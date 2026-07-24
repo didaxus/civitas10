@@ -1,5 +1,5 @@
 const { sql } = require("drizzle-orm");
-const { pgTable, uuid, varchar, text, bigint, timestamp, uniqueIndex, index } = require("drizzle-orm/pg-core");
+const { pgTable, uuid, varchar, text, bigint, timestamp, uniqueIndex, index, jsonb } = require("drizzle-orm/pg-core");
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -104,4 +104,5 @@ module.exports = {
   organizationIdentityConnections,
   organizationExternalRoleMappings,
   organizationFederatedAssignmentSources,
+  organizationExternalDirectoryObjects,
 };

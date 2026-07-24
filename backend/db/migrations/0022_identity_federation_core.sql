@@ -15,6 +15,11 @@ create table if not exists organization_identity_connections (
   claim_contract_version bigint not null default 1,
   mapping_version bigint not null default 1,
   provisioning_policy_version bigint not null default 1,
+  guard_max_absolute_removals bigint not null default 25,
+  guard_max_active_users_affected_percent numeric(5,2) not null default 10.00,
+  guard_max_memberships_affected_percent numeric(5,2) not null default 10.00,
+  guard_manual_approval_threshold bigint not null default 10,
+  guard_reactivation_cooldown_minutes bigint not null default 60,
   configuration_fingerprint varchar(128) not null,
   secret_reference varchar(255),
   last_validated_at timestamptz,
@@ -29,6 +34,7 @@ create table if not exists organization_identity_connections (
   constraint organization_identity_connections_status_chk check (status in ('draft','validating','ready','active','degraded','suspended','rotating_credentials','decommissioning','archived')),
   constraint organization_identity_connections_subject_strategy_chk check (subject_strategy in ('issuer_subject','issuer_persistent_nameid','issuer_immutable_attribute','verified_email_initial_link')),
   constraint organization_identity_connections_group_mode_chk check (group_membership_mode in ('direct','transitive','provider_defined')),
+  constraint organization_identity_connections_mass_deprovision_guard_chk check (guard_max_absolute_removals >= 0 and guard_max_active_users_affected_percent >= 0 and guard_max_active_users_affected_percent <= 100 and guard_max_memberships_affected_percent >= 0 and guard_max_memberships_affected_percent <= 100 and guard_manual_approval_threshold >= 0 and guard_reactivation_cooldown_minutes >= 0),
   constraint organization_identity_connections_no_plain_secret_chk check (secret_reference is null or secret_reference !~* '(client_secret|password|plaintext|bearer\s+[a-z0-9._~-]+)')
 );
 
@@ -94,3 +100,27 @@ create unique index if not exists organization_federated_assignment_sources_acti
   where state in ('active','pending');
 create index if not exists organization_federated_assignment_sources_user_idx on organization_federated_assignment_sources (logto_organization_id, logto_user_id, state);
 create index if not exists organization_federated_assignment_sources_mapping_idx on organization_federated_assignment_sources (mapping_id, mapping_version);
+
+create table if not exists organization_external_directory_objects (
+  id varchar(64) primary key,
+  logto_organization_id varchar(128),
+  connection_id uuid not null,
+  object_type varchar(40) not null,
+  external_id varchar(255) not null,
+  display_name varchar(255) not null,
+  source_kind varchar(80) not null default 'directory_sync_scim',
+  state varchar(40) not null default 'active',
+  members jsonb not null default '[]'::jsonb,
+  canonical_role_id varchar(128),
+  version bigint not null default 1,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint organization_external_directory_objects_connection_fk foreign key (connection_id) references organization_identity_connections (id) on delete cascade,
+  constraint organization_external_directory_objects_type_chk check (object_type in ('group','user')),
+  constraint organization_external_directory_objects_source_chk check (source_kind in ('directory_sync_scim','provider_api_sync')),
+  constraint organization_external_directory_objects_no_canonical_role_chk check (object_type <> 'group' or canonical_role_id is null),
+  constraint organization_external_directory_objects_state_chk check (state in ('active','deleted')),
+  constraint organization_external_directory_objects_external_uidx unique (connection_id, object_type, external_id)
+);
+
+create index if not exists organization_external_directory_objects_connection_idx on organization_external_directory_objects (connection_id, object_type, state);
