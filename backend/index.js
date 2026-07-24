@@ -44,6 +44,7 @@ const { requireGlobalOwner } = require("./authorization/guards");
 const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
 const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipService");
+const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
 
 const app = express();
 const port = 3000;
@@ -594,6 +595,19 @@ const documentCreatePolicies = ["same-organization", "membership-required", "cri
 secureRoute.get("/o/:organizationId/documents", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), requireAuthorization({ permission: ORG_AUTHZ.documentsRead, actionId: "documents.read", surface: "organization", operation: "read", policies: documentReadPolicies }), documentListHandler);
 
 secureRoute.post("/o/:organizationId/documents", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), requireAuthorization({ permission: ORG_AUTHZ.documentsCreate, actionId: "documents.create", surface: "organization", operation: "create", policies: documentCreatePolicies, auditIntentResolver: (req) => ({ decisionId: req.authorizationDecision?.decisionId, action: "documents.create", actorSubject: req.auth?.subject || req.user?.sub || req.user?.id, organizationId: req.params.organizationId, targetType: "document", reason: req.body?.reason || "document_create", reasonRequired: false, idempotencyRequired: false }) }), documentCreateHandler);
+
+registerIdentityFederationRoutes({
+  secureRoute,
+  requireSafeOrganizationIdParam,
+  requireGlobalAccess,
+  requireGlobalOwner,
+  requireOrganizationAccess,
+  requireOrg,
+  requireOrganizationRole,
+  requirePermission,
+  sharedAuth: SHARED_AUTH,
+  apiResource: API_RESOURCE,
+});
 
 secureRoute.get("/documents", "organizationMemberReadLegacyRedirect", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), (req, res) => {
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");
