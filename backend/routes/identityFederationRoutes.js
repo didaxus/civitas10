@@ -38,22 +38,27 @@ function registerIdentityFederationRoutes({ secureRoute, requireSafeOrganization
   const actorId = (req) => req.auth?.subject || req.user?.sub || req.user?.id || 'unknown'
   const ownerBase = '/api/v1/owner/organizations/:organizationId/identity/federation'
   const tenantBase = '/api/v1/o/:organizationId/identity/federation'
+  const ownerScimBase = '/api/v1/owner/organizations/:organizationId/scim/connections'
+  const tenantScimBase = '/api/v1/o/:organizationId/scim/connections/:connectionId'
 
-  secureRoute.get(`${ownerBase}/providers`, 'ownerRead', requireGlobalAccess({ resource: apiResource, requiredScopes: [OWNER_READ_PERMISSION] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
+  const ownerRead = [requireGlobalAccess({ resource: apiResource, requiredScopes: [OWNER_READ_PERMISSION] }), requireGlobalOwner, requireSafeOrganizationIdParam, requireTenantMatch]
+  const ownerWrite = [requireGlobalAccess({ resource: apiResource, requiredScopes: [OWNER_WRITE_PERMISSION] }), requireGlobalOwner, requireSafeOrganizationIdParam, requireTenantMatch]
+  const tenantRead = [requireSafeOrganizationIdParam, requireOrganizationAccess({ resource: apiResource, requiredAllScopes: [TENANT_READ_PERMISSION] }), requireOrg, requireTenantMatch, requireOrganizationRole(sharedAuth.organization.roles.member), requirePermission(TENANT_READ_PERMISSION)]
+  const tenantWrite = [requireSafeOrganizationIdParam, requireOrganizationAccess({ resource: apiResource, requiredAllScopes: [TENANT_WRITE_PERMISSION] }), requireOrg, requireTenantMatch, requireOrganizationRole(sharedAuth.organization.roles.admin), requirePermission(TENANT_WRITE_PERMISSION)]
+
+  secureRoute.get(`${ownerBase}/providers`, 'ownerRead', ...ownerRead, async (req, res) => {
     try { return res.json(await service.listProviders({ organizationId: req.params.organizationId })) } catch (error) { return sendIdentityError(res, error) }
   })
-  secureRoute.get(`${ownerBase}/providers/:providerId`, 'ownerRead', requireGlobalAccess({ resource: apiResource, requiredScopes: [OWNER_READ_PERMISSION] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
+  secureRoute.get(`${ownerBase}/providers/:providerId`, 'ownerRead', ...ownerRead, async (req, res) => {
     try { const result = await service.getProvider({ organizationId: req.params.organizationId, providerId: req.params.providerId }); res.set('ETag', result.etag); return res.json(result) } catch (error) { return sendIdentityError(res, error) }
   })
-  secureRoute.put(`${ownerBase}/providers/:providerId`, 'ownerSensitiveWrite', requireGlobalAccess({ resource: apiResource, requiredScopes: [OWNER_WRITE_PERMISSION] }), requireGlobalOwner, requireSafeOrganizationIdParam, requireIfMatch, async (req, res) => {
+  secureRoute.put(`${ownerBase}/providers/:providerId`, 'ownerSensitiveWrite', ...ownerWrite, requireIfMatch, async (req, res) => {
     try { const result = await service.updateProvider({ organizationId: req.params.organizationId, providerId: req.params.providerId, body: req.body, ifMatch: req.get('If-Match'), actorId: actorId(req) }); res.set('ETag', result.etag); return res.json(result) } catch (error) { return sendIdentityError(res, error) }
   })
-  secureRoute.post(`${ownerBase}/providers/:providerId/state-decisions`, 'ownerSensitiveWrite', requireGlobalAccess({ resource: apiResource, requiredScopes: [OWNER_WRITE_PERMISSION] }), requireGlobalOwner, requireSafeOrganizationIdParam, requireIdempotencyKey, requireIfMatch, async (req, res) => {
+  secureRoute.post(`${ownerBase}/providers/:providerId/state-decisions`, 'ownerSensitiveWrite', ...ownerWrite, requireIdempotencyKey, requireIfMatch, async (req, res) => {
     try { const result = await service.decideProviderState({ organizationId: req.params.organizationId, providerId: req.params.providerId, body: req.body, ifMatch: req.get('If-Match'), idempotencyKey: req.idempotencyKey, actorId: actorId(req) }); res.set('ETag', result.etag); return res.status(202).json(result) } catch (error) { return sendIdentityError(res, error) }
   })
 
-  const tenantRead = [requireSafeOrganizationIdParam, requireOrganizationAccess({ resource: apiResource, requiredAllScopes: [TENANT_READ_PERMISSION] }), requireOrg, requireTenantMatch, requireOrganizationRole(sharedAuth.organization.roles.member), requirePermission(TENANT_READ_PERMISSION)]
-  const tenantWrite = [requireSafeOrganizationIdParam, requireOrganizationAccess({ resource: apiResource, requiredAllScopes: [TENANT_WRITE_PERMISSION] }), requireOrg, requireTenantMatch, requireOrganizationRole(sharedAuth.organization.roles.admin), requirePermission(TENANT_WRITE_PERMISSION)]
   secureRoute.get(`${tenantBase}/providers`, 'organizationMemberRead', ...tenantRead, async (req, res) => {
     try { return res.json(await service.listProviders({ organizationId: req.params.organizationId })) } catch (error) { return sendIdentityError(res, error) }
   })
@@ -65,6 +70,35 @@ function registerIdentityFederationRoutes({ secureRoute, requireSafeOrganization
   })
   secureRoute.post(`${tenantBase}/providers/:providerId/state-decisions`, 'organizationAdminWrite', ...tenantWrite, requireIdempotencyKey, requireIfMatch, async (req, res) => {
     try { const result = await service.decideProviderState({ organizationId: req.params.organizationId, providerId: req.params.providerId, body: req.body, ifMatch: req.get('If-Match'), idempotencyKey: req.idempotencyKey, actorId: actorId(req) }); res.set('ETag', result.etag); return res.status(202).json(result) } catch (error) { return sendIdentityError(res, error) }
+  })
+
+  secureRoute.get(ownerScimBase, 'ownerRead', ...ownerRead, async (req, res) => {
+    try { return res.json(await service.listScimConnections({ organizationId: req.params.organizationId })) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.post(ownerScimBase, 'ownerSensitiveWrite', ...ownerWrite, async (req, res) => {
+    try { const result = await service.createScimConnection({ organizationId: req.params.organizationId, body: req.body, actorId: actorId(req) }); res.set('ETag', result.etag); return res.status(201).json(result) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.post(`${ownerScimBase}/:connectionId/credentials`, 'ownerSensitiveWrite', ...ownerWrite, requireIdempotencyKey, async (req, res) => {
+    try { const result = await service.rotateScimCredentials({ organizationId: req.params.organizationId, connectionId: req.params.connectionId, body: req.body, idempotencyKey: req.idempotencyKey, actorId: actorId(req) }); res.set('ETag', result.etag); return res.status(202).json(result) } catch (error) { return sendIdentityError(res, error) }
+  })
+
+  secureRoute.get(tenantScimBase, 'organizationMemberRead', ...tenantRead, async (req, res) => {
+    try { const result = await service.getScimConnection({ organizationId: req.params.organizationId, connectionId: req.params.connectionId }); res.set('ETag', result.etag); return res.json(result) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.put(tenantScimBase, 'organizationAdminWrite', ...tenantWrite, requireIfMatch, async (req, res) => {
+    try { const result = await service.updateScimConnection({ organizationId: req.params.organizationId, connectionId: req.params.connectionId, body: req.body, ifMatch: req.get('If-Match'), actorId: actorId(req) }); res.set('ETag', result.etag); return res.json(result) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.post(`${tenantScimBase}/reconciliation-plans`, 'organizationAdminWrite', ...tenantWrite, requireIdempotencyKey, async (req, res) => {
+    try { return res.status(202).json(await service.createScimReconciliationPlan({ organizationId: req.params.organizationId, connectionId: req.params.connectionId, body: req.body, idempotencyKey: req.idempotencyKey, actorId: actorId(req) })) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.get(`${tenantScimBase}/reconciliation-plans`, 'organizationMemberRead', ...tenantRead, async (req, res) => {
+    try { return res.json(await service.listScimReconciliationPlans({ organizationId: req.params.organizationId, connectionId: req.params.connectionId })) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.post(`${tenantScimBase}/reconciliation-runs`, 'organizationAdminWrite', ...tenantWrite, requireIdempotencyKey, async (req, res) => {
+    try { return res.status(202).json(await service.createScimReconciliationRun({ organizationId: req.params.organizationId, connectionId: req.params.connectionId, body: req.body, idempotencyKey: req.idempotencyKey, actorId: actorId(req) })) } catch (error) { return sendIdentityError(res, error) }
+  })
+  secureRoute.get(`${tenantScimBase}/reconciliation-runs`, 'organizationMemberRead', ...tenantRead, async (req, res) => {
+    try { return res.json(await service.listScimReconciliationRuns({ organizationId: req.params.organizationId, connectionId: req.params.connectionId })) } catch (error) { return sendIdentityError(res, error) }
   })
 }
 
