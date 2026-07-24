@@ -44,7 +44,11 @@ const { requireGlobalOwner } = require("./authorization/guards");
 const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
 const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipService");
+<<<<<<< ours
 const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
+=======
+const { registerIdentityFederationRoutes } = require("./identity/identityFederationHandlers");
+>>>>>>> theirs
 
 const app = express();
 const port = 3000;
@@ -629,6 +633,13 @@ secureRoute.get("/documents", "organizationMemberReadLegacyRedirect", requireOrg
 secureRoute.post("/documents", "organizationAdminWriteLegacyRejected", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), (req, res) => {
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");
   return res.status(410).json({ error: "EndpointDeprecated", code: "tenant_route_deprecated", canonicalPath });
+});
+
+registerIdentityFederationRoutes({
+  secureRoute,
+  requireSafeOrganizationIdParam,
+  ownerMiddleware: [requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner],
+  tenantMiddleware: [requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), (req, res, next) => { try { assertTenantRouteMatchesContext(req); return next(); } catch (error) { return sendPublicError(res, error, "TenantIdentityRouteError", "Tenant route organization does not match token context"); } }],
 });
 
 secureRoute.get("/", "public", (_req, res) => {
