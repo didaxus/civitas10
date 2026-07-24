@@ -77,25 +77,30 @@ const organizationFederatedAssignmentSources = pgTable("organization_federated_a
   mappingIdx: index("organization_federated_assignment_sources_mapping_idx").on(table.mappingId, table.mappingVersion),
 }));
 
-const organizationExternalDirectoryObjects = pgTable("organization_external_directory_objects", {
-  id: varchar("id", { length: 64 }).primaryKey(),
-  logtoOrganizationId: varchar("logto_organization_id", { length: 128 }),
+const scimConnectionCredentials = pgTable("scim_connection_credentials", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  logtoOrganizationId: varchar("logto_organization_id", { length: 128 }).notNull(),
   connectionId: uuid("connection_id").notNull().references(() => organizationIdentityConnections.id, { onDelete: "cascade" }),
-  objectType: varchar("object_type", { length: 40 }).notNull(),
-  externalId: varchar("external_id", { length: 255 }).notNull(),
-  displayName: varchar("display_name", { length: 255 }).notNull(),
-  sourceKind: varchar("source_kind", { length: 80 }).notNull().default("directory_sync_scim"),
-  state: varchar("state", { length: 40 }).notNull().default("active"),
-  members: jsonb("members").notNull().default(sql`'[]'::jsonb`),
-  canonicalRoleId: varchar("canonical_role_id", { length: 128 }),
-  version: bigint("version", { mode: "number" }).notNull().default(1),
+  keyId: varchar("key_id", { length: 80 }).notNull().unique(),
+  secretHash: text("secret_hash").notNull(),
+  scopes: text("scopes").array().notNull(),
+  status: varchar("status", { length: 40 }).notNull().default("active"),
+  cidrAllowlist: text("cidr_allowlist").array().notNull().default(sql`'{}'::text[]`),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
+  lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+  lastUsedIp: varchar("last_used_ip", { length: 80 }),
+  rotationOfKeyId: varchar("rotation_of_key_id", { length: 80 }),
+  revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  revokedReason: varchar("revoked_reason", { length: 160 }),
+  createdByLogtoUserId: varchar("created_by_logto_user_id", { length: 128 }),
   ...timestamps,
 }, (table) => ({
-  externalUidx: uniqueIndex("organization_external_directory_objects_external_uidx").on(table.connectionId, table.objectType, table.externalId),
-  connectionIdx: index("organization_external_directory_objects_connection_idx").on(table.connectionId, table.objectType, table.state),
+  orgIdUidx: uniqueIndex("scim_connection_credentials_org_id_uidx").on(table.logtoOrganizationId, table.id),
+  tenantConnectionIdx: index("scim_credentials_tenant_connection_idx").on(table.logtoOrganizationId, table.connectionId, table.status),
 }));
 
 module.exports = {
+  scimConnectionCredentials,
   organizationIdentityConnections,
   organizationExternalRoleMappings,
   organizationFederatedAssignmentSources,
