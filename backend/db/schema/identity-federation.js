@@ -1,5 +1,5 @@
 const { sql } = require("drizzle-orm");
-const { pgTable, uuid, varchar, text, bigint, timestamp, uniqueIndex, index } = require("drizzle-orm/pg-core");
+const { pgTable, uuid, varchar, text, bigint, integer, boolean, jsonb, timestamp, uniqueIndex, index } = require("drizzle-orm/pg-core");
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -77,8 +77,40 @@ const organizationFederatedAssignmentSources = pgTable("organization_federated_a
   mappingIdx: index("organization_federated_assignment_sources_mapping_idx").on(table.mappingId, table.mappingVersion),
 }));
 
+
+const scimUsers = pgTable("scim_users", {
+  id: varchar("id", { length: 128 }).primaryKey(),
+  connectionId: uuid("connection_id").notNull().references(() => organizationIdentityConnections.id, { onDelete: "cascade" }),
+  externalId: varchar("external_id", { length: 255 }),
+  userName: varchar("user_name", { length: 255 }).notNull(),
+  normalizedUserName: varchar("normalized_user_name", { length: 255 }).notNull(),
+  active: boolean("active").notNull().default(true),
+  resource: jsonb("resource").notNull().default(sql`'{}'::jsonb`),
+  version: bigint("version", { mode: "number" }).notNull().default(1),
+  deactivatedAt: timestamp("deactivated_at", { withTimezone: true }),
+  ...timestamps,
+}, (table) => ({
+  externalIdUidx: uniqueIndex("scim_users_connection_external_id_uidx").on(table.connectionId, table.externalId),
+  userNameUidx: uniqueIndex("scim_users_connection_normalized_user_name_uidx").on(table.connectionId, table.normalizedUserName),
+  activeIdx: index("scim_users_connection_active_idx").on(table.connectionId, table.active),
+}));
+
+const scimIdempotencyLedger = pgTable("scim_idempotency_ledger", {
+  connectionId: uuid("connection_id").notNull().references(() => organizationIdentityConnections.id, { onDelete: "cascade" }),
+  idempotencyKey: varchar("idempotency_key", { length: 220 }).notNull(),
+  method: varchar("method", { length: 16 }).notNull(),
+  path: text("path").notNull(),
+  responseStatus: integer("response_status").notNull(),
+  responseBody: jsonb("response_body").notNull().default(sql`'{}'::jsonb`),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => ({
+  ledgerUidx: uniqueIndex("scim_idempotency_ledger_uidx").on(table.connectionId, table.idempotencyKey),
+}));
+
 module.exports = {
   organizationIdentityConnections,
   organizationExternalRoleMappings,
   organizationFederatedAssignmentSources,
+  scimUsers,
+  scimIdempotencyLedger,
 };
