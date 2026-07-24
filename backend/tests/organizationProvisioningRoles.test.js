@@ -83,10 +83,6 @@ test("provisioning assigns only explicit Logto organization role and does not co
   assert.ok(steps.some(([kind, event]) => kind === "step" && event.stepName === "logto.organization_roles.list" && event.status === "completed"));
 });
 
-<<<<<<< ours
-const { assertProvisionedRoleAllowed, assertFederationRoleMappingAllowed, sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
-=======
-
 test("Logto JIT provisioning policy is sourced from the canonical authorization contract", () => {
   const logtoManagement = require("../services/logtoManagement");
   assert.equal(logtoManagement.ORGANIZATION_ADMIN_ROLE_NAME, "organization_admin");
@@ -106,8 +102,7 @@ test("empty JIT role input records versioned provisioning policy and canonical m
   assert.match(normalized.value.canonical.jitProvisioning.policy.version, /jit-provisioning-policy-v1$/);
 });
 
-const { sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
->>>>>>> theirs
+const { assertProvisionedRoleAllowed, assertFederationRoleMappingAllowed, sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
 
 test("provisioning rejects owner roles and external permission injection", () => {
   assert.throws(() => normalizeProvisioningInput({ ...validBody(), jitProvisioning: { defaultRoleNames: ["owner_global"] } }), /provisioning_role_not_canonical|provisioning_owner_role_forbidden/);
