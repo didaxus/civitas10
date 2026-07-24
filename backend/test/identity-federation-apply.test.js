@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const { OPERATION_TYPES } = require('../contracts/foundation');
 const { createInMemoryIdentityFederationApplyRepository, applyIdentityFederationReconciliation, IdentityFederationApplyError, IDENTITY_FEDERATION_OPERATION_TYPES } = require('../identity-federation/reconciliationApplyService');
 
-function plan() { return { organizationId: 'org-A', connectionId: 'conn-1', mappingVersion: 'map-v3', policyVersion: 'policy-v2', adds: [{ userId: 'u-add', roleId: 'r-student' }], removes: [{ userId: 'u-rem', roleId: 'r-old' }] }; }
+function plan() { return { organizationId: 'org-A', connectionId: 'conn-1', mappingVersion: 'map-v3', policyVersion: 'policy-v2', adds: [{ userId: 'u-add', roleId: 'r-student', provenance: { source_kind: 'directory_sync_scim', connection_id: 'conn-1', external_group_id: 'group-1', mapping_version: 'map-v3', canonical_role_key: 'organization_student' } }], removes: [{ userId: 'u-rem', roleId: 'r-old' }] }; }
 function client(failOn) { const calls = []; return { calls, async addOrganizationRoleAssignment(input) { calls.push({ method: 'add', ...input }); if (failOn === 'add') throw new Error('logto add failed'); }, async removeOrganizationRoleAssignment(input) { calls.push({ method: 'remove', ...input }); if (failOn === 'remove') throw new Error('logto remove failed'); } }; }
 
 const actor = { type: 'user', logtoUserId: 'owner-1', reason: 'reconcile', correlationId: 'corr-1', provenance: { surface: 'owner' } };
@@ -35,6 +35,9 @@ test('apply persists attempt metadata and executes adds before removes', async (
   assert.equal(attempt.policyVersion, 'policy-v2');
   assert.equal(attempt.idempotencyKey, 'idem-meta');
   assert.equal(attempt.actorProvenance.logtoUserId, 'owner-1');
+  const assignment = [...repository.assignments.values()][0];
+  assert.equal(assignment.mappingProvenance.source_kind, 'directory_sync_scim');
+  assert.equal(assignment.mappingProvenance.external_group_id, 'group-1');
   assert.deepEqual(logtoClient.calls.map((c) => c.method), ['add', 'remove']);
 });
 
