@@ -6,4 +6,5 @@ module.exports = {
   ...require("./groupRoleMappingService"),
   ...require("./reconciliationPlanner"),
   ...require("./reconciliationApplyService"),
+  ...require("./scimUserProvisioning"),
 };
