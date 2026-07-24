@@ -1,5 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const { execFileSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
 const { createInMemoryIdentityFederationRepository } = require('../identity/identityFederationRepository');
 const { registerIdentityFederationRoutes, REASON } = require('../identity/identityFederationHandlers');
 
@@ -20,6 +23,45 @@ test('registers owner and tenant identity federation route contracts', () => {
     'PUT /o/:organizationId/identity/provisioning-policy',
     'GET /o/:organizationId/identity/reconciliation-runs/:runId'
   ]) assert.ok(paths.has(path), path);
+});
+
+test('identity federation barrel preserves concrete services and contract exports', () => {
+  const federation = require('../identity-federation');
+  for (const exportedName of [
+    'ClaimNormalizer',
+    'createGroupRoleMappingService',
+    'planFederatedIdentityReconciliation',
+    'IDENTITY_FEDERATION_CONTRACT_VERSION',
+    'IDENTITY_FEDERATION_READ_STATUSES',
+    'contract',
+    'identityConnection',
+    'normalizedExternalIdentity',
+    'federationMapping',
+    'provisioningPolicy',
+    'reconciliationRun',
+  ]) {
+    assert.ok(Object.hasOwn(federation, exportedName), `${exportedName} must be exported by backend/identity-federation`);
+  }
+});
+
+test('committed source files do not contain unresolved merge conflict markers', () => {
+  const repoRoot = path.resolve(__dirname, '../..');
+  const trackedFiles = execFileSync('git', ['ls-files', '-z'], { cwd: repoRoot });
+  const markerPrefixes = ['<'.repeat(7), '='.repeat(7), '>'.repeat(7)];
+  const sourceExtensions = new Set(['.cjs', '.css', '.html', '.js', '.json', '.jsx', '.mjs', '.sql', '.ts', '.tsx', '.txt', '.yaml', '.yml']);
+  const offenders = [];
+
+  for (const relativeFile of trackedFiles.toString('utf8').split('\0').filter(Boolean)) {
+    const extension = path.extname(relativeFile);
+    if (!sourceExtensions.has(extension) && !['Dockerfile', 'Makefile'].includes(path.basename(relativeFile))) continue;
+    const content = fs.readFileSync(path.join(repoRoot, relativeFile), 'utf8');
+    const lines = content.split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (markerPrefixes.some((marker) => line.startsWith(marker))) offenders.push(`${relativeFile}:${index + 1}`);
+    });
+  }
+
+  assert.deepEqual(offenders, []);
 });
 
 test('mutations require optimistic concurrency and redact secrets from response/audit/outbox', async () => {
