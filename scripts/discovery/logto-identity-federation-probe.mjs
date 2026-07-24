@@ -71,12 +71,12 @@ export function assertRequestAllowed({ method, url, policy, isTokenRequest = fal
   return true;
 }
 
-export async function guardedFetch(url, { method = 'GET', policy, isTokenRequest = false, transport = fetch, timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
+export async function guardedFetch(url, { method = 'GET', policy, isTokenRequest = false, transport = fetch, timeoutMs = DEFAULT_TIMEOUT_MS, headers, body } = {}) {
   assertRequestAllowed({ method, url, policy, isTokenRequest });
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await transport(url, { method, redirect: 'manual', signal: controller.signal });
+    const response = await transport(url, { method, redirect: 'manual', signal: controller.signal, headers, body });
     const location = response.headers?.get?.('location');
     if (location) {
       const redirect = new URL(location, url);
@@ -140,6 +140,7 @@ export const BASE_DISCOVERY_ENDPOINTS = Object.freeze([
   '/api/resources',
 ]);
 
+<<<<<<< ours
 export function organizationJitSsoConnectorsPath(organizationId = DISCOVERY_ORGANIZATION_ID_PLACEHOLDER) {
   if (!organizationId || /[/?#]/.test(String(organizationId))) throw new ProbePolicyError('invalid organization id for discovery path');
   return `/api/organizations/${encodeURIComponent(String(organizationId))}/jit-sso-connectors`;
@@ -194,6 +195,49 @@ export async function runStaticDiscovery({ env = process.env } = {}) {
   const organizationId = env.LOGTO_DISCOVERY_ORGANIZATION_ID || DISCOVERY_ORGANIZATION_ID_PLACEHOLDER;
   const endpoints = discoveryEndpoints({ organizationId });
   return { probeVersion: PROBE_VERSION, remoteState: 'verification_required', remoteObservationPerformed: false, credentialState, plannedReadOnlyEndpoints: endpoints.map((path) => ({ method: 'GET', path })), evidenceSections: [{ name: 'custom-token-script-claim-shape', verifies: 'user.sso_identities[0].profile.groups availability' }] };
+=======
+
+export function resolveEndpoint(env = process.env) {
+  return (env.LOGTO_ENDPOINT || env.LOGTO_ISSUER || env.VITE_LOGTO_ENDPOINT || '').replace(/\/+$/, '');
+}
+
+export async function requestM2MToken({ env = process.env, policy, transport = fetch, timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
+  const endpoint = resolveEndpoint(env);
+  const clientId = env.LOGTO_M2M_CLIENT_ID || env.LOGTO_M2M_APP_ID;
+  const clientSecret = env.LOGTO_M2M_CLIENT_SECRET || env.LOGTO_M2M_APP_SECRET;
+  const resource = env.LOGTO_MANAGEMENT_API_RESOURCE;
+  const body = new URLSearchParams({ grant_type: 'client_credentials', client_id: clientId, client_secret: clientSecret, resource });
+  const tokenUrl = `${endpoint}${policy.tokenPath}`;
+  assertRequestAllowed({ method: 'POST', url: tokenUrl, policy, isTokenRequest: true });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await transport(tokenUrl, { method: 'POST', redirect: 'manual', signal: controller.signal, headers: { 'content-type': 'application/x-www-form-urlencoded' }, body });
+    const text = await readBoundedResponseText(response, policy.maxResponseBytes);
+    const parsed = safeParseJson(text);
+    return { accessToken: parsed?.access_token || null, observation: { status: response.status, ok: response.ok, headers: redactHeaders(response.headers), bodyShape: summarizeShape(parsed) } };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function runStaticDiscovery({ env = process.env, transport = fetch } = {}) {
+  const credentialState = detectCredentialState(env);
+  const endpoint = resolveEndpoint(env);
+  const plannedReadOnlyEndpoints = DISCOVERY_ENDPOINTS.map((path) => ({ method: 'GET', path }));
+  if (!credentialState.remoteReadExplicitlyEnabled || !credentialState.credentialsPresent || !credentialState.managementAudiencePresent || !credentialState.endpointConfigured) {
+    return { probeVersion: PROBE_VERSION, remoteState: 'verification_required', remoteObservationPerformed: false, credentialState, plannedReadOnlyEndpoints };
+  }
+  const policy = buildPolicy({ endpoint, allowedPaths: DISCOVERY_ENDPOINTS, allowedQueryKeys: ['page', 'page_size', 'limit', 'offset'] });
+  const { accessToken, observation: tokenObservation } = await requestM2MToken({ env, policy, transport });
+  const endpointEvidence = [];
+  if (!accessToken) return { probeVersion: PROBE_VERSION, remoteState: 'token_unavailable', remoteObservationPerformed: false, credentialState, tokenObservation, plannedReadOnlyEndpoints };
+  for (const item of plannedReadOnlyEndpoints) {
+    const url = `${endpoint}${item.path}`;
+    endpointEvidence.push({ ...item, ...(await guardedFetch(url, { method: item.method, policy, transport, headers: { authorization: `Bearer ${accessToken}` } })) });
+  }
+  return { probeVersion: PROBE_VERSION, remoteState: 'observed', remoteObservationPerformed: true, credentialState, tokenObservation, endpointEvidence };
+>>>>>>> theirs
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

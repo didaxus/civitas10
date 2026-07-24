@@ -9,16 +9,16 @@
   "remoteObservationPerformed": false,
   "probeVersion": "2026-07-issue-154-phase-0-v1",
   "probeHash": "bd166c8390a69da428e1d96766589534a6dfe238520c782be0711fde74b94044",
-  "generatedAt": "2026-07-21T23:20:20.970Z",
+  "generatedAt": "2026-07-24T05:23:10.498Z",
   "credentialState": {
     "credentialsPresent": false,
     "credentialSource": "absent",
     "managementAudiencePresent": false,
     "endpointConfigured": false,
-    "remoteReadExplicitlyEnabled": false
+    "remoteReadExplicitlyEnabled": true
   },
-  "remoteReadGuard": "LOGTO_IDENTITY_DISCOVERY_ALLOW_REMOTE_READ=true required and not enabled",
-  "externalMutationEvidence": "No remote Management API call was executed by the generator; discovery harness tests use mocked transports.",
+  "remoteReadGuard": "LOGTO_IDENTITY_DISCOVERY_ALLOW_REMOTE_READ=true was enabled for the local harness run, but no Logto endpoint, management audience, or M2M credentials were present in the execution environment.",
+  "externalMutationEvidence": "No remote Management API request was executed; the harness reported planned GET endpoints only and no credentials/endpoint were available.",
   "validationResults": [
     {
       "command": "npm run logto:authz:contract-check",
@@ -54,6 +54,13 @@
       "baseSha": "a51769d914b7cc831908d45115b46101fcc2bbe9",
       "introducedFailure": false,
       "failureClassification": "none"
+    },
+    {
+      "command": "LOGTO_IDENTITY_DISCOVERY_ALLOW_REMOTE_READ=true node scripts/discovery/logto-identity-federation-probe.mjs",
+      "exitCode": 0,
+      "remoteObservationPerformed": false,
+      "result": "remote_read_guard_enabled_but_credentials_and_endpoint_absent",
+      "generatedAt": "2026-07-24T05:23:10.498Z"
     }
   ]
 }
