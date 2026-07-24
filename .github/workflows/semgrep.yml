@@ -24,6 +24,9 @@ permissions:
 
 jobs:
   semgrep:
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      SEMGREP_DEPLOYMENT_ID: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
@@ -36,11 +39,17 @@ jobs:
         with:
           persist-credentials: false
 
-      # Scan code using project's configuration on https://semgrep.dev/manage
-      - uses: returntocorp/semgrep-action@fcd5ab7459e8d91cb1777481980d1b18b4fc6735
+      - name: Run Semgrep CI scan
+        if: ${{ env.SEMGREP_APP_TOKEN == '' }}
+        uses: semgrep/semgrep-action@v1
         with:
-          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-          publishDeployment: ${{ secrets.SEMGREP_DEPLOYMENT_ID }}
+          config: p/default
+          generateSarif: "1"
+
+      - name: Run Semgrep managed scan
+        if: ${{ env.SEMGREP_APP_TOKEN != '' }}
+        uses: semgrep/semgrep-action@v1
+        with:
           generateSarif: "1"
 
       # Upload SARIF file generated in previous step
@@ -48,4 +57,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: semgrep.sarif
-        if: always()
+        if: ${{ always() && hashFiles('semgrep.sarif') != '' }}
