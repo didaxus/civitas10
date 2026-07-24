@@ -96,7 +96,7 @@ function createPlanningApplicationServices(ports, options = {}) {
     const result = await commitAtomically(ports, async (tx) => {
       const saved = await (tx.persistencePort || ports.persistencePort).createPlan({ ...command, organizationId: context.organizationId, status: command.status || PLAN_STATUSES.DRAFT, updatedAt: nowIso(clock) });
       const dto = planDto(saved);
-      await recordSideEffects({ tx, ports, context, event: { result: dto }, audit: { action: 'planning.plan.created', organizationId: context.organizationId, actorId: context.subjectId, targetId: dto.planId, correlationId: context.correlationId }, outbox: { type: 'planning.plan.created', organizationId: context.organizationId, aggregateId: dto.planId, payload: dto, correlationId: context.correlationId }, idem });
+      await recordSideEffects({ tx, ports, context, event: { result: dto }, audit: { action: 'planning.plan.created.v1', organizationId: context.organizationId, actorId: context.subjectId, targetId: dto.planId, correlationId: context.correlationId }, outbox: { type: 'planning.plan.created.v1', organizationId: context.organizationId, aggregateId: dto.planId, payload: dto, correlationId: context.correlationId }, idem });
       return dto;
     });
     return ok(result, metaFromContext(context));
@@ -126,22 +126,22 @@ function createPlanningApplicationServices(ports, options = {}) {
       await (tx.concurrencyPort || ports.concurrencyPort)?.assertIfMatch?.({ organizationId: context.organizationId, aggregateType: 'planning.plan', aggregateId: command.planId, ifMatch: expected, currentVersion: current.version || current.etag });
       const saved = await (tx.persistencePort || ports.persistencePort).updatePlan({ ...command, organizationId: context.organizationId, ifMatch: expected, updatedAt: nowIso(clock) });
       const dto = planDto(saved);
-      await recordSideEffects({ tx, ports, context, event: { result: dto }, audit: { action: 'planning.plan.updated', organizationId: context.organizationId, actorId: context.subjectId, targetId: dto.planId, correlationId: context.correlationId }, outbox: { type: 'planning.plan.updated', organizationId: context.organizationId, aggregateId: dto.planId, payload: dto, correlationId: context.correlationId }, idem });
+      await recordSideEffects({ tx, ports, context, event: { result: dto }, audit: { action: 'planning.plan.updated.v1', organizationId: context.organizationId, actorId: context.subjectId, targetId: dto.planId, correlationId: context.correlationId }, outbox: { type: 'planning.plan.updated.v1', organizationId: context.organizationId, aggregateId: dto.planId, payload: dto, correlationId: context.correlationId }, idem });
       return dto;
     });
     return ok(result, metaFromContext(context));
   }
   async function readProfile(query, context) { const ctx = validateContext(context, 'getProfile'); if (ctx) return ctx; const scoped = await validateTenantScope({ ports, context, operation: NAMED_USE_CASES.getProfile.operationId }); if (scoped) return scoped; const found = await ports.persistencePort.readProfile({ organizationId: context.organizationId }); if (!found) return toFailed(REMOTE_PROBLEM_CODES.NOT_FOUND, PROBLEM_CATEGORIES.NOT_FOUND, { correlationId: context.correlationId }); return ok(profileDto(found), metaFromContext(context)); }
   async function replaceProfile(command, context) {
-    const ctx = validateContext(context, 'upsertProfile'); if (ctx) return ctx;
-    const scoped = await validateTenantScope({ ports, context, operation: NAMED_USE_CASES.upsertProfile.operationId }); if (scoped) return scoped;
+    const ctx = validateContext(context, 'replaceProfile'); if (ctx) return ctx;
+    const scoped = await validateTenantScope({ ports, context, operation: NAMED_USE_CASES.replaceProfile.operationId }); if (scoped) return scoped;
     const idem = await enforceIdempotency({ ports, context, request: command, responseFactory: (r) => ok(profileDto(r), metaFromContext(context)) }); if (idem.replay) return idem.replay;
     const current = await ports.persistencePort.readProfile({ organizationId: context.organizationId });
     const expected = context.concurrency?.etag || context.concurrency?.expectedVersion || command.ifMatch;
     if (current && expected && String(current.version || current.etag) !== String(expected)) return toFailed(REMOTE_PROBLEM_CODES.PRECONDITION, PROBLEM_CATEGORIES.PRECONDITION, { correlationId: context.correlationId, expectedVersion: expected, currentVersion: current.version || current.etag });
-    const result = await commitAtomically(ports, async (tx) => { await (tx.concurrencyPort || ports.concurrencyPort)?.assertIfMatch?.({ organizationId: context.organizationId, aggregateType: 'planning.profile', aggregateId: context.organizationId, ifMatch: expected, currentVersion: current?.version || current?.etag }); const saved = await (tx.persistencePort || ports.persistencePort).replaceProfile({ ...command, organizationId: context.organizationId, ifMatch: expected, updatedAt: nowIso(clock) }); const dto = profileDto(saved); await recordSideEffects({ tx, ports, context, event: { result: dto }, audit: { action: 'planning.profile.replaced', organizationId: context.organizationId, actorId: context.subjectId, correlationId: context.correlationId }, outbox: { type: 'planning.profile.replaced', organizationId: context.organizationId, aggregateId: context.organizationId, payload: dto, correlationId: context.correlationId }, idem }); return dto; });
+    const result = await commitAtomically(ports, async (tx) => { await (tx.concurrencyPort || ports.concurrencyPort)?.assertIfMatch?.({ organizationId: context.organizationId, aggregateType: 'planning.profile', aggregateId: context.organizationId, ifMatch: expected, currentVersion: current?.version || current?.etag }); const saved = await (tx.persistencePort || ports.persistencePort).replaceProfile({ ...command, organizationId: context.organizationId, ifMatch: expected, updatedAt: nowIso(clock) }); const dto = profileDto(saved); await recordSideEffects({ tx, ports, context, event: { result: dto }, audit: { action: 'planning.profile.updated.v1', organizationId: context.organizationId, actorId: context.subjectId, correlationId: context.correlationId }, outbox: { type: 'planning.profile.updated.v1', organizationId: context.organizationId, aggregateId: context.organizationId, payload: dto, correlationId: context.correlationId }, idem }); return dto; });
     return ok(result, metaFromContext(context));
   }
-  return freeze({ createPlan, listPlans, readPlan, updatePlan, readProfile, replaceProfile, getPlan: readPlan, getProfile: readProfile, upsertProfile: replaceProfile });
+  return freeze({ createPlan, listPlans, readPlan, updatePlan, readProfile, replaceProfile, getPlan: readPlan, getProfile: readProfile });
 }
 module.exports = { createPlanningApplicationServices, commands, queries, resultTypes, PLANNING_APPLICATION_PROBLEMS, PLAN_STATUSES, PROBLEM_CATEGORIES };

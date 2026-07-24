@@ -191,12 +191,13 @@
       "algorithm": "sha256",
       "files": [
         "contracts/openapi/civitas-api.yaml",
+        "contracts/openapi/modules/planning.yaml",
         "contracts/openapi/common/parameters.yaml",
         "contracts/openapi/common/responses.yaml",
         "contracts/openapi/common/schemas.yaml",
         "contracts/openapi/common/security.yaml"
       ],
-      "hash": "cdfd9a4f5c1722dcce690fcf7c92855c9f595384bfcf14becae58b730531580c"
+      "hash": "d718b059108ea640916a95a55643b9cea7e5b26c4151a19e648caaca055a7212"
     },
     "private_runtime_schema": {
       "algorithm": "sha256",
@@ -205,7 +206,7 @@
         "backend/planning/infrastructure/runtimeContractV1.js",
         "backend/planning/application/dtos.js"
       ],
-      "hash": "5b89da252ddb7f48364ad056cf23faf28efe94058aff7b7fe2a3d95dd85031f3"
+      "hash": "03eb93c93952235fbce025bbef0a871d5daba523e1797a954846230a301f43a8"
     },
     "generated_clients": {
       "algorithm": "sha256",
@@ -220,12 +221,14 @@
       "algorithm": "sha256",
       "files": [
         "backend/planning/application/remotePort.js",
+        "backend/planning/application/services.js",
+        "backend/planning/presentation/routes.js",
         "backend/planning/presentation/problemMapper.js",
         "backend/planning/infrastructure/transportAdapter.js",
         "backend/services/moduleAvailabilityResolver.js",
         "backend/services/moduleControlPlane.js"
       ],
-      "hash": "4a4763096d41e5107acb8d6eda5d26577223cdf334ddf62ce7043a355fc94f19"
+      "hash": "7a7f393e221bb4d48a1ff6c71bc5743eee5a7f7d1ebe14b98d495e9ee9c8a7cb"
     },
     "frontend_routes_actions_screens": {
       "algorithm": "sha256",
@@ -234,18 +237,23 @@
         "frontend/src/navigation/route-builders.ts",
         "frontend/src/authorization/registry/define-actions.ts",
         "frontend/src/module-ui/loader/fallbackStates.ts",
-        "frontend/src/module-ui/loader/ModuleUiErrorBoundary.tsx"
+        "frontend/src/module-ui/loader/ModuleUiErrorBoundary.tsx",
+        "frontend/src/features/planning/PlanningRemote.tsx",
+        "frontend/src/features/planning/planningApi.ts",
+        "frontend/src/features/planning/planningRemoteUiContribution.ts"
       ],
-      "hash": "962e2575375cc0dd0726b3bb62a471b5c82f16392381e1264325fe7d60fc3d73"
+      "hash": "493cfecb29f1fc9bbb11d400d38df2d9cdd88c9da40dd6325ebc9a6b97d2587e"
     },
     "planning_events": {
       "algorithm": "sha256",
       "files": [
         "contracts/integration/integration-event-registry.json",
         "contracts/integration/integration-event-v1.schema.json",
-        "docs/architecture/module-event-contracts.md"
+        "docs/architecture/module-event-contracts.md",
+        "contracts/events/planning/schemas/planning-plan-created-v1.schema.json",
+        "contracts/events/planning/schemas/planning-profile-updated-v1.schema.json"
       ],
-      "hash": "00eabd00f3de35a55b9ef404da062b674e42b8e6f3452ba403c5a8f8e8de688e"
+      "hash": "33175899669f50edb246d1fe8cc00e71db350ca37b0e36e33eabbd7833473f13"
     }
   },
   "activationEntries": [

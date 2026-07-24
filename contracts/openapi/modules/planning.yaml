@@ -1,62 +1,33 @@
 paths:
   /o/{organizationId}/planning/plans:
     post:
-<<<<<<< ours
       operationId: planningPlansCreate
       tags: [planning]
-=======
-      tags: [planning]
-      summary: Create an organization planning plan.
-      description: Planned slice operation for creating a planning plan in an organization boundary.
-      operationId: planningPlansCreate
->>>>>>> theirs
       x-civitas-module: planning
       x-civitas-capability: planning.plans
       x-civitas-route-id: planning.plans.create
       x-civitas-action-id: planning.plans.create
       x-civitas-surface: organization
       x-civitas-status: planned
-<<<<<<< ours
       x-civitas-permission: planning.plans.manage
-=======
-      x-civitas-permission: planning.plans.create
->>>>>>> theirs
       x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
       x-civitas-audit: write
       x-civitas-idempotency: required
       x-civitas-execution: synchronous
       parameters:
         - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
-<<<<<<< ours
         - $ref: '#/components/parameters/IdempotencyKey'
-=======
-        - $ref: ../common/parameters.yaml#/components/parameters/IdempotencyKey
-      security: [{ bearerAuth: [] }]
->>>>>>> theirs
       requestBody:
         required: true
         content:
           application/json:
-<<<<<<< ours
             schema: { $ref: '#/components/schemas/PlanningPlanCreateRequest' }
       responses:
         '201': { $ref: '#/components/responses/PlanningPlanResponse' }
-=======
-            schema: { $ref: '#/components/schemas/PlanCreateRequest' }
-      responses:
-        '201':
-          description: Planning plan created.
-          headers:
-            ETag: { $ref: '#/components/headers/ETag' }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/PlanResponse' }
->>>>>>> theirs
         '400': { $ref: ../common/responses.yaml#/components/responses/BadRequest }
         '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
         '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
         '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
-<<<<<<< ours
         '422': { $ref: ../common/responses.yaml#/components/responses/ValidationError }
         '503': { $ref: ../common/responses.yaml#/components/responses/ServiceUnavailable }
         '504': { $ref: ../common/responses.yaml#/components/responses/GatewayTimeout }
@@ -67,17 +38,6 @@ paths:
       x-civitas-capability: planning.plans
       x-civitas-route-id: planning.plans.list
       x-civitas-action-id: planning.plans.list
-=======
-    get:
-      tags: [planning]
-      summary: List organization planning plans.
-      description: Planned slice operation returning cursor-paginated planning plans for an organization.
-      operationId: planningPlansList
-      x-civitas-module: planning
-      x-civitas-capability: planning.plans
-      x-civitas-route-id: planning.plans.list
-      x-civitas-action-id: planning.plans.read
->>>>>>> theirs
       x-civitas-surface: organization
       x-civitas-status: planned
       x-civitas-permission: planning.plans.read
@@ -87,7 +47,6 @@ paths:
       x-civitas-execution: synchronous
       parameters:
         - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
-<<<<<<< ours
         - { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
         - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
         - { name: status, in: query, schema: { enum: [draft, approved, archived] } }
@@ -104,46 +63,17 @@ paths:
       x-civitas-module: planning
       x-civitas-capability: planning.plans
       x-civitas-route-id: planning.plans.read
-=======
-        - $ref: ../common/parameters.yaml#/components/parameters/Cursor
-        - $ref: ../common/parameters.yaml#/components/parameters/Limit
-      security: [{ bearerAuth: [] }]
-      responses:
-        '200':
-          description: Cursor-paginated planning plans.
-          headers:
-            ETag: { $ref: '#/components/headers/ETag' }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/PlanCollection' }
-        '400': { $ref: ../common/responses.yaml#/components/responses/BadRequest }
-        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
-        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
-  /o/{organizationId}/planning/plans/{planId}:
-    get:
-      tags: [planning]
-      summary: Get an organization planning plan.
-      operationId: planningPlansGet
-      x-civitas-module: planning
-      x-civitas-capability: planning.plans
-      x-civitas-route-id: planning.plans.get
->>>>>>> theirs
       x-civitas-action-id: planning.plans.read
       x-civitas-surface: organization
       x-civitas-status: planned
       x-civitas-permission: planning.plans.read
-<<<<<<< ours
       x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current, tenant-resource-ownership]
-=======
-      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
->>>>>>> theirs
       x-civitas-audit: read
       x-civitas-idempotency: forbidden
       x-civitas-execution: synchronous
       parameters:
         - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
         - $ref: '#/components/parameters/PlanId'
-<<<<<<< ours
       responses:
         '200': { $ref: '#/components/responses/PlanningPlanResponse' }
         '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
@@ -160,72 +90,25 @@ paths:
       x-civitas-status: planned
       x-civitas-permission: planning.plans.manage
       x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current, tenant-resource-ownership]
-=======
-      security: [{ bearerAuth: [] }]
-      responses:
-        '200':
-          description: Planning plan details.
-          headers:
-            ETag: { $ref: '#/components/headers/ETag' }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/PlanResponse' }
-        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
-        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
-        '404': { $ref: ../common/responses.yaml#/components/responses/NotFound }
-    put:
-      tags: [planning]
-      summary: Replace an organization planning plan.
-      description: Planned slice operation using full-replacement PUT semantics; clients must send If-Match with the current ETag.
-      operationId: planningPlansReplace
-      x-civitas-module: planning
-      x-civitas-capability: planning.plans
-      x-civitas-route-id: planning.plans.replace
-      x-civitas-action-id: planning.plans.update
-      x-civitas-surface: organization
-      x-civitas-status: planned
-      x-civitas-permission: planning.plans.update
-      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current, optimistic-concurrency-required]
->>>>>>> theirs
       x-civitas-audit: write
       x-civitas-idempotency: required
       x-civitas-execution: synchronous
       parameters:
         - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
         - $ref: '#/components/parameters/PlanId'
-<<<<<<< ours
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/IfMatch'
-=======
-        - $ref: ../common/parameters.yaml#/components/parameters/IfMatch
-        - $ref: ../common/parameters.yaml#/components/parameters/IdempotencyKey
-      security: [{ bearerAuth: [] }]
->>>>>>> theirs
       requestBody:
         required: true
         content:
           application/json:
-<<<<<<< ours
             schema: { $ref: '#/components/schemas/PlanningPlanUpdateRequest' }
       responses:
         '200': { $ref: '#/components/responses/PlanningPlanResponse' }
-=======
-            schema: { $ref: '#/components/schemas/PlanReplaceRequest' }
-      responses:
-        '200':
-          description: Planning plan replaced.
-          headers:
-            ETag: { $ref: '#/components/headers/ETag' }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/PlanResponse' }
-        '400': { $ref: ../common/responses.yaml#/components/responses/BadRequest }
->>>>>>> theirs
         '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
         '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
         '404': { $ref: ../common/responses.yaml#/components/responses/NotFound }
         '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
-<<<<<<< ours
         '412': { $ref: ../common/responses.yaml#/components/responses/PreconditionFailed }
         '422': { $ref: ../common/responses.yaml#/components/responses/ValidationError }
   /o/{organizationId}/planning/profile:
@@ -235,17 +118,6 @@ paths:
       x-civitas-module: planning
       x-civitas-capability: planning.profile
       x-civitas-route-id: planning.profile.read
-=======
-        '412': { $ref: '#/components/responses/PreconditionFailed' }
-  /o/{organizationId}/planning/profile:
-    get:
-      tags: [planning]
-      summary: Get the organization planning profile.
-      operationId: planningProfileGet
-      x-civitas-module: planning
-      x-civitas-capability: planning.profile
-      x-civitas-route-id: planning.profile.get
->>>>>>> theirs
       x-civitas-action-id: planning.profile.read
       x-civitas-surface: organization
       x-civitas-status: planned
@@ -256,7 +128,6 @@ paths:
       x-civitas-execution: synchronous
       parameters:
         - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
-<<<<<<< ours
       responses:
         '200': { $ref: '#/components/responses/PlanningProfileResponse' }
         '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
@@ -272,53 +143,19 @@ paths:
       x-civitas-status: planned
       x-civitas-permission: planning.profile.manage
       x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
-=======
-      security: [{ bearerAuth: [] }]
-      responses:
-        '200':
-          description: Organization planning profile.
-          headers:
-            ETag: { $ref: '#/components/headers/ETag' }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/PlanningProfileResponse' }
-        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
-        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
-        '404': { $ref: ../common/responses.yaml#/components/responses/NotFound }
-    put:
-      tags: [planning]
-      summary: Replace the organization planning profile.
-      description: Planned slice operation using full-replacement PUT semantics; clients must send If-Match with the current ETag.
-      operationId: planningProfileReplace
-      x-civitas-module: planning
-      x-civitas-capability: planning.profile
-      x-civitas-route-id: planning.profile.replace
-      x-civitas-action-id: planning.profile.update
-      x-civitas-surface: organization
-      x-civitas-status: planned
-      x-civitas-permission: planning.profile.update
-      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current, optimistic-concurrency-required]
->>>>>>> theirs
       x-civitas-audit: write
       x-civitas-idempotency: required
       x-civitas-execution: synchronous
       parameters:
         - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
-<<<<<<< ours
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/IfMatch'
-=======
-        - $ref: ../common/parameters.yaml#/components/parameters/IfMatch
-        - $ref: ../common/parameters.yaml#/components/parameters/IdempotencyKey
-      security: [{ bearerAuth: [] }]
->>>>>>> theirs
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/PlanningProfileReplaceRequest' }
       responses:
-<<<<<<< ours
         '200': { $ref: '#/components/responses/PlanningProfileResponse' }
         '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
         '412': { $ref: ../common/responses.yaml#/components/responses/PreconditionFailed }
@@ -349,118 +186,3 @@ components:
     PlanningPlanEnvelope: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/PlanningPlan' }, meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta } } }
     PlanningProfileEnvelope: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/PlanningProfile' }, meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta } } }
     PlanningPlanCollectionEnvelope: { type: object, required: [data, page, links, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/PlanningPlan' } }, page: { type: object, required: [nextCursor, hasMore], properties: { nextCursor: { type: [string, 'null'] }, hasMore: { type: boolean } } }, links: { type: object }, meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta } } }
-=======
-        '200':
-          description: Planning profile replaced.
-          headers:
-            ETag: { $ref: '#/components/headers/ETag' }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/PlanningProfileResponse' }
-        '400': { $ref: ../common/responses.yaml#/components/responses/BadRequest }
-        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
-        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
-        '404': { $ref: ../common/responses.yaml#/components/responses/NotFound }
-        '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
-        '412': { $ref: '#/components/responses/PreconditionFailed' }
-components:
-  securitySchemes:
-    bearerAuth: { $ref: ../common/security.yaml#/components/securitySchemes/bearerAuth }
-  headers:
-    ETag:
-      description: Strong entity tag for optimistic concurrency and cache validation.
-      schema:
-        type: string
-  parameters:
-    PlanId:
-      name: planId
-      in: path
-      required: true
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 128
-        pattern: '^[A-Za-z0-9_-]+$'
-  responses:
-    PreconditionFailed:
-      description: The If-Match precondition failed.
-      content:
-        application/problem+json:
-          schema:
-            $ref: ../common/schemas.yaml#/components/schemas/Problem
-  schemas:
-    PlanStatus:
-      type: string
-      enum: [draft, active, archived]
-    Plan:
-      type: object
-      required: [id, name, status, profileId, createdAt, updatedAt]
-      properties:
-        id: { type: string }
-        name: { type: string, minLength: 1, maxLength: 200 }
-        status: { $ref: '#/components/schemas/PlanStatus' }
-        profileId: { type: string }
-        description: { type: [string, 'null'], maxLength: 2000 }
-        startsAt: { type: [string, 'null'], format: date-time }
-        endsAt: { type: [string, 'null'], format: date-time }
-        createdAt: { type: string, format: date-time }
-        updatedAt: { type: string, format: date-time }
-    PlanCreateRequest:
-      type: object
-      required: [name]
-      additionalProperties: false
-      properties:
-        name: { type: string, minLength: 1, maxLength: 200 }
-        description: { type: [string, 'null'], maxLength: 2000 }
-        startsAt: { type: [string, 'null'], format: date-time }
-        endsAt: { type: [string, 'null'], format: date-time }
-    PlanReplaceRequest:
-      type: object
-      required: [name, status]
-      additionalProperties: false
-      properties:
-        name: { type: string, minLength: 1, maxLength: 200 }
-        status: { $ref: '#/components/schemas/PlanStatus' }
-        description: { type: [string, 'null'], maxLength: 2000 }
-        startsAt: { type: [string, 'null'], format: date-time }
-        endsAt: { type: [string, 'null'], format: date-time }
-    PlanResponse:
-      type: object
-      required: [data, meta]
-      properties:
-        data: { $ref: '#/components/schemas/Plan' }
-        meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta }
-    PlanCollection:
-      type: object
-      required: [data, page, meta]
-      properties:
-        data:
-          type: array
-          items: { $ref: '#/components/schemas/Plan' }
-        page: { $ref: ../common/schemas.yaml#/components/schemas/Page }
-        meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta }
-    PlanningProfile:
-      type: object
-      required: [id, organizationId, horizonMonths, cadence, updatedAt]
-      properties:
-        id: { type: string }
-        organizationId: { type: string }
-        horizonMonths: { type: integer, minimum: 1, maximum: 120 }
-        cadence: { type: string, enum: [monthly, quarterly, annual] }
-        defaultScenario: { type: [string, 'null'], maxLength: 128 }
-        updatedAt: { type: string, format: date-time }
-    PlanningProfileReplaceRequest:
-      type: object
-      required: [horizonMonths, cadence]
-      additionalProperties: false
-      properties:
-        horizonMonths: { type: integer, minimum: 1, maximum: 120 }
-        cadence: { type: string, enum: [monthly, quarterly, annual] }
-        defaultScenario: { type: [string, 'null'], maxLength: 128 }
-    PlanningProfileResponse:
-      type: object
-      required: [data, meta]
-      properties:
-        data: { $ref: '#/components/schemas/PlanningProfile' }
-        meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta }
->>>>>>> theirs

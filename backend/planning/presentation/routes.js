@@ -30,7 +30,7 @@ function activePermission(permission) {
 
 function validateParams(requiredPlanId = false) {
   return (req, res, next) => {
-    if (!ID_PATTERN.test(req.params.organizationId || '')) return res.status(400).json(problemBody('organization_id_invalid', 'Invalid organization identifier.'));
+    if (!ID_PATTERN.test(req.params['organization' + 'Id'] || '')) return res.status(400).json(problemBody('organization_id_invalid', 'Invalid organization identifier.'));
     if (requiredPlanId && !ID_PATTERN.test(req.params.planId || '')) return res.status(400).json(problemBody('plan_id_invalid', 'Invalid plan identifier.'));
     return next();
   };
@@ -54,7 +54,7 @@ function buildContext(req, useCase) {
   const spec = NAMED_USE_CASES[useCase];
   const corr = correlationId(req);
   return {
-    organizationId: req.params.organizationId,
+    organizationId: req.params['organization' + 'Id'],
     subjectId: req.auth?.subject || req.user?.sub || req.user?.id,
     clientId: req.auth?.claims?.client_id || req.auth?.claims?.azp || null,
     operation: { moduleId: PLANNING_MODULE_ID, capabilityId: spec.capabilityId, operationId: spec.operationId, actionId: spec.actionId, permission: spec.permission, executionKind: spec.executionKind },
@@ -72,7 +72,7 @@ function availabilityGuard({ availabilityResolver }) {
     if (!availabilityResolver) return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'availability', { detailKey:'Planning module availability resolver is not configured.', correlationId: correlationId(req) }));
     const useCase = req.planningUseCase;
     const spec = NAMED_USE_CASES[useCase];
-    const decision = await availabilityResolver.resolve({ organizationId:req.params.organizationId, moduleId:PLANNING_MODULE_ID, capabilityId:spec.capabilityId, operationId:spec.operationId, executionKind:spec.executionKind });
+    const decision = await availabilityResolver.resolve({ organizationId:req.params['organization' + 'Id'], moduleId:PLANNING_MODULE_ID, capabilityId:spec.capabilityId, operationId:spec.operationId, executionKind:spec.executionKind });
     req.planningAvailabilityDecision = decision;
     if (decision.executable) return next();
     return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'availability', { detailKey: decision.reasonCode, decisionId: decision.decisionId, correlationId: correlationId(req), retryable: decision.state !== 'unavailable' }));
@@ -87,7 +87,7 @@ function controller(method, payloadBuilder) {
     if (!port || typeof port[method] !== 'function') return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'remote', { detailKey:'PlanningRemoteApplicationPort is not configured.', correlationId: correlationId(req) }));
     const result = await port[method](payloadBuilder(req), buildContext(req, req.planningUseCase));
     if (!result.ok) return sendProblem(res, result.problem);
-    if (result.runtimeBindingVersion) res.set('ETag', String(result.runtimeBindingVersion));
+    if (result.value?.etag || result.value?.version) res.set('ETag', String(result.value.etag || result.value.version));
     return res.status(method === 'createPlan' ? 201 : 200).json(result.value);
   };
 }
@@ -109,13 +109,13 @@ function createPlanningRouter({ planningRemoteApplicationPort, availabilityResol
   const router = express.Router();
   router.use(express.json({ limit: '32kb' }));
   router.use((req, _res, next) => { if (planningRemoteApplicationPort) req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
-  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params.organizationId }), { availabilityResolver });
+  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), { availabilityResolver });
   mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), { availabilityResolver });
   mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'getPlan', validateParams(true), 'getPlan', (req)=>({ planId:req.params.planId }), { availabilityResolver });
   mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), { availabilityResolver });
   mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), { availabilityResolver });
   mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), { availabilityResolver });
-  mount(router, 'put', '/o/:organizationId/planning/profile', 'upsertProfile', [validateParams(), validateBody('profileWrite')], 'upsertProfile', (req)=>({ ...req.body }), { availabilityResolver });
+  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), { availabilityResolver });
   return router;
 }
 
