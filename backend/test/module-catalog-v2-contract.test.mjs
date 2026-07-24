@@ -91,11 +91,12 @@ test('status transition rules reject and allow expected paths', () => {
   assert.equal(assertTransition('planned','active')[0].code, 'MODULE_TRANSITION_EVIDENCE_REQUIRED');
 });
 
-test('negative regression: planning is not mounted or activated by this catalog foundation', () => {
+test('negative regression: planning is not activated and only slice OpenAPI routes are mounted', () => {
   const catalogText = readFileSync(repo('contracts/authorization/civitas-permission-catalog.yaml'), 'utf8');
   assert.equal(/namespace": "planning"[\s\S]{0,500}targetStatus": "active"/.test(catalogText), false, 'planning permissions must not be active');
   const openapi = readFileSync(repo('contracts/openapi/civitas-api.yaml'), 'utf8');
-  assert.equal(/\/planning\b/i.test(openapi), false, 'planning route must not be mounted in OpenAPI');
+  assert.equal(/\/o\/\{organizationId\}\/planning\/(plans|profile):/i.test(openapi), true, 'planning slice routes must be mounted in OpenAPI');
+  assert.equal(/\/planning\/(?!plans|profile)/i.test(openapi), false, 'non-slice planning routes must not be mounted in OpenAPI');
   const generatedInventory = readFileSync(repo('contracts/modules/generated/module-catalog-v2.inventory.json'), 'utf8');
   assert.equal(/runtimeEndpoint|routeMount|tenantBinding|healthSnapshot|secretsRef/.test(generatedInventory), false, 'inventory must not contain live runtime binding fields');
 });

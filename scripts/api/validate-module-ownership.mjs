@@ -4,7 +4,7 @@ import path from 'node:path';
 const directory = 'contracts/openapi/modules';
 const modules = new Set([
   'lms', 'crm', 'marketing', 'community', 'payments',
-  'hr', 'scheduling', 'support', 'analytics', 'reports',
+  'hr', 'scheduling', 'support', 'analytics', 'reports', 'planning',
 ]);
 const providers = ['moodle', 'mautic', 'matomo', 'calcom', 'freescout', 'stripe'];
 const roles = ['teacher-view', 'student-view', 'parent-view', 'admin-view'];

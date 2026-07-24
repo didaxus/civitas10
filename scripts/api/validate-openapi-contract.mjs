@@ -6,7 +6,7 @@ const api = fs.readFileSync(path.join(root, 'civitas-api.yaml'), 'utf8');
 const failures = [];
 const requiredModules = [
   'lms', 'crm', 'marketing', 'community', 'payments',
-  'hr', 'scheduling', 'support', 'analytics', 'reports',
+  'hr', 'scheduling', 'support', 'analytics', 'reports', 'planning',
 ];
 
 if (!/^openapi: 3\.1\.0$/m.test(api)) failures.push('civitas-api.yaml must freeze OpenAPI 3.1.0');
