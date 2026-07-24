@@ -1,5 +1,5 @@
 const { sql } = require("drizzle-orm");
-const { pgTable, uuid, varchar, text, bigint, timestamp, uniqueIndex, index } = require("drizzle-orm/pg-core");
+const { pgTable, uuid, varchar, text, bigint, timestamp, uniqueIndex, index, jsonb } = require("drizzle-orm/pg-core");
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -77,8 +77,27 @@ const organizationFederatedAssignmentSources = pgTable("organization_federated_a
   mappingIdx: index("organization_federated_assignment_sources_mapping_idx").on(table.mappingId, table.mappingVersion),
 }));
 
+const organizationExternalDirectoryObjects = pgTable("organization_external_directory_objects", {
+  id: varchar("id", { length: 64 }).primaryKey(),
+  logtoOrganizationId: varchar("logto_organization_id", { length: 128 }),
+  connectionId: uuid("connection_id").notNull().references(() => organizationIdentityConnections.id, { onDelete: "cascade" }),
+  objectType: varchar("object_type", { length: 40 }).notNull(),
+  externalId: varchar("external_id", { length: 255 }).notNull(),
+  displayName: varchar("display_name", { length: 255 }).notNull(),
+  sourceKind: varchar("source_kind", { length: 80 }).notNull().default("directory_sync_scim"),
+  state: varchar("state", { length: 40 }).notNull().default("active"),
+  members: jsonb("members").notNull().default(sql`'[]'::jsonb`),
+  canonicalRoleId: varchar("canonical_role_id", { length: 128 }),
+  version: bigint("version", { mode: "number" }).notNull().default(1),
+  ...timestamps,
+}, (table) => ({
+  externalUidx: uniqueIndex("organization_external_directory_objects_external_uidx").on(table.connectionId, table.objectType, table.externalId),
+  connectionIdx: index("organization_external_directory_objects_connection_idx").on(table.connectionId, table.objectType, table.state),
+}));
+
 module.exports = {
   organizationIdentityConnections,
   organizationExternalRoleMappings,
   organizationFederatedAssignmentSources,
+  organizationExternalDirectoryObjects,
 };
