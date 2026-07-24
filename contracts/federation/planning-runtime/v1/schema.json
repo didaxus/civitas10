@@ -1,1 +1,156 @@
-{"schemaVersion":"planning-runtime/v1","status":"planned","mediaType":"application/vnd.civitas.planning-runtime.v1+json","problemMediaType":"application/problem+json","requiredHeaders":["Content-Type","Accept","X-Civitas-Contract-Version","X-Civitas-Execution-Context","X-Correlation-Id"],"moduleExecutionContext":"civitas-module-execution-context/v1","serviceIdentityRequired":true,"idempotency":{"writes":"required","reads":"forbidden"},"concurrency":{"mutations":"If-Match when expectedVersion/etag exists"},"maximumRequestBytes":32768,"maximumResponseBytes":65536,"operations":["planning.plans.create","planning.plans.list","planning.plans.get","planning.plans.update","planning.plans.archive","planning.profile.get","planning.profile.upsert"]}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.invalid/federation/planning-runtime/v1/schema.json",
+  "title": "Civitas Planning Runtime Contract",
+  "schemaVersion": "planning-runtime/v1",
+  "status": "planned",
+  "mediaType": "application/vnd.civitas.planning-runtime.v1+json",
+  "problemMediaType": "application/problem+json",
+  "moduleExecutionContext": "civitas-module-execution-context/v1",
+  "serviceIdentityRequired": true,
+  "limits": {
+    "maximumRequestBytes": 32768,
+    "maximumResponseBytes": 65536
+  },
+  "headers": {
+    "required": {
+      "Content-Type": {
+        "required": true,
+        "value": "application/vnd.civitas.planning-runtime.v1+json",
+        "appliesTo": ["requests-with-body"]
+      },
+      "Accept": {
+        "required": true,
+        "value": "application/vnd.civitas.planning-runtime.v1+json, application/problem+json"
+      },
+      "X-Civitas-Contract-Version": {
+        "required": true,
+        "value": "planning-runtime/v1"
+      },
+      "X-Civitas-Execution-Context": {
+        "required": true,
+        "valueSchemaRef": "civitas-module-execution-context/v1",
+        "encoding": "base64url-json"
+      },
+      "X-Correlation-Id": {
+        "required": true,
+        "schema": { "type": "string", "minLength": 8, "maxLength": 128 }
+      }
+    },
+    "idempotency": {
+      "Idempotency-Key": {
+        "writes": "required",
+        "reads": "forbidden",
+        "schema": { "type": "string", "minLength": 16, "maxLength": 255 }
+      }
+    },
+    "concurrency": {
+      "If-Match": {
+        "requiredFor": ["planning.plans.update", "planning.profile.replace"],
+        "schema": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "semantics": "Must match the current resource etag or version before mutation is accepted."
+      },
+      "ETag": {
+        "returnedBy": ["planning.plans.create", "planning.plans.get", "planning.plans.update", "planning.profile.get", "planning.profile.replace"],
+        "schema": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    }
+  },
+  "activeRuntimeOperations": [
+    "planning.plans.create",
+    "planning.plans.list",
+    "planning.plans.get",
+    "planning.plans.update",
+    "planning.profile.get",
+    "planning.profile.replace"
+  ],
+  "plannedOperations": {
+    "planning.plans.archive": {
+      "status": "planned-not-mounted",
+      "reason": "Archive lifecycle is reserved for a later mounted runtime operation and is not part of the active v1 runtime operation list."
+    }
+  },
+  "operations": {
+    "planning.plans.create": {
+      "executionKind": "write",
+      "requestSchema": { "$ref": "#/$defs/CreatePlanRequest" },
+      "resultSchema": { "$ref": "#/$defs/PlanResult" },
+      "problemSchema": { "$ref": "#/$defs/PlanningProblem" },
+      "requiredHeaders": ["Content-Type", "Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id", "Idempotency-Key"]
+    },
+    "planning.plans.list": {
+      "executionKind": "read",
+      "requestSchema": { "$ref": "#/$defs/ListPlansRequest" },
+      "resultSchema": { "$ref": "#/$defs/ListPlansResult" },
+      "problemSchema": { "$ref": "#/$defs/PlanningProblem" },
+      "requiredHeaders": ["Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id"]
+    },
+    "planning.plans.get": {
+      "executionKind": "read",
+      "requestSchema": { "$ref": "#/$defs/GetPlanRequest" },
+      "resultSchema": { "$ref": "#/$defs/PlanResult" },
+      "problemSchema": { "$ref": "#/$defs/PlanningProblem" },
+      "requiredHeaders": ["Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id"]
+    },
+    "planning.plans.update": {
+      "executionKind": "write",
+      "requestSchema": { "$ref": "#/$defs/UpdatePlanRequest" },
+      "resultSchema": { "$ref": "#/$defs/PlanResult" },
+      "problemSchema": { "$ref": "#/$defs/PlanningProblem" },
+      "requiredHeaders": ["Content-Type", "Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id", "Idempotency-Key", "If-Match"]
+    },
+    "planning.profile.get": {
+      "executionKind": "read",
+      "requestSchema": { "$ref": "#/$defs/GetProfileRequest" },
+      "resultSchema": { "$ref": "#/$defs/ProfileResult" },
+      "problemSchema": { "$ref": "#/$defs/PlanningProblem" },
+      "requiredHeaders": ["Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id"]
+    },
+    "planning.profile.replace": {
+      "executionKind": "write",
+      "requestSchema": { "$ref": "#/$defs/ReplaceProfileRequest" },
+      "resultSchema": { "$ref": "#/$defs/ProfileResult" },
+      "problemSchema": { "$ref": "#/$defs/PlanningProblem" },
+      "requiredHeaders": ["Content-Type", "Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id", "Idempotency-Key", "If-Match"]
+    }
+  },
+  "compatibility": {
+    "matrixRef": "artifacts/federation/p3-009-compatibility-matrix.json",
+    "testVectorRefs": [
+      "contracts/federation/planning-runtime/v1/test-vectors/plans-create.json",
+      "contracts/federation/planning-runtime/v1/test-vectors/plans-list.json",
+      "contracts/federation/planning-runtime/v1/test-vectors/plans-get.json",
+      "contracts/federation/planning-runtime/v1/test-vectors/plans-update.json",
+      "contracts/federation/planning-runtime/v1/test-vectors/profile-get.json",
+      "contracts/federation/planning-runtime/v1/test-vectors/profile-replace.json",
+      "contracts/federation/planning-runtime/v1/test-vectors/problems.json"
+    ]
+  },
+  "problemTypes": {
+    "invalid_request": { "status": 400, "type": "https://problems.civitas.invalid/planning-runtime/v1/invalid-request" },
+    "unauthorized": { "status": 401, "type": "https://problems.civitas.invalid/planning-runtime/v1/unauthorized" },
+    "forbidden": { "status": 403, "type": "https://problems.civitas.invalid/planning-runtime/v1/forbidden" },
+    "not_found": { "status": 404, "type": "https://problems.civitas.invalid/planning-runtime/v1/not-found" },
+    "conflict": { "status": 409, "type": "https://problems.civitas.invalid/planning-runtime/v1/conflict" },
+    "precondition_required": { "status": 428, "type": "https://problems.civitas.invalid/planning-runtime/v1/precondition-required" },
+    "precondition_failed": { "status": 412, "type": "https://problems.civitas.invalid/planning-runtime/v1/precondition-failed" },
+    "idempotency_replay_conflict": { "status": 409, "type": "https://problems.civitas.invalid/planning-runtime/v1/idempotency-replay-conflict" },
+    "runtime_unavailable": { "status": 503, "type": "https://problems.civitas.invalid/planning-runtime/v1/runtime-unavailable" }
+  },
+  "$defs": {
+    "PlanId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "PlanStatus": { "type": "string", "enum": ["draft", "active", "paused", "completed"] },
+    "Plan": { "type": "object", "additionalProperties": false, "required": ["id", "organizationId", "title", "status", "version", "etag"], "properties": { "id": { "$ref": "#/$defs/PlanId" }, "organizationId": { "type": "string", "minLength": 1 }, "title": { "type": "string", "minLength": 1, "maxLength": 240 }, "description": { "type": "string", "maxLength": 4000 }, "status": { "$ref": "#/$defs/PlanStatus" }, "version": { "type": "integer", "minimum": 1 }, "etag": { "type": "string", "minLength": 1 }, "createdAt": { "type": "string", "format": "date-time" }, "updatedAt": { "type": "string", "format": "date-time" } } },
+    "CreatePlanRequest": { "type": "object", "additionalProperties": false, "required": ["organizationId", "title"], "properties": { "organizationId": { "type": "string", "minLength": 1 }, "title": { "type": "string", "minLength": 1, "maxLength": 240 }, "description": { "type": "string", "maxLength": 4000 }, "status": { "$ref": "#/$defs/PlanStatus" } } },
+    "ListPlansRequest": { "type": "object", "additionalProperties": false, "required": ["organizationId"], "properties": { "organizationId": { "type": "string", "minLength": 1 }, "status": { "$ref": "#/$defs/PlanStatus" }, "pageSize": { "type": "integer", "minimum": 1, "maximum": 100 }, "pageToken": { "type": "string", "maxLength": 512 } } },
+    "GetPlanRequest": { "type": "object", "additionalProperties": false, "required": ["organizationId", "planId"], "properties": { "organizationId": { "type": "string", "minLength": 1 }, "planId": { "$ref": "#/$defs/PlanId" } } },
+    "UpdatePlanRequest": { "type": "object", "additionalProperties": false, "required": ["organizationId", "planId", "patch"], "properties": { "organizationId": { "type": "string", "minLength": 1 }, "planId": { "$ref": "#/$defs/PlanId" }, "expectedVersion": { "type": "integer", "minimum": 1 }, "patch": { "type": "object", "additionalProperties": false, "minProperties": 1, "properties": { "title": { "type": "string", "minLength": 1, "maxLength": 240 }, "description": { "type": "string", "maxLength": 4000 }, "status": { "$ref": "#/$defs/PlanStatus" } } } } },
+    "PlanResult": { "type": "object", "additionalProperties": false, "required": ["plan"], "properties": { "plan": { "$ref": "#/$defs/Plan" } } },
+    "ListPlansResult": { "type": "object", "additionalProperties": false, "required": ["plans"], "properties": { "plans": { "type": "array", "items": { "$ref": "#/$defs/Plan" } }, "nextPageToken": { "type": "string", "maxLength": 512 } } },
+    "PlanningProfile": { "type": "object", "additionalProperties": false, "required": ["organizationId", "planningHorizon", "timezone", "version", "etag"], "properties": { "organizationId": { "type": "string", "minLength": 1 }, "planningHorizon": { "type": "string", "enum": ["quarter", "semester", "year"] }, "timezone": { "type": "string", "minLength": 1, "maxLength": 64 }, "defaultPlanStatus": { "$ref": "#/$defs/PlanStatus" }, "version": { "type": "integer", "minimum": 1 }, "etag": { "type": "string", "minLength": 1 } } },
+    "GetProfileRequest": { "type": "object", "additionalProperties": false, "required": ["organizationId"], "properties": { "organizationId": { "type": "string", "minLength": 1 } } },
+    "ReplaceProfileRequest": { "type": "object", "additionalProperties": false, "required": ["profile"], "properties": { "expectedVersion": { "type": "integer", "minimum": 1 }, "profile": { "$ref": "#/$defs/PlanningProfile" } } },
+    "ProfileResult": { "type": "object", "additionalProperties": false, "required": ["profile"], "properties": { "profile": { "$ref": "#/$defs/PlanningProfile" } } },
+    "PlanningProblem": { "type": "object", "additionalProperties": false, "required": ["type", "title", "status", "code", "correlationId"], "properties": { "type": { "type": "string", "format": "uri" }, "title": { "type": "string" }, "status": { "type": "integer", "minimum": 400, "maximum": 599 }, "detail": { "type": "string" }, "instance": { "type": "string" }, "code": { "type": "string", "enum": ["invalid_request", "unauthorized", "forbidden", "not_found", "conflict", "precondition_required", "precondition_failed", "idempotency_replay_conflict", "runtime_unavailable"] }, "correlationId": { "type": "string" }, "retryable": { "type": "boolean" }, "causes": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["field", "reason"], "properties": { "field": { "type": "string" }, "reason": { "type": "string" } } } } } }
+  }
+}

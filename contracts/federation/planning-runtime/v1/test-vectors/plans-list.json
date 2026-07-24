@@ -1,0 +1,5 @@
+{
+  "operationId": "planning.plans.list",
+  "request": { "organizationId": "org-A", "status": "draft", "pageSize": 50 },
+  "result": { "plans": [{ "id": "plan-1", "organizationId": "org-A", "title": "FY27 strategic plan", "status": "draft", "version": 1, "etag": "W/\"plan-1:1\"" }] }
+}

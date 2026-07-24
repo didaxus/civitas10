@@ -1,0 +1,6 @@
+{
+  "operationId": "planning.plans.update",
+  "headers": { "If-Match": "W/\"plan-1:1\"" },
+  "request": { "organizationId": "org-A", "planId": "plan-1", "expectedVersion": 1, "patch": { "status": "active" } },
+  "result": { "plan": { "id": "plan-1", "organizationId": "org-A", "title": "FY27 strategic plan", "status": "active", "version": 2, "etag": "W/\"plan-1:2\"" } }
+}

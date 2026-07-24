@@ -1,0 +1,11 @@
+{
+  "operationId": "planning.plans.update",
+  "problem": {
+    "type": "https://problems.civitas.invalid/planning-runtime/v1/precondition-failed",
+    "title": "Precondition failed",
+    "status": 412,
+    "code": "precondition_failed",
+    "correlationId": "corr-12345678",
+    "retryable": false
+  }
+}

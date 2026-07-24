@@ -1,0 +1,5 @@
+{
+  "operationId": "planning.profile.get",
+  "request": { "organizationId": "org-A" },
+  "result": { "profile": { "organizationId": "org-A", "planningHorizon": "year", "timezone": "UTC", "defaultPlanStatus": "draft", "version": 1, "etag": "W/\"profile:org-A:1\"" } }
+}
