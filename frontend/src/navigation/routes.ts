@@ -35,11 +35,13 @@ const ownerOrganizationGovernanceRoleNamesRoute = defineRoute("/owner/organizati
 const ownerOrganizationGovernancePreviewRoute = defineRoute("/owner/organizations/:organizationId/governance/preview");
 const ownerOrganizationGovernanceAuditRoute = defineRoute("/owner/organizations/:organizationId/governance/audit");
 const ownerOrganizationGovernancePeopleSegmentationRoute = defineRoute("/owner/organizations/:organizationId/governance/people-segmentation");
+const ownerOrganizationGovernanceProvisioningRoute = defineRoute("/owner/organizations/:organizationId/governance/identity-provisioning");
 const ownerOrganizationOperationsRoute = defineRoute("/owner/organizations/:organizationId/operations");
 const tenantGovernanceRoute = defineRoute("/o/:organizationId/settings/governance");
 const tenantGovernanceRolesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/roles");
 const tenantGovernanceRoleNamesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/role-names");
 const tenantGovernanceStructureRoute = defineRoute("/o/:organizationId/settings/governance/organization-model/structure");
+const tenantGovernanceProvisioningRoute = defineRoute("/o/:organizationId/settings/governance/identity-provisioning");
 const tenantLmsGradesRoute = defineRoute("/o/:organizationId/lms/grades");
 const tenantLmsGroupsRoute = defineRoute("/o/:organizationId/lms/groups");
 const ownerLogsRoute = staticRoute("/owner/logs");
@@ -69,11 +71,13 @@ export const appRoutes = {
   ownerOrganizationGovernancePreview: appRoute(ownerOrganizationGovernancePreviewRoute, "Access explorer", "governance", "Read-only access explorer for the selected organization."),
   ownerOrganizationGovernanceAudit: appRoute(ownerOrganizationGovernanceAuditRoute, "Audit log", "governance", "Audit and diagnostics for the selected organization."),
   ownerOrganizationGovernancePeopleSegmentation: appRoute(ownerOrganizationGovernancePeopleSegmentationRoute, "People segmentation", "governance", "People segmentation is not available yet.", false),
+  ownerOrganizationGovernanceProvisioning: appRoute(ownerOrganizationGovernanceProvisioningRoute, "Identity provisioning", "governance", "SCIM provisioning lifecycle, credentials, mappings and operations for the selected organization."),
   ownerOrganizationOperations: appRoute(ownerOrganizationOperationsRoute, "Operations", "operations", "Operational health and capability runtime for the selected organization."),
   tenantGovernance: appRoute(tenantGovernanceRoute, "Governance", "governance", "Studio tenant para activaciones, asignaciones y navegación restrictiva dentro de la organización."),
   tenantGovernanceRoles: appRoute(tenantGovernanceRolesRoute, "Role permissions", "governance", "Tenant activation editor for role permissions within Owner Ceiling."),
   tenantGovernanceRoleNames: appRoute(tenantGovernanceRoleNamesRoute, "Role names", "governance", "Tenant role alias editor for display-only canonical role labels."),
   tenantGovernanceStructure: appRoute(tenantGovernanceStructureRoute, "Structure and classification", "governance", "Tenant organization-unit structure and classification workspace."),
+  tenantGovernanceProvisioning: appRoute(tenantGovernanceProvisioningRoute, "Identity provisioning", "governance", "SCIM provisioning lifecycle, credentials, mappings and operations."),
   tenantLmsGrades: appRoute(tenantLmsGradesRoute, "Grades", "grades", "Superficie tenant LMS para calificaciones bajo contexto organizacional."),
   tenantLmsGroups: appRoute(tenantLmsGroupsRoute, "Groups", "groups", "LMS groups visible through server-side group leadership authorization."),
   ownerLogs: appRoute(ownerLogsRoute, "Audit / diagnostics", "operations", "Trazabilidad global de eventos operativos owner.", false),
@@ -120,6 +124,7 @@ export const routeMetadata: Record<string, RouteMetadata> = {
   [appRoutes.ownerOrganizationGovernancePreview.path]: { label: appRoutes.ownerOrganizationGovernancePreview.label, parentPath: appRoutes.ownerOrganizationGovernance.path },
   [appRoutes.ownerOrganizationGovernanceAudit.path]: { label: appRoutes.ownerOrganizationGovernanceAudit.label, parentPath: appRoutes.ownerOrganizationGovernance.path },
   [appRoutes.ownerOrganizationGovernancePeopleSegmentation.path]: { label: appRoutes.ownerOrganizationGovernancePeopleSegmentation.label, parentPath: appRoutes.ownerOrganizationGovernance.path },
+  [appRoutes.ownerOrganizationGovernanceProvisioning.path]: { label: appRoutes.ownerOrganizationGovernanceProvisioning.label, parentPath: appRoutes.ownerOrganizationGovernance.path },
   [appRoutes.ownerOrganizationOperations.path]: { label: appRoutes.ownerOrganizationOperations.label, parentPath: appRoutes.ownerOrganizationState.path },
   [appRoutes.ownerSystem.path]: { label: appRoutes.ownerSystem.label },
   [appRoutes.ownerWorkerQueues.path]: { label: appRoutes.ownerWorkerQueues.label, parentPath: appRoutes.ownerSystem.path },
@@ -135,6 +140,7 @@ export const routeMetadata: Record<string, RouteMetadata> = {
   [appRoutes.tenantGovernanceRoles.path]: { label: appRoutes.tenantGovernanceRoles.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantGovernanceRoleNames.path]: { label: appRoutes.tenantGovernanceRoleNames.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantGovernanceStructure.path]: { label: appRoutes.tenantGovernanceStructure.label, parentPath: appRoutes.tenantGovernance.path },
+  [appRoutes.tenantGovernanceProvisioning.path]: { label: appRoutes.tenantGovernanceProvisioning.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantLmsGroups.path]: { label: appRoutes.tenantLmsGroups.label },
   [appRoutes.tenantLmsGrades.path]: { label: appRoutes.tenantLmsGrades.label },
 };

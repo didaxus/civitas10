@@ -65,6 +65,7 @@ function AppContent() {
       <Route path={appRoutes.ownerOrganizationGovernanceRoleNames.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerOrganizationGovernancePreview.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerOrganizationGovernanceAudit.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
+      <Route path={appRoutes.ownerOrganizationGovernanceProvisioning.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerOrganizationGovernancePeopleSegmentation.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerSystem.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-worker-queues"><OwnerWorkerQueuesPage /></ScreenGate></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerWorkerQueues.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-worker-queues"><OwnerWorkerQueuesPage /></ScreenGate></OwnerRouteGuard>} />
@@ -72,6 +73,7 @@ function AppContent() {
       <Route path={appRoutes.tenantGovernanceRoles.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceRoleNames.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceStructure.path} element={<TenantGovernanceRoute />} />
+      <Route path={appRoutes.tenantGovernanceProvisioning.path} element={<TenantGovernanceRoute />} />
       <Route path="/:orgId" element={<OrganizationPage />} />
     </Routes>
   );
