@@ -35,8 +35,8 @@ async function request(app, method, path, { headers = {}, body } = {}) {
 
 function makeApp() {
   const repository = createInMemoryIdentityFederationRepository([
-    { id: 'saml-a', organizationId: 'tenant-a', name: 'SAML A', version: 3, status: 'draft' },
-    { id: 'saml-b', organizationId: 'tenant-b', name: 'SAML B', version: 5, status: 'draft' },
+    { id: 'saml-a', organizationId: 'tenant-a', name: 'SAML A', version: 3, status: 'draft', protocol: 'scim', kind: 'scim' },
+    { id: 'saml-b', organizationId: 'tenant-b', name: 'SAML B', version: 5, status: 'draft', protocol: 'scim', kind: 'scim' },
   ])
   const app = express()
   registerIdentityFederationRoutes({ secureRoute: createSecurityPolicyRegistry({ app }), requireSafeOrganizationIdParam: safeOrg, requireGlobalAccess: fakeGlobalAccess, requireGlobalOwner: (_req, _res, next) => next(), requireOrganizationAccess: fakeOrgAccess, requireOrg, requireOrganizationRole: fakeRole, requirePermission: fakePermission, sharedAuth: roles, apiResource: 'https://civitas.didaxus.com/api', service: createIdentityFederationService({ repository }) })
@@ -78,4 +78,33 @@ test('canonical permission denial uses permission middleware', async () => {
   const denied = await request(makeApp(), 'GET', '/api/v1/o/tenant-a/identity/federation/providers', { headers: { 'x-scopes': 'org.documents.create' } })
   assert.equal(denied.status, 403)
   assert.equal(denied.body.requiredPermission, 'org.documents.read')
+})
+
+test('SCIM REST v1 management routes enforce tenant context and connection ownership', async () => {
+  const app = makeApp()
+  const routes = app._router.stack.flatMap((l) => l.route ? Object.keys(l.route.methods).map((m) => `${m.toUpperCase()} ${l.route.path}`) : [])
+  for (const route of [
+    'GET /api/v1/owner/organizations/:organizationId/scim/connections',
+    'POST /api/v1/owner/organizations/:organizationId/scim/connections',
+    'POST /api/v1/owner/organizations/:organizationId/scim/connections/:connectionId/credentials',
+    'GET /api/v1/o/:organizationId/scim/connections/:connectionId',
+    'PUT /api/v1/o/:organizationId/scim/connections/:connectionId',
+    'POST /api/v1/o/:organizationId/scim/connections/:connectionId/reconciliation-plans',
+    'GET /api/v1/o/:organizationId/scim/connections/:connectionId/reconciliation-plans',
+    'POST /api/v1/o/:organizationId/scim/connections/:connectionId/reconciliation-runs',
+    'GET /api/v1/o/:organizationId/scim/connections/:connectionId/reconciliation-runs',
+  ]) assert(routes.includes(route), route)
+
+  const connection = await request(app, 'GET', '/api/v1/o/tenant-a/scim/connections/saml-a')
+  assert.equal(connection.status, 200)
+  assert.equal(connection.body.connection.organizationId, 'tenant-a')
+  assert.equal((await request(app, 'GET', '/api/v1/o/tenant-a/scim/connections/saml-a', { headers: { 'x-auth-org': 'tenant-b' } })).status, 403)
+  assert.equal((await request(app, 'GET', '/api/v1/o/tenant-a/scim/connections/saml-b')).status, 404)
+})
+
+test('SCIM credentials and reconciliation process routes require Idempotency-Key', async () => {
+  const app = makeApp()
+  assert.equal((await request(app, 'POST', '/api/v1/owner/organizations/tenant-a/scim/connections/saml-a/credentials', { body: { bearerToken: 'secret' } })).status, 400)
+  assert.equal((await request(app, 'POST', '/api/v1/o/tenant-a/scim/connections/saml-a/reconciliation-plans', { body: { changes: [] } })).status, 400)
+  assert.equal((await request(app, 'POST', '/api/v1/o/tenant-a/scim/connections/saml-a/reconciliation-runs', { body: {} })).status, 400)
 })

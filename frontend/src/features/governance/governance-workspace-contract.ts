@@ -1,4 +1,4 @@
-import { IconBuilding, IconClipboardCheck, IconDatabase, IconEyeCheck, IconListDetails, IconRoute, IconScale, IconSitemap, IconUsersGroup, type Icon } from "@tabler/icons-react";
+import { IconBuilding, IconClipboardCheck, IconDatabase, IconEyeCheck, IconListDetails, IconRoute, IconScale, IconSitemap, IconUsersGroup, IconUserCog, type Icon } from "@tabler/icons-react";
 import { appRoutes } from "../../navigation/routes";
 import type { GovernanceModuleKey, GovernanceSurface } from "./contracts";
 
@@ -12,7 +12,8 @@ export type GovernanceWorkspaceItemId =
   | "groups-courses"
   | "people-segmentation"
   | "access-explorer"
-  | "audit-log";
+  | "audit-log"
+  | "identity-provisioning";
 
 export type GovernanceWorkspaceGroupId = "operations" | "access-policy" | "organization-model" | "control-evidence";
 
@@ -70,6 +71,7 @@ export const GOVERNANCE_WORKSPACE_GROUPS: GovernanceWorkspaceGroup[] = [
     label: "Control and evidence",
     items: [
       { id: "access-explorer", label: "Access explorer", routeKey: "ownerOrganizationGovernancePreview", tenantTab: "access-explorer", moduleKey: "access-preview", ownerPermissionRequirement: { mode: "all", permissions: ["owner.runtime.operations.execute"] }, tenantPermissionRequirement: { mode: "all", permissions: ["org.documents.read"] }, actionId: "governance.accessExplorer.view", entity: "authorization decisions", endpoint: "/governance/access-preview", sourceOfTruth: "server-side authorization evaluator", status: "active", icon: IconEyeCheck },
+      { id: "identity-provisioning", label: "Identity provisioning", routeKey: "ownerOrganizationGovernanceProvisioning", tenantTab: "identity-provisioning", moduleKey: "identity-provisioning", ownerPermissionRequirement: { mode: "all", permissions: ["owner.runtime.operations.execute"] }, tenantPermissionRequirement: { mode: "all", permissions: ["org.documents.create"] }, actionId: "governance.identityProvisioning.view", entity: "scim connections and provisioning operations", endpoint: "/governance/identity-provisioning", sourceOfTruth: "identity federation provisioning read model", status: "active", icon: IconUserCog },
       { id: "audit-log", label: "Audit log", routeKey: "ownerOrganizationGovernanceAudit", tenantTab: "audit-log", moduleKey: "audit", ownerPermissionRequirement: { mode: "all", permissions: ["owner.runtime.operations.execute"] }, tenantPermissionRequirement: { mode: "all", permissions: ["org.documents.read"] }, actionId: "governance.auditLog.view", entity: "audit events", endpoint: "/governance/read-model", sourceOfTruth: "audit/outbox read model", status: "active", icon: IconListDetails },
     ],
   },

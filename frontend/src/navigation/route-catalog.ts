@@ -11,6 +11,7 @@ export const routeCatalog = {
   ownerOrganizationState: route("owner.organizations.state", appRoutes.ownerOrganizationState.path, "owner", "platform"),
   ownerGovernance: route("owner.governance", appRoutes.ownerGovernance.path, "owner", "platform"),
   ownerOrganizationGovernance: route("owner.organizations.governance", appRoutes.ownerOrganizationGovernance.path, "owner", "platform"),
+  ownerOrganizationGovernanceProvisioning: route("owner.organizations.governance.identity_provisioning", appRoutes.ownerOrganizationGovernanceProvisioning.path, "owner", "platform"),
   ownerSystem: route("owner.system", appRoutes.ownerSystem.path, "owner", "platform"),
   ownerWorkerQueues: route("owner.system.worker_queues", appRoutes.ownerWorkerQueues.path, "owner", "platform"),
   account: route("account.profile", appRoutes.account.path, "account", "platform"),
@@ -18,6 +19,7 @@ export const routeCatalog = {
   tenantGovernanceRoles: route("tenant.settings.governance.roles", appRoutes.tenantGovernanceRoles.path, "tenant", "tenant"),
   tenantGovernanceRoleNames: route("tenant.settings.governance.role_names", appRoutes.tenantGovernanceRoleNames.path, "tenant", "tenant"),
   tenantGovernanceStructure: route("tenant.settings.governance.organization_model.structure", appRoutes.tenantGovernanceStructure.path, "tenant", "tenant"),
+  tenantGovernanceProvisioning: route("tenant.settings.governance.identity_provisioning", appRoutes.tenantGovernanceProvisioning.path, "tenant", "tenant"),
   lmsGrades: route("tenant.lms.grades", appRoutes.tenantLmsGrades.path, "tenant", "tenant"),
   lmsGroups: route("tenant.lms.groups", appRoutes.tenantLmsGroups.path, "tenant", "tenant"),
 } as const;
