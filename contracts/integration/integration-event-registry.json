@@ -1,8 +1,97 @@
 {
   "schemaVersion": "civitas-integration-event-registry/v1",
   "events": [
-    { "eventType": "operations.operation.started", "schemaVersion": "civitas-integration-event/v1", "owningModuleId": "operations", "owningCapabilityId": "operations.lifecycle", "lifecycle": "planned", "sensitivity": "internal", "payloadSchema": { "type": "object" }, "producerContract": { "component": "operation-service" }, "allowedConsumers": ["operations.projection"], "compatibilityStatus": "compatible", "retentionClass": "operational", "maxPayloadBytes": 16384, "redactionPolicy": { "rejectSecrets": true } },
-    { "eventType": "operations.operation.completed", "schemaVersion": "civitas-integration-event/v1", "owningModuleId": "operations", "owningCapabilityId": "operations.lifecycle", "lifecycle": "planned", "sensitivity": "internal", "payloadSchema": { "type": "object" }, "producerContract": { "component": "operation-service" }, "allowedConsumers": ["operations.projection"], "compatibilityStatus": "compatible", "retentionClass": "operational", "maxPayloadBytes": 16384, "redactionPolicy": { "rejectSecrets": true } },
-    { "eventType": "modules.runtime.binding_changed", "schemaVersion": "civitas-integration-event/v1", "owningModuleId": "modules", "owningCapabilityId": "modules.runtime", "lifecycle": "planned", "sensitivity": "internal", "payloadSchema": { "type": "object" }, "producerContract": { "component": "module-control-plane" }, "allowedConsumers": ["module-availability.projection"], "compatibilityStatus": "compatible", "retentionClass": "operational", "maxPayloadBytes": 8192, "redactionPolicy": { "rejectSecrets": true } }
+    {
+      "eventType": "operations.operation.started",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "operations",
+      "owningCapabilityId": "operations.lifecycle",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "operation-service"
+      },
+      "allowedConsumers": [
+        "operations.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 16384,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "operations.operation.completed",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "operations",
+      "owningCapabilityId": "operations.lifecycle",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "operation-service"
+      },
+      "allowedConsumers": [
+        "operations.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 16384,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "modules.runtime.binding_changed",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "modules",
+      "owningCapabilityId": "modules.runtime",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "module-control-plane"
+      },
+      "allowedConsumers": [
+        "module-availability.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "identity.scim.operation.requested",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "identity-federation",
+      "owningCapabilityId": "identity.scim",
+      "lifecycle": "active",
+      "sensitivity": "confidential",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "scim-operation-ledger"
+      },
+      "allowedConsumers": [
+        "scim.logto-management-adapter"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 16384,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    }
   ]
 }
