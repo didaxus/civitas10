@@ -22,6 +22,7 @@ tags:
   - name: support
   - name: analytics
   - name: reports
+  - name: planning
 paths:
   /o/{organizationId}/lms/courses:
     $ref: ./modules/lms.yaml#/paths/~1o~1{organizationId}~1lms~1courses
@@ -43,6 +44,12 @@ paths:
     $ref: ./modules/analytics.yaml#/paths/~1o~1{organizationId}~1analytics~1organization-overviews~1current
   /o/{organizationId}/reports/executive-summaries/current:
     $ref: ./modules/reports.yaml#/paths/~1o~1{organizationId}~1reports~1executive-summaries~1current
+  /o/{organizationId}/planning/plans:
+    $ref: ./modules/planning.yaml#/paths/~1o~1{organizationId}~1planning~1plans
+  /o/{organizationId}/planning/plans/{planId}:
+    $ref: ./modules/planning.yaml#/paths/~1o~1{organizationId}~1planning~1plans~1{planId}
+  /o/{organizationId}/planning/profile:
+    $ref: ./modules/planning.yaml#/paths/~1o~1{organizationId}~1planning~1profile
 components:
   securitySchemes:
     bearerAuth:
