@@ -622,6 +622,19 @@ registerIdentityFederationRoutes({
   apiResource: API_RESOURCE,
 });
 
+registerScimReconciliationRoutes({
+  secureRoute,
+  requireSafeOrganizationIdParam,
+  requireGlobalAccess,
+  requireGlobalOwner,
+  requireOrganizationAccess,
+  requireOrg,
+  requireOrganizationRole,
+  requirePermission,
+  sharedAuth: SHARED_AUTH,
+  apiResource: API_RESOURCE,
+});
+
 secureRoute.get("/documents", "organizationMemberReadLegacyRedirect", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), (req, res) => {
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");
   res.set("Deprecation", "true");
