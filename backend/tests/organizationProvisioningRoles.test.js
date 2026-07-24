@@ -83,7 +83,7 @@ test("provisioning assigns only explicit Logto organization role and does not co
   assert.ok(steps.some(([kind, event]) => kind === "step" && event.stepName === "logto.organization_roles.list" && event.status === "completed"));
 });
 
-const { sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
+const { assertProvisionedRoleAllowed, assertFederationRoleMappingAllowed, sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
 
 test("provisioning rejects owner roles and external permission injection", () => {
   assert.throws(() => normalizeProvisioningInput({ ...validBody(), jitProvisioning: { defaultRoleNames: ["owner_global"] } }), /provisioning_role_not_canonical|provisioning_owner_role_forbidden/);
@@ -92,4 +92,49 @@ test("provisioning rejects owner roles and external permission injection", () =>
   assert.ok(normalized.errors.some((error) => error.message === "provisioning_role_not_canonical" || error.message === "provisioning_owner_role_forbidden"));
   assert.throws(() => sanitizeExternalProvisioningClaims({ sub: "user", permissions: ["owner.profile.read"], owner_global: true }), /provisioning_claim_forbidden/);
   assert.throws(() => sanitizeExternalProvisioningClaims({ sub: "user", organizationId: "other" }), /provisioning_claim_forbidden/);
+});
+
+
+test("provisioning blocks sensitive roles as automatic JIT fallback unless owner policy is explicit", () => {
+  assert.throws(
+    () => normalizeProvisioningInput({ ...validBody(), jitProvisioning: { defaultRoleNames: ["organization_admin"] } }),
+    /provisioning_sensitive_role_requires_owner_policy/,
+  );
+  assert.doesNotThrow(() => assertProvisionedRoleAllowed({
+    roleName: "organization_admin",
+    source: "jit_default_roles",
+    approvalPolicy: { ownerApproved: true, policyVersion: "owner-policy-v1" },
+  }));
+});
+
+test("provisioning keeps owner_global forbidden even with explicit owner policy", () => {
+  assert.throws(
+    () => assertProvisionedRoleAllowed({ roleName: "owner_global", source: "federated_jit", approvalPolicy: { ownerApproved: true } }),
+    /provisioning_owner_role_forbidden/,
+  );
+});
+
+test("provisioning allows standard organization_member as fallback when policy permits it", () => {
+  assert.doesNotThrow(() => normalizeProvisioningInput({ ...validBody(), jitProvisioning: { defaultRoleNames: ["organization_member"] } }));
+  assert.doesNotThrow(() => assertProvisionedRoleAllowed({ roleName: "organization_member", source: "jit_default_roles", autoProvisioningMode: "automatic", firstLogin: true }));
+});
+
+test("federation mapping guard requires review metadata and audits sensitive role mappings", () => {
+  assert.throws(
+    () => assertFederationRoleMappingAllowed({ roleName: "organization_admin", approvalPolicy: { ownerApproved: true } }),
+    /federation_sensitive_mapping_actor_required/,
+  );
+  const events = [];
+  assert.doesNotThrow(() => assertFederationRoleMappingAllowed({
+    roleName: "organization_admin",
+    actor: { type: "owner", logtoUserId: "owner-1" },
+    reason: "approved federation role mapping",
+    policyVersion: "policy-7",
+    mappingVersion: "mapping-3",
+    approvalPolicy: { ownerApproved: true },
+    audit: { record(event) { events.push(event); } },
+  }));
+  assert.equal(events[0].action, "federation.role_mapping.sensitive_review_required");
+  assert.equal(events[0].policyVersion, "policy-7");
+  assert.equal(events[0].mappingVersion, "mapping-3");
 });
