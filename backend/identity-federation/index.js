@@ -7,9 +7,10 @@ const reconciliationPlanner = require("./reconciliationPlanner");
 const reconciliationApplyService = require("./reconciliationApplyService");
 
 module.exports = {
-  ...contracts,
-  ...claimNormalizer,
-  ...groupRoleMappingService,
-  ...reconciliationPlanner,
-  ...reconciliationApplyService,
+  ...require("./contracts"),
+  ...require("./claimNormalizer"),
+  ...require("./groupRoleMappingService"),
+  ...require("./reconciliationPlanner"),
+  ...require("./reconciliationApplyService"),
+  ...require("./massDeprovisionGuard"),
 };

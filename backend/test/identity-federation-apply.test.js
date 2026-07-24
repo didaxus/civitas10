@@ -58,3 +58,22 @@ test('local state is not mutated when corresponding Logto add mutation fails', a
   assert.equal(repository.assignments.size, 0);
   assert.equal(repository.deadLetters.length, 1);
 });
+
+test('mass deprovision guard blocks destructive reconciliation and exposes dry-run affected subjects', async () => {
+  const repository = createInMemoryIdentityFederationApplyRepository();
+  const logtoClient = client();
+  const guardedPlan = { ...plan(), removes: [{ userId: 'u-1', roleId: 'r-old' }, { userId: 'u-2', roleId: 'r-old' }], activeUsersTotal: 10, membershipsTotal: 10 };
+  const result = await applyIdentityFederationReconciliation({ repository, logtoClient, plan: guardedPlan, idempotencyKey: 'idem-guard', actor, guardConfig: { maxAbsoluteRemovals: 1, maxActiveUsersAffectedPercent: 10, maxMembershipsAffectedPercent: 10, manualApprovalThreshold: 2 } });
+  assert.equal(result.result.blocked, true);
+  assert.equal(result.result.preserveExistingAccess, true);
+  assert.equal(result.result.event.type, 'scim.mass_deprovision_guard.triggered');
+  assert.deepEqual(result.result.dryRunPlan.affectedSubjects.map((s) => s.subjectId), ['u-1', 'u-2']);
+  assert.equal(logtoClient.calls.length, 0);
+});
+
+test('emergency fail-closed approval allows guarded destructive apply', async () => {
+  const repository = createInMemoryIdentityFederationApplyRepository();
+  const logtoClient = client();
+  await applyIdentityFederationReconciliation({ repository, logtoClient, plan: { ...plan(), removes: [{ userId: 'u-1', roleId: 'r-old' }] }, idempotencyKey: 'idem-emergency', actor, guardConfig: { maxAbsoluteRemovals: 0 }, approval: { manualApproval: true, emergencyFailClosed: true } });
+  assert.deepEqual(logtoClient.calls.map((c) => c.method), ['add', 'remove']);
+});
