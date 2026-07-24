@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import crypto from 'node:crypto';
+import dns from 'node:dns';
 import net from 'node:net';
 
 export const PROBE_VERSION = '2026-07-issue-154-phase-0-v2';
@@ -32,11 +33,85 @@ export function detectCredentialState(env = process.env) {
   });
 }
 
+function normalizeHostCandidate(host) {
+  const value = String(host || '').trim();
+  if (value.startsWith('[')) return value.slice(1, value.indexOf(']'));
+  return value.includes(':') && net.isIP(value) !== 6 ? value.split(':')[0] : value;
+}
+
 export function assertPublicHost(host) {
-  const candidate = String(host || '').split(':')[0];
+  const candidate = normalizeHostCandidate(host);
   const ipVersion = net.isIP(candidate);
   if (!ipVersion) return true;
   if (candidate === '127.0.0.1' || candidate === '0.0.0.0' || candidate.startsWith('10.') || candidate.startsWith('192.168.') || /^172\.(1[6-9]|2\d|3[0-1])\./.test(candidate) || candidate.startsWith('169.254.') || candidate === '::1' || candidate.startsWith('fc') || candidate.startsWith('fd') || candidate.startsWith('fe80:')) throw new ProbePolicyError('private or loopback host blocked before network', { hostHash: sha256(candidate) });
+  return true;
+}
+
+
+function ipv4ToInt(address) {
+  return address.split('.').reduce((value, part) => (value << 8) + Number(part), 0) >>> 0;
+}
+
+function ipv4InRange(address, base, maskBits) {
+  const mask = maskBits === 0 ? 0 : (0xffffffff << (32 - maskBits)) >>> 0;
+  return (ipv4ToInt(address) & mask) === (ipv4ToInt(base) & mask);
+}
+
+function isPublicIpv4(address) {
+  return ![
+    ['0.0.0.0', 8],
+    ['10.0.0.0', 8],
+    ['100.64.0.0', 10],
+    ['127.0.0.0', 8],
+    ['169.254.0.0', 16],
+    ['172.16.0.0', 12],
+    ['192.0.0.0', 24],
+    ['192.0.2.0', 24],
+    ['192.168.0.0', 16],
+    ['198.18.0.0', 15],
+    ['198.51.100.0', 24],
+    ['203.0.113.0', 24],
+    ['224.0.0.0', 4],
+    ['240.0.0.0', 4],
+  ].some(([base, maskBits]) => ipv4InRange(address, base, maskBits));
+}
+
+function isPublicIpv6(address) {
+  const normalized = address.toLowerCase();
+  if (normalized.startsWith('::ffff:')) return isPublicIpv4(normalized.slice(7));
+  return normalized !== '::'
+    && normalized !== '::1'
+    && !normalized.startsWith('fc')
+    && !normalized.startsWith('fd')
+    && !/^fe[89ab][0-9a-f]:/.test(normalized)
+    && !normalized.startsWith('ff')
+    && !normalized.startsWith('2001:db8:');
+}
+
+function isPublicIpAddress(address) {
+  const version = net.isIP(address);
+  if (version === 4) return isPublicIpv4(address);
+  if (version === 6) return isPublicIpv6(address);
+  return false;
+}
+
+function normalizeLookupResults(results) {
+  const entries = Array.isArray(results) ? results : [results];
+  return entries.map((entry) => (typeof entry === 'string' ? entry : entry?.address)).filter(Boolean);
+}
+
+export async function assertResolvedAddressesPublic(hostname, resolver = dns.promises.lookup) {
+  const candidate = normalizeHostCandidate(hostname);
+  assertPublicHost(candidate);
+  let addresses;
+  try {
+    addresses = normalizeLookupResults(await resolver(candidate, { all: true, verbatim: true }));
+  } catch (error) {
+    throw new ProbePolicyError('hostname resolution failed closed before network', { hostHash: sha256(candidate), errorHash: sha256(error?.code || error?.message || error) });
+  }
+  if (!addresses.length) throw new ProbePolicyError('hostname resolution returned no addresses before network', { hostHash: sha256(candidate) });
+  const addressHashes = addresses.map((address) => sha256(address));
+  if (!addresses.every(isPublicIpAddress)) throw new ProbePolicyError('hostname resolved to non-public address before network', { hostHash: sha256(candidate), addressHashes });
   return true;
 }
 
@@ -71,8 +146,13 @@ export function assertRequestAllowed({ method, url, policy, isTokenRequest = fal
   return true;
 }
 
+<<<<<<< ours
 export async function guardedFetch(url, { method = 'GET', policy, isTokenRequest = false, transport = fetch, timeoutMs = DEFAULT_TIMEOUT_MS, headers, body } = {}) {
+=======
+export async function guardedFetch(url, { method = 'GET', policy, isTokenRequest = false, transport = fetch, timeoutMs = DEFAULT_TIMEOUT_MS, resolver = dns.promises.lookup } = {}) {
+>>>>>>> theirs
   assertRequestAllowed({ method, url, policy, isTokenRequest });
+  await assertResolvedAddressesPublic(new URL(url, policy.endpoint || 'https://logto.invalid').hostname, resolver);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {

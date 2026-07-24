@@ -9,11 +9,13 @@ function policy(mod) {
   return mod.buildPolicy({ endpoint: 'https://auth.didaxus.com', allowedPaths: ['/api/users'], maxResponseBytes: 16 });
 }
 
+const publicResolver = async () => [{ address: '93.184.216.34', family: 4 }];
+
 test('probe rejects unsafe management methods before transport', async () => {
   const mod = await loadProbe();
   for (const method of ['POST', 'PUT', 'PATCH', 'DELETE']) {
     let called = false;
-    await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method, policy: policy(mod), transport: async () => { called = true; } }), /blocked before network/);
+    await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method, policy: policy(mod), transport: async () => { called = true; }, resolver: publicResolver }), /blocked before network/);
     assert.equal(called, false);
   }
 });
@@ -29,7 +31,7 @@ test('probe rejects unknown host and unknown path before transport', async () =>
   const mod = await loadProbe();
   for (const url of ['https://evil.example/api/users', 'https://auth.didaxus.com/api/unknown']) {
     let called = false;
-    await assert.rejects(() => mod.guardedFetch(url, { method: 'GET', policy: policy(mod), transport: async () => { called = true; } }), /unknown (host|path)/);
+    await assert.rejects(() => mod.guardedFetch(url, { method: 'GET', policy: policy(mod), transport: async () => { called = true; }, resolver: publicResolver }), /unknown (host|path)/);
     assert.equal(called, false);
   }
 });
@@ -37,20 +39,20 @@ test('probe rejects unknown host and unknown path before transport', async () =>
 test('probe rejects redirect to unknown host', async () => {
   const mod = await loadProbe();
   const response = { status: 302, ok: false, headers: new Map([['location', 'https://evil.example/callback']]), text: async () => '' };
-  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method: 'GET', policy: policy(mod), transport: async () => response }), /redirect to unknown host/);
+  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method: 'GET', policy: policy(mod), transport: async () => response, resolver: publicResolver }), /redirect to unknown host/);
 });
 
 test('probe rejects response above size limit', async () => {
   const mod = await loadProbe();
   const response = { status: 200, ok: true, headers: new Map(), text: async () => 'x'.repeat(32) };
-  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method: 'GET', policy: policy(mod), transport: async () => response }), /response above size limit/);
+  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method: 'GET', policy: policy(mod), transport: async () => response, resolver: publicResolver }), /response above size limit/);
 });
 
 test('probe blocks private IP hosts and unexpected query parameters before transport', async () => {
   const mod = await loadProbe();
   assert.throws(() => mod.buildPolicy({ endpoint: 'https://127.0.0.1', allowedPaths: ['/api/users'] }), /private or loopback/);
   let called = false;
-  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users?unsafe=true', { method: 'GET', policy: policy(mod), transport: async () => { called = true; } }), /unknown query parameter/);
+  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users?unsafe=true', { method: 'GET', policy: policy(mod), transport: async () => { called = true; }, resolver: publicResolver }), /unknown query parameter/);
   assert.equal(called, false);
 });
 
@@ -58,7 +60,84 @@ test('probe enforces response size while streaming', async () => {
   const mod = await loadProbe();
   const encoder = new TextEncoder();
   const response = { status: 200, ok: true, headers: new Map(), body: new ReadableStream({ start(controller) { controller.enqueue(encoder.encode('0123456789')); controller.enqueue(encoder.encode('overflow')); controller.close(); } }) };
-  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method: 'GET', policy: policy(mod), transport: async () => response }), /during streaming/);
+  await assert.rejects(() => mod.guardedFetch('https://auth.didaxus.com/api/users', { method: 'GET', policy: policy(mod), transport: async () => response, resolver: publicResolver }), /during streaming/);
+});
+
+
+test('probe rejects allowed hostname that resolves to loopback before transport', async () => {
+  const mod = await loadProbe();
+  let called = false;
+  await assert.rejects(
+    () => mod.guardedFetch('https://auth.didaxus.com/api/users', {
+      method: 'GET',
+      policy: policy(mod),
+      transport: async () => { called = true; },
+      resolver: async () => [{ address: '127.0.0.1', family: 4 }],
+    }),
+    /non-public address before network/,
+  );
+  assert.equal(called, false);
+});
+
+test('probe rejects allowed hostname that resolves to RFC1918 IPv4 before transport', async () => {
+  const mod = await loadProbe();
+  let called = false;
+  await assert.rejects(
+    () => mod.guardedFetch('https://auth.didaxus.com/api/users', {
+      method: 'GET',
+      policy: policy(mod),
+      transport: async () => { called = true; },
+      resolver: async () => [{ address: '10.23.45.67', family: 4 }],
+    }),
+    /non-public address before network/,
+  );
+  assert.equal(called, false);
+});
+
+test('probe rejects allowed hostname with mixed public and private results before transport', async () => {
+  const mod = await loadProbe();
+  let called = false;
+  await assert.rejects(
+    () => mod.guardedFetch('https://auth.didaxus.com/api/users', {
+      method: 'GET',
+      policy: policy(mod),
+      transport: async () => { called = true; },
+      resolver: async () => [{ address: '93.184.216.34', family: 4 }, { address: '10.23.45.67', family: 4 }],
+    }),
+    /non-public address before network/,
+  );
+  assert.equal(called, false);
+});
+
+test('probe rejects allowed hostname that resolves to IPv6 ULA or link-local before transport', async () => {
+  const mod = await loadProbe();
+  for (const address of ['fd00::1', 'fe80::1']) {
+    let called = false;
+    await assert.rejects(
+      () => mod.guardedFetch('https://auth.didaxus.com/api/users', {
+        method: 'GET',
+        policy: policy(mod),
+        transport: async () => { called = true; },
+        resolver: async () => [{ address, family: 6 }],
+      }),
+      /non-public address before network/,
+    );
+    assert.equal(called, false);
+  }
+});
+
+test('probe allows allowed hostname that resolves only to public IP addresses', async () => {
+  const mod = await loadProbe();
+  let called = false;
+  const response = { status: 200, ok: true, headers: new Map(), text: async () => '{}' };
+  const result = await mod.guardedFetch('https://auth.didaxus.com/api/users', {
+    method: 'GET',
+    policy: policy(mod),
+    transport: async () => { called = true; return response; },
+    resolver: async () => [{ address: '93.184.216.34', family: 4 }, { address: '2606:2800:220:1:248:1893:25c8:1946', family: 6 }],
+  });
+  assert.equal(called, true);
+  assert.equal(result.status, 200);
 });
 
 test('probe includes exact read-only jit sso connectors endpoint for an organization', async () => {
