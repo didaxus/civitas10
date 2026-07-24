@@ -2,7 +2,7 @@ import type { ActionId, PermissionKey, ScreenId } from "../../authorization/cont
 import type { VisualDecisionReason } from "../../authorization/contracts/visual-decision";
 
 export type GovernanceSurface = "owner" | "tenant";
-export type GovernanceModuleKey = "overview" | "permissions" | "members" | "taxonomy" | "units" | "lms-groups" | "data-scope" | "aliases-navigation" | "access-preview" | "audit";
+export type GovernanceModuleKey = "overview" | "permissions" | "members" | "taxonomy" | "units" | "lms-groups" | "data-scope" | "aliases-navigation" | "access-preview" | "audit" | "identity-provisioning";
 
 export const GOVERNANCE_READ_MODEL_CONTRACT_VERSION = "2026-07-civitas10-governance-read-model-v1" as const;
 export const GOVERNANCE_OPERATION_REGISTRY_VERSION = "2026-07-civitas10-governance-operations-v1" as const;
@@ -65,6 +65,8 @@ export type GovernanceUnitItem = { id: string; label: string; stableKey?: string
 export type GovernanceDataScopeAssignment = { id?: string; principalId: string; membershipId?: string | null; roleId?: string | null; canonicalRoleId?: string | null; scopeTemplateId?: string; scopeTemplateVersion?: string; strategy?: string; targetKind?: "dimension" | "unit" | "resource" | "relationship"; dimensionValueId?: string | null; unitId?: string | null; relationshipKey?: string | null; capability: string; action?: string; scopeType?: string; taxonomyIds: string[]; unitIds: string[]; resourceSummary: string; effective: boolean; source?: string; reason: string; unresolvedReason?: string | null; sourceVersion?: string; changedBy?: string; changedAt?: string };
 export type GovernanceAliasNavigationPolicy = { aliasesTenantEditable: boolean; navigationTenantEditable: boolean; aliases?: Array<{ roleId: string; canonicalKey: string; displayName: string; editableBy?: "owner" | "tenant"; defaultLabel?: string; description?: string; status?: "active" | "deprecated" | "planned"; updatedAt?: string; lastChangedAt?: string }>; visualPreferences: Array<{ screenId: ScreenId; canonicalLabel?: string; routeId?: string; hidden?: boolean; order?: number; locked: boolean; hideable?: boolean; authorizationEffect?: "presentation_only" }> ; version?: string; updatedAt?: string };
 export type GovernanceAccessPreview = { contractVersion?: string; generatedAt?: string; organizationId?: string; surface?: GovernanceSurface; subjectId: string; actionId?: ActionId; screenId?: ScreenId; decision: { allowed: boolean; reason: VisualDecisionReason | PermissionMatrixReasonCode | string; sourceVersions: PermissionMatrixReason["sourceVersions"] & { visualVersion?: string; readModelVersion?: string } }; provenance?: unknown; diagnostics?: unknown; mutated?: false };
+export type IdentityFederationReadStatus = "not_configured" | "active" | "degraded" | "suspended" | "credentials_expiring" | "reconciliation_required";
+export type GovernanceIdentityProvisioningSummary = { status: IdentityFederationReadStatus; connectionId?: string | null; protocol?: "oidc" | "saml" | null; providerKind?: string | null; claimsContractVersion?: number; mappingVersion?: number; provisioningPolicyVersion?: number; lastValidatedAt?: string | null; lastSuccessfulLoginAt?: string | null; credentialExpiresAt?: string | null; latestReconciliationRunId?: string | null; latestReconciliationStatus?: string | null; driftItemCount?: number; reason?: string };
 export type GovernanceAuditEvent = { id: string; actorId: string; organizationId: string; target: string; targetType?: string; targetId?: string | null; action: string; before?: unknown; after?: unknown; result?: string; reason: string; contractVersion: string; createdAt: string };
 
 export type GovernanceModuleStatus = "active" | "planned" | "unavailable" | "denied" | "stale" | "error" | "ready" | "pending" | "blocked";
@@ -89,6 +91,7 @@ export type GovernanceReadModel = {
   dataScopes: GovernanceDataScopeAssignment[];
   aliasesNavigation: GovernanceAliasNavigationPolicy;
   accessPreviews: GovernanceAccessPreview[];
+  identityProvisioning?: GovernanceIdentityProvisioningSummary;
   auditSummary?: Record<string, unknown>;
   auditEvents: GovernanceAuditEvent[];
   diagnostics: Array<string | { code: string; severity?: string; message?: string }>;

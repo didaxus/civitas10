@@ -30,3 +30,9 @@ test('aliases navigation, access preview and audit endpoints are mounted and pro
   assert.match(source, /secureRoute\.get\("\/owner\/organizations\/:organizationId\/governance\/audit", "ownerRead"/);
   assert.match(source, /secureRoute\.get\("\/o\/:organizationId\/governance\/audit", "organizationMemberRead"/);
 });
+
+test('identity federation governance surfaces are mounted as planned and protected by existing governance authz', () => {
+  assert.match(source, /secureRoute\.get\("\/owner\/organizations\/:organizationId\/governance\/identity", "ownerRead", requireGlobalAccess\(\{ resource: API_RESOURCE, requiredScopes: \[OWNER_AUTHZ\.ownerProfileRead\] \}\), requireGlobalOwner, requireSafeOrganizationIdParam/);
+  assert.match(source, /secureRoute\.get\("\/o\/:organizationId\/settings\/governance\/identity", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess\(\{ requiredAllScopes: \[ORG_AUTHZ\.documentsRead\] \}\), requireOrg, requireOrganizationRole\(SHARED_AUTH\.organization\.roles\.admin\), requirePermission\(ORG_AUTHZ\.documentsRead\)/);
+  assert.match(source, /identity_federation_handlers_policies_and_tests_pending/);
+});

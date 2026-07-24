@@ -5,9 +5,9 @@ const { buildRolesGovernanceSlice } = require("./governanceRolesReadModel");
 const { buildStructureGovernanceSlice } = require("./governanceStructureReadModel");
 const { buildAliasesNavigationPolicy, listGovernanceAuditEvents } = require("./governanceOperationsReadModel");
 
-const MODULE_KEYS = Object.freeze(["overview", "permissions", "members", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]);
-const TENANT_MODULES = Object.freeze(new Set(["permissions", "members", "data-scope", "taxonomy", "units", "aliases-navigation", "access-preview"]));
-const OWNER_MODULES = Object.freeze(new Set(["overview", "permissions", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]));
+const MODULE_KEYS = Object.freeze(["overview", "identity-provisioning", "permissions", "members", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]);
+const TENANT_MODULES = Object.freeze(new Set(["identity-provisioning", "permissions", "members", "data-scope", "taxonomy", "units", "aliases-navigation", "access-preview"]));
+const OWNER_MODULES = Object.freeze(new Set(["overview", "identity-provisioning", "permissions", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]));
 
 function isoNow() { return new Date().toISOString(); }
 function safeString(value, fallback = null) { return typeof value === "string" && value.trim() ? value.trim() : fallback; }
@@ -58,6 +58,10 @@ function roleCatalogDiagnostics({ roles = [], aliasesNavigation }) {
   for (const [canonicalKey, count] of canonicalCounts.entries()) if (count > 1) diagnostics.push({ code: "logto_role_duplicate_canonical_key", severity: "warning", message: `Multiple Logto roles resolve to ${canonicalKey}.` });
   for (const alias of aliasesNavigation.aliases || []) if (!roleIds.has(alias.roleId)) diagnostics.push({ code: "role_alias_orphaned", severity: "warning", message: `Alias references role ${alias.roleId}, but Logto did not return that role for this organization.` });
   return diagnostics;
+}
+
+function buildIdentityProvisioningSummary({ status = "not_configured" } = {}) {
+  return { status, connectionId: null, protocol: null, providerKind: null, claimsContractVersion: 0, mappingVersion: 0, provisioningPolicyVersion: 0, lastValidatedAt: null, lastSuccessfulLoginAt: null, credentialExpiresAt: null, latestReconciliationRunId: null, latestReconciliationStatus: null, driftItemCount: status === "reconciliation_required" ? 1 : 0, reason: status === "not_configured" ? "identity_federation_connection_missing" : "fixture_status" };
 }
 
 function buildPermissionMatrix(versions) {
@@ -113,7 +117,9 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
     modules,
     operationRegistry: { registryVersion: GOVERNANCE_OPERATION_REGISTRY_VERSION, operations: governanceOperationRegistry },
     moduleInventory,
+    identityProvisioning: buildIdentityProvisioningSummary(),
     summary: {
+      identityProvisioningStates: ["not_configured", "active", "degraded", "suspended", "credentials_expiring", "reconciliation_required"],
       status: versions.runtimeStatus === "current" ? "available" : versions.runtimeStatus,
       activeModules: Object.values(modules).filter((item) => item.status === "active").length,
       plannedModules: Object.values(modules).filter((item) => item.status === "planned").length,

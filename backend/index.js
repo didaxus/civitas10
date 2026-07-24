@@ -375,6 +375,16 @@ secureRoute.get("/owner/organizations/:organizationId/operational-state", "owner
 });
 
 
+
+secureRoute.get("/owner/organizations/:organizationId/governance/identity", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
+  return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: req.params.organizationId, surface: "owner", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" });
+});
+
+secureRoute.get("/o/:organizationId/settings/governance/identity", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
+  try { assertTenantRouteMatchesContext(req); return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: req.params.organizationId, surface: "tenant", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" }); }
+  catch (error) { return sendPublicError(res, error, "TenantIdentityFederationError", "Failed to load identity federation surface"); }
+});
+
 secureRoute.get("/owner/organizations/:organizationId/governance", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
   try {
     const logtoOrganization = await getLogtoOrganizationById(req.params.organizationId);
