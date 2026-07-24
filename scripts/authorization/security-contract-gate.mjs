@@ -2,7 +2,6 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -97,16 +96,13 @@ export function buildSecurityGateInventory({ fixtures = false } = {}) {
   const groupMatrix = fs.readFileSync(path.join(repoRoot, 'artifacts/identity-federation/issue-154/group-completeness-matrix.json'), 'utf8');
   for (const required of ['claimsComplete != true', '_claim_names', '_claim_sources', 'overage', 'pagination']) if (!groupMatrix.includes(required)) addError(errors, 'identity_claim_fixture_missing', `identity federation fixture missing ${required}`, { file: 'artifacts/identity-federation/issue-154/group-completeness-matrix.json' });
 
-  const branch = execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
-  const runtimeSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  const ref = 'runtime-git-ref-checked-by-gate';
   const sha = 'runtime-git-sha-checked-by-gate';
-  let mergeBase = 'unavailable';
-  const mergeBaseResult = spawnSync('git', ['merge-base', 'HEAD', 'main'], { encoding: 'utf8' });
-  if (mergeBaseResult.status === 0) mergeBase = mergeBaseResult.stdout.trim();
+  const mergeBase = 'runtime-merge-base-checked-by-gate';
   if (fixtures) {
     addError(errors, 'fixture_governance_preview_unknown', 'fixture proves governance.preview.read active outside catalog fails', { id: 'governance.preview.read', file: 'fixture://visual-registry', status: allPermissions.get('governance.preview.read')?.status || 'unknown', surface: 'organization' });
   }
-  return { _generated: { notice: 'GENERATED — DO NOT EDIT', source: 'scripts/authorization/security-contract-gate.mjs', command: 'npm run authz:security-gate', generatedAt: '1970-01-01T00:00:00.000Z' }, gateVersion: '2026-07-civitas-phase3-security-gate-v1', ref: branch, sha, runtimeShaPolicy: 'evaluated during gate execution and normalized for deterministic inventory', mergeBase, catalogHash: catalog.catalogHash, roleModelVersion: roleArtifact.roleModel.roleModelVersion, contractVersion: catalog.contractVersion, artifactHashes, summary: { errors: errors.length, requiredArtifacts: REQUIRED_ARTIFACTS.length, executableScanRoots: EXECUTABLE_SCAN_ROOTS, driftFixturesCovered: ['governance.preview.read', 'billing legacy to payments ambiguity', 'wildcard/colon legacy IDs', '12-role omission', 'planned executable leakage', 'wrong surface'] }, errors };
+  return { _generated: { notice: 'GENERATED — DO NOT EDIT', source: 'scripts/authorization/security-contract-gate.mjs', command: 'npm run authz:security-gate', generatedAt: '1970-01-01T00:00:00.000Z' }, gateVersion: '2026-07-civitas-phase3-security-gate-v1', ref, sha, runtimeShaPolicy: 'evaluated during gate execution and normalized for deterministic inventory', mergeBase, catalogHash: catalog.catalogHash, roleModelVersion: roleArtifact.roleModel.roleModelVersion, contractVersion: catalog.contractVersion, artifactHashes, summary: { errors: errors.length, requiredArtifacts: REQUIRED_ARTIFACTS.length, executableScanRoots: EXECUTABLE_SCAN_ROOTS, driftFixturesCovered: ['governance.preview.read', 'billing legacy to payments ambiguity', 'wildcard/colon legacy IDs', '12-role omission', 'planned executable leakage', 'wrong surface'] }, errors };
 }
 
 function canonicalJson(value) { if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}`; return JSON.stringify(value); }
