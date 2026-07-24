@@ -12,5 +12,10 @@ module.exports = {
   ...require("./groupRoleMappingService"),
   ...require("./reconciliationPlanner"),
   ...require("./reconciliationApplyService"),
-  ...require("./massDeprovisionGuard"),
+  ...require("./scimUserProvisioning"),
+  ...contracts,
+  ...claimNormalizer,
+  ...groupRoleMappingService,
+  ...reconciliationPlanner,
+  ...reconciliationApplyService,
 };
