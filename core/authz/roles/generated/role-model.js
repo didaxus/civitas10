@@ -10,14 +10,14 @@ const generated = Object.freeze({
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
-    "roleModelHash": "4edf94cc7fef6d97033ba2c4141eb1350cce96900a2ea764f230ab9382c73974"
+    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9",
+    "roleModelHash": "0714e258f33b13b4f2ad7c226e9d71c8a0e21c6c38a21f2e85e64f46f310dca2"
   },
   "roleModel": {
     "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
-    "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
-    "roleModelHash": "4edf94cc7fef6d97033ba2c4141eb1350cce96900a2ea764f230ab9382c73974",
+    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9",
+    "roleModelHash": "0714e258f33b13b4f2ad7c226e9d71c8a0e21c6c38a21f2e85e64f46f310dca2",
     "bundles": [
       {
         "key": "org_documents_reader",
@@ -307,10 +307,10 @@ const generated = Object.freeze({
         "key": "planning_reader",
         "description": "planning_reader canonical Phase 3 role-potential bundle",
         "permissionIds": [
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
-          "planning.approvals.export"
+          "planning.approvals.export",
+          "planning.budgets.approve",
+          "planning.budgets.update"
         ],
         "allowedRoleKeys": [
           "organization_admin",
@@ -327,10 +327,10 @@ const generated = Object.freeze({
         "key": "planning_reviewer",
         "description": "planning_reviewer canonical Phase 3 role-potential bundle",
         "permissionIds": [
-          "planning.budgets.approve",
-          "planning.budgets.update",
           "planning.dependencies.approve",
-          "planning.dependencies.manage"
+          "planning.dependencies.manage",
+          "planning.initiatives.archive",
+          "planning.initiatives.create"
         ],
         "allowedRoleKeys": [
           "organization_director",
@@ -345,10 +345,10 @@ const generated = Object.freeze({
         "key": "planning_approver",
         "description": "planning_approver canonical Phase 3 role-potential bundle",
         "permissionIds": [
-          "planning.initiatives.archive",
-          "planning.initiatives.create",
           "planning.milestones.read",
-          "planning.milestones.update"
+          "planning.milestones.update",
+          "planning.minutes.delete",
+          "planning.plans.manage"
         ],
         "allowedRoleKeys": [
           "organization_director",
@@ -362,9 +362,9 @@ const generated = Object.freeze({
         "key": "planning_author",
         "description": "planning_author canonical Phase 3 role-potential bundle",
         "permissionIds": [
-          "planning.minutes.delete",
-          "planning.plans.manage",
           "planning.plans.read",
+          "planning.profile.manage",
+          "planning.profile.read",
           "planning.proposals.update"
         ],
         "allowedRoleKeys": [
@@ -862,10 +862,10 @@ const generated = Object.freeze({
           "org.roles.create",
           "org.settings.read",
           "org.workflows.delete",
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
           "planning.approvals.export",
+          "planning.budgets.approve",
+          "planning.budgets.update",
           "planning.risks.delete",
           "planning.risks.export",
           "planning.roadmaps.export",
@@ -970,8 +970,6 @@ const generated = Object.freeze({
           "org.groups.update",
           "org.members.read",
           "org.settings.read",
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
           "planning.approvals.export",
           "planning.budgets.approve",
@@ -982,6 +980,8 @@ const generated = Object.freeze({
           "planning.initiatives.create",
           "planning.milestones.read",
           "planning.milestones.update",
+          "planning.minutes.delete",
+          "planning.plans.manage",
           "reports.admin.export",
           "reports.exports.approve",
           "reports.imports.delete",
@@ -1056,8 +1056,6 @@ const generated = Object.freeze({
           "org.groups.update",
           "org.members.read",
           "org.settings.read",
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
           "planning.approvals.export",
           "planning.budgets.approve",
@@ -1068,6 +1066,8 @@ const generated = Object.freeze({
           "planning.initiatives.create",
           "planning.milestones.read",
           "planning.milestones.update",
+          "planning.minutes.delete",
+          "planning.plans.manage",
           "reports.admin.export",
           "reports.exports.approve",
           "reports.imports.delete",
@@ -1146,8 +1146,6 @@ const generated = Object.freeze({
           "org.documents.read",
           "org.groups.update",
           "org.members.read",
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
           "planning.approvals.export",
           "planning.budgets.approve",
@@ -1158,6 +1156,8 @@ const generated = Object.freeze({
           "planning.initiatives.create",
           "planning.milestones.read",
           "planning.milestones.update",
+          "planning.minutes.delete",
+          "planning.plans.manage",
           "planning.risks.delete",
           "planning.risks.export",
           "planning.roadmaps.export",
@@ -1232,14 +1232,14 @@ const generated = Object.freeze({
           "lms.groups.read",
           "org.announcements.read",
           "org.documents.read",
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
           "planning.approvals.export",
           "planning.budgets.approve",
           "planning.budgets.update",
           "planning.dependencies.approve",
           "planning.dependencies.manage",
+          "planning.initiatives.archive",
+          "planning.initiatives.create",
           "scheduling.events.read"
         ],
         "activeExecutableScopeIds": [
@@ -1303,13 +1303,13 @@ const generated = Object.freeze({
           "lms.submissions.update",
           "org.announcements.read",
           "org.documents.read",
-          "planning.agora.manage",
-          "planning.agora.read",
           "planning.approvals.archive",
           "planning.approvals.export",
-          "planning.minutes.delete",
-          "planning.plans.manage",
+          "planning.budgets.approve",
+          "planning.budgets.update",
           "planning.plans.read",
+          "planning.profile.manage",
+          "planning.profile.read",
           "planning.proposals.update",
           "scheduling.events.read"
         ],

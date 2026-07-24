@@ -97,10 +97,7 @@
     "federation:p3-009:no-sdk-check": "npm run federation:p3-009:no-sdk-leakage-check",
     "modules:docker-contracts-smoke": "npm run docker:contracts:smoke",
     "ui:p3-012:check": "npm run ui:p3-012:registry-check && npm run ui:p3-012:navigation-check && npm run ui:p3-012:route-safety-check && npm run ui:p3-012:authorization-parity-check && npm run ui:p3-012:lifecycle-check && npm run ui:p3-012:no-parallel-navigation-check && npm run ui:p3-012:no-frontend-authority-check && npm run ui:p3-012:inventory-check",
-<<<<<<< ours
-    "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js"
-=======
+    "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
     "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check"
->>>>>>> theirs
   }
 }

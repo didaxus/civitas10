@@ -4,6 +4,18 @@ const api = fs.readFileSync('contracts/openapi/civitas-api.yaml', 'utf8');
 const planning = fs.readFileSync('contracts/openapi/modules/planning.yaml', 'utf8');
 const runtime = JSON.parse(fs.readFileSync('contracts/federation/planning-runtime/v1/schema.json', 'utf8'));
 const parity = JSON.parse(fs.readFileSync('artifacts/federation/p3-014-planning-operation-parity.json', 'utf8'));
+const conflictMarkerInputs = [
+  'backend/planning/application/remotePort.js',
+  'backend/planning/infrastructure/runtimeContractV1.js',
+  'contracts/federation/planning-runtime/v1/schema.json',
+  'contracts/openapi/modules/planning.yaml',
+  'package.json',
+];
+for (const file of conflictMarkerInputs) {
+  const content = fs.readFileSync(file, 'utf8');
+  const conflictMarker = new RegExp('^(' + '<'.repeat(7) + '|=' .repeat(7).replace(/ /g, '') + '|' + '>'.repeat(7) + ')( |$)', 'm');
+  if (conflictMarker.test(content)) fail(`unresolved git conflict marker in ${file}`);
+}
 for (const path of ['/o/{organizationId}/planning/plans', '/o/{organizationId}/planning/plans/{planId}', '/o/{organizationId}/planning/profile']) {
   if (!api.includes(path)) fail(`missing composed OpenAPI path ${path}`);
 }

@@ -24,8 +24,7 @@ export const planningRemoteUiContribution: ModuleUiContribution = {
   actions: [
     action("planning.plans.create", "planning.plans.list", "planning.plans.create", "planning.plans.manage", "write"),
     action("planning.plans.update", "planning.plans.edit", "planning.plans.update", "planning.plans.manage", "write"),
-    action("planning.plans.archive", "planning.plans.detail", "planning.plans.archive", "planning.plans.manage", "write", "required"),
-    action("planning.profile.upsert", "planning.profile", "planning.profile.upsert", "planning.profile.manage", "write"),
+    action("planning.profile.replace", "planning.profile", "planning.profile.replace", "planning.profile.manage", "write"),
     action("planning.plans.reload", "planning.plans.list", "planning.plans.list", "planning.plans.read", "read"),
   ],
   fallback: { unavailable: "planning.fallback.unavailable", incompatible: "planning.fallback.incompatible", integrityFailure: "planning.fallback.bundle_failure", degraded: "planning.fallback.read_only", upgradeRequired: "planning.fallback.upgrade_required" },

@@ -78,11 +78,11 @@ test('replaceProfile uses PUT /profile with If-Match and typed precondition/conf
   const { port, fake }=deps();
   assert.equal(typeof port.replaceProfile,'function');
   assert.equal(port['upsert'+'Profile'], undefined);
-  const profileContext=ctx({ operation:{ moduleId:'planning', capabilityId:'planning.profile', operationId:'planning.profile.replace', actionId:'planning.profile.update', permission:'planning.agora.manage', executionKind:'write' }, concurrency:{ etag:'profile-v1' } });
+  const profileContext=ctx({ operation:{ moduleId:'planning', capabilityId:'planning.profile', operationId:'planning.profile.replace', actionId:'planning.profile.replace', permission:'planning.profile.manage', executionKind:'write' }, concurrency:{ etag:'profile-v1' } });
   const res=await port.replaceProfile({ planningMode:'standard', preferences:{ fiscalYearStart:'09-01' } }, profileContext);
   assert.equal(res.ok,true);
   assert.equal(fake.calls[0].method,'PUT');
-  assert.equal(fake.calls[0].path,'/private/planning-runtime/v1/profile');
+  assert.equal(fake.calls[0].path,'/private/planning-runtime/v1/profile:replace');
   assert.equal(fake.calls[0].headers['If-Match'],'profile-v1');
   assert.equal(fake.calls[0].body.operation.operationId,'planning.profile.replace');
 

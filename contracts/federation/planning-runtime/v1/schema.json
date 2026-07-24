@@ -1,4 +1,3 @@
-<<<<<<< ours
 {
   "schemaVersion": "planning-runtime/v1",
   "status": "planned",
@@ -32,6 +31,3 @@
     }
   }
 }
-=======
-{"schemaVersion":"planning-runtime/v1","status":"planned","mediaType":"application/vnd.civitas.planning-runtime.v1+json","problemMediaType":"application/problem+json","requiredHeaders":["Content-Type","Accept","X-Civitas-Contract-Version","X-Civitas-Execution-Context","X-Correlation-Id"],"moduleExecutionContext":"civitas-module-execution-context/v1","serviceIdentityRequired":true,"idempotency":{"writes":"required","reads":"forbidden"},"concurrency":{"mutations":"If-Match when expectedVersion/etag exists","profileReplace":"If-Match required for replacing an existing profile"},"maximumRequestBytes":32768,"maximumResponseBytes":65536,"operations":["planning.plans.create","planning.plans.list","planning.plans.get","planning.plans.update","planning.plans.archive","planning.profile.get","planning.profile.replace"],"http":{"planning.profile.get":{"method":"POST","path":"/private/planning-runtime/v1/profile:get"},"planning.profile.replace":{"method":"PUT","path":"/private/planning-runtime/v1/profile","requiredHeaders":["If-Match"]}},"problems":{"precondition_required":{"status":428,"appliesTo":["planning.profile.replace"],"fieldViolations":[{"field":"If-Match","code":"required"}]},"precondition_failed":{"status":412,"appliesTo":["planning.profile.replace","planning.plans.update","planning.plans.archive"]},"conflict":{"status":409,"appliesTo":["planning.profile.replace","planning.plans.create","planning.plans.update","planning.plans.archive"]}},"operationIds":{"getProfile":"planning.profile.get","replaceProfile":"planning.profile.replace"},"generatedClients":{"javascript":"backend/planning/infrastructure/runtimeContractV1.js","fakeRuntime":"backend/planning/testing/fakeFederatedRuntime.js"},"routeActionParity":{"planning.profile.replace":{"actionId":"planning.profile.update","method":"PUT","path":"/private/planning-runtime/v1/profile","preconditions":["If-Match"]}}}
->>>>>>> theirs

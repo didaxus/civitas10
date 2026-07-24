@@ -13,14 +13,8 @@ const NAMED_USE_CASES = Object.freeze({
   listPlans: { capabilityId:'planning.plans', operationId:'planning.plans.list', actionId:'planning.plans.read', permission:'planning.plans.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
   getPlan: { capabilityId:'planning.plans', operationId:'planning.plans.get', actionId:'planning.plans.read', permission:'planning.plans.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
   updatePlan: { capabilityId:'planning.plans', operationId:'planning.plans.update', actionId:'planning.plans.update', permission:'planning.plans.manage', executionKind:'write', idempotency:'required', concurrency:'if-match', planned:true },
-<<<<<<< ours
   getProfile: { capabilityId:'planning.profile', operationId:'planning.profile.get', actionId:'planning.profile.read', permission:'planning.profile.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
   replaceProfile: { capabilityId:'planning.profile', operationId:'planning.profile.replace', actionId:'planning.profile.replace', permission:'planning.profile.manage', executionKind:'write', idempotency:'required', concurrency:'if-match', planned:true }
-=======
-  archivePlan: { capabilityId:'planning.plans', operationId:'planning.plans.archive', actionId:'planning.plans.archive', permission:'planning.plans.manage', executionKind:'write', idempotency:'required', concurrency:'if-match', planned:true },
-  getProfile: { capabilityId:'planning.profile', operationId:'planning.profile.get', actionId:'planning.profile.read', permission:'planning.agora.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
-  replaceProfile: { capabilityId:'planning.profile', operationId:'planning.profile.replace', actionId:'planning.profile.update', permission:'planning.agora.manage', executionKind:'write', idempotency:'required', concurrency:'if-match', planned:true }
->>>>>>> theirs
 });
 function assertPlanningRemoteCallContext(context, useCase){
   if(!context || context.organizationId !== context.authorizationDecision?.organizationId && context.authorizationDecision?.organizationId) throw new Error('planning remote context tenant mismatch');

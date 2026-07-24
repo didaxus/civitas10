@@ -8,8 +8,8 @@ function context(useCase, overrides = {}) {
     listPlans: ['planning.plans', 'planning.plans.list', 'planning.plans.read', 'planning.plans.read', 'read', null],
     getPlan: ['planning.plans', 'planning.plans.get', 'planning.plans.read', 'planning.plans.read', 'read', null],
     updatePlan: ['planning.plans', 'planning.plans.update', 'planning.plans.update', 'planning.plans.manage', 'write', { key: 'idem-1' }],
-    getProfile: ['planning.profile', 'planning.profile.get', 'planning.profile.read', 'planning.agora.read', 'read', null],
-    upsertProfile: ['planning.profile', 'planning.profile.upsert', 'planning.profile.update', 'planning.agora.manage', 'write', { key: 'idem-1' }],
+    getProfile: ['planning.profile', 'planning.profile.get', 'planning.profile.read', 'planning.profile.read', 'read', null],
+    replaceProfile: ['planning.profile', 'planning.profile.replace', 'planning.profile.replace', 'planning.profile.manage', 'write', { key: 'idem-1' }],
   }[useCase];
   return {
     organizationId: 'org-1', subjectId: 'user-1', correlationId: 'corr-1', contractVersion: 'v1',
@@ -92,7 +92,7 @@ test('read and replace profile enforce scope, If-Match, audit, outbox and idempo
   const p = ports({ profiles: [{ organizationId: 'org-1', planningMode: 'standard', preferences: {}, version: '1' }] });
   const services = createPlanningApplicationServices(p);
   assert.equal((await services.readProfile({}, context('getProfile'))).ok, true);
-  const result = await services.replaceProfile({ planningMode: 'agile', preferences: {}, ifMatch: '1' }, context('upsertProfile', { concurrency: { etag: '1' } }));
+  const result = await services.replaceProfile({ planningMode: 'agile', preferences: {}, ifMatch: '1' }, context('replaceProfile', { concurrency: { etag: '1' } }));
   assert.equal(result.ok, true);
   assert.ok(p.calls.some(([name]) => name === 'audit'));
   assert.ok(p.calls.some(([name]) => name === 'outbox'));
