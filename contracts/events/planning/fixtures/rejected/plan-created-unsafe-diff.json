@@ -1,0 +1,14 @@
+{
+  "eventId": "00000000-0000-4000-8000-000000000201",
+  "eventType": "planning.plan.created.v1",
+  "version": 1,
+  "occurredAt": "2026-07-24T00:10:00.000Z",
+  "organizationId": "org_A",
+  "actor": { "type": "user", "id": "usr_123", "displayName": "[redacted]", "redacted": true },
+  "correlationId": "corr-planning-003",
+  "decision": { "decisionId": "dec_003", "policyVersion": "planning-authz-2026-07", "reason": "plan_create_allowed" },
+  "causation": { "causationId": "cmd_003" },
+  "sensitivity": "internal",
+  "payload": { "planId": "plan_002", "title": "Unsafe", "status": "draft", "redacted": true },
+  "diff": { "redacted": true, "changes": [ { "op": "add", "path": "/accessToken", "before": null, "after": "Bearer abc.def.ghi", "classification": "restricted" } ] }
+}

@@ -1,0 +1,14 @@
+{
+  "eventId": "00000000-0000-4000-8000-000000000101",
+  "eventType": "planning.plan.created.v1",
+  "version": 1,
+  "occurredAt": "2026-07-24T00:00:00.000Z",
+  "organizationId": "org_A",
+  "actor": { "type": "user", "id": "usr_123", "displayName": "[redacted]", "redacted": true },
+  "correlationId": "corr-planning-001",
+  "decision": { "decisionId": "dec_001", "policyVersion": "planning-authz-2026-07", "reason": "plan_create_allowed" },
+  "causation": { "causationId": "cmd_001", "operationId": "op_001" },
+  "sensitivity": "internal",
+  "payload": { "planId": "plan_001", "title": "FY27 roadmap", "status": "draft", "redacted": true, "safeSummary": "Plan shell created without objective or participant details.", "fields": ["title", "status"] },
+  "diff": { "redacted": true, "changes": [ { "op": "add", "path": "/title", "before": null, "after": "[redacted]", "classification": "internal" }, { "op": "add", "path": "/status", "before": null, "after": "[redacted]", "classification": "internal" } ] }
+}
