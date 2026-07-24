@@ -108,9 +108,9 @@ const scimIdempotencyLedger = pgTable("scim_idempotency_ledger", {
 }));
 
 module.exports = {
-  scimConnectionCredentials,
   organizationIdentityConnections,
   organizationExternalRoleMappings,
   organizationFederatedAssignmentSources,
-  organizationExternalDirectoryObjects,
+  scimUsers,
+  scimIdempotencyLedger,
 };

@@ -195,7 +195,7 @@ export function summarizeShape(value, depth = 0) {
   if (depth > 4) return { type: 'max_depth' };
   if (Array.isArray(value)) return { type: 'array', length: value.length, itemShape: value.length ? summarizeShape(value[0], depth + 1) : null };
   if (typeof value === 'object') {
-    return { type: 'object', keys: Object.keys(value).sort(), fields: Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, SENSITIVE_KEY_PATTERN.test(key) ? { type: 'redacted', hash: sha256(JSON.stringify(entry)) } : summarizeShape(entry, depth + 1)])) };
+    return { type: 'object', keys: Object.keys(value).sort(), fields: Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, SENSITIVE_KEY_PATTERN.test(key) ? { type: 'redacted' } : summarizeShape(entry, depth + 1)])) };
   }
   return { type: typeof value };
 }
