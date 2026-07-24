@@ -83,7 +83,31 @@ test("provisioning assigns only explicit Logto organization role and does not co
   assert.ok(steps.some(([kind, event]) => kind === "step" && event.stepName === "logto.organization_roles.list" && event.status === "completed"));
 });
 
+<<<<<<< ours
 const { assertProvisionedRoleAllowed, assertFederationRoleMappingAllowed, sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
+=======
+
+test("Logto JIT provisioning policy is sourced from the canonical authorization contract", () => {
+  const logtoManagement = require("../services/logtoManagement");
+  assert.equal(logtoManagement.ORGANIZATION_ADMIN_ROLE_NAME, "organization_admin");
+  assert.equal(logtoManagement.JIT_FALLBACK_ORGANIZATION_ROLE_NAME, "organization_member");
+  assert.deepEqual(logtoManagement.REQUIRED_ORGANIZATION_ROLE_NAMES, ["organization_admin", "organization_member"]);
+  assert.match(logtoManagement.PROVISIONING_POLICY.version, /jit-provisioning-policy-v1$/);
+  assert.equal(logtoManagement.PROVISIONING_POLICY.canonicalRoleKeySource, "sharedContract.auth.organization.roles");
+  assert.equal(logtoManagement.PROVISIONING_POLICY.ownerPublishedMappingCeiling, "owner_ceiling_required_before_functional_role_materialization");
+  assert.equal(logtoManagement.PROVISIONING_POLICY.tenantActivationApproval, "tenant_activation_required_before_functional_role_materialization");
+  assert.deepEqual(logtoManagement.PROVISIONING_POLICY.fallbackRoleNames, ["organization_member", "pending_review"]);
+});
+
+test("empty JIT role input records versioned provisioning policy and canonical member fallback", () => {
+  const normalized = normalizeProvisioningInput({ ...validBody(), jitProvisioning: { defaultRoleNames: [] } });
+  assert.deepEqual(normalized.errors, []);
+  assert.deepEqual(normalized.value.canonical.jitProvisioning.defaultRoleNames, ["organization_member"]);
+  assert.match(normalized.value.canonical.jitProvisioning.policy.version, /jit-provisioning-policy-v1$/);
+});
+
+const { sanitizeExternalProvisioningClaims } = require("../authorization/provisioningGuard");
+>>>>>>> theirs
 
 test("provisioning rejects owner roles and external permission injection", () => {
   assert.throws(() => normalizeProvisioningInput({ ...validBody(), jitProvisioning: { defaultRoleNames: ["owner_global"] } }), /provisioning_role_not_canonical|provisioning_owner_role_forbidden/);

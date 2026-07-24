@@ -14,6 +14,7 @@ const getDeploymentConfig = () => {
 const { organizationRoles } = require("../../core/authz/roles/registry");
 
 const MANAGEMENT_TOKEN_SCOPE = "all";
+<<<<<<< ours
 const ORGANIZATION_ADMIN_ROLE_KEY = "organization_admin";
 const JIT_DEFAULT_ORGANIZATION_ROLE_KEY = "organization_student";
 const LEGACY_ORGANIZATION_ADMIN_ROLE_DISPLAY_NAME = "Admin-org";
@@ -27,6 +28,22 @@ const LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY = Object.freeze({
 const CANONICAL_ORGANIZATION_ROLE_KEYS_BY_LEGACY_DISPLAY_NAME = Object.freeze(Object.fromEntries(
   Object.entries(LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY).map(([key, displayName]) => [displayName, key]),
 ));
+=======
+const AUTHORIZATION_CONTRACT_VERSION = sharedContract.version;
+const ORGANIZATION_ADMIN_ROLE_NAME = sharedContract.auth.organization.roles.admin;
+const ORGANIZATION_MEMBER_ROLE_NAME = sharedContract.auth.organization.roles.member;
+const JIT_FALLBACK_ORGANIZATION_ROLE_NAME = ORGANIZATION_MEMBER_ROLE_NAME;
+const JIT_PENDING_REVIEW_ROLE_NAME = "pending_review";
+const CANONICAL_ORGANIZATION_ROLE_KEYS = Object.freeze(Object.values(sharedContract.auth.organization.roles));
+const PROVISIONING_POLICY = Object.freeze({
+  version: `${AUTHORIZATION_CONTRACT_VERSION}:jit-provisioning-policy-v1`,
+  canonicalRoleKeySource: "sharedContract.auth.organization.roles",
+  ownerPublishedMappingCeiling: "owner_ceiling_required_before_functional_role_materialization",
+  tenantActivationApproval: "tenant_activation_required_before_functional_role_materialization",
+  fallbackRoleNames: Object.freeze([JIT_FALLBACK_ORGANIZATION_ROLE_NAME, JIT_PENDING_REVIEW_ROLE_NAME]),
+});
+const REQUIRED_ORGANIZATION_ROLE_NAMES = [ORGANIZATION_ADMIN_ROLE_NAME, ORGANIZATION_MEMBER_ROLE_NAME];
+>>>>>>> theirs
 const PROHIBITED_ORGANIZATION_USER_GLOBAL_ROLE_NAMES = [sharedContract.auth.global.ownerRole];
 const SENSITIVE_KEY_PATTERN = /(authorization|password|secret|token|credential|cookie|client[_-]?secret|api[_-]?key)/i;
 
@@ -750,6 +767,7 @@ async function listLogtoOrganizations() {
 }
 
 module.exports = {
+<<<<<<< ours
   ORGANIZATION_ADMIN_ROLE_KEY,
   JIT_DEFAULT_ORGANIZATION_ROLE_KEY,
   LEGACY_ORGANIZATION_ADMIN_ROLE_DISPLAY_NAME,
@@ -757,6 +775,15 @@ module.exports = {
   REQUIRED_ORGANIZATION_ROLE_KEYS,
   LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY,
   CANONICAL_ORGANIZATION_ROLE_KEYS_BY_LEGACY_DISPLAY_NAME,
+=======
+  ORGANIZATION_ADMIN_ROLE_NAME,
+  ORGANIZATION_MEMBER_ROLE_NAME,
+  JIT_FALLBACK_ORGANIZATION_ROLE_NAME,
+  JIT_PENDING_REVIEW_ROLE_NAME,
+  CANONICAL_ORGANIZATION_ROLE_KEYS,
+  PROVISIONING_POLICY,
+  REQUIRED_ORGANIZATION_ROLE_NAMES,
+>>>>>>> theirs
   PROHIBITED_ORGANIZATION_USER_GLOBAL_ROLE_NAMES,
   LogtoManagementApiError,
   replaceJitDefaultRolesForLogtoOrganization,

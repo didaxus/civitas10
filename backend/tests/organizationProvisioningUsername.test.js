@@ -91,7 +91,7 @@ test("organization customData uses required Logto profile structure", () => {
     business: { nit: "900123456", city: "Bogotá", country: "Colombia", description: "Colegio" },
     segmentation: { tags: ["org-colegio-demo"], lists: ["onboarding-colegio-demo"] },
     administrativeContacts: [{ firstName: "Juan", firstSurname: "Rodriguez", secondSurname: "Perez", email: "j.rodriguez@ejemplo.com", organizationRoleName: "organization_payroll" }],
-    jitProvisioning: { defaultRoleNames: ["legacy-role"] },
+    jitProvisioning: { defaultRoleNames: ["organization_member"] },
   });
 
   assert.deepEqual(normalized.errors, []);

@@ -29,7 +29,7 @@ function normalize(input = payload()) {
 
 function logtoDeps(calls, { failOnAssignEmail = null } = {}) {
   return {
-    async listLogtoOrganizationRoles() { calls.push("roles.list"); return [{ id: "role-admin", name: "organization_admin" }, { id: "role-billing", name: "organization_billing" }]; },
+    async listLogtoOrganizationRoles() { calls.push("roles.list"); return [{ id: "role-admin", name: "organization_admin" }, { id: "role-billing", name: "organization_billing" }, { id: "role-member", name: "organization_member" }]; },
     async ensureOrganizationTemplate() { calls.push("template.validate"); return { ok: true }; },
     async createOrganization() { calls.push("organization.create"); return { id: "org-1", name: "Colegio Uno" }; },
     async replaceJitEmailDomainsForLogtoOrganization() { calls.push("jit.domains.replace"); },
@@ -63,12 +63,12 @@ test("same idempotencyKey resume does not repeat completed external effects", as
   assert.equal(recorder.operation.status, "completed");
 });
 
-test("empty jitProvisioning.defaultRoleNames is preserved as an empty Logto role replacement", async () => {
+test("empty jitProvisioning.defaultRoleNames falls back to approved organization_member", async () => {
   const calls = [];
   const recorder = createMemoryProvisioningRecorder({ idempotencyKey: "idem-empty-jit" });
   await runCanonicalOrganizationProvisioning({ input: normalize(), actor: { type: "owner_global" }, recorder, logto: logtoDeps(calls) });
 
-  assert.deepEqual(calls.find((call) => Array.isArray(call) && call[0] === "jit.roles.replace"), ["jit.roles.replace", []]);
+  assert.deepEqual(calls.find((call) => Array.isArray(call) && call[0] === "jit.roles.replace"), ["jit.roles.replace", ["role-member"]]);
 });
 
 test("first administrative contact is primary operational contact but has no implicit role", async () => {
