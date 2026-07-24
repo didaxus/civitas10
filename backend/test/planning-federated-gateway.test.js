@@ -73,3 +73,27 @@ test('oversized runtime responses are rejected without leaking provider payloads
   assert.equal(res.problem.code,'planning.remote.bad_gateway');
   assert.equal(JSON.stringify(res.problem).includes('xxxxx'), false);
 });
+
+test('replaceProfile uses PUT /profile with If-Match and typed precondition/conflict problems', async()=>{
+  const { port, fake }=deps();
+  assert.equal(typeof port.replaceProfile,'function');
+  assert.equal(port['upsert'+'Profile'], undefined);
+  const profileContext=ctx({ operation:{ moduleId:'planning', capabilityId:'planning.profile', operationId:'planning.profile.replace', actionId:'planning.profile.update', permission:'planning.agora.manage', executionKind:'write' }, concurrency:{ etag:'profile-v1' } });
+  const res=await port.replaceProfile({ planningMode:'standard', preferences:{ fiscalYearStart:'09-01' } }, profileContext);
+  assert.equal(res.ok,true);
+  assert.equal(fake.calls[0].method,'PUT');
+  assert.equal(fake.calls[0].path,'/private/planning-runtime/v1/profile');
+  assert.equal(fake.calls[0].headers['If-Match'],'profile-v1');
+  assert.equal(fake.calls[0].body.operation.operationId,'planning.profile.replace');
+
+  const missing=await port.replaceProfile({ planningMode:'standard' }, ctx({ operation:profileContext.operation }));
+  assert.equal(missing.ok,false);
+  assert.equal(missing.problem.code,'planning.remote.precondition_required');
+  assert.deepEqual(missing.problem.fieldViolations,[{ field:'If-Match', code:'required' }]);
+
+  const conflictDeps=deps('precondition_failed');
+  const stale=await conflictDeps.port.replaceProfile({ planningMode:'standard' }, profileContext);
+  assert.equal(stale.ok,false);
+  assert.equal(stale.problem.code,'planning.remote.precondition_failed');
+  assert.equal(toRfc9457Problem(stale.problem).status,412);
+});
