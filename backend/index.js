@@ -45,6 +45,7 @@ const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
 const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipService");
 const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
+const { registerScimReconciliationRoutes } = require("./routes/scimReconciliationRoutes");
 
 const app = express();
 const port = 3000;
@@ -607,6 +608,19 @@ secureRoute.get("/o/:organizationId/documents", "organizationMemberRead", requir
 secureRoute.post("/o/:organizationId/documents", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), requireAuthorization({ permission: ORG_AUTHZ.documentsCreate, actionId: "documents.create", surface: "organization", operation: "create", policies: documentCreatePolicies, auditIntentResolver: (req) => ({ decisionId: req.authorizationDecision?.decisionId, action: "documents.create", actorSubject: req.auth?.subject || req.user?.sub || req.user?.id, organizationId: req.params.organizationId, targetType: "document", reason: req.body?.reason || "document_create", reasonRequired: false, idempotencyRequired: false }) }), documentCreateHandler);
 
 registerIdentityFederationRoutes({
+  secureRoute,
+  requireSafeOrganizationIdParam,
+  requireGlobalAccess,
+  requireGlobalOwner,
+  requireOrganizationAccess,
+  requireOrg,
+  requireOrganizationRole,
+  requirePermission,
+  sharedAuth: SHARED_AUTH,
+  apiResource: API_RESOURCE,
+});
+
+registerScimReconciliationRoutes({
   secureRoute,
   requireSafeOrganizationIdParam,
   requireGlobalAccess,
