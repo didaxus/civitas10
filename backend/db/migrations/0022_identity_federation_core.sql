@@ -100,3 +100,27 @@ create unique index if not exists organization_federated_assignment_sources_acti
   where state in ('active','pending');
 create index if not exists organization_federated_assignment_sources_user_idx on organization_federated_assignment_sources (logto_organization_id, logto_user_id, state);
 create index if not exists organization_federated_assignment_sources_mapping_idx on organization_federated_assignment_sources (mapping_id, mapping_version);
+
+create table if not exists organization_external_directory_objects (
+  id varchar(64) primary key,
+  logto_organization_id varchar(128),
+  connection_id uuid not null,
+  object_type varchar(40) not null,
+  external_id varchar(255) not null,
+  display_name varchar(255) not null,
+  source_kind varchar(80) not null default 'directory_sync_scim',
+  state varchar(40) not null default 'active',
+  members jsonb not null default '[]'::jsonb,
+  canonical_role_id varchar(128),
+  version bigint not null default 1,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint organization_external_directory_objects_connection_fk foreign key (connection_id) references organization_identity_connections (id) on delete cascade,
+  constraint organization_external_directory_objects_type_chk check (object_type in ('group','user')),
+  constraint organization_external_directory_objects_source_chk check (source_kind in ('directory_sync_scim','provider_api_sync')),
+  constraint organization_external_directory_objects_no_canonical_role_chk check (object_type <> 'group' or canonical_role_id is null),
+  constraint organization_external_directory_objects_state_chk check (state in ('active','deleted')),
+  constraint organization_external_directory_objects_external_uidx unique (connection_id, object_type, external_id)
+);
+
+create index if not exists organization_external_directory_objects_connection_idx on organization_external_directory_objects (connection_id, object_type, state);

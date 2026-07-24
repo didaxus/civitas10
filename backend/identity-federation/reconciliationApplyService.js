@@ -63,7 +63,7 @@ async function applyIdentityFederationReconciliation({ repository, logtoClient, 
   try {
     for (const item of adds) {
       await logtoClient.addOrganizationRoleAssignment({ organizationId: plan.organizationId, userId: item.userId, roleId: item.roleId });
-      await repository.upsertAssignmentSource({ organizationId: plan.organizationId, connectionId: plan.connectionId, assignmentId: item.assignmentId || `${item.userId}:${item.roleId}`, userId: item.userId, roleId: item.roleId, mappingVersion: plan.mappingVersion, policyVersion: plan.policyVersion, actorProvenance, idempotencyKey });
+      await repository.upsertAssignmentSource({ organizationId: plan.organizationId, connectionId: plan.connectionId, assignmentId: item.assignmentId || `${item.userId}:${item.roleId}`, userId: item.userId, roleId: item.roleId, mappingVersion: plan.mappingVersion, policyVersion: plan.policyVersion, mappingProvenance: item.provenance || plan.provenance || null, actorProvenance, idempotencyKey });
       applied.push({ action: 'add', userId: item.userId, roleId: item.roleId });
     }
     for (const item of removes) {
