@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.didaxus.com/contracts/events/planning/profile-updated.v1.schema.json",
+  "title": "planning.profile.updated.v1",
+  "type": "object",
+  "required": ["eventId", "eventType", "eventVersion", "occurredAt", "organizationId", "actor", "correlationId", "sensitivity", "safeDiff"],
+  "additionalProperties": false,
+  "properties": {
+    "eventId": { "type": "string" },
+    "eventType": { "const": "planning.profile.updated.v1" },
+    "eventVersion": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "organizationId": { "type": "string" },
+    "actor": { "type": "object", "required": ["subjectId", "clientId"], "additionalProperties": false, "properties": { "subjectId": {"type":"string"}, "clientId": {"type":"string"} } },
+    "correlationId": { "type": "string" },
+    "decisionId": { "type": ["string", "null"] },
+    "sensitivity": { "const": "internal" },
+    "safeDiff": { "type": "array", "items": { "type": "object", "required": ["path", "op"], "additionalProperties": false, "properties": { "path": {"type":"string", "pattern":"^/(planningMode|preferences)(/.*)?$"}, "op": {"enum":["add","replace","remove"]}, "from": {"type":["string","number","boolean","null"]}, "to": {"type":["string","number","boolean","null"]} } } }
+  }
+}

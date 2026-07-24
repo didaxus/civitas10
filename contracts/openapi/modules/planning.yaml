@@ -1,0 +1,188 @@
+paths:
+  /o/{organizationId}/planning/plans:
+    post:
+      operationId: planningPlansCreate
+      tags: [planning]
+      x-civitas-module: planning
+      x-civitas-capability: planning.plans
+      x-civitas-route-id: planning.plans.create
+      x-civitas-action-id: planning.plans.create
+      x-civitas-surface: organization
+      x-civitas-status: planned
+      x-civitas-permission: planning.plans.manage
+      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
+      x-civitas-audit: write
+      x-civitas-idempotency: required
+      x-civitas-execution: synchronous
+      parameters:
+        - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlanningPlanCreateRequest' }
+      responses:
+        '201': { $ref: '#/components/responses/PlanningPlanResponse' }
+        '400': { $ref: ../common/responses.yaml#/components/responses/BadRequest }
+        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
+        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
+        '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
+        '422': { $ref: ../common/responses.yaml#/components/responses/ValidationError }
+        '503': { $ref: ../common/responses.yaml#/components/responses/ServiceUnavailable }
+        '504': { $ref: ../common/responses.yaml#/components/responses/GatewayTimeout }
+    get:
+      operationId: planningPlansList
+      tags: [planning]
+      x-civitas-module: planning
+      x-civitas-capability: planning.plans
+      x-civitas-route-id: planning.plans.list
+      x-civitas-action-id: planning.plans.list
+      x-civitas-surface: organization
+      x-civitas-status: planned
+      x-civitas-permission: planning.plans.read
+      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
+      x-civitas-audit: read
+      x-civitas-idempotency: forbidden
+      x-civitas-execution: synchronous
+      parameters:
+        - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
+        - { name: cursor, in: query, schema: { type: string, maxLength: 512 } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: status, in: query, schema: { enum: [draft, approved, archived] } }
+      responses:
+        '200': { $ref: '#/components/responses/PlanningPlanCollectionResponse' }
+        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
+        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
+        '503': { $ref: ../common/responses.yaml#/components/responses/ServiceUnavailable }
+        '504': { $ref: ../common/responses.yaml#/components/responses/GatewayTimeout }
+  /o/{organizationId}/planning/plans/{planId}:
+    get:
+      operationId: planningPlansRead
+      tags: [planning]
+      x-civitas-module: planning
+      x-civitas-capability: planning.plans
+      x-civitas-route-id: planning.plans.read
+      x-civitas-action-id: planning.plans.read
+      x-civitas-surface: organization
+      x-civitas-status: planned
+      x-civitas-permission: planning.plans.read
+      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current, tenant-resource-ownership]
+      x-civitas-audit: read
+      x-civitas-idempotency: forbidden
+      x-civitas-execution: synchronous
+      parameters:
+        - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200': { $ref: '#/components/responses/PlanningPlanResponse' }
+        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
+        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
+        '404': { $ref: ../common/responses.yaml#/components/responses/NotFound }
+    patch:
+      operationId: planningPlansUpdate
+      tags: [planning]
+      x-civitas-module: planning
+      x-civitas-capability: planning.plans
+      x-civitas-route-id: planning.plans.update
+      x-civitas-action-id: planning.plans.update
+      x-civitas-surface: organization
+      x-civitas-status: planned
+      x-civitas-permission: planning.plans.manage
+      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current, tenant-resource-ownership]
+      x-civitas-audit: write
+      x-civitas-idempotency: required
+      x-civitas-execution: synchronous
+      parameters:
+        - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
+        - $ref: '#/components/parameters/PlanId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlanningPlanUpdateRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/PlanningPlanResponse' }
+        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
+        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
+        '404': { $ref: ../common/responses.yaml#/components/responses/NotFound }
+        '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
+        '412': { $ref: ../common/responses.yaml#/components/responses/PreconditionFailed }
+        '422': { $ref: ../common/responses.yaml#/components/responses/ValidationError }
+  /o/{organizationId}/planning/profile:
+    get:
+      operationId: planningProfileRead
+      tags: [planning]
+      x-civitas-module: planning
+      x-civitas-capability: planning.profile
+      x-civitas-route-id: planning.profile.read
+      x-civitas-action-id: planning.profile.read
+      x-civitas-surface: organization
+      x-civitas-status: planned
+      x-civitas-permission: planning.profile.read
+      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
+      x-civitas-audit: read
+      x-civitas-idempotency: forbidden
+      x-civitas-execution: synchronous
+      parameters:
+        - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
+      responses:
+        '200': { $ref: '#/components/responses/PlanningProfileResponse' }
+        '401': { $ref: ../common/responses.yaml#/components/responses/Unauthorized }
+        '403': { $ref: ../common/responses.yaml#/components/responses/Forbidden }
+    put:
+      operationId: planningProfileReplace
+      tags: [planning]
+      x-civitas-module: planning
+      x-civitas-capability: planning.profile
+      x-civitas-route-id: planning.profile.replace
+      x-civitas-action-id: planning.profile.replace
+      x-civitas-surface: organization
+      x-civitas-status: planned
+      x-civitas-permission: planning.profile.manage
+      x-civitas-policies: [same-organization, membership-required, authorization-snapshot-current]
+      x-civitas-audit: write
+      x-civitas-idempotency: required
+      x-civitas-execution: synchronous
+      parameters:
+        - $ref: ../common/parameters.yaml#/components/parameters/OrganizationId
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlanningProfileReplaceRequest' }
+      responses:
+        '200': { $ref: '#/components/responses/PlanningProfileResponse' }
+        '409': { $ref: ../common/responses.yaml#/components/responses/Conflict }
+        '412': { $ref: ../common/responses.yaml#/components/responses/PreconditionFailed }
+        '422': { $ref: ../common/responses.yaml#/components/responses/ValidationError }
+components:
+  parameters:
+    PlanId: { name: planId, in: path, required: true, schema: { type: string, minLength: 1, maxLength: 128 } }
+    IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, minLength: 8, maxLength: 255 } }
+    IfMatch: { name: If-Match, in: header, required: true, schema: { type: string, minLength: 1, maxLength: 128 } }
+  responses:
+    PlanningPlanResponse:
+      description: Planning plan response.
+      headers: { ETag: { schema: { type: string } } }
+      content: { application/json: { schema: { $ref: '#/components/schemas/PlanningPlanEnvelope' } } }
+    PlanningPlanCollectionResponse:
+      description: Cursor-paginated planning plans.
+      content: { application/json: { schema: { $ref: '#/components/schemas/PlanningPlanCollectionEnvelope' } } }
+    PlanningProfileResponse:
+      description: Planning profile response.
+      headers: { ETag: { schema: { type: string } } }
+      content: { application/json: { schema: { $ref: '#/components/schemas/PlanningProfileEnvelope' } } }
+  schemas:
+    PlanningPlan: { type: object, required: [id, title, status, version, updatedAt], properties: { id: { type: string }, title: { type: string, maxLength: 160 }, description: { type: [string, 'null'], maxLength: 4000 }, status: { enum: [draft, approved, archived] }, version: { type: string }, updatedAt: { type: string, format: date-time } } }
+    PlanningProfile: { type: object, required: [organizationId, planningMode, preferences, version, updatedAt], properties: { organizationId: { type: string }, planningMode: { enum: [standard, curriculum, strategic] }, preferences: { type: object, additionalProperties: false, properties: { fiscalYearStart: { type: string, pattern: '^[0-9]{2}-[0-9]{2}$' } } }, version: { type: string }, updatedAt: { type: string, format: date-time } } }
+    PlanningPlanCreateRequest: { type: object, required: [title], additionalProperties: false, properties: { title: { type: string, minLength: 1, maxLength: 160 }, description: { type: [string, 'null'], maxLength: 4000 } } }
+    PlanningPlanUpdateRequest: { type: object, additionalProperties: false, minProperties: 1, properties: { title: { type: string, minLength: 1, maxLength: 160 }, description: { type: [string, 'null'], maxLength: 4000 } } }
+    PlanningProfileReplaceRequest: { type: object, required: [planningMode, preferences], additionalProperties: false, properties: { planningMode: { enum: [standard, curriculum, strategic] }, preferences: { type: object, additionalProperties: false, properties: { fiscalYearStart: { type: string, pattern: '^[0-9]{2}-[0-9]{2}$' } } } } }
+    PlanningPlanEnvelope: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/PlanningPlan' }, meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta } } }
+    PlanningProfileEnvelope: { type: object, required: [data, meta], properties: { data: { $ref: '#/components/schemas/PlanningProfile' }, meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta } } }
+    PlanningPlanCollectionEnvelope: { type: object, required: [data, page, links, meta], properties: { data: { type: array, items: { $ref: '#/components/schemas/PlanningPlan' } }, page: { type: object, required: [nextCursor, hasMore], properties: { nextCursor: { type: [string, 'null'] }, hasMore: { type: boolean } } }, links: { type: object }, meta: { $ref: ../common/schemas.yaml#/components/schemas/Meta } } }
