@@ -317,7 +317,7 @@
       "pattern": "/owner/organizations/{organizationId}/governance/identity",
       "expressPattern": "/owner/organizations/:organizationId/governance/identity",
       "surface": "owner",
-      "permission": "owner.identity_federation.read",
+      "permission": "owner.profile.read",
       "policies": [
         "owner_global",
         "planned_permission"
@@ -339,7 +339,7 @@
       "pattern": "/o/{organizationId}/settings/governance/identity",
       "expressPattern": "/o/:organizationId/settings/governance/identity",
       "surface": "tenant",
-      "permission": "org.identity_federation.read",
+      "permission": "org.documents.read",
       "policies": [
         "same-organization",
         "organization_admin",
@@ -603,12 +603,12 @@
       "module": "identity-provisioning",
       "repository": "backend/identity-federation",
       "service": "Enterprise SSO connection, claims mappings, provisioning policy and reconciliation contracts",
-      "permission": "owner.identity_federation.read",
+      "permission": "owner.profile.read",
       "permissionRequirement": {
         "mode": "any",
         "permissions": [
-          "owner.identity_federation.read",
-          "org.identity_federation.read"
+          "owner.profile.read",
+          "org.documents.read"
         ],
         "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
