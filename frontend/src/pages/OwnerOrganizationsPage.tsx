@@ -1211,7 +1211,7 @@ const StepCanonicalOrganization = ({
 }) => (
   <SectionCard
     title="Identity & routing"
-    description="Created canonically in Logto; configure display name, entry URL, provisioning domain and default role."
+    description="Created canonically in Logto; configure display name, entry URL, legacy/simple JIT domain and default role. Organization Identity Federation uses explicit mapping policies instead."
   >
     <div className="civitas-form-grid">
       <FormField id="organization-name" label="Organization name" required>
@@ -1266,7 +1266,7 @@ const StepCanonicalOrganization = ({
           placeholder="school.edu.co"
         />
       </FormField>
-      <FormField id="jit-default-role" label="JIT default role">
+      <FormField id="jit-default-role" label="Legacy JIT domain default role (not federation)">
         <select
           id="jit-default-role"
           className={inputClassName}
@@ -1276,7 +1276,7 @@ const StepCanonicalOrganization = ({
           }
           disabled={templateLoading || adminRoleOptions.length === 0}
         >
-          <option value="">No JIT default role</option>
+          <option value="">No legacy JIT default role</option>
           {adminRoleOptions.map((role) => (
             <option key={role.id} value={role.name}>
               {role.name}
@@ -1285,6 +1285,10 @@ const StepCanonicalOrganization = ({
         </select>
       </FormField>
     </div>
+
+    <AlertStrip variant="info" title="Legacy JIT is not federation">
+      This simple onboarding default role only applies to Logto JIT joins by institutional domain. It does not map external IdP claims, SCIM groups or Organization Identity Federation assignments.
+    </AlertStrip>
     <AlertStrip variant="neutral" title="Entry URL preview">
       {form.appSubdomain && form.appBaseDomain
         ? `https://${form.appSubdomain}.${form.appBaseDomain}`
@@ -1985,7 +1989,7 @@ const StepReview = ({
             value: form.adminDomain,
             required: true,
           },
-          { label: "JIT default role", value: form.jitDefaultRoleName },
+          { label: "Legacy JIT default role (no external claim/group mapping)", value: form.jitDefaultRoleName },
           { label: "Description", value: form.description },
         ]}
       />

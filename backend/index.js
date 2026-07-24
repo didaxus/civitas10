@@ -44,6 +44,8 @@ const { requireGlobalOwner } = require("./authorization/guards");
 const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
 const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipService");
+const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
+const { registerScimUserRoutes } = require("./scim/users/routes");
 
 const app = express();
 const port = 3000;
@@ -374,6 +376,16 @@ secureRoute.get("/owner/organizations/:organizationId/operational-state", "owner
 });
 
 
+
+secureRoute.get("/owner/organizations/:organizationId/governance/identity", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
+  return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: req.params.organizationId, surface: "owner", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" });
+});
+
+secureRoute.get("/o/:organizationId/settings/governance/identity", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
+  try { assertTenantRouteMatchesContext(req); return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: req.params.organizationId, surface: "tenant", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" }); }
+  catch (error) { return sendPublicError(res, error, "TenantIdentityFederationError", "Failed to load identity federation surface"); }
+});
+
 secureRoute.get("/owner/organizations/:organizationId/governance", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
   try {
     const logtoOrganization = await getLogtoOrganizationById(req.params.organizationId);
@@ -595,6 +607,34 @@ secureRoute.get("/o/:organizationId/documents", "organizationMemberRead", requir
 
 secureRoute.post("/o/:organizationId/documents", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), requireAuthorization({ permission: ORG_AUTHZ.documentsCreate, actionId: "documents.create", surface: "organization", operation: "create", policies: documentCreatePolicies, auditIntentResolver: (req) => ({ decisionId: req.authorizationDecision?.decisionId, action: "documents.create", actorSubject: req.auth?.subject || req.user?.sub || req.user?.id, organizationId: req.params.organizationId, targetType: "document", reason: req.body?.reason || "document_create", reasonRequired: false, idempotencyRequired: false }) }), documentCreateHandler);
 
+registerScimUserRoutes({ secureRoute });
+
+registerIdentityFederationRoutes({
+  secureRoute,
+  requireSafeOrganizationIdParam,
+  requireGlobalAccess,
+  requireGlobalOwner,
+  requireOrganizationAccess,
+  requireOrg,
+  requireOrganizationRole,
+  requirePermission,
+  sharedAuth: SHARED_AUTH,
+  apiResource: API_RESOURCE,
+});
+
+registerScimReconciliationRoutes({
+  secureRoute,
+  requireSafeOrganizationIdParam,
+  requireGlobalAccess,
+  requireGlobalOwner,
+  requireOrganizationAccess,
+  requireOrg,
+  requireOrganizationRole,
+  requirePermission,
+  sharedAuth: SHARED_AUTH,
+  apiResource: API_RESOURCE,
+});
+
 secureRoute.get("/documents", "organizationMemberReadLegacyRedirect", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), (req, res) => {
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");
   res.set("Deprecation", "true");
@@ -606,6 +646,7 @@ secureRoute.post("/documents", "organizationAdminWriteLegacyRejected", requireOr
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");
   return res.status(410).json({ error: "EndpointDeprecated", code: "tenant_route_deprecated", canonicalPath });
 });
+
 
 secureRoute.get("/", "public", (_req, res) => {
   res.json({ message: "Welcome to the Civitas 10 API" });

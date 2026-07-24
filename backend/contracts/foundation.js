@@ -33,6 +33,11 @@ const OPERATION_STATUSES = Object.freeze({
   COMPENSATED: "compensated",
 });
 
+const OPERATION_TYPES = Object.freeze({
+  IDENTITY_FEDERATION_RECONCILIATION_PLAN_CREATE: 'identity_federation.reconciliation_plan.create',
+  IDENTITY_FEDERATION_RECONCILIATION_APPLY: 'identity_federation.reconciliation.apply',
+});
+
 const ITEM_STATUSES = Object.freeze({
   SUCCESS: "success",
   FAILED: "failed",
@@ -104,6 +109,7 @@ module.exports = {
   CANONICAL_PERMISSIONS,
   ITEM_STATUSES,
   OPERATION_STATUSES,
+  OPERATION_TYPES,
   assertKnownCapability,
   createAdapterHealth,
 };

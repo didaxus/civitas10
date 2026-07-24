@@ -159,6 +159,10 @@
         "operationRegistryVersion": "2026-07-civitas10-governance-operations-v1",
         "runtimeStatus": "current"
       }
+    },
+    "identity-provisioning": {
+      "status": "planned",
+      "reason": "identity_federation_contracts_persisted_but_handlers_policies_tests_pending"
     }
   },
   "operationRegistry": {
@@ -383,7 +387,15 @@
     "activeModules": 5,
     "plannedModules": 2,
     "unavailableModules": 1,
-    "reason": "aggregate_projection_only"
+    "reason": "aggregate_projection_only",
+    "identityProvisioningStates": [
+      "not_configured",
+      "active",
+      "degraded",
+      "suspended",
+      "credentials_expiring",
+      "reconciliation_required"
+    ]
   },
   "roles": [
     {
@@ -815,5 +827,21 @@
         ]
       }
     }
-  ]
+  ],
+  "identityProvisioning": {
+    "status": "not_configured",
+    "connectionId": null,
+    "protocol": null,
+    "providerKind": null,
+    "claimsContractVersion": 0,
+    "mappingVersion": 0,
+    "provisioningPolicyVersion": 0,
+    "lastValidatedAt": null,
+    "lastSuccessfulLoginAt": null,
+    "credentialExpiresAt": null,
+    "latestReconciliationRunId": null,
+    "latestReconciliationStatus": null,
+    "driftItemCount": 0,
+    "reason": "identity_federation_connection_missing"
+  }
 }

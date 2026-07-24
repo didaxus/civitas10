@@ -34,7 +34,7 @@
     "authz:role-model:diff": "node scripts/authorization/diff-role-model.mjs",
     "logto:authz:plan": "node scripts/logto/cli.js plan-rbac",
     "authz:security-gate": "node scripts/authorization/security-contract-gate.mjs",
-    "authz:security-gate:check": "node scripts/authorization/security-contract-gate.mjs --check && node --test backend/test/security-contract-gate.test.js backend/test/logto-identity-federation-probe.test.js",
+    "authz:security-gate:check": "node scripts/authorization/security-contract-gate.mjs --check && node --test backend/test/security-contract-gate.test.js backend/test/logto-identity-federation-probe.test.js backend/test/logto-enterprise-sso-adapter.test.js",
     "authz:canonical-core-contract-check": "node --test backend/test/authz-canonical-core-contract.test.js",
     "authz:catalog-check": "npm run authz:permission-catalog:check",
     "authz:role-potential-check": "npm run authz:role-model:check",

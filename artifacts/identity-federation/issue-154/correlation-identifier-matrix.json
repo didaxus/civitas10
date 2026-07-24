@@ -82,5 +82,13 @@
       "safeAsPrimary": true,
       "notes": "Requires remote evidence."
     }
-  ]
+  ],
+  "remoteReadOnlyProbeAttempt": {
+    "command": "LOGTO_IDENTITY_DISCOVERY_ALLOW_REMOTE_READ=true node scripts/discovery/logto-identity-federation-probe.mjs",
+    "exitCode": 0,
+    "remoteObservationPerformed": false,
+    "result": "remote_read_guard_enabled_but_credentials_and_endpoint_absent",
+    "generatedAt": "2026-07-24T05:23:10.498Z"
+  },
+  "decisionSummary": "verification_required; do not use mutable attributes as primary correlation. If Logto lacks upstream issuer+subject+connector evidence, fallback to provider API/SCIM is required."
 }

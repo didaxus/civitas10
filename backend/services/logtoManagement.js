@@ -11,10 +11,35 @@ const getDeploymentConfig = () => {
   return deploymentConfigCache;
 };
 
+const { organizationRoles } = require("../../core/authz/roles/registry");
+
 const MANAGEMENT_TOKEN_SCOPE = "all";
-const ORGANIZATION_ADMIN_ROLE_NAME = "Admin-org";
-const JIT_DEFAULT_ORGANIZATION_ROLE_NAME = "Student-org";
-const REQUIRED_ORGANIZATION_ROLE_NAMES = [ORGANIZATION_ADMIN_ROLE_NAME, JIT_DEFAULT_ORGANIZATION_ROLE_NAME];
+const AUTHORIZATION_CONTRACT_VERSION = sharedContract.version;
+const ORGANIZATION_ADMIN_ROLE_NAME = sharedContract.auth.organization.roles.admin;
+const ORGANIZATION_MEMBER_ROLE_NAME = sharedContract.auth.organization.roles.member;
+const JIT_FALLBACK_ORGANIZATION_ROLE_NAME = ORGANIZATION_MEMBER_ROLE_NAME;
+const JIT_PENDING_REVIEW_ROLE_NAME = "pending_review";
+const ORGANIZATION_ADMIN_ROLE_KEY = ORGANIZATION_ADMIN_ROLE_NAME;
+const JIT_DEFAULT_ORGANIZATION_ROLE_KEY = JIT_FALLBACK_ORGANIZATION_ROLE_NAME;
+const LEGACY_ORGANIZATION_ADMIN_ROLE_DISPLAY_NAME = "Admin-org";
+const LEGACY_JIT_DEFAULT_ORGANIZATION_ROLE_DISPLAY_NAME = "Student-org";
+const CANONICAL_ORGANIZATION_ROLE_KEYS = new Set(Object.values(sharedContract.auth.organization.roles));
+const LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY = Object.freeze({
+  [ORGANIZATION_ADMIN_ROLE_KEY]: LEGACY_ORGANIZATION_ADMIN_ROLE_DISPLAY_NAME,
+  [JIT_DEFAULT_ORGANIZATION_ROLE_KEY]: LEGACY_JIT_DEFAULT_ORGANIZATION_ROLE_DISPLAY_NAME,
+});
+const CANONICAL_ORGANIZATION_ROLE_KEYS_BY_LEGACY_DISPLAY_NAME = Object.freeze(Object.fromEntries(
+  Object.entries(LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY).map(([key, displayName]) => [displayName, key]),
+));
+const REQUIRED_ORGANIZATION_ROLE_KEYS = [ORGANIZATION_ADMIN_ROLE_KEY, JIT_DEFAULT_ORGANIZATION_ROLE_KEY];
+const PROVISIONING_POLICY = Object.freeze({
+  version: `${AUTHORIZATION_CONTRACT_VERSION}:jit-provisioning-policy-v1`,
+  canonicalRoleKeySource: "sharedContract.auth.organization.roles",
+  ownerPublishedMappingCeiling: "owner_ceiling_required_before_functional_role_materialization",
+  tenantActivationApproval: "tenant_activation_required_before_functional_role_materialization",
+  fallbackRoleNames: Object.freeze([JIT_FALLBACK_ORGANIZATION_ROLE_NAME, JIT_PENDING_REVIEW_ROLE_NAME]),
+});
+const REQUIRED_ORGANIZATION_ROLE_NAMES = [ORGANIZATION_ADMIN_ROLE_NAME, ORGANIZATION_MEMBER_ROLE_NAME];
 const PROHIBITED_ORGANIZATION_USER_GLOBAL_ROLE_NAMES = [sharedContract.auth.global.ownerRole];
 const SENSITIVE_KEY_PATTERN = /(authorization|password|secret|token|credential|cookie|client[_-]?secret|api[_-]?key)/i;
 
@@ -402,43 +427,81 @@ function getAllowedOrganizationUserGlobalRoleNames() {
 
 const normalizeRoleListResponse = (response) => (Array.isArray(response) ? response : response?.data || response?.items || []);
 
+function normalizeRequiredOrganizationRoleKeys({ requiredRoleKeys, requiredRoleNames } = {}) {
+  const requested = requiredRoleKeys || requiredRoleNames || REQUIRED_ORGANIZATION_ROLE_KEYS;
+  return requested.map((roleKey) => {
+    const canonicalKey = CANONICAL_ORGANIZATION_ROLE_KEYS_BY_LEGACY_DISPLAY_NAME[roleKey] || roleKey;
+    if (!CANONICAL_ORGANIZATION_ROLE_KEYS.has(canonicalKey)) {
+      throw new LogtoManagementApiError(`Unknown canonical organization role key: ${roleKey}`, {
+        status: 500,
+        body: { reason: "unknown_canonical_organization_role_key", roleKey },
+      });
+    }
+    return canonicalKey;
+  });
+}
+
+function resolveCanonicalOrganizationRoleFromLogtoRole(role = {}) {
+  const roleName = getOrganizationRoleName(role);
+  const canonicalKey = CANONICAL_ORGANIZATION_ROLE_KEYS.has(roleName)
+    ? roleName
+    : CANONICAL_ORGANIZATION_ROLE_KEYS_BY_LEGACY_DISPLAY_NAME[roleName] || null;
+  return {
+    ...role,
+    id: getOrganizationRoleId(role),
+    name: roleName,
+    canonicalKey,
+    legacyDisplayName: canonicalKey ? LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY[canonicalKey] || null : null,
+    resolvedBy: canonicalKey === roleName ? "canonical_role_key" : (canonicalKey ? "legacy_display_name_mapping" : null),
+  };
+}
+
 async function findOrganizationRoleByName(name) {
   const roles = await listLogtoOrganizationRoles();
   return roles.find((role) => getOrganizationRoleName(role) === name) || null;
 }
 
-async function validateOrganizationTemplate({ requiredRoleNames = REQUIRED_ORGANIZATION_ROLE_NAMES } = {}) {
+async function findOrganizationRoleByCanonicalKey(roleKey) {
+  const requiredRoleKeys = normalizeRequiredOrganizationRoleKeys({ requiredRoleKeys: [roleKey] });
   const roles = await listLogtoOrganizationRoles();
-  const normalizedRoles = roles.map((role) => ({
-    ...role,
-    id: getOrganizationRoleId(role),
-    name: getOrganizationRoleName(role),
-  }));
-  const availableRoleNames = normalizedRoles.map((role) => role.name).filter(Boolean);
-  const missingRoleNames = requiredRoleNames.filter((roleName) => !availableRoleNames.includes(roleName));
+  const normalizedRoles = roles.map(resolveCanonicalOrganizationRoleFromLogtoRole);
+  return normalizedRoles.find((role) => role.canonicalKey === requiredRoleKeys[0]) || null;
+}
+
+async function validateOrganizationTemplate({ requiredRoleKeys, requiredRoleNames } = {}) {
+  const resolvedRequiredRoleKeys = normalizeRequiredOrganizationRoleKeys({ requiredRoleKeys, requiredRoleNames });
+  const roles = await listLogtoOrganizationRoles();
+  const normalizedRoles = roles.map(resolveCanonicalOrganizationRoleFromLogtoRole);
+  const availableCanonicalRoleKeys = normalizedRoles.map((role) => role.canonicalKey).filter(Boolean);
+  const missingRoleKeys = resolvedRequiredRoleKeys.filter((roleKey) => !availableCanonicalRoleKeys.includes(roleKey));
 
   return {
-    ok: missingRoleNames.length === 0,
-    requiredRoleNames,
-    missingRoleNames,
+    ok: missingRoleKeys.length === 0,
+    requiredRoleKeys: resolvedRequiredRoleKeys,
+    missingRoleKeys,
+    requiredRoleNames: resolvedRequiredRoleKeys,
+    missingRoleNames: missingRoleKeys,
     roles: normalizedRoles,
   };
 }
 
-async function ensureOrganizationTemplate({ requiredRoleNames = REQUIRED_ORGANIZATION_ROLE_NAMES } = {}) {
-  const template = await validateOrganizationTemplate({ requiredRoleNames });
+async function ensureOrganizationTemplate({ requiredRoleKeys, requiredRoleNames } = {}) {
+  const template = await validateOrganizationTemplate({ requiredRoleKeys, requiredRoleNames });
   if (!template.ok) {
-    const error = new LogtoManagementApiError(`Logto organization template is missing required role(s): ${template.missingRoleNames.join(", ")}`, {
+    const error = new LogtoManagementApiError(`Logto organization template is missing required canonical role key(s): ${template.missingRoleKeys.join(", ")}`, {
       status: 424,
       body: {
         reason: "organization_template_missing_roles",
-        requiredRoleNames: template.requiredRoleNames,
-        missingRoleNames: template.missingRoleNames,
+        requiredRoleKeys: template.requiredRoleKeys,
+        missingRoleKeys: template.missingRoleKeys,
+        requiredRoleNames: template.requiredRoleKeys,
+        missingRoleNames: template.missingRoleKeys,
         availableRoleNames: template.roles.map((role) => role.name).filter(Boolean),
       },
     });
     error.code = "LOGTO_ORGANIZATION_TEMPLATE_MISSING_ROLES";
-    error.missingRoleNames = template.missingRoleNames;
+    error.missingRoleKeys = template.missingRoleKeys;
+    error.missingRoleNames = template.missingRoleKeys;
     throw error;
   }
   return template;
@@ -700,8 +763,19 @@ async function listLogtoOrganizations() {
 }
 
 module.exports = {
+  ORGANIZATION_ADMIN_ROLE_KEY,
+  JIT_DEFAULT_ORGANIZATION_ROLE_KEY,
+  LEGACY_ORGANIZATION_ADMIN_ROLE_DISPLAY_NAME,
+  LEGACY_JIT_DEFAULT_ORGANIZATION_ROLE_DISPLAY_NAME,
+  REQUIRED_ORGANIZATION_ROLE_KEYS,
+  LEGACY_ORGANIZATION_ROLE_DISPLAY_NAMES_BY_KEY,
+  CANONICAL_ORGANIZATION_ROLE_KEYS_BY_LEGACY_DISPLAY_NAME,
   ORGANIZATION_ADMIN_ROLE_NAME,
-  JIT_DEFAULT_ORGANIZATION_ROLE_NAME,
+  ORGANIZATION_MEMBER_ROLE_NAME,
+  JIT_FALLBACK_ORGANIZATION_ROLE_NAME,
+  JIT_PENDING_REVIEW_ROLE_NAME,
+  CANONICAL_ORGANIZATION_ROLE_KEYS,
+  PROVISIONING_POLICY,
   REQUIRED_ORGANIZATION_ROLE_NAMES,
   PROHIBITED_ORGANIZATION_USER_GLOBAL_ROLE_NAMES,
   LogtoManagementApiError,
@@ -726,6 +800,7 @@ module.exports = {
   findLogtoOrganizationByName,
   ensureOrganizationTemplate,
   findOrganizationRoleByName,
+  findOrganizationRoleByCanonicalKey,
   getLogtoManagementConfig,
   getLogtoUserById,
   getLogtoOrganizationById,

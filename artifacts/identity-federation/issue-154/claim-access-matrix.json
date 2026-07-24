@@ -261,5 +261,13 @@
       "evidence": "remote observation not performed; static docs are not sufficient",
       "decision": "verification_required"
     }
-  ]
+  ],
+  "remoteReadOnlyProbeAttempt": {
+    "command": "LOGTO_IDENTITY_DISCOVERY_ALLOW_REMOTE_READ=true node scripts/discovery/logto-identity-federation-probe.mjs",
+    "exitCode": 0,
+    "remoteObservationPerformed": false,
+    "result": "remote_read_guard_enabled_but_credentials_and_endpoint_absent",
+    "generatedAt": "2026-07-24T05:23:10.498Z"
+  },
+  "decisionSummary": "verification_required: remote read-only probe could not contact Logto because runtime endpoint/audience/M2M credentials are absent; provider API/SCIM fallback remains required if Logto cannot expose immutable issuer+subject+connector and complete group evidence."
 }

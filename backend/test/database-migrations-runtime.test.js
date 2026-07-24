@@ -125,3 +125,54 @@ test("SQL migrator serializes backend and worker startup with a PostgreSQL advis
   assert.equal(queries.filter((sql) => sql.includes("pg_advisory_unlock")).length, 2);
   assert.ok(queries.indexOf("select pg_advisory_lock(hashtext('civitas10:sql-migrations'))") < queries.indexOf("select pg_advisory_unlock(hashtext('civitas10:sql-migrations'))"));
 });
+
+test("identity federation migration defines dedicated tables, constraints, and indexes", async () => {
+  const fs = require("node:fs/promises");
+  const path = require("node:path");
+  const migrationSql = await fs.readFile(path.join(__dirname, "..", "db", "migrations", "0022_identity_federation_core.sql"), "utf8");
+
+  for (const table of [
+    "organization_identity_connections",
+    "organization_external_role_mappings",
+    "organization_federated_assignment_sources",
+  ]) assert.match(migrationSql, new RegExp(`create table if not exists ${table}`));
+
+  for (const column of ["version", "created_at", "updated_at"]) assert.match(migrationSql, new RegExp(`${column} .*not null`, "i"));
+  assert.match(migrationSql, /protocol in \('oidc','saml'\)/);
+  assert.match(migrationSql, /status in \('draft','validating','ready','active','degraded','suspended','rotating_credentials','decommissioning','archived'\)/);
+  assert.match(migrationSql, /source_kind in \('manual','federated_jit','federated_login_reconciliation','directory_sync_scim','provider_api_sync','bootstrap_profile','support_override'\)/);
+  assert.match(migrationSql, /assignment_kind in \('organization_role','data_scope_assignment','organization_membership'\)/);
+  assert.match(migrationSql, /canonical_role_key <> 'owner_global'/);
+  assert.match(migrationSql, /canonical_role_key like 'organization\\_%' escape '\\'/);
+  assert.match(migrationSql, /secret_reference varchar\(255\)/);
+  assert.doesNotMatch(migrationSql, /client_secret\s+varchar|client_secret\s+text|secret\s+varchar|secret\s+text/i);
+
+  for (const index of [
+    "organization_identity_connections_org_status_idx",
+    "organization_external_role_mappings_group_role_uidx",
+    "organization_external_role_mappings_role_idx",
+    "organization_federated_assignment_sources_active_uidx",
+    "organization_federated_assignment_sources_user_idx",
+  ]) assert.match(migrationSql, new RegExp(index));
+});
+
+test("identity federation Drizzle schema is exported with secret references only", () => {
+  const schema = require("../db/schema");
+  assert.ok(schema.organizationIdentityConnections);
+  assert.ok(schema.organizationExternalRoleMappings);
+  assert.ok(schema.organizationFederatedAssignmentSources);
+
+  const connectionColumns = Object.keys(schema.organizationIdentityConnections);
+  assert.ok(connectionColumns.includes("secretReference"));
+  assert.equal(connectionColumns.includes("clientSecret"), false);
+  assert.equal(connectionColumns.includes("secret"), false);
+
+  const roleMappingColumns = Object.keys(schema.organizationExternalRoleMappings);
+  assert.ok(roleMappingColumns.includes("canonicalRoleKey"));
+  assert.ok(roleMappingColumns.includes("version"));
+
+  const sourceColumns = Object.keys(schema.organizationFederatedAssignmentSources);
+  for (const column of ["assignmentKind", "assignmentKey", "sourceKind", "mappingVersion", "version", "createdAt", "updatedAt"]) {
+    assert.ok(sourceColumns.includes(column), column);
+  }
+});

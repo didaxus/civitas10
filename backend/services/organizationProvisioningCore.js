@@ -6,6 +6,8 @@ const {
   listLogtoOrganizationRoles,
   replaceJitDefaultRolesForLogtoOrganization,
   replaceJitEmailDomainsForLogtoOrganization,
+  JIT_FALLBACK_ORGANIZATION_ROLE_NAME,
+  PROVISIONING_POLICY,
 } = require("./logtoManagement");
 const {
   buildOrganizationCreatePayload,
@@ -18,10 +20,14 @@ const { assertProvisionedRoleAllowed } = require("../authorization/provisioningG
 const emptyToNull = (value) =>
   typeof value === "string" && value.trim() ? value.trim() : null;
 
-const normalizeRoleNames = (value) => {
+const normalizeRoleNames = (value, { fallbackRoleName = JIT_FALLBACK_ORGANIZATION_ROLE_NAME } = {}) => {
   const input = Array.isArray(value) ? value : [];
   const roles = input.map((role) => (typeof role === "string" ? role.trim() : "")).filter(Boolean);
   for (const role of roles) assertProvisionedRoleAllowed({ roleName: role, source: "jit_default_roles" });
+  if (roles.length === 0 && fallbackRoleName) {
+    assertProvisionedRoleAllowed({ roleName: fallbackRoleName, source: "jit_default_roles_fallback" });
+    roles.push(fallbackRoleName);
+  }
   return Array.from(new Set(roles));
 };
 
@@ -199,6 +205,7 @@ function normalizeProvisioningInput(body = {}) {
         jitProvisioning: {
           domain: settings.value.adminDomain,
           defaultRoleNames: jitDefaultRoleNames,
+          policy: PROVISIONING_POLICY,
         },
       },
       settings: settings.value,

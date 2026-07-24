@@ -1,5 +1,27 @@
 const { ROLE_MAPPING_NOT_CONFIGURED, RoleMappingError } = require("./roleMappingErrors");
 const { isSupportedCapability } = require("../connectors/adapters/contracts");
+const { organizationRoles } = require("../../core/authz/roles/registry");
+
+const CANONICAL_ORGANIZATION_ROLE_NAMES = new Set(organizationRoles);
+const PROHIBITED_CANONICAL_ROLE_NAMES = new Set([
+  "Admin-org",
+  "Student-org",
+  "Organization admin",
+  "Organization student",
+  "Admin",
+  "Student",
+  "Administrators",
+  "Students",
+  "org" + "_admin",
+  "org" + "_student",
+]);
+
+function assertCanonicalOrganizationRoleName(roleName, source = "role_mapping") {
+  if (!roleName || typeof roleName !== "string" || PROHIBITED_CANONICAL_ROLE_NAMES.has(roleName) || !CANONICAL_ORGANIZATION_ROLE_NAMES.has(roleName)) {
+    throw new RoleMappingError("ROLE_MAPPING_CANONICAL_ROLE_INVALID", `Role mapping ${source} must use a canonical organization role key`, { roleName });
+  }
+  return true;
+}
 
 function scoreMapping(row, input) {
   let score = 0;
@@ -20,8 +42,14 @@ function sourceFor(row, input) {
 async function resolveRoleMapping(input = {}, { store } = {}) {
   const { orgId, capability, connectorKey = null, canonicalRoleId = null, canonicalRoleName, logtoOrganizationId = orgId, membershipContext = {} } = input;
   if (!isSupportedCapability(capability)) throw new RoleMappingError("ROLE_MAPPING_CAPABILITY_UNSUPPORTED", `Unsupported capability ${capability}`, { capability });
+  assertCanonicalOrganizationRoleName(canonicalRoleName, "input canonicalRoleName");
   const rows = store?.listMappings ? await store.listMappings({ orgId, logtoOrganizationId, capability, connectorKey, canonicalRoleId, canonicalRoleName }) : [];
-  const candidates = rows.filter((row) => row.capability === capability && (row.canonicalRoleId === canonicalRoleId || row.canonicalRoleName === canonicalRoleName));
+  const candidates = rows
+    .filter((row) => row.capability === capability && (row.canonicalRoleId === canonicalRoleId || row.canonicalRoleName === canonicalRoleName))
+    .filter((row) => {
+      assertCanonicalOrganizationRoleName(row.canonicalRoleName, "stored canonicalRoleName");
+      return true;
+    });
   const selected = candidates.sort((a, b) => scoreMapping(b, input) - scoreMapping(a, input))[0];
   if (!selected) throw new RoleMappingError(ROLE_MAPPING_NOT_CONFIGURED, `No role mapping configured for ${capability}/${canonicalRoleName}`, { orgId, capability, connectorKey, canonicalRoleId, canonicalRoleName });
   return {
@@ -35,4 +63,4 @@ async function resolveRoleMapping(input = {}, { store } = {}) {
     freshness: { source: selected.freshnessSource || "cached", generatedAt: new Date().toISOString() },
   };
 }
-module.exports = { resolveRoleMapping, scoreMapping };
+module.exports = { resolveRoleMapping, scoreMapping, assertCanonicalOrganizationRoleName, PROHIBITED_CANONICAL_ROLE_NAMES };

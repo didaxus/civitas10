@@ -17,6 +17,7 @@ import { DataScopeModule } from "./modules/data-scope/DataScopeModule";
 import { AliasesNavigationModule } from "./modules/aliases-navigation/AliasesNavigationModule";
 import { AccessPreviewModule, AccessPreviewUnavailable } from "./modules/access-preview/AccessPreviewModule";
 import { AuditDiagnosticsModule } from "./modules/audit/AuditDiagnosticsModule";
+import { IdentityProvisioningModule } from "./modules/identity-provisioning/IdentityProvisioningModule";
 import { governanceDisplayName } from "./adapters/governance-view-model";
 import { flattenGovernanceWorkspaceItems, type GovernanceWorkspaceItemId } from "./governance-workspace-contract";
 
@@ -46,6 +47,7 @@ const ownerPathSegmentToItem: Record<string, GovernanceWorkspaceItemId> = {
   preview: "access-explorer",
   audit: "audit-log",
   "people-segmentation": "people-segmentation",
+  "identity-provisioning": "identity-provisioning",
   operations: "operations",
 };
 
@@ -62,6 +64,11 @@ const workspaceItemById = Object.fromEntries(workspaceItems.map((item) => [item.
 
 const activeItemFromLocation = (surface: GovernanceSurface, pathname: string, search: string): GovernanceWorkspaceItemId => {
   if (surface === "tenant") {
+    const pathParts = pathname.split("/").filter(Boolean);
+    if (pathParts.includes("identity-provisioning")) return "identity-provisioning";
+    if (pathParts.includes("roles")) return "role-permissions";
+    if (pathParts.includes("role-names")) return "role-names";
+    if (pathParts.includes("structure")) return "structure-classification";
     const params = new URLSearchParams(search);
     const tab = (params.get("section") || params.get("tab")) as LegacyGovernanceTabId | GovernanceWorkspaceItemId | null;
     if (tab && workspaceItemById[tab as GovernanceWorkspaceItemId]) return tab as GovernanceWorkspaceItemId;
@@ -116,6 +123,7 @@ const GovernanceModules = ({ activeItemId, model, operationalModel, previewOwner
     if (!isGovernanceOperationActive(model.surface, "governance.accessPreview")) return <AccessPreviewUnavailable />;
     return <AccessPreviewModule organizationId={model.organizationId} surface={model.surface} previews={model.accessPreviews} onPreview={previewModel.surface === "owner" ? previewOwnerAccess : previewTenantAccess} />;
   }
+  if (activeModule === "identity-provisioning") return <IdentityProvisioningModule organizationId={model.organizationId} surface={model.surface} summary={model.identityProvisioning} />;
   if (activeModule === "audit") return <AuditDiagnosticsModule events={model.auditEvents} />;
   return <UnavailableWorkspacePanel title={item.label} description="People segmentation is not available yet." />;
 };
