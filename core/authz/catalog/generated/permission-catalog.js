@@ -9,7 +9,7 @@ const generated = Object.freeze({
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d"
+    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
   },
   "catalog": {
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
@@ -1736,36 +1736,6 @@ const generated = Object.freeze({
         "compatibility": "none"
       },
       {
-        "name": "planning.agora.manage",
-        "namespace": "planning",
-        "moduleId": null,
-        "capabilityId": "planning.agora",
-        "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
-        "dataScopeStrategy": "organization",
-        "risk": "standard",
-        "consumers": [],
-        "policyRequirements": [],
-        "screenActionIds": [],
-        "compatibility": "none"
-      },
-      {
-        "name": "planning.agora.read",
-        "namespace": "planning",
-        "moduleId": null,
-        "capabilityId": "planning.agora",
-        "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
-        "dataScopeStrategy": "organization",
-        "risk": "standard",
-        "consumers": [],
-        "policyRequirements": [],
-        "screenActionIds": [],
-        "compatibility": "none"
-      },
-      {
         "name": "planning.approvals.archive",
         "namespace": "planning",
         "moduleId": null,
@@ -1950,6 +1920,36 @@ const generated = Object.freeze({
         "namespace": "planning",
         "moduleId": null,
         "capabilityId": "planning.plans",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
+        "name": "planning.profile.manage",
+        "namespace": "planning",
+        "moduleId": null,
+        "capabilityId": "planning.profile",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
+        "name": "planning.profile.read",
+        "namespace": "planning",
+        "moduleId": null,
+        "capabilityId": "planning.profile",
         "surface": "organization",
         "targetStatus": "planned",
         "observedImplementation": "absent",
@@ -2699,7 +2699,7 @@ const generated = Object.freeze({
       "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
       "contractVersion": "2026-07-civitas-permission-catalog-v1",
       "baselineAudit": "#167 observed legacy baseline; target is canonical Phase 3 contract",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d"
+      "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
     },
     "legacyBaselineObserved": [
       {
@@ -2950,7 +2950,7 @@ const generated = Object.freeze({
         "reason": "Governance IDs are blocked pending explicit namespace decision; consumers must not infer target permissions."
       }
     ],
-    "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d"
+    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
   },
   "activePermissions": [
     {
@@ -3074,4 +3074,4 @@ const catalog = Object.freeze(generated.catalog)
 const permissions = Object.freeze(catalog.permissions.map(Object.freeze))
 const activePermissions = Object.freeze(generated.activePermissions.map(Object.freeze))
 const permissionsByName = Object.freeze(Object.fromEntries(permissions.map((permission) => [permission.name, permission])))
-module.exports = { generated, catalog, catalogHash: '57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d', permissions, activePermissions, permissionsByName }
+module.exports = { generated, catalog, catalogHash: '710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9', permissions, activePermissions, permissionsByName }

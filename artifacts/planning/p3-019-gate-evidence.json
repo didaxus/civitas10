@@ -1,0 +1,298 @@
+{
+  "schemaVersion": "p3-019-planning-gate-evidence/v1",
+  "moduleId": "planning",
+  "slice": "first Planning vertical slice",
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "activationRule": "Entries may be active only when contracts, consumers, tests, deployment, observability, and rollback evidence all pass.",
+  "scenarios": [
+    {
+      "id": "two_org_allow_deny_no_leakage",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "authn_audience_tenant",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "role_path",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "owner_ceiling",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "tenant_activation",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "policies",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "data_scope",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "module_lifecycle_health",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "replay_jti",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "idempotency_replay_conflict",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "stale_etag",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "approved_mutation_denial",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "timeout_unavailable_incompatible_circuit_open_recovery",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "ui_degraded_fallback_states",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    },
+    {
+      "id": "remote_bundle_failure",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    }
+  ],
+  "parity": {
+    "openapi": {
+      "algorithm": "sha256",
+      "files": [
+        "contracts/openapi/civitas-api.yaml",
+        "contracts/openapi/modules/planning.yaml",
+        "contracts/openapi/common/parameters.yaml",
+        "contracts/openapi/common/responses.yaml",
+        "contracts/openapi/common/schemas.yaml",
+        "contracts/openapi/common/security.yaml"
+      ],
+      "hash": "d718b059108ea640916a95a55643b9cea7e5b26c4151a19e648caaca055a7212"
+    },
+    "private_runtime_schema": {
+      "algorithm": "sha256",
+      "files": [
+        "contracts/federation/planning-runtime/v1/schema.json",
+        "backend/planning/infrastructure/runtimeContractV1.js",
+        "backend/planning/application/dtos.js"
+      ],
+      "hash": "03eb93c93952235fbce025bbef0a871d5daba523e1797a954846230a301f43a8"
+    },
+    "generated_clients": {
+      "algorithm": "sha256",
+      "files": [
+        "contracts/modules/generated/module-catalog-v2.inventory.json",
+        "contracts/modules/generated/module-catalog-v2.types.ts",
+        "artifacts/module-ui/module-ui-contributions.inventory.json"
+      ],
+      "hash": "344d56bf1ec9f62bac8a8ed134b2dec52197fc7872a8ac5a2f89c544f22ec037"
+    },
+    "backend_routes_actions_services": {
+      "algorithm": "sha256",
+      "files": [
+        "backend/planning/application/remotePort.js",
+        "backend/planning/application/services.js",
+        "backend/planning/presentation/routes.js",
+        "backend/planning/presentation/problemMapper.js",
+        "backend/planning/infrastructure/transportAdapter.js",
+        "backend/services/moduleAvailabilityResolver.js",
+        "backend/services/moduleControlPlane.js"
+      ],
+      "hash": "7a7f393e221bb4d48a1ff6c71bc5743eee5a7f7d1ebe14b98d495e9ee9c8a7cb"
+    },
+    "frontend_routes_actions_screens": {
+      "algorithm": "sha256",
+      "files": [
+        "frontend/src/navigation/route-catalog.ts",
+        "frontend/src/navigation/route-builders.ts",
+        "frontend/src/authorization/registry/define-actions.ts",
+        "frontend/src/module-ui/loader/fallbackStates.ts",
+        "frontend/src/module-ui/loader/ModuleUiErrorBoundary.tsx",
+        "frontend/src/features/planning/PlanningRemote.tsx",
+        "frontend/src/features/planning/planningApi.ts",
+        "frontend/src/features/planning/planningRemoteUiContribution.ts"
+      ],
+      "hash": "493cfecb29f1fc9bbb11d400d38df2d9cdd88c9da40dd6325ebc9a6b97d2587e"
+    },
+    "planning_events": {
+      "algorithm": "sha256",
+      "files": [
+        "contracts/integration/integration-event-registry.json",
+        "contracts/integration/integration-event-v1.schema.json",
+        "docs/architecture/module-event-contracts.md",
+        "contracts/events/planning/schemas/planning-plan-created-v1.schema.json",
+        "contracts/events/planning/schemas/planning-profile-updated-v1.schema.json"
+      ],
+      "hash": "33175899669f50edb246d1fe8cc00e71db350ca37b0e36e33eabbd7833473f13"
+    }
+  },
+  "activationEntries": [
+    {
+      "id": "planning.first_vertical_slice.gate",
+      "status": "active",
+      "evidence": {
+        "contracts": "pass",
+        "consumers": "pass",
+        "tests": "pass",
+        "deployment": "pass",
+        "observability": "pass",
+        "rollback": "pass"
+      }
+    }
+  ],
+  "canary": {
+    "stages": [
+      "contract-only dark launch",
+      "single internal tenant",
+      "two-organization canary",
+      "progressive tenant opt-in"
+    ],
+    "abortSignals": [
+      "authorization denial regression",
+      "cross-tenant leakage",
+      "runtime incompatibility",
+      "circuit remains open after recovery probe",
+      "UI white screen or missing fallback"
+    ]
+  },
+  "rollback": {
+    "principle": "Rollback without data deletion: disable Planning tenant activation and runtime/UI bindings, keep contracts and event records for audit, fail closed, and never delete tenant Planning data.",
+    "steps": [
+      "mark tenant Planning installation unavailable/non-executable",
+      "disable remote runtime binding and UI contribution",
+      "preserve outbox/inbox/audit/idempotency ledgers",
+      "revert route exposure through module catalog status if needed",
+      "run recovery probes before re-canary"
+    ]
+  }
+}

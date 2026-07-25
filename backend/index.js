@@ -46,6 +46,7 @@ const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, 
 const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipService");
 const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
 const { registerScimUserRoutes } = require("./scim/users/routes");
+const { registerPlanningRoutes } = require("./planning/presentation/routes");
 
 const app = express();
 const port = 3000;
@@ -57,6 +58,8 @@ const OWNER_AUTHZ = SHARED_AUTH.global.permissions;
 const ORG_AUTHZ = SHARED_AUTH.organization.documentPermissions;
 
 app.use(cors());
+// Planning presentation owns request parsing for its mounted API routes.
+registerPlanningRoutes(app);
 // Orden canónico de middlewares tenant: requireOrganizationAccess → requireOrg → requirePermission → requireSeats (solo si aplica) → handler.
 const secureRoute = createSecurityPolicyRegistry({ app });
 

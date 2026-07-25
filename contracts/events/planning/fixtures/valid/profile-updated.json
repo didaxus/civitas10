@@ -1,0 +1,14 @@
+{
+  "eventId": "00000000-0000-4000-8000-000000000102",
+  "eventType": "planning.profile.updated.v1",
+  "version": 1,
+  "occurredAt": "2026-07-24T00:05:00.000Z",
+  "organizationId": "org_A",
+  "actor": { "type": "service", "id": "planning-runtime", "redacted": true },
+  "correlationId": "corr-planning-002",
+  "decision": { "decisionId": "dec_002", "policyVersion": "planning-authz-2026-07", "reason": "profile_update_allowed" },
+  "causation": { "causationId": "cmd_002", "operationId": "op_002", "parentEventId": "00000000-0000-4000-8000-000000000101" },
+  "sensitivity": "confidential",
+  "payload": { "profileId": "profile_001", "planningMode": "standard", "redacted": true, "safeSummary": "Profile preferences updated with sensitive preference values removed.", "fields": ["planningMode", "preferences"] },
+  "diff": { "redacted": true, "changes": [ { "op": "replace", "path": "/preferences", "before": "[redacted]", "after": "[redacted]", "classification": "confidential" } ] }
+}

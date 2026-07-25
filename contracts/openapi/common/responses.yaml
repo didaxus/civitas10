@@ -30,3 +30,27 @@ components:
         application/problem+json:
           schema:
             $ref: ./schemas.yaml#/components/schemas/Problem
+    PreconditionFailed:
+      description: Optimistic concurrency precondition failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ./schemas.yaml#/components/schemas/Problem
+    ValidationError:
+      description: Schema-valid request has semantic validation errors.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ./schemas.yaml#/components/schemas/Problem
+    ServiceUnavailable:
+      description: Module runtime or governed dependency is unavailable.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ./schemas.yaml#/components/schemas/Problem
+    GatewayTimeout:
+      description: Module runtime or governed dependency timed out.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ./schemas.yaml#/components/schemas/Problem

@@ -1,0 +1,14 @@
+{
+  "eventId": "00000000-0000-4000-8000-000000000202",
+  "eventType": "planning.profile.updated.v1",
+  "version": 1,
+  "occurredAt": "2026-07-24T00:15:00.000Z",
+  "organizationId": "org_A",
+  "actor": { "type": "user", "id": "usr_456", "displayName": "Jane Person", "redacted": false },
+  "correlationId": "corr-planning-004",
+  "decision": { "decisionId": "dec_004", "policyVersion": "planning-authz-2026-07", "reason": "profile_update_allowed" },
+  "causation": { "causationId": "cmd_004" },
+  "sensitivity": "confidential",
+  "payload": { "profileId": "profile_002", "planningMode": "standard", "redacted": false, "email": "jane@example.test" },
+  "diff": { "redacted": true, "changes": [ { "op": "replace", "path": "/email", "before": "[redacted]", "after": "[redacted]", "classification": "restricted" } ] }
+}
