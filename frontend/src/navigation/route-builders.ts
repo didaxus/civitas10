@@ -19,6 +19,13 @@ const unsafeInternalRoutePattern = /^(?:https?:|\/\/)|javascript:|data:|\.\.|\\/
 const organizationScopedPattern = /^\/o\/:organizationId(?:\/|$)/;
 const encodedOrganizationPlaceholderPattern = /%3AorganizationId/i;
 
+export const organizationScopedRouteTemplate = (suffix = "") => {
+  if (suffix && !suffix.startsWith("/")) {
+    throw new Error("organization_route_suffix_invalid");
+  }
+  return `/o/:organizationId${suffix}`;
+};
+
 export const isConcreteRouteParam = (value: string | undefined): value is string =>
   typeof value === "string" && value.trim().length > 0 && !routePlaceholderPattern.test(value);
 
