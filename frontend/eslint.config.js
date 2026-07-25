@@ -19,6 +19,14 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // React Hooks 7 enables React Compiler diagnostics in its recommended
+      // preset. Keep every diagnostic active while existing code is migrated
+      // incrementally; the two fundamental Hooks rules remain errors.
+      ...Object.fromEntries(
+        Object.keys(reactHooks.configs.recommended.rules)
+          .filter((rule) => !['react-hooks/rules-of-hooks', 'react-hooks/exhaustive-deps'].includes(rule))
+          .map((rule) => [rule, 'warn']),
+      ),
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
