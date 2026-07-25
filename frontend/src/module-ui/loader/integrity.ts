@@ -4,7 +4,9 @@ const toBase64Url = (bytes: Uint8Array): string => {
   return globalThis.btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 };
 
-const bytesOf = (content: string | Uint8Array): Uint8Array => typeof content === "string" ? new TextEncoder().encode(content) : content;
+// Web Crypto requires an ArrayBuffer-backed view; a caller may supply a view
+// backed by SharedArrayBuffer, so normalize binary input into owned bytes.
+const bytesOf = (content: string | Uint8Array): Uint8Array<ArrayBuffer> => typeof content === "string" ? new TextEncoder().encode(content) : new Uint8Array(content);
 
 export const sha256Integrity = async (content: string | Uint8Array): Promise<string> => {
   const digest = await globalThis.crypto.subtle.digest("SHA-256", bytesOf(content));
