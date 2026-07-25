@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { OwnerBadge, OwnerShell, ownerToneFromSeverity } from "../components/owner/OwnerUI";
 import { AlertStrip, KpiGrid, MetricCard, PageHeader, SectionCard, StateRegion, StatusPill } from "../shared/ui";
 import { useOwnerApi, type OwnerOrganization, type WorkerHealthAggregate } from "../api/owner";

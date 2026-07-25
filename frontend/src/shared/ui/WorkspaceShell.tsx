@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useId } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import type { Icon } from "@tabler/icons-react";
 import { NavCollapse, type NavCollapseItem } from "./NavCollapse";
 import type { StatusPillStatus } from "./StatusPill";

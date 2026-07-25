@@ -1,6 +1,6 @@
 import { useLogto } from "@logto/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { getMe, type MeResponse } from "../../api/me";
 import { useOwnerApi, type OwnerOrganization } from "../../api/owner";
 import { APP_ENV } from "../../env";

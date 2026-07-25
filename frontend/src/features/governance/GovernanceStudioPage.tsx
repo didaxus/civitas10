@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router";
 import { OwnerLayout } from "../../layouts/OwnerLayout";
 import { OrganizationLayout } from "../../layouts/OrganizationLayout";
 import { OrganizationContextHeader, SectionCard, StateRegion, StatusPill } from "../../shared/ui";

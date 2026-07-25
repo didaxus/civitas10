@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 import type { Icon } from "@tabler/icons-react";
 import { IconChevronRight } from "@tabler/icons-react";
 import { StatusPill, type StatusPillStatus } from "./StatusPill";

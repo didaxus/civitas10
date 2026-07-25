@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 import { AlertStrip, EmptyState, OrganizationContextHeader, StateRegion, StatusPill } from "../shared/ui";
 import { OwnerShell } from "../components/owner/OwnerUI";
 import { OperationalOverview, OperationalModules } from "../features/owner/organization/operationalCards";

@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { OwnerShell, PageHeader } from "../../components/owner/OwnerUI";
 import { AlertStrip, StateRegion } from "../../shared/ui";
 import { appRoutes } from "../../navigation/routes";

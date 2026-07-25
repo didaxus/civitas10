@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { LogtoProvider, useLogto } from "@logto/react";
-import { Routes, Route, Navigate, useParams } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router";
 import Landing from "./Landing";
 import Callback from "../Callback";
 import OrganizationPage from "../OrganizationPage";

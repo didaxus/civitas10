@@ -1,5 +1,5 @@
 import { useLogto } from "@logto/react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router";
 import { APP_ENV } from "../env";
 import { appRoutes } from "../navigation/routes";
 import { SignOutActionButton } from "./layout/TopBar/ActionButtons";

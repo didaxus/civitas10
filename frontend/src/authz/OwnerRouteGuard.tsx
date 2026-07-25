@@ -1,6 +1,6 @@
 import { useLogto } from "@logto/react";
 import { useEffect, useState, type ReactNode } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { getMe, type MeResponse } from "../api/me";
 import { APP_ENV } from "../env";
 import { getMissingOwnerShellScopes, OWNER_GLOBAL_ROLE, OWNER_SHELL_REQUIRED_SCOPES, ownerHasGlobalRole } from "./ownerScopes";

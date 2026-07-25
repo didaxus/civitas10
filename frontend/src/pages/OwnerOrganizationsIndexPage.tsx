@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { IconBuildingCommunity, IconRefresh } from "@tabler/icons-react";
 import { OwnerBadge, OwnerShell, primaryButtonClassName, secondaryButtonClassName } from "../components/owner/OwnerUI";
 import { AlertStrip, EmptyState, PageHeader, SectionCard, StateRegion, StatusPill } from "../shared/ui";
