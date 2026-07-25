@@ -1,8 +1,9 @@
 import { MODULE_UI_CONTRACT_VERSION, MODULE_UI_DESIGN_SYSTEM_VERSION, MODULE_UI_HOST_API_VERSION, type ModuleUiActionContribution, type ModuleUiContribution } from "../../module-ui/loader/contracts";
+import { organizationScopedRouteTemplate } from "../../navigation/route-builders";
 
 const catalogHash = "c".repeat(64);
 const manifestHash = "d".repeat(64);
-const base = "/o/:organizationId/planning";
+const base = organizationScopedRouteTemplate("/planning");
 const route = (suffix: string) => `${base}${suffix}`;
 
 export const planningRemoteUiContribution: ModuleUiContribution = {
