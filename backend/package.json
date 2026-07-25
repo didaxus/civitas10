@@ -27,7 +27,9 @@
     "authz:data-scope-migration-check": "node ../scripts/authz-data-scope-migration-check.js",
     "organization-structure:data-scope-integration-check": "node ../scripts/organization-structure-data-scope-integration-check.js && node --test test/authz-organization-structure-data-scope-integration.test.js",
     "organization-structure:reconciliation-check": "node ../scripts/organization-structure-reconciliation-check.js",
-    "authz:runtime-contract-check": "node ../scripts/authorization/check-runtime-contract.js && node --test test/authz-runtime-consistency-contract.test.js"
+    "authz:runtime-contract-check": "node ../scripts/authorization/check-runtime-contract.js && node --test test/authz-runtime-consistency-contract.test.js",
+    "security:audit": "npm audit --audit-level=high",
+    "security:audit:production": "npm audit --omit=dev --audit-level=high"
   },
   "keywords": [],
   "author": "",
@@ -44,5 +46,6 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.10"
-  }
+  },
+  "packageManager": "npm@12.0.1"
 }
