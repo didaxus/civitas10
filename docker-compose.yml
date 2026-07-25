@@ -1,3 +1,92 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      REDIS_URL: ${REDIS_URL:?REDIS_URL is required}
+      API_URL: ${API_URL:?API_URL is required}
+      LOGTO_API_RESOURCE: ${LOGTO_API_RESOURCE:?LOGTO_API_RESOURCE is required}
+      LOGTO_MANAGEMENT_API_RESOURCE: ${LOGTO_MANAGEMENT_API_RESOURCE:?LOGTO_MANAGEMENT_API_RESOURCE is required}
+      LOGTO_M2M_CLIENT_ID: ${LOGTO_M2M_CLIENT_ID:?LOGTO_M2M_CLIENT_ID is required}
+      LOGTO_M2M_CLIENT_SECRET: ${LOGTO_M2M_CLIENT_SECRET:?LOGTO_M2M_CLIENT_SECRET is required}
+      BULLMQ_PREFIX: ${BULLMQ_PREFIX:-civitas}
+      RUN_MIGRATIONS_ON_STARTUP: ${RUN_MIGRATIONS_ON_STARTUP:-false}
+      DATABASE_WAIT_TIMEOUT_MS: ${DATABASE_WAIT_TIMEOUT_MS:-60000}
+      DATABASE_WAIT_INTERVAL_MS: ${DATABASE_WAIT_INTERVAL_MS:-2000}
+      DATABASE_CONNECT_TIMEOUT_MS: ${DATABASE_CONNECT_TIMEOUT_MS:-5000}
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - |
+          require('http').get('http://127.0.0.1:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - default
+      - loginet
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=loginet
+      - traefik.http.routers.civitas-api.rule=Host(`civitas.didaxus.com`) && PathPrefix(`/api`)
+      - traefik.http.routers.civitas-api.entrypoints=http,https
+      - traefik.http.routers.civitas-api.tls=true
+      - traefik.http.routers.civitas-api.tls.certresolver=letsencrypt
+      - traefik.http.routers.civitas-api.middlewares=civitas-api-strip
+      - traefik.http.routers.civitas-api.priority=100
+      - traefik.http.middlewares.civitas-api-strip.stripprefix.prefixes=/api
+      - traefik.http.services.civitas-api.loadbalancer.server.port=3000
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: npm run worker
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      REDIS_URL: ${REDIS_URL:?REDIS_URL is required}
+      BULLMQ_PREFIX: ${BULLMQ_PREFIX:-civitas}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-1}
+      ENABLE_QUEUE_RECONCILER: ${ENABLE_QUEUE_RECONCILER:-true}
+      ENABLE_DB_POLL_EXECUTION: ${ENABLE_DB_POLL_EXECUTION:-false}
+      RUN_MIGRATIONS_ON_STARTUP: ${RUN_MIGRATIONS_ON_STARTUP:-false}
+      DATABASE_WAIT_TIMEOUT_MS: ${DATABASE_WAIT_TIMEOUT_MS:-60000}
+      DATABASE_WAIT_INTERVAL_MS: ${DATABASE_WAIT_INTERVAL_MS:-2000}
+      DATABASE_CONNECT_TIMEOUT_MS: ${DATABASE_CONNECT_TIMEOUT_MS:-5000}
+      WORKER_JOB_ATTEMPTS: ${WORKER_JOB_ATTEMPTS:-3}
+      WORKER_JOB_BACKOFF_MS: ${WORKER_JOB_BACKOFF_MS:-5000}
+      WORKER_REMOVE_ON_COMPLETE: ${WORKER_REMOVE_ON_COMPLETE:-1000}
+      WORKER_REMOVE_ON_FAIL: ${WORKER_REMOVE_ON_FAIL:-5000}
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - |
+          require('http').get('http://127.0.0.1:3002/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
+    networks:
+      - default
+      - loginet
+
   frontend:
     build:
       context: .
@@ -34,3 +123,8 @@
       - traefik.http.routers.civitas-frontend.tls.certresolver=letsencrypt
       - traefik.http.routers.civitas-frontend.priority=1
       - traefik.http.services.civitas-frontend.loadbalancer.server.port=80
+
+networks:
+  default:
+  loginet:
+    external: true
