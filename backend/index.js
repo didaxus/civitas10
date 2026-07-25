@@ -45,6 +45,7 @@ const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
 const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipService");
 const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
+const { registerScimReconciliationRoutes } = require("./routes/scimReconciliationRoutes");
 const { registerScimUserRoutes } = require("./scim/users/routes");
 const { registerPlanningRoutes } = require("./planning/presentation/routes");
 
