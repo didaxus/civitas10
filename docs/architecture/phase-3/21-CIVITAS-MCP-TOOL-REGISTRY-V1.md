@@ -62,69 +62,63 @@ permission
 role
 scopeOverride
 authorityOverride
-provider credentials
 arbitrary URL
-raw SQL
+SQL
+provider token
+service credential
 ```
 
-Organization, permission and scope come from authenticated principal, registry and authorization evaluation.
+Resource identifiers are allowed only when the server reconciles tenant ownership and Data Scope.
 
-## 6. Handler boundary
+## 6. Principal, delegation and consent
 
-Handlers call application services or private runtime ports. They do not:
+The runtime receives the v2 principal. Agent/system principals carry authenticated client identity and a bounded delegation chain. Delegation cannot widen organization, role path, permission, capability, time window or risk allowance.
 
-- call public REST loopback;
-- forward user tokens to module runtimes;
+## 7. Risk classes
+
+- `R0`: bounded read, no external side effect.
+- `R1`: reversible or low-risk write with idempotency/concurrency controls.
+- `R2`: critical, approval, irreversible or high-impact effect.
+
+R2 requires a versioned confirmation/consent artifact bound to principal, tenant, tool version, normalized arguments, expiry and nonce. Confirmation is one-time and cannot be replayed across principals or tenants.
+
+## 8. Handler boundary
+
+Handlers are thin. They may not:
+
 - query databases directly;
-- call provider SDKs directly;
-- construct local authorization decisions.
+- execute SQL;
+- call public REST loopback;
+- forward user tokens;
+- call providers directly;
+- fetch arbitrary URLs;
+- bypass the application-service registry.
 
-For physically separate deployments, a private service-to-service contract with service identity may be used.
+A physically separate runtime may use a private service-to-service contract with service identity, audience, replay protection and no user-token forwarding.
 
-## 7. Risk
+## 9. Runtime controls
 
-```text
-R0: bounded read, no material side effect
-R1: reversible or low-risk write
-R2: high-impact, approval, publication, destructive or external handoff
-```
-
-R2 requires confirmation/consent evidence bound to principal, organization, tool/version, normalized arguments, expiry and nonce. Replays and cross-principal confirmations deny.
-
-## 8. Controls
-
-- per-client/principal/org/tool rate and usage limits;
-- maximum list page and aggregate output size;
+- allowlisted transport and clients;
+- rate, concurrency and cost limits;
+- bounded pagination/output;
 - redaction and classification;
-- audit correlation;
-- kill switch by tool/version/module/tenant;
-- service identity scoped to module/capability;
-- version downgrade and tool-shadowing protection.
+- kill switch by tool/version/tenant/module;
+- audit with decision/correlation/delegation IDs;
+- version compatibility and downgrade prevention;
+- replay and idempotency protection.
 
-## 9. Initial contributions
+## 10. Initial files
 
-The `contracts/mcp/modules/*.tools.yaml` files are planned contributions. Their presence does not register runtime tools. The parity gate validates service and permission references while preserving non-executability.
+The files under `contracts/mcp/modules` are planned registry contributions. They demonstrate parity and provider neutrality. They are not proof that an MCP runtime exists or that a tool is active.
 
-## 10. Required adversarial tests
+## 11. Required adversarial tests
 
-- alternate organization input;
-- prompt permission/scope escalation;
-- replay and confirmation swap;
-- SSRF/arbitrary URL;
-- list/output exfiltration;
-- tool version downgrade/shadowing;
-- direct DB/provider import;
-- REST loopback/user token forwarding;
-- kill-switch bypass;
-- cross-tenant service identity.
-
-## 11. Rollout
-
-```text
-#194 shared foundation
--> #195 Planning bounded reads
--> #196 selected writes with R1/R2
--> module-by-module curated expansion
-```
-
-No automatic conversion of every REST operation into an MCP tool.
+- prompt-supplied organization/permission/scope rejected;
+- tool shadowing/version downgrade rejected;
+- R2 nonce replay rejected;
+- confirmation from another principal rejected;
+- kill switch enforced;
+- direct DB/HTTP/provider access detected by CI;
+- output/list limits enforced;
+- service identity for module A rejected by module B;
+- wrong-tenant resource denied before disclosure.
