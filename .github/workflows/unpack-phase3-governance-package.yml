@@ -1,0 +1,50 @@
+name: Unpack Phase 3 governance package
+
+on:
+  push:
+    branches:
+      - agent/freeze-phase-3-governance-contract-v2
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Expand canonical package
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive='artifacts/phase3/CIVITAS-PHASE-3-CONTRACT-PACKAGE.zip'
+          test -f "$archive"
+          temp_dir="$(mktemp -d)"
+          unzip -q "$archive" -d "$temp_dir"
+          source_dir="$temp_dir/CIVITAS-PHASE-3-CONTRACT-PACKAGE"
+          test -d "$source_dir"
+          cp -a "$source_dir"/. ./
+          rm -f "$archive"
+          rm -f .github/workflows/unpack-phase3-governance-package.yml
+
+      - name: Validate Phase 3 contracts
+        run: node scripts/phase3/validate-phase3-contracts.mjs
+
+      - name: Commit expanded package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'docs(phase-3): expand governance contract package'
+          git push origin HEAD:agent/freeze-phase-3-governance-contract-v2
