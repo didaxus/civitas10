@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.didaxus.com/contracts/authorization/principal.schema.json",
+  "title": "Civitas Principal v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "principalId",
+    "principalType",
+    "subject",
+    "issuer",
+    "audiences",
+    "organizationId",
+    "membershipBindingId",
+    "membershipBindingSource",
+    "organizationRoleIds",
+    "authzContractVersion",
+    "issuedAt",
+    "expiresAt",
+    "snapshotVersion"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "civitas-principal/v2"
+    },
+    "principalId": {
+      "type": "string",
+      "minLength": 8
+    },
+    "principalType": {
+      "enum": [
+        "user",
+        "agent",
+        "system"
+      ]
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issuer": {
+      "type": "string",
+      "format": "uri"
+    },
+    "audiences": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "organizationId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "membershipBindingId": {
+      "type": "string",
+      "minLength": 8
+    },
+    "membershipBindingSource": {
+      "enum": [
+        "logto_claim",
+        "civitas_server_binding"
+      ]
+    },
+    "organizationRoleIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "authzContractVersion": {
+      "const": "civitas-authorization-foundation/v2"
+    },
+    "authenticatedClientId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "delegationChain": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "delegatorPrincipalId",
+          "delegatePrincipalId",
+          "organizationId",
+          "scope",
+          "expiresAt"
+        ],
+        "properties": {
+          "delegatorPrincipalId": {
+            "type": "string"
+          },
+          "delegatePrincipalId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "snapshotVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tokenIdHash": {
+          "type": "string"
+        },
+        "bindingRecordVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resolvedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
