@@ -1,6 +1,6 @@
 import type { NavigationNode } from "./routes";
 import { appRoutes, ownerNavigationTree } from "./routes";
-import { GOVERNANCE_WORKSPACE_GROUPS, type GovernanceWorkspaceItem } from "../features/governance/governance-workspace-contract";
+import { GOVERNANCE_WORKSPACE_GROUPS, governanceWorkspaceAvailability, type GovernanceWorkspaceItem } from "../features/governance/governance-workspace-contract";
 import { isConcreteRouteParam } from "./route-builders";
 
 export const materializeNavigationTree = (items: readonly NavigationNode[], params: Record<string, string | undefined> = {}): NavigationNode[] => items.flatMap((item) => {
@@ -29,7 +29,7 @@ export const buildOwnerNavigationTree = ({ organizationId, organizationName }: O
     ...appRoutes[item.routeKey],
     id: item.id,
     label: item.label,
-    status: item.status,
+    status: governanceWorkspaceAvailability("owner", item),
     actionId: item.actionId,
     ownerPermissionRequirement: item.ownerPermissionRequirement,
     tenantPermissionRequirement: item.tenantPermissionRequirement,

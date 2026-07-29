@@ -90,7 +90,8 @@ export const PermissionMatrixModule = ({
   const buildRowState = (row: GovernancePermissionMatrixRow): PermissionRowState => {
     const override = pending[row.permission]?.enabled;
     const currentEnabled = override ?? rowEnabled(row, surface);
-    const eligible = rowEligible(row, surface);
+    const writerRegistered = surface === "owner" ? Boolean(onSaveOwnerCeilings) : Boolean(onSaveTenantActivations);
+    const eligible = writerRegistered && rowEligible(row, surface);
     return { item: { permissionId: row.permission, label: row.displayName || row.permission, description: row.description, checked: currentEnabled, disabled: !eligible, reason: reasonLabel(rowReason(row, surface)) }, row, eligible };
   };
   const allGrouped = useMemo(() => roleRows.reduce((groups, row) => {
