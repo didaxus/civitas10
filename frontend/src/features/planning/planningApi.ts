@@ -6,6 +6,7 @@ export type PlanningPlan = { planId: string; organizationId: string; title: stri
 export type PlanningProfile = { organizationId: string; planningMode: "standard" | "curriculum" | "strategic"; preferences: { fiscalYearStart?: string }; version: string; etag?: string; updatedAt?: string };
 export type PlanningListResponse = { items: PlanningPlan[]; page?: { limit?: number; cursor?: string } };
 export type PlanningPlanInput = { title: string; description?: string; status?: PlanningPlanStatus };
+export type ProductionHandoffOperation = { operationId:string; handoffId:string; planId:string; planVersion:number; state:"accepted"|"running"|"succeeded"|"failed"|"timed_out"|"cancelled"|"rolled_back"; result?:Record<string,unknown>; updatedAt?:string };
 export type PlanningProblemCode = "validation" | "precondition_failed" | "conflict" | "module_unavailable" | "module_incompatible" | "authorization_context" | "archived" | "stale" | string;
 export class PlanningApiError extends Error { constructor(message: string, public status?: number, public code?: PlanningProblemCode, public details?: unknown) { super(message); this.name = "PlanningApiError"; } }
 
@@ -15,6 +16,7 @@ export const planningCacheKeys = {
   plans: (organizationId: string) => ["planning", organizationId, "plans"] as const,
   plan: (organizationId: string, planId: string) => ["planning", organizationId, "plan", planId] as const,
   profile: (organizationId: string) => ["planning", organizationId, "profile"] as const,
+  handoffs: (organizationId: string) => ["planning", organizationId, "production-handoffs"] as const,
 };
 const assertPlan = (value: unknown): PlanningPlan => { const plan = (value as { result?: unknown; plan?: unknown })?.result ?? (value as { plan?: unknown })?.plan ?? value; if (!plan || typeof plan !== "object" || typeof (plan as PlanningPlan).planId !== "string" || typeof (plan as PlanningPlan).title !== "string") throw new PlanningApiError("Planning plan contract failed", 502, "contract_invalid"); return plan as PlanningPlan; };
 const assertList = (value: unknown): PlanningListResponse => { const result = (value as { result?: unknown })?.result ?? value; if (!result || typeof result !== "object" || !Array.isArray((result as PlanningListResponse).items)) throw new PlanningApiError("Planning list contract failed", 502, "contract_invalid"); return result as PlanningListResponse; };

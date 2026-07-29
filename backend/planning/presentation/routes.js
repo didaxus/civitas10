@@ -126,6 +126,20 @@ function createPlanningRouter(options = {}) {
   mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
   mount(router, 'get', '/o/:organizationId/planning/profile', 'readProfile', validateParams(), 'readProfile', ()=>({}), deps);
   mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), deps);
+  const handoffGuard = (req,res,next) => {
+    const scopes = req.auth?.scopes instanceof Set ? req.auth.scopes : new Set(req.auth?.scopes || req.user?.scopes || []);
+    const decision = req.authorizationDecision || {};
+    if (!scopes.has('planning.production_handoffs.manage')) return res.status(403).json(problemBody('handoff_permission_required','Canonical handoff permission is required.',403));
+    if (decision.dataScope?.strategy !== 'approved_plans' && req.auth?.dataScope !== 'approved_plans') return res.status(403).json(problemBody('handoff_scope_required','approved_plans scope is required.',403));
+    next();
+  };
+  router.get('/o/:organizationId/planning/production-handoffs', validateParams(), handoffGuard, async(req,res)=>res.json({items:await productionHandoffOperations?.list(req.params.organizationId) || []}));
+  router.get('/o/:organizationId/planning/production-handoffs/:operationId', validateParams(), handoffGuard, async(req,res)=>{const value=await productionHandoffOperations?.findById(req.params.organizationId,req.params.operationId);return value?res.json(value):res.status(404).json(problemBody('handoff_operation_not_found','Handoff operation not found.',404));});
+  for (const action of ['reconcile','cancel','rollback']) router.post(`/o/:organizationId/planning/production-handoffs/:operationId/${action}`,validateParams(),handoffGuard,async(req,res)=>{
+    if (!productionHandoffService) return res.status(503).json(problemBody('handoff_service_unavailable','Handoff service unavailable.',503));
+    const operation=await productionHandoffOperations.findById(req.params.organizationId,req.params.operationId); if(!operation)return res.status(404).json(problemBody('handoff_operation_not_found','Handoff operation not found.',404));
+    try { return res.json(await productionHandoffService[action](operation.contract,req.body?.target)); } catch(error){ return res.status(error.status||409).json(problemBody(error.reasonCode||'handoff_action_failed',error.message,error.status||409)); }
+  });
   return router;
 }
 

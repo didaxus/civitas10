@@ -1,6 +1,6 @@
 const { createProductionHandoff, HandoffContractError } = require('./contract');
 
-const EVENT = Object.freeze({ REQUESTED: 'production.handoff.requested', RECEIVED: 'production.handoff.received', REJECTED: 'production.handoff.rejected', TIMED_OUT: 'production.handoff.timed_out', RECONCILED: 'production.handoff.reconciled' });
+const EVENT = Object.freeze({ REQUESTED: 'production.handoff.requested', RECEIVED: 'production.handoff.received', REJECTED: 'production.handoff.rejected', TIMED_OUT: 'production.handoff.timed_out', RECONCILED: 'production.handoff.reconciled', CANCELLED: 'production.handoff.cancelled', ROLLED_BACK: 'production.handoff.rolled_back' });
 
 function createProductionHandoffService({ port, plans, operations, events, timeoutMs = 5000 }) {
   if (!port || !plans || !operations || !events) throw new TypeError('port, plans, operations and events are required');
@@ -8,7 +8,7 @@ function createProductionHandoffService({ port, plans, operations, events, timeo
   const reject = async (h, reasonCode) => { await operations.transition(h.operationId, 'failed', { reasonCode }); await emit(EVENT.REJECTED, h, { reasonCode }); throw new HandoffContractError(reasonCode, reasonCode); };
   async function validate(h, content) {
     const approved = await plans.getApprovedVersion(h.organizationId, h.plan.id);
-    if (!approved || approved.version !== h.plan.version) return reject(h, 'handoff_plan_version_not_approved');
+    if (!approved || approved.version !== h.plan.version || approved.state !== 'approved' || approved.immutable !== true) return reject(h, 'handoff_plan_version_not_approved');
     if (approved.contentHash !== h.contentHash || (content != null && plans.hash(content) !== h.contentHash)) return reject(h, 'handoff_hash_mismatch');
   }
   return Object.freeze({
@@ -16,7 +16,7 @@ function createProductionHandoffService({ port, plans, operations, events, timeo
       const h = createProductionHandoff(input);
       const existing = await operations.findByHandoff(h.organizationId, h.handoffId);
       if (existing) return existing;
-      await operations.create({ id: h.operationId, organizationId: h.organizationId, handoffId: h.handoffId, correlationId: h.correlationId, state: 'accepted' });
+      await operations.create({ id: h.operationId, organizationId: h.organizationId, handoffId: h.handoffId, planId: h.plan.id, planVersion: h.plan.version, contentHash: h.contentHash, contract: h, correlationId: h.correlationId, state: 'accepted' });
       await validate(h, input.content);
       await operations.transition(h.operationId, 'running'); await emit(EVENT.REQUESTED, h, { planId: h.plan.id, planVersion: h.plan.version, contentHash: h.contentHash, provenance: h.provenance });
       const controller = new AbortController();
@@ -41,6 +41,21 @@ function createProductionHandoffService({ port, plans, operations, events, timeo
       if (receipt.organizationId !== h.organizationId || receipt.handoffId !== h.handoffId || receipt.contentHash !== h.contentHash) return reject(h, 'handoff_receipt_inconsistent');
       const result = { state: 'succeeded', receiptId: receipt.receiptId, handoffId: h.handoffId, reconciled: true };
       await operations.transition(h.operationId, 'succeeded', result); await emit(EVENT.RECONCILED, h, { receiptId: receipt.receiptId }); return result;
+    },
+    async cancel(input) {
+      const h = createProductionHandoff(input); const operation = await operations.findByHandoff(h.organizationId, h.handoffId);
+      if (!operation) throw new HandoffContractError('handoff_operation_not_found', 'handoff operation not found', 404);
+      if (['succeeded', 'rolled_back'].includes(operation.state)) throw new HandoffContractError('handoff_cancellation_not_allowed', 'completed handoffs cannot be cancelled', 409);
+      await port.cancel(h); const result = { state: 'cancelled', handoffId: h.handoffId };
+      await operations.transition(h.operationId, 'cancelled', result); await emit(EVENT.CANCELLED, h); return result;
+    },
+    async rollback(input, target) {
+      const h = createProductionHandoff(input); const operation = await operations.findByHandoff(h.organizationId, h.handoffId);
+      if (!operation) throw new HandoffContractError('handoff_operation_not_found', 'handoff operation not found', 404);
+      if (operation.state !== 'succeeded') throw new HandoffContractError('handoff_rollback_not_allowed', 'only a succeeded handoff can be rolled back', 409);
+      if (!target?.handoffId || !target?.contentHash) throw new HandoffContractError('handoff_rollback_target_required', 'a governed prior release is required');
+      const receipt = await port.rollback(h, target); const result = { state: 'rolled_back', handoffId: h.handoffId, rollbackReceiptId: receipt?.receiptId, target };
+      await operations.transition(h.operationId, 'rolled_back', result); await emit(EVENT.ROLLED_BACK, h, { rollbackReceiptId: receipt?.receiptId, target }); return result;
     },
   });
 }
