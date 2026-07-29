@@ -5,9 +5,9 @@ const { NAMED_USE_CASES } = require('../planning/application/remotePort');
 const { paths } = require('../planning/infrastructure/runtimeContractV1');
 
 test('planning remote port exposes only six scoped plan/profile use cases', () => {
-  assert.deepEqual(Object.keys(NAMED_USE_CASES).sort(), ['createPlan', 'getPlan', 'getProfile', 'listPlans', 'replaceProfile', 'updatePlan']);
+  assert.deepEqual(Object.keys(NAMED_USE_CASES).sort(), ['createPlan', 'listPlans', 'readPlan', 'readProfile', 'replaceProfile', 'updatePlan']);
   assert.equal(NAMED_USE_CASES.replaceProfile.operationId, 'planning.profile.replace');
-  assert.equal(NAMED_USE_CASES.getProfile.permission, 'planning.profile.read');
+  assert.equal(NAMED_USE_CASES.readProfile.permission, 'planning.profile.read');
   assert.equal(NAMED_USE_CASES.archivePlan, undefined);
 });
 

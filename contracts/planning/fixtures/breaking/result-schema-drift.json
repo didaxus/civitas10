@@ -1,0 +1,1 @@
+{"description":"Changing the canonical response envelope is breaking","target":"inventory","operationId":"planningPlansRead","set":{"resultSchema":"#/components/schemas/PlanningPlan"},"expectedError":"result schema mismatch"}
