@@ -10,6 +10,12 @@ const GOVERNANCE_IDENTITY_FEDERATION_CONTRACT_VERSION = "2026-07-civitas10-ident
 
 const authorizationProvenance = Object.freeze({ catalogHash, roleModelVersion: roleModel._generated?.roleModelVersion || roleModel.roleModelVersion, snapshotProvenance: Object.freeze({ source: "core/governance/operation-registry.cjs", catalogHash, roleModelVersion: roleModel._generated?.roleModelVersion || roleModel.roleModelVersion }) });
 const withAuthorizationProvenance = (entry) => Object.freeze({ ...entry, catalogHash, roleModelVersion: authorizationProvenance.roleModelVersion, snapshotProvenance: authorizationProvenance.snapshotProvenance });
+const operation = (entry) => withAuthorizationProvenance({
+  authoritativeEndpoint: entry.status !== "planned",
+  backendAuthorization: entry.status !== "planned",
+  durableRepository: entry.status !== "planned",
+  ...entry,
+});
 const permissionRequirement = (mode, permissions) => Object.freeze({ mode, permissions: Object.freeze(permissions), catalogHash, roleModelVersion: authorizationProvenance.roleModelVersion });
 const anyPermission = (...permissions) => permissionRequirement("any", permissions);
 

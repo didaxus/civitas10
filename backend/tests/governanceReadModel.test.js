@@ -18,7 +18,7 @@ test('governance read model exposes versioned aggregate without PII graphs', asy
   assert.equal(response.roles[0].assignedMemberCount, 1);
   assert.equal(response.members[0].display.startsWith('sub_'), true);
   assert.equal(JSON.stringify(response).includes('secret@example.test'), false);
-  assert.ok(response.operationRegistry.operations.filter((entry) => entry.status === 'active').length >= 13);
+  assert.ok(response.operationRegistry.operations.filter((entry) => ['active', 'read-only', 'preview'].includes(entry.status)).length >= 13);
   assert.ok(response.moduleInventory.some((entry) => entry.module === 'taxonomy' && entry.status === 'active'));
   assert.equal(Array.isArray(response.permissionMatrix), true);
   assert.equal(Object.hasOwn(response, 'assignmentGraph'), false);

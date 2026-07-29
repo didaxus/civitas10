@@ -241,9 +241,9 @@ test("governance unavailable operations prevent blind fetches", () => {
   const capabilities = readFileSync(new URL("./governance-capabilities.ts", import.meta.url), "utf8");
   assert.match(capabilities, /operation-registry\.generated\.json/);
   const artifact = JSON.parse(readFileSync(new URL("./operation-registry.generated.json", import.meta.url), "utf8"));
-  assert.equal(artifact.operations.find((entry) => entry.operationId === "governance.readModel" && entry.surface === "owner").status, "active");
-  assert.equal(artifact.operations.find((entry) => entry.operationId === "governance.accessPreview" && entry.surface === "owner").status, "active");
-  assert.match(page, /!isGovernanceOperationActive\(surface, "governance.readModel"\)/);
+  assert.equal(artifact.operations.find((entry) => entry.operationId === "governance.readModel" && entry.surface === "owner").status, "read-only");
+  assert.equal(artifact.operations.find((entry) => entry.operationId === "governance.accessPreview" && entry.surface === "owner").status, "preview");
+  assert.match(page, /!isGovernanceOperationAvailable\(surface, "governance.readModel"\)/);
   assert.match(api, /assertAccessPreview/);
 });
 
