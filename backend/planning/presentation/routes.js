@@ -116,5 +116,11 @@ function createPlanningRouter({ planningRemoteApplicationPort, availabilityResol
   return router;
 }
 
-function registerPlanningRoutes(app, options) { app.use('/api/v1', createPlanningRouter(options)); }
+function registerPlanningRoutes(app, options = {}) {
+  app.use('/api/v1', createPlanningRouter(options));
+  if (options.authoringService) {
+    const { createPlanningAuthoringRouter } = require('./authoringRoutes');
+    app.use('/api/v1/o/:organizationId/planning', createPlanningAuthoringRouter(options.authoringService));
+  }
+}
 module.exports = { createPlanningRouter, registerPlanningRoutes, authorizationProblem, buildContext };
