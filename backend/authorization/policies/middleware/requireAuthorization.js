@@ -28,7 +28,7 @@ function requireAuthorization({ permission, actionId, surface, operation, polici
       const facts = {};
       if (auditIntentResolver) facts.auditIntent = await auditIntentResolver(req);
       const organizationId = req.params?.organizationId || req.user?.organizationId || req.auth?.organizationId;
-      const principal = await buildPrincipalForRest(req, { permissionId: permission, surface: "rest", organizationId });
+      const principal = req.principal || await buildPrincipalForRest(req, { permissionId: permission, surface: "rest", organizationId });
       const decision = await authorize({ principal, permission, actionId, surface, operation, organizationId, routeId: req.routeId || actionId || permission, target, resource, policies, providers: defaultProviders(providers), registry, facts });
       req.authorizationDecision = decision;
       if (onDecision) await onDecision(req, decision);
