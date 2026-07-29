@@ -8,7 +8,8 @@ const REVIEW_EVENTS = Object.freeze({
   APPROVED: 'planning.review_approved.v1', REJECTED: 'planning.review_rejected.v1',
   DRAFT_STARTED: 'planning.draft_started_from_approved.v1',
 });
-const REVIEW_STATUS = Object.freeze({ DRAFT: 'draft', IN_REVIEW: 'in_review', APPROVED: 'approved', REJECTED: 'rejected' });
+const { PLANNING_STATES } = require('./stateMachine');
+const REVIEW_STATUS = PLANNING_STATES;
 
 function command(type, value) {
   if (!value?.organizationId || !value?.planId || !value?.actorId) throw new TypeError(`${type} requires organizationId, planId and actorId`);

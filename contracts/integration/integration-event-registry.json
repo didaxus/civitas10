@@ -392,6 +392,78 @@
       "redactionPolicy": {
         "rejectSecrets": true
       }
+    },
+    {
+      "eventType": "planning.plan.created.v1",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "planning",
+      "owningCapabilityId": "planning.plans",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "$ref": "../events/planning/schemas/planning-plan-created-v1.schema.json"
+      },
+      "producerContract": {
+        "component": "planning-application-service"
+      },
+      "allowedConsumers": [
+        "planning.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeDiffRequired": true
+      }
+    },
+    {
+      "eventType": "planning.plan.updated.v1",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "planning",
+      "owningCapabilityId": "planning.plans",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "$ref": "../events/planning/schemas/planning-plan-updated-v1.schema.json"
+      },
+      "producerContract": {
+        "component": "planning-application-service"
+      },
+      "allowedConsumers": [
+        "planning.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeDiffRequired": true
+      }
+    },
+    {
+      "eventType": "planning.profile.updated.v1",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "planning",
+      "owningCapabilityId": "planning.profile",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "$ref": "../events/planning/schemas/planning-profile-updated-v1.schema.json"
+      },
+      "producerContract": {
+        "component": "planning-application-service"
+      },
+      "allowedConsumers": [
+        "planning.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeDiffRequired": true
+      }
     }
   ]
 }

@@ -1,12 +1,13 @@
 interface ActionBarProps {
   canCreateDocuments: boolean;
+  onCreate?: () => void;
 }
 
-export const ActionBar = ({ canCreateDocuments }: ActionBarProps) => {
+export const ActionBar = ({ canCreateDocuments, onCreate }: ActionBarProps) => {
   return (
     <div className="mb-6 flex justify-between items-center">
       {canCreateDocuments && (
-        <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-contrast bg-primary hover:bg-primary-strong focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-focus">
+        <button onClick={onCreate} className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-contrast bg-primary hover:bg-primary-strong focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-focus">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 mr-2"
@@ -49,4 +50,4 @@ export const ActionBar = ({ canCreateDocuments }: ActionBarProps) => {
       </div>
     </div>
   );
-}; 
+};
