@@ -10,6 +10,7 @@ Propuesto — **BLOCKED para implementar #198** hasta que Arquitectura, Segurida
 
 ## Relacionado
 
+- #197
 - #198
 - ADR-001: MCP Boundary in Civitas
 - ADR-002: REST API Boundary for Civitas v1
@@ -158,6 +159,10 @@ No se atribuye una aprobación a personas que no la hayan emitido. Cada revisor 
 
 **Decisión registrada al 2026-07-29:** `NO-GO / BLOCKED`. Se acepta este texto únicamente como propuesta de baseline para revisión; **no se autoriza implementar ni activar #198 con datos, proveedores o usuarios reales**. El cambio a `Accepted / GO` requiere las tres decisiones `Aprobado`, cero blocker abierto, enlaces a evidencias, y una última resolución explícita del Architecture owner. Cualquier aprobación condicionada mantiene `BLOCKED` hasta cerrar y registrar la condición.
 
+La verificación de este gate y cualquier decisión de no implementación se registra en
+`docs/audits/phase-3/50-CIVITAS-197-HUMAN-APPROVAL-GATE.md`. Ese registro no sustituye
+ninguna de las aprobaciones humanas exigidas por esta tabla.
+
 ## Checklist de salida para #198
 
 - [ ] Arquitectura aprobó y no quedan blockers.
@@ -167,4 +172,3 @@ No se atribuye una aprobación a personas que no la hayan emitido. Cada revisor 
 - [ ] Pruebas demuestran que outputs, retries, tools y webhooks no mutan canon sin aceptación humana.
 - [ ] Borrado incluye derivados/proveedor y la liberación de hold reanuda solicitudes pendientes.
 - [ ] Observabilidad no captura contenido ni secretos y se verificó con canarios sintéticos.
-
