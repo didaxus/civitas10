@@ -199,6 +199,8 @@ const serializeOwnerOrganization = async (organization, { operations = [] } = {}
   };
 };
 
+secureRoute.get("/api/v1/organization-structure/management-levels", "public", (_req, res) => res.json(managementLevelCatalogDto()));
+
 secureRoute.get("/health", "health", async (_req, res) => {
   const [database, redis] = await Promise.all([getDatabaseHealth(), getRedisHealth()]);
   const logto = getLogtoConfigHealth();

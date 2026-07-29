@@ -1,0 +1,6 @@
+"use strict";
+const test=require("node:test");const assert=require("node:assert/strict");
+const {managementLevelCatalogDto,parseCreateUnitDto,parseUpdateUnitDto,organizationStructureProblem}=require("../organization-structure");
+test("catalog exposes canonical order and a virtual, non-persisted root",()=>{const c=managementLevelCatalogDto();assert.deepEqual(c.levels.map(x=>[x.managementLevel,x.levelOrder]),[["organization",0],["strategic",1],["tactical",2],["coordination",3],["operational",4],["administrative",5]]);assert.equal(c.root.persisted,false)});
+test("unit DTO accepts managementLevel and rejects derived/root fields",()=>{assert.equal(parseCreateUnitDto({hierarchyKey:"academic_structure",unitType:"custom",stableKey:"x",displayName:"X",managementLevel:"strategic"}).managementLevel,"strategic");assert.throws(()=>parseUpdateUnitDto({levelOrder:2}),/level_order_read_only/);assert.throws(()=>parseUpdateUnitDto({managementLevel:"organization"}),/root_reserved/)});
+test("database violations map to stable problem details",()=>{const p=organizationStructureProblem(new Error("organization_unit_cycle_detected"),"/units/1");assert.equal(p.status,422);assert.equal(p.body.reasonCode,"organization_unit_cycle_detected")});
