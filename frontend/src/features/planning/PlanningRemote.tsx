@@ -1,16 +1,31 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router";
 import { EmptyState, PageHeader, SectionCard, StateRegion, StatusPill } from "../../shared/ui";
-import { PlanningApiError, type PlanningPlan, type PlanningPlanInput, type ProductionHandoffOperation, usePlanningApi } from "./planningApi";
+import { PlanningApiError, type PlanningPlan, type PlanningPlanInput, type PlanningProfile, usePlanningApi } from "./planningApi";
 
-type Screen = "home" | "list" | "create" | "detail" | "edit" | "profile" | "handoffs";
+type Screen = "home" | "list" | "create" | "detail" | "edit" | "profile" | "roadmaps";
 type Props = { organizationId: string; screen: Screen; planId?: string; readOnly?: boolean; access?: "allowed" | "denied"; availability?: "available" | "unavailable" | "degraded" | "incompatible" };
-const copy: Record<string, string> = { denied: "You do not have access to Planning in this organization.", unavailable: "Planning is temporarily unavailable.", incompatible: "This Planning UI is incompatible with the active host contract.", conflict: "Someone else updated this plan. Reload before saving again.", validation: "Check the highlighted fields and try again.", archived: "Archived plans are read-only." };
+const copy = { denied: "You do not have access to Planning in this organization.", unavailable: "Planning is temporarily unavailable.", incompatible: "This Planning UI is incompatible with the active host contract.", conflict: "Someone else updated this resource. Reload before saving again.", validation: "Check the highlighted fields and try again.", archived: "Archived plans are read-only." };
+const path = (organizationId: string, suffix = "") => `/o/${encodeURIComponent(organizationId)}/planning/plans${suffix}`;
 
-const usePlanningData = (organizationId: string, screen: Screen, planId?: string) => { const api = usePlanningApi(); const [plans, setPlans] = useState<PlanningPlan[]>([]); const [plan, setPlan] = useState<PlanningPlan | null>(null); const [error, setError] = useState<PlanningApiError | null>(null); const [loading, setLoading] = useState(true); const orgRef = useRef(organizationId);
-  useEffect(() => { const controller = new AbortController(); if (orgRef.current !== organizationId) { setPlans([]); setPlan(null); orgRef.current = organizationId; } setLoading(true); setError(null); const run = async () => { try { if (screen === "detail" || screen === "edit") setPlan((await api.getPlan(organizationId, planId || "", controller.signal)) ?? null); else if (screen === "profile") await api.getProfile(organizationId, controller.signal); else setPlans(((await api.listPlans(organizationId, controller.signal))?.items) ?? []); } catch (e) { if (!controller.signal.aborted) setError(e instanceof PlanningApiError ? e : new PlanningApiError(String(e))); } finally { if (!controller.signal.aborted) setLoading(false); } }; run(); return () => controller.abort(); }, [api, organizationId, planId, screen]); return { plans, plan, setPlan, error, setError, loading }; };
+function errorMessage(error: PlanningApiError | null) {
+  if (!error) return null;
+  if (error.status === 409 || error.status === 412 || error.code === "precondition_failed" || error.code === "stale") return copy.conflict;
+  if (error.status === 422 || error.code === "validation") return copy.validation;
+  if (error.code === "archived") return copy.archived;
+  return error.message;
+}
 
-function Banner({ state, error, readOnly }: { state?: Props["availability"]; error?: PlanningApiError | null; readOnly?: boolean }) { const message = state === "degraded" || readOnly ? "Planning is in degraded read-only mode. Write actions are disabled." : state ? copy[state] : error?.status === 412 || error?.code === "precondition_failed" || error?.code === "stale" ? copy.conflict : error?.status === 422 || error?.code === "validation" ? copy.validation : error?.code === "archived" ? copy.archived : error?.message; return message ? <StateRegion><p role="status">{message}</p></StateRegion> : null; }
-function PlanForm({ initial, readOnly, onSubmit }: { initial?: PlanningPlan | null; readOnly?: boolean; onSubmit: (input: PlanningPlanInput) => Promise<void> }) { const [title, setTitle] = useState(initial?.title || ""); const [description, setDescription] = useState(initial?.description || ""); const [saving, setSaving] = useState(false); const invalid = title.trim().length < 3; const ref = useRef<HTMLInputElement>(null); useEffect(() => { ref.current?.focus(); }, []); const submit = async (event: FormEvent) => { event.preventDefault(); if (invalid || readOnly) return; setSaving(true); await onSubmit({ title, description }); setSaving(false); }; return <form className="civitas-stack-md" onSubmit={submit} aria-describedby="planning-form-status"><label>Plan title<input ref={ref} value={title} onChange={(e) => setTitle(e.target.value)} aria-invalid={invalid} disabled={readOnly} /></label><label>Description<textarea value={description} onChange={(e) => setDescription(e.target.value)} disabled={readOnly} /></label><p id="planning-form-status" aria-live="polite">{readOnly ? "Read-only mode" : saving ? "Saving plan" : invalid ? "Title must be at least 3 characters." : "Ready to save"}</p><button className="civitas-button" disabled={readOnly || invalid || saving}>{saving ? "Saving…" : "Save plan"}</button></form>; }
+export function PlanningRemoteScreen(props: Props) {
+  const api = usePlanningApi();
+  const navigate = useNavigate();
+  const [plans, setPlans] = useState<PlanningPlan[]>([]);
+  const [plan, setPlan] = useState<PlanningPlan | null>(null);
+  const [profile, setProfile] = useState<PlanningProfile | null>(null);
+  const [error, setError] = useState<PlanningApiError | null>(null);
+  const [loading, setLoading] = useState(true);
+  const orgRef = useRef(props.organizationId);
+  const readOnly = Boolean(props.readOnly || props.availability === "degraded" || plan?.status === "archived");
 
 export function PlanningRemoteScreen(props: Props) { const readOnly = props.readOnly || props.availability === "degraded"; const api = usePlanningApi(); const data = usePlanningData(props.organizationId, props.screen, props.planId); const isArchived = data.plan?.status === "archived"; const title = `Planning ${props.screen}`; if (props.access === "denied") return <Denied />; if (props.availability === "unavailable" || props.availability === "incompatible") return <><PageHeader eyebrow="Planning" title={title} /><Banner state={props.availability} /></>; if (data.loading) return <><PageHeader eyebrow="Planning" title={title} /><StateRegion><p role="status">Loading Planning workspace…</p></StateRegion></>;
   const save = async (input: PlanningPlanInput) => { try { if (props.screen === "create") data.setPlan((await api.createPlan(props.organizationId, input)) ?? null); else if (data.plan) data.setPlan((await api.updatePlan(props.organizationId, data.plan.planId, input, data.plan.etag || data.plan.version)) ?? null); } catch (e) { data.setError(e as PlanningApiError); } };
