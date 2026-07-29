@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router";
 import { EmptyState, FormField, PageHeader, SectionCard, StateRegion, StatusPill } from "../../shared/ui";
-import { PlanningApiError, type PlanningPlan, type PlanningPlanInput, type PlanningProfile, usePlanningApi } from "./planningApi";
+import { PlanningApiError, type PlanningPlan, type PlanningPlanInput, type PlanningPlanType, type PlanningProfile, usePlanningApi } from "./planningApi";
 
 type Screen = "home" | "list" | "create" | "detail" | "edit" | "profile";
 type Props = {
@@ -11,6 +11,9 @@ type Props = {
   readOnly?: boolean;
   access?: "allowed" | "denied";
   availability?: "available" | "unavailable" | "degraded" | "incompatible";
+  canCreate?: boolean;
+  canUpdate?: boolean;
+  canReplaceProfile?: boolean;
 };
 
 const copy = {
@@ -62,11 +65,11 @@ export function PlanningRemoteScreen(props: Props) {
 
     setLoading(true);
     const request = props.screen === "home" || props.screen === "list"
-      ? api.listPlans(props.organizationId, controller.signal).then((value) => setPlans(value.items))
+      ? api.listPlans(props.organizationId, controller.signal).then((value) => setPlans(value.data))
       : props.screen === "profile"
         ? api.getProfile(props.organizationId, controller.signal).then(setProfile)
         : props.planId
-          ? api.getPlan(props.organizationId, props.planId, controller.signal).then(setPlan)
+          ? api.readPlan(props.organizationId, props.planId, controller.signal).then(setPlan)
           : Promise.reject(new PlanningApiError("A plan id is required.", 400, "validation"));
 
     request.catch((reason: unknown) => {
@@ -86,9 +89,9 @@ export function PlanningRemoteScreen(props: Props) {
       if (props.screen === "create") {
         const created = await api.createPlan(props.organizationId, input);
         setPlan(created);
-        navigate(plansPath(props.organizationId, `/${encodeURIComponent(created.planId)}`));
+        navigate(plansPath(props.organizationId, `/${encodeURIComponent(created.id)}`));
       } else if (plan) {
-        const updated = await api.updatePlan(props.organizationId, plan.planId, input, plan.etag || plan.version);
+        const updated = await api.updatePlan(props.organizationId, plan.id, input, plan.version);
         setPlan(updated);
       }
     } catch (reason) {
@@ -103,7 +106,7 @@ export function PlanningRemoteScreen(props: Props) {
     setSaving(true);
     setError(null);
     try {
-      setProfile(await api.replaceProfile(props.organizationId, input, profile.etag || profile.version));
+      setProfile(await api.replaceProfile(props.organizationId, input, profile.version));
     } catch (reason) {
       setError(asPlanningError(reason));
     } finally {
@@ -122,33 +125,34 @@ export function PlanningRemoteScreen(props: Props) {
   return (
     <main className="civitas-stack-lg" data-module="planning" aria-labelledby="planning-title">
       <PageHeader eyebrow="Planning" title={<span id="planning-title">{title}</span>} description="Organization-aware Planning workspace."
-        actions={!readOnly && props.screen !== "create" ? <Link className="civitas-button" to={plansPath(props.organizationId, "/create")}>New plan</Link> : null} />
+        actions={!readOnly && props.canCreate && props.screen !== "create" ? <Link className="civitas-button" to={plansPath(props.organizationId, "/create")}>New plan</Link> : null} />
       <div ref={focusRef} tabIndex={-1}>
-        <Banner state={props.availability} error={error} readOnly={readOnly || archived} />
+        <Banner state={props.availability} error={error} archived={archived} />
         {loading ? <StateRegion><p role="status">Loading Planning workspace…</p></StateRegion> : null}
-        {!loading && (props.screen === "home" || props.screen === "list") ? <PlanList organizationId={props.organizationId} plans={plans} /> : null}
-        {!loading && props.screen === "create" ? <SectionCard><PlanForm readOnly={readOnly} saving={saving} onSubmit={savePlan} /></SectionCard> : null}
-        {!loading && (props.screen === "detail" || props.screen === "edit") ? <PlanDetail organizationId={props.organizationId} plan={plan} edit={props.screen === "edit"} readOnly={readOnly || archived} saving={saving} onSubmit={savePlan} /> : null}
-        {!loading && props.screen === "profile" ? <ProfileForm profile={profile} readOnly={readOnly} saving={saving} onSubmit={saveProfile} /> : null}
+        {!loading && (props.screen === "home" || props.screen === "list") ? <PlanList organizationId={props.organizationId} plans={plans} canCreate={!readOnly && props.canCreate} /> : null}
+        {!loading && props.screen === "create" ? <SectionCard><PlanForm create readOnly={readOnly || !props.canCreate} saving={saving} onSubmit={savePlan} /></SectionCard> : null}
+        {!loading && (props.screen === "detail" || props.screen === "edit") ? <PlanDetail organizationId={props.organizationId} plan={plan} edit={props.screen === "edit"} readOnly={readOnly || archived || !props.canUpdate} saving={saving} onSubmit={savePlan} /> : null}
+        {!loading && props.screen === "profile" ? <ProfileForm profile={profile} readOnly={readOnly || !props.canReplaceProfile} saving={saving} onSubmit={saveProfile} /> : null}
       </div>
     </main>
   );
 }
 
-export function Banner({ state, error, readOnly }: { state?: Props["availability"]; error?: PlanningApiError | null; readOnly?: boolean }) {
+export function Banner({ state, error, archived }: { state?: Props["availability"]; error?: PlanningApiError | null; archived?: boolean }) {
   const message = state === "unavailable" ? copy.unavailable : state === "incompatible" ? copy.incompatible : errorMessage(error || null);
-  return <div aria-live="polite">{state === "degraded" ? <p role="status">Planning is in degraded read-only mode.</p> : null}{readOnly && state !== "degraded" ? <p role="status">{copy.archived}</p> : null}{message ? <p role="alert">{message}</p> : null}</div>;
+  return <div aria-live="polite">{state === "degraded" ? <p role="status">Planning is in degraded read-only mode.</p> : null}{archived ? <p role="status">{copy.archived}</p> : null}{message ? <p role="alert">{message}</p> : null}</div>;
 }
 
-export function PlanForm({ initial, readOnly, saving, onSubmit }: { initial?: PlanningPlan; readOnly?: boolean; saving?: boolean; onSubmit: (input: PlanningPlanInput) => Promise<void> }) {
+export function PlanForm({ initial, create, readOnly, saving, onSubmit }: { initial?: PlanningPlan; create?: boolean; readOnly?: boolean; saving?: boolean; onSubmit: (input: PlanningPlanInput) => Promise<void> }) {
   const [title, setTitle] = useState(initial?.title || "");
   const [description, setDescription] = useState(initial?.description || "");
+  const [planType, setPlanType] = useState<PlanningPlanType>(initial?.planType || "curriculum");
   const [validation, setValidation] = useState<string | null>(null);
   const submit = (event: FormEvent) => {
     event.preventDefault();
     if (!title.trim()) { setValidation("Title is required."); return; }
     setValidation(null);
-    void onSubmit({ title: title.trim(), description: description.trim(), status: initial?.status });
+    void onSubmit({ title: title.trim(), description: description.trim() || null, ...(create ? { planType } : {}) });
   };
   return <form className="civitas-stack-md" onSubmit={submit} noValidate>
     <FormField id="planning-title-input" label="Title" required error={validation}>
@@ -156,28 +160,31 @@ export function PlanForm({ initial, readOnly, saving, onSubmit }: { initial?: Pl
     </FormField>
     {validation ? <span id="planning-title-error" className="sr-only">{validation}</span> : null}
     <FormField id="planning-description" label="Description"><textarea id="planning-description" value={description} onChange={(event) => setDescription(event.target.value)} disabled={readOnly || saving} /></FormField>
+    {create ? <FormField id="planning-plan-type" label="Plan type" required><select id="planning-plan-type" value={planType} onChange={(event) => setPlanType(event.target.value as PlanningPlanType)} disabled={readOnly || saving}><option value="strategic">Strategic</option><option value="tactical">Tactical</option><option value="operational">Operational</option><option value="project">Project</option><option value="curriculum">Curriculum</option></select></FormField> : null}
     <button className="civitas-button" type="submit" disabled={readOnly || saving}>{saving ? "Saving…" : "Save plan"}</button>
   </form>;
 }
 
-export function PlanList({ organizationId, plans }: { organizationId: string; plans: PlanningPlan[] }) {
-  if (!plans.length) return <EmptyState message="No planning records yet."><Link className="civitas-button" to={plansPath(organizationId, "/create")}>Create a plan</Link></EmptyState>;
-  return <SectionCard><div className="civitas-responsive-table" role="region" aria-label="Planning plans" tabIndex={0}><table><thead><tr><th>Title</th><th>Status</th><th>Updated</th></tr></thead><tbody>{plans.map((item) => <tr key={item.planId}><td><Link to={plansPath(organizationId, `/${encodeURIComponent(item.planId)}`)}>{item.title}</Link></td><td><StatusPill status={item.status === "archived" ? "neutral" : "success"}>{item.status}</StatusPill></td><td>{item.updatedAt || "Not available"}</td></tr>)}</tbody></table></div></SectionCard>;
+export function PlanList({ organizationId, plans, canCreate }: { organizationId: string; plans: PlanningPlan[]; canCreate?: boolean }) {
+  if (!plans.length) return <EmptyState message="No planning records yet.">{canCreate ? <Link className="civitas-button" to={plansPath(organizationId, "/create")}>Create a plan</Link> : null}</EmptyState>;
+  return <SectionCard><div className="civitas-responsive-table" role="region" aria-label="Planning plans" tabIndex={0}><table><thead><tr><th>Title</th><th>Status</th><th>Updated</th></tr></thead><tbody>{plans.map((item) => <tr key={item.id}><td><Link to={plansPath(organizationId, `/${encodeURIComponent(item.id)}`)}>{item.title}</Link></td><td><StatusPill status={item.status === "archived" ? "neutral" : "success"}>{item.status}</StatusPill></td><td>{item.updatedAt}</td></tr>)}</tbody></table></div></SectionCard>;
 }
 
 export function PlanDetail({ organizationId, plan, edit, readOnly, saving, onSubmit }: { organizationId: string; plan: PlanningPlan | null; edit: boolean; readOnly?: boolean; saving?: boolean; onSubmit: (input: PlanningPlanInput) => Promise<void> }) {
   if (!plan) return <EmptyState message="Planning record was not found or is no longer available." />;
-  return <SectionCard>{edit ? <PlanForm initial={plan} readOnly={readOnly} saving={saving} onSubmit={onSubmit} /> : <div className="civitas-stack-md"><h2>{plan.title}</h2><p>{plan.description || "No description provided."}</p><StatusPill status={plan.status === "archived" ? "neutral" : "success"}>{plan.status}</StatusPill>{!readOnly ? <Link className="civitas-button" to={plansPath(organizationId, `/${encodeURIComponent(plan.planId)}/edit`)}>Edit plan</Link> : null}</div>}</SectionCard>;
+  return <SectionCard>{edit ? <PlanForm initial={plan} readOnly={readOnly} saving={saving} onSubmit={onSubmit} /> : <div className="civitas-stack-md"><h2>{plan.title}</h2><p>{plan.description || "No description provided."}</p><StatusPill status={plan.status === "archived" ? "neutral" : "success"}>{plan.status}</StatusPill>{!readOnly ? <Link className="civitas-button" to={plansPath(organizationId, `/${encodeURIComponent(plan.id)}/edit`)}>Edit plan</Link> : null}</div>}</SectionCard>;
 }
 
 export function ProfileForm({ profile, readOnly, saving, onSubmit }: { profile: PlanningProfile | null; readOnly?: boolean; saving?: boolean; onSubmit: (input: Pick<PlanningProfile, "planningMode" | "preferences">) => Promise<void> }) {
   const [planningMode, setPlanningMode] = useState<PlanningProfile["planningMode"]>(profile?.planningMode || "standard");
   const [fiscalYearStart, setFiscalYearStart] = useState(profile?.preferences.fiscalYearStart || "");
+  const [fiscalError, setFiscalError] = useState<string | null>(null);
   useEffect(() => { if (profile) { setPlanningMode(profile.planningMode); setFiscalYearStart(profile.preferences.fiscalYearStart || ""); } }, [profile]);
   if (!profile) return <EmptyState message="Planning profile is not available." />;
-  return <SectionCard><form className="civitas-stack-md" onSubmit={(event) => { event.preventDefault(); void onSubmit({ planningMode, preferences: { fiscalYearStart } }); }}>
+  return <SectionCard><form className="civitas-stack-md" noValidate onSubmit={(event) => { event.preventDefault(); if (fiscalYearStart && !/^\d{2}-\d{2}$/.test(fiscalYearStart)) { setFiscalError("Fiscal year start must use MM-DD."); return; } setFiscalError(null); void onSubmit({ planningMode, preferences: { fiscalYearStart } }); }}>
     <FormField id="planning-mode" label="Planning mode"><select id="planning-mode" value={planningMode} onChange={(event) => setPlanningMode(event.target.value as PlanningProfile["planningMode"])} disabled={readOnly || saving}><option value="standard">Standard</option><option value="curriculum">Curriculum</option><option value="strategic">Strategic</option></select></FormField>
-    <FormField id="fiscal-year-start" label="Fiscal year start"><input id="fiscal-year-start" type="date" value={fiscalYearStart} onChange={(event) => setFiscalYearStart(event.target.value)} disabled={readOnly || saving} /></FormField>
+    <FormField id="fiscal-year-start" label="Fiscal year start" hint="Use MM-DD, for example 07-01." error={fiscalError}><input id="fiscal-year-start" value={fiscalYearStart} pattern="[0-9]{2}-[0-9]{2}" placeholder="MM-DD" onChange={(event) => setFiscalYearStart(event.target.value)} disabled={readOnly || saving} aria-invalid={Boolean(fiscalError)} aria-describedby={fiscalError ? "fiscal-year-start-error" : undefined} /></FormField>
+    {fiscalError ? <span id="fiscal-year-start-error" className="sr-only">{fiscalError}</span> : null}
     <button className="civitas-button" type="submit" disabled={readOnly || saving}>{saving ? "Saving…" : "Save profile"}</button>
   </form></SectionCard>;
 }
