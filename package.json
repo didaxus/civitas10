@@ -104,7 +104,6 @@
     "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
     "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check",
     "contracts:referential-integrity:check": "node scripts/contracts/referential-integrity-check.mjs"
-    "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check"
   },
   "dependencies": {
     "jose": "5.9.6",

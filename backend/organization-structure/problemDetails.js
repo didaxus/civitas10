@@ -1,0 +1,6 @@
+"use strict";
+const { ORGANIZATION_STRUCTURE_REASON_CODES: C } = require("./organizationStructureReasonCodes");
+const DATABASE_REASON = Object.freeze({ organization_unit_parent_invalid: C.UNIT_PARENT_INVALID, organization_unit_cycle_detected: C.UNIT_CYCLE_DETECTED, management_level_order_invalid: C.MANAGEMENT_LEVEL_ORDER_INVALID, management_level_root_reserved: C.MANAGEMENT_LEVEL_ROOT_RESERVED });
+function reasonCode(error) { if (/^(organization_|management_level_)/.test(error?.code || "")) return error.code; const message = String(error?.message || ""); return Object.entries(DATABASE_REASON).find(([needle]) => message.includes(needle))?.[1] || (error?.code === "23505" ? "organization_unit_conflict" : "organization_structure_invalid"); }
+function organizationStructureProblem(error, instance) { const code = reasonCode(error); const conflict = code === C.STRUCTURE_VERSION_CONFLICT || code === "organization_unit_conflict"; const notFound = code === C.UNIT_NOT_FOUND; const status = notFound ? 404 : conflict ? 412 : 422; return { status, body: { type: `https://civitas10.dev/problems/${code}`, title: conflict ? "Precondition failed" : notFound ? "Organization unit not found" : "Invalid organization structure", status, detail: code, instance, reasonCode: code } }; }
+module.exports = { organizationStructureProblem };

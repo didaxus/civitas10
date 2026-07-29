@@ -49,6 +49,7 @@ const { registerScimReconciliationRoutes } = require("./routes/scimReconciliatio
 const { registerScimUserRoutes } = require("./scim/users/routes");
 const { registerPlanningRoutes } = require("./planning/presentation/routes");
 const { buildPrincipalForRest } = require("./authorization/principalBuilder");
+const { managementLevelCatalogDto } = require("./organization-structure");
 
 const app = express();
 const port = 3000;
@@ -178,6 +179,8 @@ const serializeOwnerOrganization = async (organization, { operations = [] } = {}
     legacy: profile.legacy,
   };
 };
+
+secureRoute.get("/api/v1/organization-structure/management-levels", "public", (_req, res) => res.json(managementLevelCatalogDto()));
 
 secureRoute.get("/health", "health", async (_req, res) => {
   const [database, redis] = await Promise.all([getDatabaseHealth(), getRedisHealth()]);

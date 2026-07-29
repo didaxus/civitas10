@@ -12,6 +12,7 @@ const assertAccessPreview = (response: unknown): GovernanceAccessPreview => {
 };
 
 export type GovernancePolicyMutationRequest = { roleId: string; expectedPolicyVersion?: string; changes: Array<{ permission: string; enabled: boolean }>; reason: string };
+export type ManagementLevelCatalog = { catalogVersion: string; root: { managementLevel: "organization"; levelOrder: 0; virtual: true; persisted: false }; levels: Array<{ managementLevel: string; levelOrder: number; virtual: boolean; persisted: boolean }> };
 
 const assertGovernanceReadModel = (response: unknown): GovernanceReadModel => {
   const contract = validateGovernanceReadModel(response);
@@ -23,6 +24,7 @@ export const useGovernanceApi = () => {
   const { ownerApiFetch, organizationApiFetch } = useApi();
 
   return useMemo(() => ({
+    getManagementLevelCatalog: async (): Promise<ManagementLevelCatalog> => ownerApiFetch("/api/v1/organization-structure/management-levels") as Promise<ManagementLevelCatalog>,
     getOwnerGovernance: async (organizationId: string): Promise<GovernanceReadModel> => assertGovernanceReadModel(await ownerApiFetch(`/owner/organizations/${encodeURIComponent(organizationId)}/governance`)),
     getTenantGovernance: async (organizationId: string): Promise<GovernanceReadModel> => assertGovernanceReadModel(await organizationApiFetch(organizationId, `/o/${encodeURIComponent(organizationId)}/governance`)),
     previewOwnerAccessReadOnly: async (request: GovernanceAccessPreviewRequest): Promise<GovernanceAccessPreview> => assertAccessPreview(await ownerApiFetch(`/owner/organizations/${encodeURIComponent(request.organizationId)}/access-preview`, { method: "POST", headers: { "X-Civitas-Preview-Only": "true" }, body: JSON.stringify({ ...request, previewOnly: true }) })),
