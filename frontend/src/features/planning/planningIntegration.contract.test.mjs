@@ -31,3 +31,8 @@ test("canonical AuthorizationContext—not an uncontracted access endpoint—con
   assert.match(routeSource, /useVisualAuthorization/); assert.match(decisionSource, /evaluateScreenEligibility/);
   assert.doesNotMatch(apiSource, /getUiAccess|ui-access/); assert.doesNotMatch(routeSource, /jwt|claim|dimension|userRoles|hasRole/i);
 });
+
+test("all Planning URLs share the planning/plans route root and use router navigation", () => { assert.match(routeSource, /planning\/plans/); assert.match(remoteSource, /useNavigate/); assert.match(remoteSource, /<Link/); assert.doesNotMatch(remoteSource, /<a\s|href=/); });
+test("create navigates to returned resource and profile replacement preserves ETag", () => { assert.match(remoteSource, /created\.planId/); assert.match(remoteSource, /profile\.etag \|\| profile\.version/); assert.match(apiSource, /"If-Match": etag/); });
+test("route screen and action lifecycle statuses stay planned", () => { assert.equal((contributionSource.match(/status: "planned"/g) || []).length, 8); });
+test("build hashes the emitted Planning artifact bytes", () => { assert.match(viteSource, /artifact\.code/); assert.match(viteSource, /createHash\("sha256"\)/); assert.match(viteSource, /planning-bundle-integrity\.json/); });
