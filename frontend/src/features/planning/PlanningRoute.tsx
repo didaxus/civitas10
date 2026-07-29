@@ -9,10 +9,10 @@ import { planningVisualRegistryContribution } from "./planningRegistry";
 import { PlanningApiError, usePlanningApi, type PlanningUiAccess } from "./planningApi";
 import { organizationScopedRouteTemplate } from "../../navigation/route-builders";
 
-export const planningRoutePattern = `${organizationScopedRouteTemplate("/planning")}/*`;
+export const planningRoutePattern = `${organizationScopedRouteTemplate("/planning/plans")}/*`;
 
-const screens = { "": ["home", "planning.home"], plans: ["list", "planning.plans.list"], "plans/create": ["create", "planning.plans.create"], profile: ["profile", "planning.profile"] } as const;
-function resolveScreen(splat = "") { const exact = screens[splat as keyof typeof screens]; if (exact) return { screen: exact[0], routeId: exact[1] }; const edit = splat.match(/^plans\/([^/]+)\/edit$/); if (edit) return { screen: "edit" as const, routeId: "planning.plans.edit", planId: edit[1] }; const detail = splat.match(/^plans\/([^/]+)$/); return detail ? { screen: "detail" as const, routeId: "planning.plans.detail", planId: detail[1] } : null; }
+const screens = { "": ["home", "planning.home"], list: ["list", "planning.plans.list"], create: ["create", "planning.plans.create"], profile: ["profile", "planning.profile"] } as const;
+function resolveScreen(splat = "") { const exact = screens[splat as keyof typeof screens]; if (exact) return { screen: exact[0], routeId: exact[1] }; const edit = splat.match(/^([^/]+)\/edit$/); if (edit) return { screen: "edit" as const, routeId: "planning.plans.edit", planId: edit[1] }; const detail = splat.match(/^([^/]+)$/); return detail ? { screen: "detail" as const, routeId: "planning.plans.detail", planId: detail[1] } : null; }
 
 export function PlanningRoute() {
   const { organizationId = "", "*": splat = "" } = useParams();
