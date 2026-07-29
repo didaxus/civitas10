@@ -166,6 +166,7 @@ const buildAuthContext = ({ payload, tokenType, organizationId }) => {
   const globalRoles = extractGlobalRoleNames(payload);
   const organizationRoles = extractOrganizationRoleNames(payload);
   return {
+    tokenValidated: true,
     subject: payload.sub,
     tokenType,
     audience: normalizeAudiences(payload.aud),
