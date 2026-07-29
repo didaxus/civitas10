@@ -94,7 +94,6 @@
       }
     },
     {
-<<<<<<< ours
       "eventType": "documents.generation.requested",
       "schemaVersion": "civitas-integration-event/v1",
       "owningModuleId": "documents",
@@ -277,7 +276,9 @@
         "rejectSecrets": true,
         "rejectContent": true,
         "rejectUrls": true
-=======
+      }
+    },
+    {
       "eventType": "production.handoff.requested",
       "schemaVersion": "civitas-integration-event/v1",
       "owningModuleId": "production-handoff",
@@ -390,7 +391,6 @@
       "maxPayloadBytes": 4096,
       "redactionPolicy": {
         "rejectSecrets": true
->>>>>>> theirs
       }
     }
   ]

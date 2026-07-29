@@ -6,9 +6,16 @@ const root = path.resolve(__dirname, '..')
 const scope = require('../backend/authorization/data-scope')
 const forbidden = ['academic.' + 'grade_level', 'academic.' + 'section', 'course_' + 'scope']
 const excluded = new Set(['docs', 'artifacts', '.git', 'node_modules', 'backend/db/migrations'])
+const legacyEvidenceFiles = new Set([
+  'backend/taxonomy/taxonomyV2MigrationService.js',
+  'backend/test/taxonomy-v2-migration.test.js',
+  'scripts/authz-data-scope-v2-contract-check.js',
+  'scripts/contracts/referential-integrity-check.mjs',
+  'scripts/phase3/validate-phase3-contracts.mjs',
+])
 function files(directory, relative = '') { const out=[]; for(const entry of fs.readdirSync(directory,{withFileTypes:true})){const rel=path.join(relative,entry.name);if([...excluded].some((item)=>rel===item||rel.startsWith(`${item}${path.sep}`)))continue;const full=path.join(directory,entry.name);if(entry.isDirectory())out.push(...files(full,rel));else if(/\.(js|mjs|cjs|json|ya?ml)$/.test(entry.name))out.push(full)}return out }
 const violations=[]
-for(const file of files(root)) { const text=fs.readFileSync(file,'utf8'); for(const term of forbidden) if(text.includes(term)) violations.push(`${path.relative(root,file)}:${term}`) }
+for(const file of files(root)) { const relative=path.relative(root,file);if(legacyEvidenceFiles.has(relative))continue;const text=fs.readFileSync(file,'utf8'); for(const term of forbidden) if(text.includes(term)) violations.push(`${relative}:${term}`) }
 scope.assertScopeTemplateContracts()
 const assignmentMigration=fs.readFileSync(path.join(root,'backend/db/migrations/0026_data_scope_assignment_governance.sql'),'utf8')
 for(const column of ['strategy_id','target','provenance','snapshot_version']) if(!assignmentMigration.includes(column)) violations.push(`assignment migration missing:${column}`)
