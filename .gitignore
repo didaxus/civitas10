@@ -14,3 +14,5 @@
 !/artifacts/authorization/issue-165/
 !/artifacts/authorization/issue-161/
 !/artifacts/authorization/issue-161/provenance.json
+# Runtime-generated, commit-bound Planning E2E evidence (archived by CI).
+artifacts/planning/e2e/

@@ -41,8 +41,16 @@ async function requestPlanning(authContext, organizationId = ORG) {
   const app = express();
   app.use((req, _res, next) => { req.auth = authContext; next(); });
   app.use(createPlanningRouter({
-    planningRemoteApplicationPort: { listPlans: async () => { remoteCalls += 1; return { ok: true, value: [] }; } },
+    planningRemoteApplicationPort: {
+      createPlan: async () => ({ ok: true, value: {} }),
+      listPlans: async () => { remoteCalls += 1; return { ok: true, value: [] }; },
+      getPlan: async () => ({ ok: true, value: {} }), updatePlan: async () => ({ ok: true, value: {} }),
+      getProfile: async () => ({ ok: true, value: {} }), replaceProfile: async () => ({ ok: true, value: {} }),
+    },
     availabilityResolver: { resolve: async () => { availabilityCalls += 1; return { executable: true, decisionId: 'availability_A', state: 'available' }; } },
+    authorizationProviders: {}, authorizationRegistry: require('../authorization/policies').createDefaultPolicyRegistry(),
+    authorizationResourceResolver: (req) => ({ organizationId: req.params.organizationId }),
+    preAuthorizationMiddleware: [(_req, _res, next) => next()],
   }));
   const server = app.listen(0);
   try {

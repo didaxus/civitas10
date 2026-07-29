@@ -1,0 +1,1 @@
+{"description":"Changing plan update from PATCH to PUT is breaking","target":"inventory","operationId":"planningPlansUpdate","set":{"method":"PUT"},"expectedError":"method mismatch"}

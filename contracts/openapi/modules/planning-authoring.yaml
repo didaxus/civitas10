@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info: { title: Civitas Planning Authoring, version: 1.0.0 }
+paths:
+  /organizations/{organizationId}/planning/roadmaps/{roadmapId}/units/order:
+    put:
+      operationId: reorderPlanningUnits
+      parameters:
+        - { name: organizationId, in: path, required: true, schema: { type: string } }
+        - { name: roadmapId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: If-Match, in: header, required: true, schema: { type: string } }
+        - { name: Idempotency-Key, in: header, required: true, schema: { type: string } }
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [orderedIds], properties: { orderedIds: { type: array, uniqueItems: true, items: { type: string, format: uuid } } } } } } }
+      responses: { '200': { description: Reordered }, '412': { description: Stale ETag }, '428': { description: If-Match required } }
+  /organizations/{organizationId}/planning/assessment-blueprints/{blueprintId}/validation-runs:
+    post:
+      operationId: validateAssessmentBlueprint
+      parameters:
+        - { name: organizationId, in: path, required: true, schema: { type: string } }
+        - { name: blueprintId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: Idempotency-Key, in: header, required: true, schema: { type: string } }
+      responses: { '201': { description: Deterministic validation result } }
