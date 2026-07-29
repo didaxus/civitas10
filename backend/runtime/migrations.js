@@ -5,6 +5,11 @@ const path = require("node:path");
 const { getPool } = require("../lib/db");
 
 const MIGRATIONS_DIR = path.join(__dirname, "..", "db", "migrations");
+const LEGACY_MIGRATION_NAMES = Object.freeze({
+  "0029_documents_generation.sql": "0029_documents_generation.sql",
+  "0030_planning_aggregate.sql": "0029_planning_aggregate.sql",
+  "0031_planning_review_workflow.sql": "0029_planning_review_workflow.sql",
+});
 
 const REQUIRED_OPERATIONAL_SCHEMA = Object.freeze({
   operational_operations: Object.freeze([
@@ -127,9 +132,11 @@ async function runSqlMigrations({ pool = getPool(), logger = console } = {}) {
       let inserted = false;
       try {
         await client.query("begin");
+        const legacyName = LEGACY_MIGRATION_NAMES[migration];
+        const legacy = legacyName === migration ? { rowCount: 0 } : await client.query("select 1 from schema_migrations where migration=$1", [legacyName]);
         const claim = await client.query("insert into schema_migrations(migration) values($1) on conflict do nothing returning migration", [migration]);
         inserted = Boolean(claim.rows?.[0]);
-        if (inserted) await client.query(sql);
+        if (inserted && !legacy.rowCount) await client.query(sql);
         await client.query("commit");
       } catch (error) {
         try { await client.query("rollback"); } catch (_rollbackError) {}
