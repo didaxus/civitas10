@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { EmptyState, PageHeader, SectionCard, StateRegion, StatusPill } from "../../shared/ui";
 import { PlanningApiError, type PlanningPlan, type PlanningPlanInput, type PlanningProfile, usePlanningApi } from "./planningApi";
 
-type Screen = "home" | "list" | "create" | "detail" | "edit" | "profile";
+type Screen = "home" | "list" | "create" | "detail" | "edit" | "profile" | "roadmaps";
 type Props = { organizationId: string; screen: Screen; planId?: string; readOnly?: boolean; access?: "allowed" | "denied"; availability?: "available" | "unavailable" | "degraded" | "incompatible" };
 const copy = { denied: "You do not have access to Planning in this organization.", unavailable: "Planning is temporarily unavailable.", incompatible: "This Planning UI is incompatible with the active host contract.", conflict: "Someone else updated this resource. Reload before saving again.", validation: "Check the highlighted fields and try again.", archived: "Archived plans are read-only." };
 const path = (organizationId: string, suffix = "") => `/o/${encodeURIComponent(organizationId)}/planning/plans${suffix}`;
