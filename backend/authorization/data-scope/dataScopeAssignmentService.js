@@ -4,6 +4,7 @@ const { DATA_SCOPE_REASON_CODES, dataScopeError } = require("./dataScopeReasonCo
 const { validateDimensionAssignment } = require("./taxonomyScopeAdapter");
 const { validateRelationshipKey } = require("./relationshipScopeAdapter");
 const { assertAssignmentMatchesTemplate } = require("./scopeTemplateRegistry");
+const { AUTHORIZATION_EVENT_TYPES } = require("../runtime/authorizationEvents");
 
 function isEffectiveAssignment(assignment, now = new Date()) {
   return assignment.status === "active" && new Date(assignment.validFrom) <= now && (!assignment.validUntil || new Date(assignment.validUntil) > now);
@@ -24,8 +25,14 @@ async function validateScopeTemplate({ input, templateRegistry }) {
   return template;
 }
 
-function createDataScopeAssignmentService({ repository, taxonomyPort, runtimeConsistencyPort, templateRegistry, membershipPort, unitPort, resourcePort } = {}) {
+function createDataScopeAssignmentService({ repository, taxonomyPort, runtimeConsistencyPort, authorizationFreshnessService, templateRegistry, membershipPort, unitPort, resourcePort } = {}) {
   async function emit(event) {
+    if (authorizationFreshnessService?.invalidate) {
+      const eventType = event.eventType.endsWith(".created") ? AUTHORIZATION_EVENT_TYPES.DATA_SCOPE_ASSIGNMENT_CREATED : AUTHORIZATION_EVENT_TYPES.DATA_SCOPE_ASSIGNMENT_DELETED;
+      const snapshot = await authorizationFreshnessService.invalidate({ ...event, eventType, actorUserId: event.actorLogtoUserId, aggregateId: event.assignmentId, reason: event.eventType });
+      if (runtimeConsistencyPort?.audit) await runtimeConsistencyPort.audit({ ...event, policyVersion: snapshot.policyVersion });
+      return snapshot.policyVersion;
+    }
     const policyVersion = runtimeConsistencyPort?.incrementPolicyVersion ? await runtimeConsistencyPort.incrementPolicyVersion(event) : await repository.incrementPolicyVersion();
     const out = { ...event, policyVersion };
     if (runtimeConsistencyPort?.enqueueOutbox) await runtimeConsistencyPort.enqueueOutbox(out); else await repository.recordOutbox(out);
@@ -50,8 +57,10 @@ function createDataScopeAssignmentService({ repository, taxonomyPort, runtimeCon
     if (input.scopeKind === "dimension") await validateDimensionAssignment({ taxonomyPort, organizationId: input.organizationId, dimensionKey: input.dimensionKey, dimensionValueId: input.dimensionValueId, capability: input.capability });
     if (input.scopeKind !== "dimension") validateRelationshipKey(input.relationshipKey);
     const template = await validateScopeTemplate({ input, templateRegistry });
-    if (input.scopeKind === "unit" && unitPort?.getUnit) { const unit = await unitPort.getUnit({ organizationId: input.organizationId, unitId: input.unitId }); if (!unit) throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_UNKNOWN); if (unit.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_WRONG_TENANT); if (unit.status && unit.status !== "active") throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_INACTIVE); }
-    if (input.scopeKind === "resource" && resourcePort?.getResource) { const resource = await resourcePort.getResource({ organizationId: input.organizationId, resourceRef: input.resourceRef }); if (!resource) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_UNKNOWN); if (resource.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_WRONG_TENANT); if (resource.status && !["active","published"].includes(resource.status)) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_FORBIDDEN); }
+    if (input.scopeKind === "unit" && !unitPort?.getUnit) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOLVER_UNAVAILABLE);
+    if (input.scopeKind === "resource" && !resourcePort?.getResource) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOLVER_UNAVAILABLE);
+    if (input.scopeKind === "unit") { const unit = await unitPort.getUnit({ organizationId: input.organizationId, unitId: input.unitId }); if (!unit) throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_UNKNOWN); if (unit.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_WRONG_TENANT); if (unit.status && unit.status !== "active") throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_INACTIVE); }
+    if (input.scopeKind === "resource") { const resource = await resourcePort.getResource({ organizationId: input.organizationId, resourceRef: input.resourceRef }); if (!resource) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_UNKNOWN); if (resource.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_WRONG_TENANT); if (resource.status && !["active","published"].includes(resource.status)) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_FORBIDDEN); }
     return template;
   }
 

@@ -22,6 +22,7 @@
     "authz:data-scope-v2:generate": "node scripts/authz-data-scope-v2-contract-check.js",
     "authz:data-scope-v2:check": "node scripts/authz-data-scope-v2-contract-check.js --check && node --test backend/test/authz-data-scope-v2-contract.test.js backend/test/authz-revocation-delegation-contract.test.js",
     "authz:data-scope-migration-check": "node scripts/authz-data-scope-migration-check.js",
+    "authz:data-scope-v2:postgres-check": "node scripts/authz-data-scope-migration-check.js",
     "organization-structure:data-scope-integration-check": "node scripts/organization-structure-data-scope-integration-check.js && node --test backend/test/authz-organization-structure-data-scope-integration.test.js",
     "organization-structure:reconciliation-check": "node scripts/organization-structure-reconciliation-check.js",
     "authz:runtime-contract-check": "node scripts/authorization/check-runtime-contract.js && node --test backend/test/authz-runtime-consistency-contract.test.js",
@@ -103,5 +104,9 @@
     "ui:p3-012:check": "npm run ui:p3-012:registry-check && npm run ui:p3-012:navigation-check && npm run ui:p3-012:route-safety-check && npm run ui:p3-012:authorization-parity-check && npm run ui:p3-012:lifecycle-check && npm run ui:p3-012:no-parallel-navigation-check && npm run ui:p3-012:no-frontend-authority-check && npm run ui:p3-012:inventory-check",
     "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
     "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check"
+  },
+  "dependencies": {
+    "jose": "5.9.6",
+    "pg": "8.16.3"
   }
 }

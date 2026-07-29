@@ -7,4 +7,6 @@ module.exports = {
   ...require("./delegationRepository"),
   ...require("./delegationService"),
   ...require("./delegationContextService"),
+  ...require("./delegationContextRepository"),
+  ...require("./requireDelegationContext"),
 };

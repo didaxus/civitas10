@@ -5,16 +5,23 @@ const { permissionsByName, rolePermissionAssignments } = require("../../core/aut
 const { createInMemoryEntitlementRepository } = require("../authorization/entitlements/entitlementRepository");
 const { createEntitlementService } = require("../authorization/entitlements/entitlementService");
 const { evaluateOrganizationEntitlement } = require("../authorization/entitlements/entitlementEvaluator");
+const { createAuthorizationFreshnessService } = require("../authorization/runtime/authorizationFreshnessService");
 
 const entitlementRepository = createInMemoryEntitlementRepository();
 const runtimeAuditEvents = [];
 const runtimeOutboxEvents = [];
+const runtimeCacheInvalidations = [];
 
 const runtimeConsistencyPort = {
   async incrementPolicyVersion({ organizationId }) { return entitlementRepository.incrementPolicyVersion(organizationId); },
   async enqueueOutbox(event) { runtimeOutboxEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
   async audit(event) { runtimeAuditEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
 };
+const authorizationFreshnessService = createAuthorizationFreshnessService({
+  versionService: { increment: async ({ organizationId }) => ({ policyVersion: await entitlementRepository.incrementPolicyVersion(organizationId) }), getVersion: async (organizationId) => ({ policyVersion: await entitlementRepository.getPolicyVersion(organizationId) }) },
+  cachePort: { async invalidateOrganization(event) { runtimeCacheInvalidations.push({ ...event, createdAt: new Date().toISOString() }); } },
+  eventPort: { async publish(event) { runtimeOutboxEvents.push({ ...event, createdAt: new Date().toISOString() }); } },
+});
 
 function hashSubject(value) { return value ? `sub_${crypto.createHash("sha256").update(String(value)).digest("hex").slice(0, 12)}` : null; }
 function roleId(role = {}) { return role.id || role.organizationRoleId || role.roleId || null; }
@@ -112,11 +119,11 @@ async function buildRolesGovernanceSlice({ organizationId, roles = [], members =
 }
 
 async function updateOwnerCeilings({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, roleIdToName, reason, decisionId }) {
-  return createEntitlementService({ repository: entitlementRepository, runtimeConsistencyPort, roleIdToName }).upsertOwnerLimits({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, reason, decisionId });
+  return createEntitlementService({ repository: entitlementRepository, runtimeConsistencyPort, authorizationFreshnessService, roleIdToName }).upsertOwnerLimits({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, reason, decisionId });
 }
 async function updateTenantActivations({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, roleIdToName, reason, decisionId }) {
-  return createEntitlementService({ repository: entitlementRepository, runtimeConsistencyPort, roleIdToName }).upsertTenantActivations({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, reason, decisionId });
+  return createEntitlementService({ repository: entitlementRepository, runtimeConsistencyPort, authorizationFreshnessService, roleIdToName }).upsertTenantActivations({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, reason, decisionId });
 }
 function roleMapFromRoles(roles = []) { return Object.fromEntries(roles.map((role) => [roleId(role), canonicalRoleKey(roleName(role))]).filter(([id]) => id)); }
 
-module.exports = { entitlementRepository, runtimeAuditEvents, runtimeOutboxEvents, buildRolesGovernanceSlice, updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, canonicalRoleKey };
+module.exports = { entitlementRepository, runtimeAuditEvents, runtimeOutboxEvents, runtimeCacheInvalidations, authorizationFreshnessService, buildRolesGovernanceSlice, updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, canonicalRoleKey };

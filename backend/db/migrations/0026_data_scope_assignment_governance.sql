@@ -7,6 +7,9 @@ update authorization_scope_assignments a set strategy_id=t.strategy,
 from owner_scope_templates t where a.scope_template_id=t.id and a.scope_template_version=t.version;
 do $$ begin if exists(select 1 from authorization_scope_assignments where scope_template_id is null or scope_template_version is null or strategy_id is null or target is null or provenance is null or snapshot_version is null or membership_id is null or canonical_role_id is null) then raise exception 'data_scope_assignment_v2_reconciliation_required'; end if; end $$;
 alter table authorization_scope_assignments alter column scope_template_id set not null, alter column scope_template_version set not null, alter column strategy_id set not null, alter column target set not null, alter column provenance set not null, alter column snapshot_version set not null;
+alter table authorization_scope_assignments drop constraint if exists authorization_scope_assignments_target_object_ck;
+alter table authorization_scope_assignments drop constraint if exists authorization_scope_assignments_provenance_object_ck;
+alter table authorization_scope_assignments drop constraint if exists authorization_scope_assignments_snapshot_positive_ck;
 alter table authorization_scope_assignments add constraint authorization_scope_assignments_target_object_ck check(jsonb_typeof(target)='object');
 alter table authorization_scope_assignments add constraint authorization_scope_assignments_provenance_object_ck check(jsonb_typeof(provenance)='object');
 alter table authorization_scope_assignments add constraint authorization_scope_assignments_snapshot_positive_ck check(snapshot_version>0);
