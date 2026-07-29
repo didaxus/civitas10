@@ -6,7 +6,7 @@ import { validateGovernanceReadModel, type GovernanceAccessPreview, type Governa
 const assertAccessPreview = (response: unknown): GovernanceAccessPreview => {
   if (!response || typeof response !== "object") throw new Error("Governance access preview contract failed at $: response must be an object");
   const value = response as GovernanceAccessPreview;
-  if (!value.subjectId || !value.decision || typeof value.decision.allowed !== "boolean") throw new Error("Governance access preview contract failed at $.decision: decision must include allowed boolean");
+  if (value.aggregateVersion !== "authorization-explanation/v2" || !value.summary || typeof value.summary.allowed !== "boolean" || !Array.isArray(value.rolePathMatrix)) throw new Error("Governance access preview contract failed: expected authorization-explanation/v2 backend aggregate");
   if (value.mutated !== false) throw new Error("Governance access preview contract failed at $.mutated: preview must be read-only");
   return value;
 };
@@ -26,10 +26,10 @@ export const useGovernanceApi = () => {
   return useMemo(() => ({
     getManagementLevelCatalog: async (): Promise<ManagementLevelCatalog> => ownerApiFetch("/api/v1/organization-structure/management-levels") as Promise<ManagementLevelCatalog>,
     getOwnerGovernance: async (organizationId: string): Promise<GovernanceReadModel> => assertGovernanceReadModel(await ownerApiFetch(`/owner/organizations/${encodeURIComponent(organizationId)}/governance`)),
-    getTenantGovernance: async (organizationId: string): Promise<GovernanceReadModel> => assertGovernanceReadModel(await organizationApiFetch(organizationId, `/o/${encodeURIComponent(organizationId)}/governance`)),
+    getTenantGovernance: async (organizationId: string): Promise<GovernanceReadModel> => assertGovernanceReadModel(await organizationApiFetch(organizationId, `/organization/governance`)),
     previewOwnerAccessReadOnly: async (request: GovernanceAccessPreviewRequest): Promise<GovernanceAccessPreview> => assertAccessPreview(await ownerApiFetch(`/owner/organizations/${encodeURIComponent(request.organizationId)}/access-preview`, { method: "POST", headers: { "X-Civitas-Preview-Only": "true" }, body: JSON.stringify({ ...request, previewOnly: true }) })),
-    previewTenantAccessReadOnly: async (request: GovernanceAccessPreviewRequest): Promise<GovernanceAccessPreview> => assertAccessPreview(await organizationApiFetch(request.organizationId, `/o/${encodeURIComponent(request.organizationId)}/access-preview`, { method: "POST", headers: { "X-Civitas-Preview-Only": "true" }, body: JSON.stringify({ ...request, previewOnly: true }) })),
+    previewTenantAccessReadOnly: async (request: GovernanceAccessPreviewRequest): Promise<GovernanceAccessPreview> => assertAccessPreview(await organizationApiFetch(request.organizationId, `/organization/access-preview`, { method: "POST", headers: { "X-Civitas-Preview-Only": "true" }, body: JSON.stringify({ ...request, previewOnly: true }) })),
     updateOwnerCeilings: async (organizationId: string, request: GovernancePolicyMutationRequest): Promise<unknown> => ownerApiFetch(`/owner/organizations/${encodeURIComponent(organizationId)}/governance/entitlement-ceilings`, { method: "PUT", body: JSON.stringify({ expectedPolicyVersion: request.expectedPolicyVersion, reason: request.reason, changes: request.changes.map((change) => ({ logtoRoleId: request.roleId, permission: change.permission, allowed: change.enabled })) }) }),
-    updateTenantActivations: async (organizationId: string, request: GovernancePolicyMutationRequest): Promise<unknown> => organizationApiFetch(organizationId, `/o/${encodeURIComponent(organizationId)}/governance/role-activations`, { method: "PUT", body: JSON.stringify({ expectedPolicyVersion: request.expectedPolicyVersion, reason: request.reason, changes: request.changes.map((change) => ({ logtoRoleId: request.roleId, permission: change.permission, enabled: change.enabled })) }) }),
+    updateTenantActivations: async (organizationId: string, request: GovernancePolicyMutationRequest): Promise<unknown> => organizationApiFetch(organizationId, `/organization/governance/role-activations`, { method: "PUT", body: JSON.stringify({ expectedPolicyVersion: request.expectedPolicyVersion, reason: request.reason, changes: request.changes.map((change) => ({ logtoRoleId: request.roleId, permission: change.permission, enabled: change.enabled })) }) }),
   }), [organizationApiFetch, ownerApiFetch]);
 };

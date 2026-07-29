@@ -15,7 +15,12 @@ function assertCanonicalActivePermission(permission) {
 function validateOperationRegistry(operations = governanceOperationRegistry) {
   for (const operation of operations) {
     assert.ok(operation.operationId, "operationId is required");
-    if (operation.status === "active") assertCanonicalActivePermission(operation.permission);
+    if (["active", "read-only", "preview"].includes(operation.status)) assertCanonicalActivePermission(operation.permission);
+    if (operation.status === "active") {
+      assert.equal(operation.authoritativeEndpoint, true);
+      assert.equal(operation.backendAuthorization, true);
+      assert.equal(operation.durableRepository, true);
+    }
     if (operation.status === "planned") assert.equal(operation.fetcher || operation.action || operation.mountedHandler, undefined, "planned operations cannot mount fetch/action handlers");
   }
 }

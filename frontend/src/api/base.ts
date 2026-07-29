@@ -2,6 +2,7 @@ import { useLogto } from "@logto/react";
 import { useMemo } from "react";
 import { APP_ENV } from "../env";
 import { getMissingScopes, OWNER_SHELL_REQUIRED_SCOPES } from "../authz/ownerScopes";
+import { tenantRequestSignal } from "../tenant/lifecycle";
 
 const API_URL = APP_ENV.api.url;
 const API_RESOURCE = APP_ENV.api.resource;
@@ -269,6 +270,7 @@ export const useApi = () => {
 
         const response = await fetch(joinApiUrl(endpoint), {
           ...options,
+          signal: options.signal ?? tenantRequestSignal(),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

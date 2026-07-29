@@ -102,6 +102,9 @@
     "modules:docker-contracts-smoke": "npm run docker:contracts:smoke",
     "ui:p3-012:check": "npm run ui:p3-012:registry-check && npm run ui:p3-012:navigation-check && npm run ui:p3-012:route-safety-check && npm run ui:p3-012:authorization-parity-check && npm run ui:p3-012:lifecycle-check && npm run ui:p3-012:no-parallel-navigation-check && npm run ui:p3-012:no-frontend-authority-check && npm run ui:p3-012:inventory-check",
     "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
+    "planning:p3-016:contract-check": "node scripts/planning/p3-016-gate.mjs contract && node --test backend/test/planning-application-services.test.js",
+    "planning:p3-016:security-check": "node scripts/planning/p3-016-gate.mjs security && node --test backend/test/planning-federated-gateway.test.js",
+    "planning:p3-016:postgres-check": "node scripts/planning/p3-016-gate.mjs postgres",
     "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check",
     "contracts:referential-integrity:check": "node scripts/contracts/referential-integrity-check.mjs"
   },
