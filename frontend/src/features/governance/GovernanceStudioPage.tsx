@@ -8,7 +8,7 @@ import { validateOperationalResponse, type ConsolidatedOperationalResponse } fro
 import { isInvalidOrganizationId, OperationalModules, OperationalOverview } from "../owner/organization/operationalCards";
 import { useGovernanceApi } from "./api";
 import { appRoutes } from "../../navigation/routes";
-import { governanceModuleStatus, isGovernanceOperationActive } from "./governance-capabilities";
+import { governanceModuleStatus, isGovernanceOperationActive, isGovernanceOperationAvailable } from "./governance-capabilities";
 import type { GovernanceModuleKey, GovernanceReadModel, GovernanceSurface } from "./contracts";
 import { PermissionMatrixModule } from "./modules/permission-matrix/PermissionMatrixModule";
 import { MembersRoleAssignmentsModule } from "./modules/members/MembersRoleAssignmentsModule";
@@ -112,7 +112,11 @@ const GovernanceModules = ({ activeItemId, model, operationalModel, previewOwner
   if (activeModule === "organization-overview") return operationalModel ? <OperationalOverview organization={operationalModel} /> : <StateRegion><p className="text-sm text-muted-strong">Preparing organization overview...</p></StateRegion>;
   if (activeModule === "operations") return operationalModel ? <OperationalModules organization={operationalModel} /> : <StateRegion><p className="text-sm text-muted-strong">Preparing operations...</p></StateRegion>;
   const previewModel = { ...model, previewOwnerAccess, previewTenantAccess };
-  if (activeModule === "permissions") return <PermissionMatrixModule organizationId={model.organizationId} rows={model.permissionMatrix} roles={model.roles || []} surface={model.surface} versions={model.versions} onSaveOwnerCeilings={async (input) => { await updateOwnerCeilings(model.organizationId, input); await refetchReadModel(); }} onSaveTenantActivations={async (input) => { await updateTenantActivations(model.organizationId, input); await refetchReadModel(); }} />;
+  if (activeModule === "permissions") {
+    const ownerWriter = item.writeOperations.includes("governance.entitlementCeilings") && isGovernanceOperationActive("owner", "governance.entitlementCeilings");
+    const tenantWriter = item.writeOperations.includes("governance.roleActivations") && isGovernanceOperationActive("tenant", "governance.roleActivations");
+    return <PermissionMatrixModule organizationId={model.organizationId} rows={model.permissionMatrix} roles={model.roles || []} surface={model.surface} versions={model.versions} onSaveOwnerCeilings={ownerWriter ? async (input) => { await updateOwnerCeilings(model.organizationId, input); await refetchReadModel(); } : undefined} onSaveTenantActivations={tenantWriter ? async (input) => { await updateTenantActivations(model.organizationId, input); await refetchReadModel(); } : undefined} />;
+  }
   if (activeModule === "members") return <MembersRoleAssignmentsModule members={model.members || []} />;
   if (activeModule === "taxonomy") return <UnitsModule units={model.units} taxonomy={model.taxonomy} surface={model.surface} />;
   if (activeModule === "units") return <UnitsModule units={model.units} taxonomy={model.taxonomy} surface={model.surface} />;
@@ -120,7 +124,7 @@ const GovernanceModules = ({ activeItemId, model, operationalModel, previewOwner
   if (activeModule === "data-scope") return <DataScopeModule assignments={model.dataScopes} roles={model.roles || []} />;
   if (activeModule === "aliases-navigation") return <AliasesNavigationModule roles={model.roles ?? []} policy={model.aliasesNavigation} surface={model.surface} />;
   if (activeModule === "access-preview") {
-    if (!isGovernanceOperationActive(model.surface, "governance.accessPreview")) return <AccessPreviewUnavailable />;
+    if (!isGovernanceOperationAvailable(model.surface, "governance.accessPreview")) return <AccessPreviewUnavailable />;
     return <AccessPreviewModule organizationId={model.organizationId} surface={model.surface} previews={model.accessPreviews} onPreview={previewModel.surface === "owner" ? previewOwnerAccess : previewTenantAccess} />;
   }
   if (activeModule === "identity-provisioning") return <IdentityProvisioningModule organizationId={model.organizationId} surface={model.surface} summary={model.identityProvisioning} />;
@@ -141,7 +145,7 @@ export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }
   const [operationalModel, setOperationalModel] = useState<ConsolidatedOperationalResponse | null>(null);
 
   const refetchGovernanceReadModel = useCallback(() => {
-    if (!organizationId || !isGovernanceOperationActive(surface, "governance.readModel")) return Promise.resolve();
+    if (!organizationId || !isGovernanceOperationAvailable(surface, "governance.readModel")) return Promise.resolve();
     setLoading(true);
     setError(null);
     const load = surface === "owner" ? governanceApi.getOwnerGovernance : governanceApi.getTenantGovernance;
@@ -155,7 +159,7 @@ export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }
     let active = true;
     setLoading(true);
     setError(null);
-    if (!organizationId || !isGovernanceOperationActive(surface, "governance.readModel")) {
+    if (!organizationId || !isGovernanceOperationAvailable(surface, "governance.readModel")) {
       setModel(emptyGovernanceModel(organizationId, surface));
       setError(!organizationId ? "Choose an organization from Directory to open its Governance workspace." : null);
       setLoading(false);
