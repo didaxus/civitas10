@@ -18,7 +18,8 @@
     "authzContractVersion",
     "issuedAt",
     "expiresAt",
-    "snapshotVersion"
+    "snapshotVersion",
+    "rolePaths"
   ],
   "properties": {
     "schemaVersion": {
@@ -148,7 +149,17 @@
         "resolvedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "tokenContractVersion": {
+          "const": "2026-07-civitas-authz-v2"
         }
+      }
+    },
+    "rolePaths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "role-path.schema.json"
       }
     }
   }

@@ -31,18 +31,9 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install root dependencies
+      - name: Install canonical Node dependencies
         shell: bash
-        run: |
-          set -euo pipefail
-
-          if [[ -f package-lock.json ]]; then
-            echo "::notice::Installing root dependencies with npm ci."
-            npm ci
-          else
-            echo "::notice::No root package-lock.json; using npm install without generating a lockfile."
-            npm install --package-lock=false
-          fi
+        run: bash scripts/ci/install-node-dependencies.sh
 
       - name: Validate authorization workflow scripts
         shell: bash
@@ -70,6 +61,7 @@ jobs:
             'authz:policy-contract-check',
             'authz:data-scope-contract-check',
             'authz:data-scope-migration-check',
+            'authz:data-scope-v2:postgres-check',
             'logto:authz:contract-check',
             'authz:security-gate:check',
             'authz:runtime-contract-check',
@@ -144,7 +136,6 @@ jobs:
       - name: Run complete authorization matrix
         run: npm test
 
-
   module-control-plane-postgres:
     name: Module control plane PostgreSQL persistence gate
     runs-on: ubuntu-latest
@@ -176,34 +167,86 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install root dependencies
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [[ -f package-lock.json ]]; then npm ci; else npm install --package-lock=false; fi
-
-      - name: Install backend dependencies
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [[ -f backend/package-lock.json ]]; then npm --prefix backend ci; else npm --prefix backend install --package-lock=false; fi
-
-      - name: Prepare Phase 3 PostgreSQL gate databases
-        shell: bash
-        run: |
-          set -euo pipefail
-          createdb -h localhost -U postgres civitas_p3_006 || true
-          createdb -h localhost -U postgres civitas_p3_010 || true
+      - name: Install canonical Node dependencies
+        run: bash scripts/ci/install-node-dependencies.sh
 
       - name: Run PostgreSQL module control plane persistence gate
         env:
           DATABASE_URL: postgres://postgres@localhost:5432/civitas_p3_005
         run: npm run modules:p3-005:postgres-check
 
+  module-availability-postgres:
+    name: Module availability PostgreSQL persistence gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: civitas_p3_006
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d civitas_p3_006"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install canonical Node dependencies
+        run: bash scripts/ci/install-node-dependencies.sh
+
       - name: Run PostgreSQL module availability gate
         env:
           DATABASE_URL: postgres://postgres@localhost:5432/civitas_p3_006
         run: npm run modules:p3-006:postgres-check
+
+  integration-events-postgres:
+    name: Integration events PostgreSQL persistence gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: civitas_p3_010
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d civitas_p3_010"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install canonical Node dependencies
+        run: bash scripts/ci/install-node-dependencies.sh
 
       - name: Run PostgreSQL integration events gate
         env:

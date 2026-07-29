@@ -1,0 +1,15 @@
+{
+  "localVerification": [
+    {
+      "command": "node --check backend/services/integrationEvents.js",
+      "status": "PASS"
+    },
+    {
+      "command": "node --check backend/integration/integration-events-postgres.integration.test.js",
+      "status": "PASS"
+    }
+  ],
+  "postgresExecution": "PENDING_GITHUB_ACTIONS",
+  "authorizationMatrix": "PENDING_GITHUB_ACTIONS",
+  "note": "No local PostgreSQL service or authenticated GitHub CLI was available; GitHub Actions is the execution environment for the final gates."
+}
