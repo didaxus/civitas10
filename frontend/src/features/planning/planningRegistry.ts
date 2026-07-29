@@ -1,5 +1,5 @@
-import { adaptValidatedModuleUiContribution } from "../../module-ui/registry/contributionAdapter";
 import type { ModuleUiValidatedContribution } from "../../module-ui/loader/contracts";
+import { resolveModuleMountDecision } from "../../module-ui/registry/moduleMountDecision";
 import { planningRemoteUiContribution } from "./planningRemoteUiContribution";
 
 // This built-in artifact is verified by the application build. Downloaded contributions must
@@ -12,4 +12,6 @@ export const planningValidatedContribution = Object.freeze({
   resolvedArtifact: { artifactId: planningRemoteUiContribution.artifact.entrypoint.artifactId, origin: "app://civitas", cacheKey: "planning|bundled" },
 }) as ModuleUiValidatedContribution;
 
-export const planningVisualRegistryContribution = adaptValidatedModuleUiContribution(planningValidatedContribution);
+export function resolvePlanningVisualRegistryContribution() {
+  return resolveModuleMountDecision(planningValidatedContribution);
+}

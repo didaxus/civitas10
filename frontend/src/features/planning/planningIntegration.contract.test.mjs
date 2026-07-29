@@ -12,7 +12,7 @@ const contributionSource = readFileSync(new URL("./planningRemoteUiContribution.
 const viteSource = readFileSync(new URL("../../../vite.config.ts", import.meta.url), "utf8");
 
 test("Planning contribution uses the canonical Screen/Action adapter", () => {
-  assert.match(registrySource, /adaptValidatedModuleUiContribution/);
+  assert.match(registrySource, /resolveModuleMountDecision/);
   assert.match(registrySource, /planningRemoteUiContribution/);
 });
 test("navigation, direct URLs and breadcrumbs remain organization scoped", () => {

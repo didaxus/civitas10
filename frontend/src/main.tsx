@@ -3,11 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import './index.css'
 import App from './pages/App'
+import { AppRuntimeErrorBoundary } from './pages/App/AppRuntimeErrorBoundary'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <AppRuntimeErrorBoundary><BrowserRouter><App /></BrowserRouter></AppRuntimeErrorBoundary>
   </StrictMode>,
 )
