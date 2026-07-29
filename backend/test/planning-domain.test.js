@@ -9,8 +9,8 @@ test("Planning enforces transitions and rejection invariants", () => {
   const aggregate = plan();
   assert.throws(() => aggregate.transition(PLANNING_STATES.APPROVED, { actorId: "reviewer" }), { code: ERROR_CODES.INVALID_TRANSITION });
   aggregate.transition(PLANNING_STATES.IN_REVIEW, { actorId: "author" });
-  assert.throws(() => aggregate.transition(PLANNING_STATES.REJECTED, { actorId: "reviewer" }), { code: ERROR_CODES.INVALID_ARGUMENT });
-  aggregate.transition(PLANNING_STATES.REJECTED, { actorId: "reviewer", reason: "Missing budget" });
+  assert.throws(() => aggregate.transition(PLANNING_STATES.CHANGES_REQUESTED, { actorId: "reviewer" }), { code: ERROR_CODES.INVALID_ARGUMENT });
+  aggregate.transition(PLANNING_STATES.CHANGES_REQUESTED, { actorId: "reviewer", reason: "Missing budget" });
   aggregate.revise({ content: { year: 2027, budget: 10 }, actorId: "author" });
   assert.equal(aggregate.currentVersion, 2);
   assert.equal(aggregate.versions.length, 2);

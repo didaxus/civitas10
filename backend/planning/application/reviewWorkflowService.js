@@ -2,8 +2,8 @@ const { randomUUID } = require('node:crypto');
 const { REVIEW_ACTIONS, REVIEW_EVENTS, rehydrateReviewWorkflow, workflow, ReviewWorkflowError } = require('../domain');
 
 class ReviewApplicationError extends Error { constructor(code, details) { super(code); this.name='ReviewApplicationError'; this.code=code; this.details=details; } }
-const actionFor = { assignReviewer:REVIEW_ACTIONS.ASSIGN, submitReview:REVIEW_ACTIONS.SUBMIT, approve:REVIEW_ACTIONS.APPROVE, reject:REVIEW_ACTIONS.REJECT, draftFromApproved:REVIEW_ACTIONS.START_DRAFT };
-const handlerFor = { assignReviewer:'assign', submitReview:'submit', approve:'approve', reject:'reject', draftFromApproved:'draftFromApproved' };
+const actionFor = { addCollaborator:REVIEW_ACTIONS.COLLABORATE, versionPolicy:REVIEW_ACTIONS.ASSIGN, assign:REVIEW_ACTIONS.ASSIGN, assignReviewer:REVIEW_ACTIONS.ASSIGN, assignApprover:REVIEW_ACTIONS.ASSIGN, requestReview:REVIEW_ACTIONS.REQUEST, submitReview:REVIEW_ACTIONS.SUBMIT, approve:REVIEW_ACTIONS.APPROVE, requestChanges:REVIEW_ACTIONS.REQUEST_CHANGES, draftFromApproved:REVIEW_ACTIONS.START_DRAFT };
+const handlerFor = { addCollaborator:'addCollaborator', versionPolicy:'versionPolicy', assign:'assign', assignReviewer:'assign', assignApprover:'assign', requestReview:'requestReview', submitReview:'submit', approve:'approve', requestChanges:'requestChanges', draftFromApproved:'draftFromApproved' };
 function fingerprint(command) { return JSON.stringify(Object.keys(command).sort().reduce((o,k)=>(o[k]=command[k],o),{})); }
 
 function createReviewWorkflowService(ports, options={}) {
@@ -17,7 +17,7 @@ function createReviewWorkflowService(ports, options={}) {
     if (!command.ifMatch && command.ifMatch !== 0) throw new ReviewApplicationError('if_match_required');
     const fp=fingerprint(command);
     return ports.unitOfWork.transaction(async (tx) => {
-      const ledger=tx.idempotencyLedger || ports.idempotencyLedger;
+      const ledger=tx.reviewIdempotencyLedger || tx.idempotencyLedger || ports.reviewIdempotencyLedger || ports.idempotencyLedger;
       const prior=await ledger?.lookup({ organizationId:command.organizationId, operation:action, key });
       if (prior) { if (prior.fingerprint !== fp) throw new ReviewApplicationError('idempotency_conflict'); return prior.result; }
       const repo=tx.reviewRepository || ports.reviewRepository;
@@ -29,7 +29,7 @@ function createReviewWorkflowService(ports, options={}) {
       if (!authorization?.allowed) throw new ReviewApplicationError('authorization_denied', { decisionId:authorization?.decisionId, reason:authorization?.reason });
       if (operation === 'approve' && command.actorId === resource.authorId) throw new ReviewApplicationError('self_approval_denied');
       let event;
-      try { event=workflow[handlerFor[operation]](state, { ...command, eventId:uuid(), decisionId:command.decisionId || uuid(), occurredAt:clock().toISOString() }); }
+      try { event=workflow[handlerFor[operation]](state, { ...command, role:command.role || (operation==='assignApprover'?'approver':operation==='assignReviewer'?'reviewer':command.role), assignmentId:command.assignmentId || (operation.startsWith('assign')?uuid():command.assignmentId), reviewRequestId:command.reviewRequestId || (operation==='requestReview'?uuid():command.reviewRequestId), eventId:uuid(), decisionId:command.decisionId || uuid(), occurredAt:clock().toISOString() }); }
       catch (error) { if (error instanceof ReviewWorkflowError) throw new ReviewApplicationError(error.code); throw error; }
       await repo.append({ organizationId:command.organizationId, planId:command.planId, expectedVersion:state.version, event });
       const result=Object.freeze({ organizationId:command.organizationId, planId:command.planId, status:event.type, version:event.aggregateVersion, etag:String(event.aggregateVersion), event });

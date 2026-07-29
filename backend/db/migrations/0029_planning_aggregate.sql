@@ -12,7 +12,7 @@ create table planning_plans (
   created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
   primary key (organization_id, id), unique (organization_id, id, revision),
   foreign key (organization_id, profile_id) references planning_profiles(organization_id, id),
-  constraint planning_plans_state_ck check (state in ('draft','in_review','approved','rejected','archived'))
+  constraint planning_plans_state_ck check (state in ('draft','in_review','approved','changes_requested','archived'))
 );
 create index planning_plans_org_state_idx on planning_plans(organization_id, state, updated_at);
 

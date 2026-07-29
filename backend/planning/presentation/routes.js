@@ -101,7 +101,7 @@ function mount(router, method, path, useCase, validator, controllerMethod, paylo
     controller(controllerMethod, payloadBuilder));
 }
 
-function createPlanningRouter({ planningRemoteApplicationPort, availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry } = {}) {
+function createPlanningRouter({ planningRemoteApplicationPort, reviewWorkflowService, availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry } = {}) {
   const router = express.Router();
   router.use(express.json({ limit: '32kb' }));
   router.use((req, _res, next) => { if (planningRemoteApplicationPort) req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
@@ -113,6 +113,15 @@ function createPlanningRouter({ planningRemoteApplicationPort, availabilityResol
   mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
   mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), deps);
   mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), deps);
+  if (reviewWorkflowService) {
+    const reviewOperation={ collaborators:'addCollaborator', policy:'versionPolicy', assignments:'assign', requests:'requestReview', submit:'submitReview', approve:'approve', changes:'requestChanges', draft:'draftFromApproved' };
+    router.post('/o/:organizationId/planning/plans/:planId/review/:resource', validateParams(true), validateBody('reviewWrite'), async(req,res,next)=>{ try {
+      const operation=reviewOperation[req.params.resource]; if(!operation) return res.status(404).json(problemBody('review_resource_not_found','Unknown review resource.',404));
+      const actorId=req.auth?.subject||req.user?.sub||req.user?.id; if(!actorId) return res.status(401).json(problemBody('authentication_required','An authenticated actor is required.',401));
+      const value=await reviewWorkflowService[operation]({...req.body,organizationId:req.params.organizationId,planId:req.params.planId,actorId,idempotencyKey:req.headers['idempotency-key'],ifMatch:req.headers['if-match']??req.body.ifMatch},{principal:req.principal||{subjectId:actorId},correlationId:correlationId(req)});
+      res.set('ETag',value.etag); return res.status(operation==='approve'||operation==='requestChanges'?200:201).json(value);
+    } catch(error) { if(error?.code==='etag_mismatch') return res.status(412).json(problemBody('stale_version','Review version is stale.',412)); if(error?.code==='self_approval_denied'||error?.code==='authorization_denied') return res.status(403).json(problemBody(error.code,error.code,403)); return next(error); } });
+  }
   return router;
 }
 

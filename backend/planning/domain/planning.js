@@ -7,14 +7,14 @@ const PLANNING_STATES = Object.freeze({
   DRAFT: "draft",
   IN_REVIEW: "in_review",
   APPROVED: "approved",
-  REJECTED: "rejected",
+  CHANGES_REQUESTED: "changes_requested",
   ARCHIVED: "archived",
 });
 
 const TRANSITIONS = Object.freeze({
   [PLANNING_STATES.DRAFT]: [PLANNING_STATES.IN_REVIEW, PLANNING_STATES.ARCHIVED],
-  [PLANNING_STATES.IN_REVIEW]: [PLANNING_STATES.APPROVED, PLANNING_STATES.REJECTED],
-  [PLANNING_STATES.REJECTED]: [PLANNING_STATES.DRAFT, PLANNING_STATES.ARCHIVED],
+  [PLANNING_STATES.IN_REVIEW]: [PLANNING_STATES.APPROVED, PLANNING_STATES.CHANGES_REQUESTED],
+  [PLANNING_STATES.CHANGES_REQUESTED]: [PLANNING_STATES.DRAFT, PLANNING_STATES.ARCHIVED],
   [PLANNING_STATES.APPROVED]: [PLANNING_STATES.ARCHIVED],
   [PLANNING_STATES.ARCHIVED]: [],
 });
@@ -68,13 +68,13 @@ class Planning {
     if (this.state === PLANNING_STATES.APPROVED) {
       throw new PlanningDomainError(ERROR_CODES.APPROVED_VERSION_IMMUTABLE, "Approved versions cannot be modified");
     }
-    if (![PLANNING_STATES.DRAFT, PLANNING_STATES.REJECTED].includes(this.state)) {
+    if (![PLANNING_STATES.DRAFT, PLANNING_STATES.CHANGES_REQUESTED].includes(this.state)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_TRANSITION, `Cannot revise a plan in ${this.state}`);
     }
     if (content == null || typeof content !== "object" || Array.isArray(content)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content must be an object");
     }
-    if (this.state === PLANNING_STATES.REJECTED) this.#transition(PLANNING_STATES.DRAFT, actorId, now);
+    if (this.state === PLANNING_STATES.CHANGES_REQUESTED) this.#transition(PLANNING_STATES.DRAFT, actorId, now);
     this.currentVersion += 1;
     this.revision += 1;
     this.updatedAt = now;
@@ -94,8 +94,8 @@ class Planning {
     if (!(TRANSITIONS[this.state] || []).includes(toState)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_TRANSITION, `Transition ${this.state} -> ${toState} is not allowed`, { from: this.state, to: toState });
     }
-    if (toState === PLANNING_STATES.REJECTED && !String(reason || "").trim()) {
-      throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "A rejection reason is required");
+    if (toState === PLANNING_STATES.CHANGES_REQUESTED && !String(reason || "").trim()) {
+      throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "A changes-requested reason is required");
     }
     const from = this.state;
     this.state = toState;

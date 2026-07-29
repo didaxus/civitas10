@@ -93,11 +93,43 @@ function createPostgresPlanningPersistence({ pool }) {
       lookup: async ({ organizationId, key }) => { if (!key) return null; const result = await db.query("select * from planning_idempotency where organization_id=$1 and idempotency_key=$2", [organizationId, key]); return result.rowCount ? { fingerprint: result.rows[0].fingerprint, result: result.rows[0].result } : null; },
       recordSuccess: async ({ organizationId, key, fingerprint, result }) => db.query("insert into planning_idempotency(organization_id,idempotency_key,fingerprint,result) values($1,$2,$3,$4)", [organizationId, key, fingerprint || digest(result), result]),
     };
-    return { persistencePort, auditPort, outboxPort, idempotencyLedgerPort, concurrencyPort: { assertIfMatch: async () => true } };
+    const reviewRepository = {
+      async loadEvents({ organizationId, planId }) {
+        const result=await db.query("select payload from planning_review_events where logto_organization_id=$1 and plan_id=$2 order by aggregate_version",[organizationId,planId]);
+        return result.rows.map((row)=>row.payload);
+      },
+      async append({ organizationId, planId, expectedVersion, event }) {
+        await db.query("insert into planning_review_streams(logto_organization_id,plan_id,current_version) values($1,$2,0) on conflict do nothing",[organizationId,planId]);
+        const locked=await db.query("select current_version from planning_review_streams where logto_organization_id=$1 and plan_id=$2 for update",[organizationId,planId]);
+        if (Number(locked.rows[0].current_version)!==Number(expectedVersion)) throw new PlanningDomainError(ERROR_CODES.VERSION_CONFLICT,"Review stream was concurrently modified");
+        await db.query("insert into planning_review_events(event_id,logto_organization_id,plan_id,aggregate_version,event_type,payload,occurred_at) values($1,$2,$3,$4,$5,$6,$7)",[event.eventId,organizationId,planId,event.aggregateVersion,event.type,event,event.occurredAt]);
+        await projectReviewEvent(db,event);
+        await db.query("update planning_review_streams set current_version=$3 where logto_organization_id=$1 and plan_id=$2",[organizationId,planId,event.aggregateVersion]);
+      },
+    };
+    const reviewIdempotencyLedger = {
+      async lookup({organizationId,operation,key}) { const r=await db.query("select request_fingerprint,result_json from planning_review_idempotency where logto_organization_id=$1 and operation=$2 and idempotency_key=$3",[organizationId,operation,key]); return r.rowCount?{fingerprint:r.rows[0].request_fingerprint,result:r.rows[0].result_json}:null; },
+      async recordSuccess({organizationId,operation,key,fingerprint,result}) { await db.query("insert into planning_review_idempotency(logto_organization_id,operation,idempotency_key,request_fingerprint,result_json) values($1,$2,$3,$4,$5)",[organizationId,operation,key,fingerprint,result]); },
+    };
+    return { persistencePort, auditPort, outboxPort, idempotencyLedgerPort, reviewRepository, reviewIdempotencyLedger, concurrencyPort: { assertIfMatch: async () => true } };
   }
 
   const root = bind(pool);
   return { ...root.persistencePort, ...root, transaction, executeAtomically: transaction };
+}
+
+async function projectReviewEvent(db,event) {
+  const p=[event.organizationId,event.planId];
+  if(event.type==='planning.collaborator_added.v1') await db.query("insert into planning_collaborators(logto_organization_id,plan_id,collaborator_id,capabilities) values($1,$2,$3,$4) on conflict(logto_organization_id,plan_id,collaborator_id) do update set capabilities=excluded.capabilities,active=true",[...p,event.collaboratorId,event.capabilities||['edit']]);
+  if(event.type==='planning.maker_checker_policy_versioned.v1') await db.query("insert into planning_maker_checker_policies(logto_organization_id,plan_id,version,policy,created_by,created_at) values($1,$2,$3,$4,$5,$6)",[...p,event.policy.version,event.policy,event.actorId,event.occurredAt]);
+  if(event.type==='planning.review_assignment_created.v1') await db.query("insert into planning_review_assignments(assignment_id,logto_organization_id,plan_id,assignee_id,assignment_role,plan_version,policy_version,assigned_by) values($1,$2,$3,$4,$5,$6,$7,$8)",[event.assignmentId,...p,event.assigneeId,event.role,event.planVersion,event.policyVersion,event.actorId]);
+  if(event.type==='planning.review_requested.v1') await db.query("insert into planning_review_requests(review_request_id,logto_organization_id,plan_id,plan_version,policy_version,assignment_ids,requested_by) values($1,$2,$3,$4,$5,$6,$7)",[event.reviewRequestId,...p,event.planVersion,event.policyVersion,event.assignmentIds,event.actorId]);
+  if(event.type==='planning.review_approved.v1'||event.type==='planning.review_changes_requested.v1') {
+    await db.query("insert into planning_review_decisions(decision_id,logto_organization_id,plan_id,assignment_id,actor_id,decision,plan_version,policy_version,rationale) values($1,$2,$3,$4,$5,$6,$7,$8,$9)",[event.decisionId,...p,event.assignmentId,event.actorId,event.decision,event.planVersion,event.policyVersion,event.rationale||null]);
+    await db.query("update planning_review_assignments set active=false where logto_organization_id=$1 and assignment_id=$2",[event.organizationId,event.assignmentId]);
+    if(event.reviewRequestId) await db.query("update planning_review_requests set status='completed' where logto_organization_id=$1 and review_request_id=$2",[event.organizationId,event.reviewRequestId]);
+  }
+  if(event.type==='planning.review_approved.v1') await db.query("insert into planning_approved_snapshots(logto_organization_id,plan_id,plan_version,snapshot,snapshot_hash,provenance,approved_by,approved_at) values($1,$2,$3,$4,$5,$6,$7,$8)",[...p,event.planVersion,event.approvedSnapshot,event.snapshotHash,event.provenance,event.actorId,event.occurredAt]);
 }
 
 function mapAggregate(plan, versions) { return { organizationId: plan.organization_id, id: plan.id, profileId: plan.profile_id, name: plan.name, state: plan.state, currentVersion: plan.current_version, revision: plan.revision, createdAt: plan.created_at, updatedAt: plan.updated_at, versions: versions.map((v) => ({ version: v.version, state: v.state, content: v.content, createdBy: v.created_by, createdAt: v.created_at, approvedBy: v.approved_by, approvedAt: v.approved_at })) }; }

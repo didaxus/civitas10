@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import { useApi, ApiRequestError } from "../../api/base";
 
-export type PlanningPlanStatus = "draft" | "approved" | "archived";
+export type PlanningPlanStatus = "draft" | "in_review" | "approved" | "changes_requested" | "archived";
+export type ReviewAssignmentRole = "reviewer" | "approver";
+export type ReviewAssignmentInput = { assigneeId: string; role: ReviewAssignmentRole; planVersion: number; policyVersion: number };
+export type ReviewCommandInput = Record<string, unknown> & { ifMatch: string | number };
 export type PlanningPlan = { planId: string; organizationId: string; title: string; description?: string; status: PlanningPlanStatus; version: string; updatedAt?: string; etag?: string };
 export type PlanningProfile = { organizationId: string; planningMode: string; preferences?: Record<string, unknown>; version: string };
 export type PlanningListResponse = { items: PlanningPlan[]; page?: { limit?: number; cursor?: string } };
@@ -32,4 +35,5 @@ export const usePlanningApi = () => { const { organizationApiFetch } = useApi();
   updatePlan: async (organizationId: string, planId: string, input: PlanningPlanInput, etag: string, signal?: AbortSignal) => { try { return assertPlan(await organizationApiFetch(organizationId, `${root(organizationId)}/${encodeURIComponent(planId)}`, { method: "PUT", body: JSON.stringify(input), headers: { "If-Match": etag, "Idempotency-Key": crypto.randomUUID() }, signal })); } catch (e) { mapError(e); } },
   getProfile: async (organizationId: string, signal?: AbortSignal) => { try { return assertProfile(await organizationApiFetch(organizationId, `${root(organizationId)}/profile`, { signal })); } catch (e) { mapError(e); } },
   replaceProfile: async (organizationId: string, profile: Partial<PlanningProfile>, signal?: AbortSignal) => { try { return assertProfile(await organizationApiFetch(organizationId, `${root(organizationId)}/profile`, { method: "PUT", body: JSON.stringify(profile), headers: { "Idempotency-Key": crypto.randomUUID() }, signal })); } catch (e) { mapError(e); } },
+  reviewCommand: async (organizationId: string, planId: string, resource: "collaborators"|"policy"|"assignments"|"requests"|"submit"|"approve"|"changes"|"draft", input: ReviewCommandInput, signal?: AbortSignal) => { try { return await organizationApiFetch(organizationId, `${root(organizationId)}/plans/${encodeURIComponent(planId)}/review/${resource}`, { method:"POST", body:JSON.stringify(input), headers:{ "If-Match":String(input.ifMatch), "Idempotency-Key":crypto.randomUUID() }, signal }); } catch(e) { mapError(e); } },
 }), [organizationApiFetch]); };
