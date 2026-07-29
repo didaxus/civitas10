@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.local/mcp/delegation-chain.v1.json",
+  "type": "object",
+  "required": ["schemaVersion", "links"],
+  "properties": {
+    "schemaVersion": { "const": "civitas.mcp.delegation-chain/v1" },
+    "links": { "type": "array", "maxItems": 8, "items": { "type": "object", "additionalProperties": false, "required": ["delegatorId", "delegateId", "permissions", "riskCeiling", "expiresAt"], "properties": { "delegatorId": { "type": "string", "minLength": 1 }, "delegateId": { "type": "string", "minLength": 1 }, "permissions": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }, "riskCeiling": { "enum": ["R0", "R1", "R2"] }, "expiresAt": { "type": "string", "format": "date-time" }, "delegationId": { "type": "string" } } } }
+  },
+  "additionalProperties": false
+}
