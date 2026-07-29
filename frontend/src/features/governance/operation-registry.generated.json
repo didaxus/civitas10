@@ -1,7 +1,15 @@
 {
+  "_generated": {
+    "notice": "GENERATED — DO NOT EDIT",
+    "source": "core/governance/operation-registry.cjs",
+    "command": "npm run governance:registry:generate"
+  },
   "registryVersion": "2026-07-civitas10-governance-operations-v1",
   "operations": [
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.readModel",
       "method": "GET",
       "pattern": "/owner/organizations/{organizationId}/governance",
@@ -11,40 +19,46 @@
       "policies": [
         "owner_global"
       ],
-      "status": "active",
+      "status": "read-only",
       "contractVersion": "2026-07-civitas10-governance-read-model-v1",
       "responseSchema": "GovernanceReadModel",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.readModel",
       "method": "GET",
-      "pattern": "/o/{organizationId}/governance",
-      "expressPattern": "/o/:organizationId/governance",
+      "pattern": "/organization/governance",
+      "expressPattern": "/organization/governance",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
         "same-organization",
         "organization_member"
       ],
-      "status": "active",
+      "status": "read-only",
       "contractVersion": "2026-07-civitas10-governance-read-model-v1",
       "responseSchema": "GovernanceReadModel",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.entitlementCeilings",
       "method": "PUT",
       "pattern": "/owner/organizations/{organizationId}/governance/entitlement-ceilings",
@@ -57,19 +71,22 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-roles-v1",
       "responseSchema": "GovernanceEntitlementMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.roleActivations",
       "method": "PUT",
-      "pattern": "/o/{organizationId}/governance/role-activations",
-      "expressPattern": "/o/:organizationId/governance/role-activations",
+      "pattern": "/organization/governance/role-activations",
+      "expressPattern": "/organization/governance/role-activations",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -79,19 +96,22 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-roles-v1",
       "responseSchema": "GovernanceEntitlementMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.memberRoleAssignments",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/member-role-assignments",
-      "expressPattern": "/o/:organizationId/governance/member-role-assignments",
+      "pattern": "/organization/governance/member-role-assignments",
+      "expressPattern": "/organization/governance/member-role-assignments",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -102,19 +122,22 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-roles-v1",
       "responseSchema": "GovernanceRoleAssignmentMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.taxonomyValues",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/taxonomy/values",
-      "expressPattern": "/o/:organizationId/governance/taxonomy/values",
+      "pattern": "/organization/governance/taxonomy/values",
+      "expressPattern": "/organization/governance/taxonomy/values",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -124,19 +147,22 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-structure-v1",
       "responseSchema": "GovernanceTaxonomyMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.taxonomyPublish",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/taxonomy/publish",
-      "expressPattern": "/o/:organizationId/governance/taxonomy/publish",
+      "pattern": "/organization/governance/taxonomy/publish",
+      "expressPattern": "/organization/governance/taxonomy/publish",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -146,19 +172,22 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-structure-v1",
       "responseSchema": "GovernanceTaxonomyMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.units",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/units",
-      "expressPattern": "/o/:organizationId/governance/units",
+      "pattern": "/organization/governance/units",
+      "expressPattern": "/organization/governance/units",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -168,19 +197,22 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-structure-v1",
       "responseSchema": "GovernanceUnitMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.dataScopes",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/data-scopes",
-      "expressPattern": "/o/:organizationId/governance/data-scopes",
+      "pattern": "/organization/governance/data-scopes",
+      "expressPattern": "/organization/governance/data-scopes",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -191,15 +223,18 @@
       "status": "active",
       "contractVersion": "2026-07-civitas10-governance-structure-v1",
       "responseSchema": "GovernanceDataScopeMutation",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.accessPreview",
       "method": "POST",
       "pattern": "/owner/organizations/{organizationId}/access-preview",
@@ -210,22 +245,25 @@
         "authorization-snapshot-current",
         "preview-only"
       ],
-      "status": "active",
+      "status": "preview",
       "contractVersion": "2026-07-civitas10-governance-operations-v1",
       "responseSchema": "GovernanceAccessPreview",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.accessPreview",
       "method": "POST",
-      "pattern": "/o/{organizationId}/access-preview",
-      "expressPattern": "/o/:organizationId/access-preview",
+      "pattern": "/organization/access-preview",
+      "expressPattern": "/organization/access-preview",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
@@ -233,22 +271,25 @@
         "authorization-snapshot-current",
         "preview-only"
       ],
-      "status": "active",
+      "status": "preview",
       "contractVersion": "2026-07-civitas10-governance-operations-v1",
       "responseSchema": "GovernanceAccessPreview",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": false,
       "operationId": "governance.navigationPreferences",
       "method": "PUT",
-      "pattern": "/o/{organizationId}/governance/navigation-preferences",
-      "expressPattern": "/o/:organizationId/governance/navigation-preferences",
+      "pattern": "/organization/governance/navigation-preferences",
+      "expressPattern": "/organization/governance/navigation-preferences",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -256,18 +297,21 @@
         "organization_admin",
         "presentation_only"
       ],
-      "status": "active",
+      "status": "read-only",
       "contractVersion": "2026-07-civitas10-governance-operations-v1",
       "responseSchema": "GovernanceAliasNavigationPolicy",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.audit",
       "method": "GET",
       "pattern": "/owner/organizations/{organizationId}/governance/audit",
@@ -278,40 +322,46 @@
         "owner_global",
         "redacted_audit"
       ],
-      "status": "active",
+      "status": "read-only",
       "contractVersion": "2026-07-civitas10-governance-operations-v1",
       "responseSchema": "GovernanceAuditEvent[]",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": true,
+      "backendAuthorization": true,
+      "durableRepository": true,
       "operationId": "governance.audit",
       "method": "GET",
-      "pattern": "/o/{organizationId}/governance/audit",
-      "expressPattern": "/o/:organizationId/governance/audit",
+      "pattern": "/organization/governance/audit",
+      "expressPattern": "/organization/governance/audit",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
         "same-organization",
         "redacted_audit"
       ],
-      "status": "active",
+      "status": "read-only",
       "contractVersion": "2026-07-civitas10-governance-operations-v1",
       "responseSchema": "GovernanceAuditEvent[]",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": false,
+      "backendAuthorization": false,
+      "durableRepository": false,
       "operationId": "governance.identityProvisioning",
       "method": "GET",
       "pattern": "/owner/organizations/{organizationId}/governance/identity",
@@ -325,19 +375,22 @@
       "status": "planned",
       "contractVersion": "2026-07-civitas10-identity-federation-v1",
       "responseSchema": "IdentityFederationReadModel",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
     {
+      "authoritativeEndpoint": false,
+      "backendAuthorization": false,
+      "durableRepository": false,
       "operationId": "governance.identityProvisioning",
       "method": "GET",
-      "pattern": "/o/{organizationId}/settings/governance/identity",
-      "expressPattern": "/o/:organizationId/settings/governance/identity",
+      "pattern": "/organization/settings/governance/identity",
+      "expressPattern": "/organization/settings/governance/identity",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
@@ -348,11 +401,11 @@
       "status": "planned",
       "contractVersion": "2026-07-civitas10-identity-federation-v1",
       "responseSchema": "IdentityFederationReadModel",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     }
@@ -369,7 +422,7 @@
           "owner.profile.read",
           "org.documents.read"
         ],
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       },
       "policies": [
@@ -381,11 +434,11 @@
       "version": "2026-07-civitas10-governance-read-model-v1",
       "status": "active",
       "reason": "aggregate_read_model_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -400,7 +453,7 @@
           "owner.runtime.operations.execute",
           "org.documents.create"
         ],
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       },
       "policies": [
@@ -412,11 +465,11 @@
       "version": "2026-07-civitas10-governance-roles-v1",
       "status": "active",
       "reason": "roles_entitlements_and_permission_matrix_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -434,11 +487,11 @@
       "version": "2026-07-civitas10-governance-roles-v1",
       "status": "active",
       "reason": "member_role_assignment_operation_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -455,11 +508,11 @@
       "version": "2026-07-civitas10-governance-structure-v1",
       "status": "active",
       "reason": "taxonomy_operations_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -476,11 +529,11 @@
       "version": "2026-07-civitas10-governance-structure-v1",
       "status": "active",
       "reason": "unit_operations_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -498,11 +551,11 @@
       "version": "2026-07-civitas10-governance-structure-v1",
       "status": "active",
       "reason": "data_scope_operations_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -517,7 +570,7 @@
           "owner.profile.read",
           "org.documents.create"
         ],
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       },
       "policies": [
@@ -529,11 +582,11 @@
       "version": "2026-07-civitas10-governance-operations-v1",
       "status": "active",
       "reason": "aliases_navigation_preferences_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -548,7 +601,7 @@
           "owner.profile.read",
           "org.documents.read"
         ],
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       },
       "policies": [
@@ -560,11 +613,11 @@
       "version": "2026-07-civitas10-governance-operations-v1",
       "status": "active",
       "reason": "access_preview_handler_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -579,7 +632,7 @@
           "owner.profile.read",
           "org.documents.read"
         ],
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       },
       "policies": [
@@ -591,11 +644,11 @@
       "version": "2026-07-civitas10-governance-operations-v1",
       "status": "active",
       "reason": "governance_audit_endpoint_mounted",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     },
@@ -610,7 +663,7 @@
           "owner.profile.read",
           "org.documents.read"
         ],
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       },
       "policies": [
@@ -622,11 +675,11 @@
       "version": "2026-07-civitas10-identity-federation-v1",
       "status": "planned",
       "reason": "identity_federation_contracts_persisted_but_handlers_policies_tests_pending",
-      "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
       "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
       "snapshotProvenance": {
         "source": "core/governance/operation-registry.cjs",
-        "catalogHash": "57adc4a7b28cb5ddb79bb7f66257d5d226cf27e174f22a7b0a19628aebf4e76d",
+        "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
         "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1"
       }
     }

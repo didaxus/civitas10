@@ -1,7 +1,6 @@
 "use strict";
 
-const { explainAuthorization, hashSubject } = require("../authorization/diagnostics");
-const { governanceAuditRepository } = require("./governanceAuditRepository");
+const { hashSubject, redact } = require("../authorization/diagnostics");
 
 const GOVERNANCE_OPERATIONS_CONTRACT_VERSION = "2026-07-civitas10-governance-operations-v1";
 const REGISTERED_SCREENS = Object.freeze(new Map([
@@ -9,7 +8,6 @@ const REGISTERED_SCREENS = Object.freeze(new Map([
   ["tenant-governance", Object.freeze({ screenId: "tenant-governance", canonicalLabel: "Tenant Governance Studio", surface: "tenant", locked: true, hideable: false, routeId: "tenant.settings.governance" })],
   ["tenant-documents", Object.freeze({ screenId: "tenant-documents", canonicalLabel: "Documents", surface: "tenant", locked: false, hideable: true, routeId: "tenant.documents" })],
 ]));
-const REGISTERED_ACTIONS = Object.freeze(new Set(["governance.access.preview", "documents.read", "documents.create", "owner.organizations.read"]));
 
 const navigationPolicies = new Map();
 const rateLimitBuckets = new Map();
@@ -80,33 +78,12 @@ function assertPreviewRateLimit({ organizationId, actorLogtoUserId }) {
   if (count > 30) { const error = new Error("access_preview_rate_limited"); error.status = 429; error.code = "access_preview_rate_limited"; throw error; }
 }
 
-async function previewAccess({ organizationId, surface, body = {}, actorLogtoUserId, principal = {} }) {
+async function previewAccess({ organizationId, surface, body = {}, actorLogtoUserId, principal = {}, explainabilityQuery }) {
   assertPreviewRateLimit({ organizationId, actorLogtoUserId });
   if (body.previewOnly !== true) { const error = new Error("access_preview_requires_preview_only"); error.status = 400; error.code = "access_preview_requires_preview_only"; throw error; }
-  const subjectId = String(body.subjectId || "");
-  const actionId = body.actionId ? String(body.actionId) : undefined;
-  const screenId = body.screenId ? String(body.screenId) : undefined;
-  if (!subjectId || (!actionId && !screenId)) { const error = new Error("access_preview_subject_and_target_required"); error.status = 400; error.code = "access_preview_subject_and_target_required"; throw error; }
-  if (actionId && !REGISTERED_ACTIONS.has(actionId)) { const error = new Error("access_preview_action_unknown"); error.status = 400; error.code = "access_preview_action_unknown"; throw error; }
-  const screen = screenId ? REGISTERED_SCREENS.get(screenId) : null;
-  if (screenId && !screen) { const error = new Error("access_preview_screen_unknown"); error.status = 400; error.code = "access_preview_screen_unknown"; throw error; }
-  const policy = getPolicy(organizationId);
-  const preference = screenId ? policy.visualPreferences.find((item) => item.screenId === screenId) : null;
-  const allowed = Boolean(subjectId) && (!screen || screen.surface === surface || surface === "owner");
-  const reason = allowed ? (preference?.hidden ? "visual_preference_hidden_not_authorization" : "allowed") : "surface_mismatch";
-  const diagnostics = await explainAuthorization({
-    surface: surface === "tenant" ? "organization" : "owner",
-    organizationId,
-    principal: { subject: subjectId, organizationId: surface === "tenant" ? organizationId : principal.organizationId, scopes: [actionId || "governance.preview.read"], tokenType: surface === "tenant" ? "organization" : "global" },
-    permission: actionId || "governance.preview.read",
-    decision: { allowed, reasonCode: reason, policyVersion: policy.version, evaluatedRolePaths: allowed ? ["preview"] : [] },
-    diagnosticPermissionGranted: true,
-    visual: { screen, action: actionId ? { actionId } : null, visualPreference: preference },
-    runtime: { policyVersion: policy.version, visualVersion: policy.version, readModelVersion: GOVERNANCE_OPERATIONS_CONTRACT_VERSION },
-    provenance: { entitlement: { permission: actionId || screenId, ownerCeiling: "preview", tenantActivation: "preview", reasonCodes: [reason] }, governance: { readModelVersion: GOVERNANCE_OPERATIONS_CONTRACT_VERSION, policyConfigVersion: policy.version } },
-  });
-  const response = { contractVersion: GOVERNANCE_OPERATIONS_CONTRACT_VERSION, generatedAt: nowIso(), organizationId, surface, subjectId: hashSubject(subjectId), actionId, screenId, decision: { allowed, reason, sourceVersions: { policyVersion: policy.version, visualVersion: policy.version, readModelVersion: GOVERNANCE_OPERATIONS_CONTRACT_VERSION } }, provenance: diagnostics.provenance, diagnostics, mutated: false };
-  audit({ organizationId, actorLogtoUserId, action: "governance.access_preview.simulated", targetType: actionId ? "action" : "screen", targetId: actionId || screenId, result: allowed ? "allowed" : "denied", reason, after: response });
+  if (!explainabilityQuery) { const error = new Error("authorization_explainability_query_unavailable"); error.status = 503; error.code = "authorization_explainability_query_unavailable"; throw error; }
+  const response = await explainabilityQuery.execute({ organizationId, surface, subjectId: body.subjectId, permission: body.permission || body.actionId, resourceRef: body.resourceRef, decisionId: body.decisionId });
+  audit({ organizationId, actorLogtoUserId, action: "governance.authorization_explanation.queried", targetType: "authorization_decision", targetId: response.decisionId, result: response.summary.allowed ? "allowed" : "denied", reason: response.summary.firstDecisiveReason });
   return response;
 }
 
