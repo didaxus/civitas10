@@ -22,7 +22,7 @@ test("governance studio exposes separate owner and tenant surfaces", () => {
   assert.match(routes, /ownerOrganizationGovernance/);
   assert.match(routes, /\/owner\/organizations\/:organizationId\/governance/);
   assert.match(routes, /tenantGovernance/);
-  assert.match(routes, /\/o\/:organizationId\/settings\/governance/);
+  assert.match(routes, /\/settings\/governance/);
   assert.match(registry, /owner-governance/);
   assert.match(registry, /route: routeCatalog\.ownerOrganizationGovernance/);
   assert.match(registry, /requiresOrganizationContext: false/);
@@ -130,7 +130,7 @@ test("structure workspace represents persisted organization units, not taxonomy 
 
 test("structure routes separate owner inspection from tenant organization model workspace", () => {
   assert.match(routes, /ownerOrganizationGovernanceStructureRoute = defineRoute\("\/owner\/organizations\/:organizationId\/governance\/organization-model\/structure"\)/);
-  assert.match(routes, /tenantGovernanceStructureRoute = defineRoute\("\/o\/:organizationId\/settings\/governance\/organization-model\/structure"\)/);
+  assert.match(routes, /tenantGovernanceStructureRoute = defineRoute\("\/settings\/governance\/organization-model\/structure"\)/);
   assert.match(workspaceContract, /routeKey: "ownerOrganizationGovernanceStructure"/);
   assert.match(routeCatalogSource, /tenantGovernanceStructure: route\("tenant\.settings\.governance\.organization_model\.structure"/);
   assert.match(appSource, /appRoutes\.tenantGovernanceStructure\.path/);
@@ -177,7 +177,7 @@ test("role names screen is the simple alias editor", () => {
 
 test("role names routes separate owner audit context from tenant alias editing", () => {
   assert.match(routes, /ownerOrganizationGovernanceRoleNamesRoute = defineRoute\("\/owner\/organizations\/:organizationId\/governance\/access-policy\/role-names"\)/);
-  assert.match(routes, /tenantGovernanceRoleNamesRoute = defineRoute\("\/o\/:organizationId\/settings\/governance\/access-policy\/role-names"\)/);
+  assert.match(routes, /tenantGovernanceRoleNamesRoute = defineRoute\("\/settings\/governance\/access-policy\/role-names"\)/);
   assert.match(workspaceContract, /routeKey: "ownerOrganizationGovernanceRoleNames"/);
   assert.match(routeCatalogSource, /tenantGovernanceRoleNames: route\("tenant\.settings\.governance\.role_names"/);
   assert.match(appSource, /appRoutes\.tenantGovernanceRoleNames\.path/);
@@ -232,7 +232,7 @@ test("role permissions editor is operational, single-role and endpoint-backed", 
 
 test("role permissions routes distinguish owner ceilings from tenant activations", () => {
   assert.match(routes, /ownerOrganizationGovernanceRolesRoute = defineRoute\("\/owner\/organizations\/:organizationId\/governance\/access-policy\/roles"\)/);
-  assert.match(routes, /tenantGovernanceRolesRoute = defineRoute\("\/o\/:organizationId\/settings\/governance\/access-policy\/roles"\)/);
+  assert.match(routes, /tenantGovernanceRolesRoute = defineRoute\("\/settings\/governance\/access-policy\/roles"\)/);
   assert.match(routeCatalogSource, /tenantGovernanceRoles: route\("tenant\.settings\.governance\.roles"/);
   assert.match(appSource, /appRoutes\.tenantGovernanceRoles\.path/);
 });
