@@ -467,7 +467,7 @@
   "taxonomy": [
     {
       "id": "value_1",
-      "dimension": "academic.section",
+      "dimension": "academic.stage",
       "stableKey": "primary",
       "label": "Primary",
       "status": "active",

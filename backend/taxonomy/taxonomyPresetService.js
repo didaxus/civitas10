@@ -1,11 +1,11 @@
 "use strict";
 const PRESETS = Object.freeze({
   school_k12: { version: "2026-07-v1", values: [
-    ["academic.section","primary","Primary",null,10], ["academic.section","middle","Middle",null,20], ["academic.section","high","High",null,30],
+    ["academic.stage","primary","Primary",null,10], ["academic.stage","middle","Middle",null,20], ["academic.stage","high","High",null,30],
     ["academic.subject","mathematics","Mathematics",null,10], ["academic.subject","social_studies","Social studies",null,20], ["academic.subject","spanish","Spanish",null,30], ["academic.subject","english","English",null,40],
     ["organization.department","billing","Billing",null,10], ["administration.function","facturacion","Facturación",null,10]
   ]},
-  school_international: { version: "2026-07-v1", values: [["academic.section","elementary","Elementary",null,10],["academic.section","baccalaureate","Baccalaureate",null,20]] },
+  school_international: { version: "2026-07-v1", values: [["academic.stage","elementary","Elementary",null,10],["academic.stage","baccalaureate","Baccalaureate",null,20]] },
   higher_education: { version: "2026-07-v1", values: [["organization.campus","main","Main campus",null,10],["organization.department","mathematics","Mathematics department",null,10]] },
   corporate_training: { version: "2026-07-v1", values: [["organization.department","learning","Learning",null,10],["administration.function","billing","Billing",null,20]] },
   generic_organization: { version: "2026-07-v1", values: [["organization.department","operations","Operations",null,10]] },
