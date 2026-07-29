@@ -429,7 +429,7 @@ secureRoute.post("/owner/organizations/:organizationId/access-preview", "ownerRe
 });
 
 secureRoute.get("/owner/organizations/:organizationId/governance/audit", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
-  try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
+  try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: await listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
   catch (error) { return sendPublicError(res, error, "OwnerGovernanceAuditError", "Failed to load governance audit events"); }
 });
 

@@ -1,20 +1,11 @@
 "use strict";
 
-const { createInMemoryTaxonomyRepository, createTaxonomyService, createTaxonomyPublicationService } = require("../taxonomy");
-const { createInMemoryOrganizationStructureRepository, createUnitService } = require("../organization-structure");
-const { createInMemoryDataScopeRepository, createDataScopeAssignmentService, isEffectiveAssignment } = require("../authorization/data-scope");
+const { createTaxonomyService, createTaxonomyPublicationService } = require("../taxonomy");
+const { createUnitService } = require("../organization-structure");
+const { createDataScopeAssignmentService, isEffectiveAssignment } = require("../authorization/data-scope");
 
-const taxonomyRepository = createInMemoryTaxonomyRepository();
-const unitRepository = createInMemoryOrganizationStructureRepository();
-const dataScopeRepository = createInMemoryDataScopeRepository();
-const structureAuditEvents = [];
-const structureOutboxEvents = [];
-
-const runtimeConsistencyPort = {
-  async incrementPolicyVersion(event) { return dataScopeRepository.incrementPolicyVersion(event.organizationId); },
-  async enqueueOutbox(event) { structureOutboxEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
-  async audit(event) { structureAuditEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
-};
+function createGovernanceStructureReadModel({ taxonomyRepository, unitRepository, dataScopeRepository, runtimeConsistencyPort, auditPort, outboxPort } = {}) {
+  if (!taxonomyRepository || !unitRepository || !dataScopeRepository || !runtimeConsistencyPort || !auditPort || !outboxPort) throw new Error("governance_structure_ports_required");
 
 const safeActor = (req) => req?.user?.sub || req?.user?.id || "system";
 
@@ -46,7 +37,7 @@ async function dataScopesSummary(organizationId) {
 
 async function buildStructureGovernanceSlice(organizationId) {
   const [taxonomy, units, dataScopes] = await Promise.all([taxonomySummary(organizationId), unitsSummary(organizationId), dataScopesSummary(organizationId)]);
-  return { taxonomy, units, dataScopes, auditEvents: structureAuditEvents.filter((event) => event.organizationId === organizationId).slice(-25), outboxEvents: structureOutboxEvents.filter((event) => event.organizationId === organizationId).slice(-25) };
+  return { taxonomy, units, dataScopes, auditEvents: await auditPort.list({ organizationId, limit: 25 }), outboxEvents: await outboxPort.list({ organizationId, limit: 25 }) };
 }
 
 async function createTaxonomyValue({ organizationId, body, actorLogtoUserId }) { return taxonomyService().createValue({ organizationId, actorLogtoUserId, ...body }); }
@@ -59,4 +50,7 @@ async function createDataScope({ organizationId, body, actorLogtoUserId }) {
   return dataScopeService().createAssignment({ organizationId, actorLogtoUserId, ...body });
 }
 
-module.exports = { taxonomyRepository, unitRepository, dataScopeRepository, buildStructureGovernanceSlice, createTaxonomyValue, publishTaxonomy, createUnit, activateUnit, createDataScope, safeActor };
+return { buildStructureGovernanceSlice, createTaxonomyValue, publishTaxonomy, createUnit, activateUnit, createDataScope };
+}
+
+module.exports = { createGovernanceStructureReadModel, safeActor };
