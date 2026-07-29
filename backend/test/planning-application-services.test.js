@@ -24,7 +24,7 @@ function ports(seed = {}) {
   const profiles = new Map(seed.profiles?.map((p) => [p.organizationId, p]) || []);
   const ledger = new Map();
   const calls = [];
-  const api = { calls, ledger,
+  const api = { calls, ledger, plans, profiles,
     persistencePort: {
       async createPlan(input) { calls.push(['createPlan', input]); const row = { planId: input.planId || 'p1', title: input.title, organizationId: input.organizationId, status: input.status, version: '1' }; plans.set(row.planId, row); return row; },
       async listPlans(input) { calls.push(['listPlans', input]); return { items: [...plans.values()].filter((p) => p.organizationId === input.organizationId && (input.constraints.includeArchived || !p.archived)), page: { limit: input.constraints.limit } }; },
@@ -33,12 +33,12 @@ function ports(seed = {}) {
       async readProfile(input) { calls.push(['readProfile', input]); return profiles.get(input.organizationId) || null; },
       async replaceProfile(input) { calls.push(['replaceProfile', input]); const row = { organizationId: input.organizationId, planningMode: input.planningMode, preferences: input.preferences, version: '2' }; profiles.set(input.organizationId, row); return row; },
     },
-    authorizationContextPort: { async validateDataScope(input) { calls.push(['scope', input]); return { allowed: true }; } },
+    authorizationContextPort: { async validateDataScope(input) { calls.push(['scope', input]); return seed.scopeDecision === undefined ? { allowed: true } : seed.scopeDecision; } },
     idempotencyLedgerPort: { async lookup({ key }) { return ledger.get(key) || null; }, async recordSuccess({ key, fingerprint, result }) { ledger.set(key, { fingerprint, result }); } },
     concurrencyPort: { async assertIfMatch(input) { calls.push(['ifMatch', input]); } },
-    auditPort: { async record(input) { calls.push(['audit', input]); } },
-    outboxPort: { async enqueue(input) { calls.push(['outbox', input]); } },
-    unitOfWorkPort: { async transaction(work) { calls.push(['transaction']); return work(api); } },
+    auditPort: { async record(input) { calls.push(['audit', input]); if (seed.failAudit) throw new Error('audit unavailable'); } },
+    outboxPort: { async enqueue(input) { calls.push(['outbox', input]); if (seed.failOutbox) throw new Error('outbox unavailable'); } },
+    unitOfWorkPort: { async transaction(work) { calls.push(['transaction']); const planSnapshot = new Map(plans); const profileSnapshot = new Map(profiles); const ledgerSnapshot = new Map(ledger); try { return await work(api); } catch (error) { plans.clear(); for (const entry of planSnapshot) plans.set(...entry); profiles.clear(); for (const entry of profileSnapshot) profiles.set(...entry); ledger.clear(); for (const entry of ledgerSnapshot) ledger.set(...entry); throw error; } } },
   };
   return api;
 }
@@ -65,7 +65,34 @@ test('read plan validates tenant data scope before lookup or disclosure', async 
   const p = ports({ plans: [{ planId: 'p1', organizationId: 'org-1', title: 'A' }] });
   const result = await createPlanningApplicationServices(p).readPlan({ planId: 'p1' }, context('getPlan'));
   assert.equal(result.ok, true);
-  assert.deepEqual(p.calls.map(([name]) => name).slice(0, 2), ['scope', 'readPlan']);
+  assert.deepEqual(p.calls.map(([name]) => name).slice(0, 3), ['scope', 'readPlan', 'scope']);
+});
+
+test('construction rejects every missing mandatory application port', () => {
+  const required = ['authorizationContextPort', 'persistencePort', 'unitOfWorkPort', 'auditPort', 'outboxPort', 'idempotencyLedgerPort', 'concurrencyPort'];
+  for (const name of required) {
+    const incomplete = ports();
+    delete incomplete[name];
+    assert.throws(() => createPlanningApplicationServices(incomplete), new RegExp(name === 'persistencePort' ? 'PlanningPersistencePort' : 'Planning'));
+  }
+});
+
+test('scope evaluator is fail-closed for missing or indeterminate decisions', async () => {
+  for (const scopeDecision of [null, {}, { allowed: 'yes' }]) {
+    const p = ports({ scopeDecision });
+    const result = await createPlanningApplicationServices(p).createPlan({ title: 'Denied' }, context('createPlan'));
+    assert.equal(result.ok, false);
+    assert.equal(result.problem.code, 'planning.remote.authorization_context_rejected');
+    assert.equal(p.calls.some(([name]) => name === 'createPlan'), false);
+  }
+});
+
+test('cross-tenant records are hidden after persistence lookup', async () => {
+  const p = ports({ plans: [{ planId: 'foreign', organizationId: 'org-2', title: 'Secret' }] });
+  const result = await createPlanningApplicationServices(p).readPlan({ planId: 'foreign' }, context('getPlan'));
+  assert.equal(result.ok, false);
+  assert.equal(result.problem.code, 'planning.remote.tenant_mismatch');
+  assert.equal(result.problem.category, 'not_found');
 });
 
 test('update plan rejects stale If-Match and approved-plan mutation', async () => {
@@ -96,4 +123,14 @@ test('read and replace profile enforce scope, If-Match, audit, outbox and idempo
   assert.equal(result.ok, true);
   assert.ok(p.calls.some(([name]) => name === 'audit'));
   assert.ok(p.calls.some(([name]) => name === 'outbox'));
+});
+
+test('audit and outbox failures roll back the write and idempotency record', async () => {
+  for (const failure of ['failAudit', 'failOutbox']) {
+    const p = ports({ [failure]: true });
+    const services = createPlanningApplicationServices(p);
+    await assert.rejects(() => services.createPlan({ title: 'Atomic' }, context('createPlan')));
+    assert.equal(p.plans.size, 0);
+    assert.equal(p.ledger.size, 0);
+  }
 });

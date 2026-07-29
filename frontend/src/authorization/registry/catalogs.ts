@@ -22,8 +22,10 @@ export const permissionCatalog = new Map<PermissionKey, CatalogPermissionMetadat
   ["lms.groups.read" as PermissionKey, organization()],
   ["org.documents.create" as PermissionKey, organization()],
   ["org.documents.read" as PermissionKey, organization()],
-  ["planning.plans.read" as PermissionKey, { status: "planned" as never, surface: "organization", catalogHash: authorizationCatalogHash }],
-  ["planning.plans.manage" as PermissionKey, { status: "planned" as never, surface: "organization", catalogHash: authorizationCatalogHash }],
+  ["planning.plans.read" as PermissionKey, organization()],
+  ["planning.plans.manage" as PermissionKey, organization()],
+  ["planning.profile.read" as PermissionKey, organization()],
+  ["planning.profile.manage" as PermissionKey, organization()],
 ]);
 
 export const activePermissions = new Set<PermissionKey>(permissionCatalog.keys());

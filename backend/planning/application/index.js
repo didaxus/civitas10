@@ -3,4 +3,5 @@ module.exports = {
   ...require('./remotePort'),
   ...require('./ports'),
   ...require('./services'),
+  ...require('./reviewWorkflowService'),
 };

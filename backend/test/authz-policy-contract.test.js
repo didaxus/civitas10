@@ -137,7 +137,24 @@ test("extension and impersonation interfaces fail closed until #90/#94/#95/#100 
 });
 
 test("HTTP middleware consumes req.auth without revalidating JWT and returns safe diagnostics", async () => {
-  const req = { auth: principal, params: { organizationId: ORG } };
+  const now = new Date();
+  const req = { auth: {
+    tokenValidated: true,
+    claims: {
+      iss: "https://issuer.example/oidc", sub: principal.subject, aud: principal.audience,
+      iat: Math.floor(now.getTime() / 1000) - 1, exp: Math.floor(now.getTime() / 1000) + 300,
+      organization_id: ORG, scope: "org.documents.read", authz_snapshot_version: 1,
+      "https://civitas.didaxus.com/claims/organization_membership_id": "membership_A",
+      "https://civitas.didaxus.com/claims/organization_role_ids": ["organization_admin"],
+      "https://civitas.didaxus.com/claims/authz_contract_version": "civitas-authorization-foundation/v2",
+    },
+    trustedMembershipBinding: {
+      serverTrusted: true, membershipBindingId: "membership_A", subject: principal.subject,
+      organizationId: ORG, membershipState: "active", snapshotVersion: 1,
+      bindingRecordVersion: "binding-v1", rolePotentialVersion: "role-v1", checkedAt: now.toISOString(),
+      roleAssignments: [{ state: "active", logtoRoleId: "organization_admin", canonicalRoleId: "organization_admin", rolePathId: "path_A", fragments: [{ surface: "rest", permissions: ["org.documents.read"], fragmentId: "fragment_A", version: "v1" }] }],
+    },
+  }, params: { organizationId: ORG } };
   const res = { statusCode: null, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } };
   let called = false;
   await requireAuthorization({ permission: "org.documents.read", surface: "organization", operation: "read", policies: ["same-organization", "membership-required"], providers: delegationProviders() })(req, res, () => { called = true; });

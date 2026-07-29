@@ -2,31 +2,12 @@
 
 const express = require('express');
 const { randomUUID, createHash } = require('node:crypto');
-const { requireOrganizationAccess } = require('../../middleware/auth');
-const { requireOrg } = require('../../middleware/requireOrg');
 const { requireAuthorization } = require('../../authorization/policies');
 const { NAMED_USE_CASES, PLANNING_MODULE_ID, REMOTE_PROBLEM_CODES, problem } = require('../application/remotePort');
 const { toRfc9457Problem } = require('./problemMapper');
-const { permissionsByName } = require('../../../core/authz');
 
 const ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH']);
-
-function activePermission(permission) {
-  return (req, res, next) => {
-    const definition = permissionsByName[permission];
-    if (!definition || definition.status !== 'active') {
-      const decisionId = `authz_${randomUUID()}`;
-      return res.status(403).json({ error: 'Forbidden', code: 'permission_not_active', requiredPermission: permission, decisionId });
-    }
-    const scopes = req.auth?.scopes instanceof Set ? req.auth.scopes : new Set(req.user?.scopes || []);
-    if (!scopes.has(permission)) {
-      const decisionId = `authz_${randomUUID()}`;
-      return res.status(403).json({ error: 'Forbidden', code: 'permission_missing', requiredPermission: permission, decisionId });
-    }
-    return next();
-  };
-}
 
 function validateParams(requiredPlanId = false) {
   return (req, res, next) => {
@@ -67,16 +48,17 @@ function buildContext(req, useCase) {
   };
 }
 
-function availabilityGuard({ availabilityResolver }) {
-  return async (req, res, next) => {
-    if (!availabilityResolver) return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'availability', { detailKey:'Planning module availability resolver is not configured.', correlationId: correlationId(req) }));
-    const useCase = req.planningUseCase;
-    const spec = NAMED_USE_CASES[useCase];
-    const decision = await availabilityResolver.resolve({ organizationId:req.params['organization' + 'Id'], moduleId:PLANNING_MODULE_ID, capabilityId:spec.capabilityId, operationId:spec.operationId, executionKind:spec.executionKind });
-    req.planningAvailabilityDecision = decision;
-    if (decision.executable) return next();
-    return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'availability', { detailKey: decision.reasonCode, decisionId: decision.decisionId, correlationId: correlationId(req), retryable: decision.state !== 'unavailable' }));
-  };
+function authorizationProblem(res, { status, error, code, decisionId }) {
+  const unavailable = new Set(['runtime_unavailable', 'runtime_incompatible', 'capability_unavailable']);
+  const responseStatus = unavailable.has(code) ? 503 : status;
+  return res.status(responseStatus).type('application/problem+json').json({
+    type: `https://civitas.local/problems/authorization/${code}`,
+    title: error,
+    status: responseStatus,
+    detail: code,
+    code,
+    ...(decisionId ? { decisionId } : {}),
+  });
 }
 
 function routeUseCase(useCase) { return (req, _res, next) => { req.planningUseCase = useCase; next(); }; }
@@ -96,28 +78,43 @@ function mount(router, method, path, useCase, validator, controllerMethod, paylo
   const spec = NAMED_USE_CASES[useCase];
   router[method](path,
     routeUseCase(useCase),
-    requireOrganizationAccess({ requiredAllScopes: [spec.permission] }),
-    requireOrg,
-    availabilityGuard(deps),
-    activePermission(spec.permission),
-    requireAuthorization({ permission: spec.permission, actionId: spec.actionId, surface: 'organization', operation: spec.executionKind, policies: ['same-organization', 'membership-required'] }),
+    requireAuthorization({
+      permission: spec.permission,
+      actionId: spec.actionId,
+      surface: 'organization',
+      operation: spec.operationId,
+      policies: ['same-organization', 'membership-required'],
+      providers: {
+        ...deps.authorizationProviders,
+        moduleAvailabilityResolver: deps.availabilityResolver || { async resolve() { return { executable: false, state: 'unavailable', reasonCode: 'runtime_unavailable' }; } },
+      },
+      registry: deps.authorizationRegistry,
+      targetResolver: () => ({ moduleId: PLANNING_MODULE_ID, capability: spec.capabilityId, executionKind: spec.executionKind }),
+      resourceResolver: deps.authorizationResourceResolver,
+      denialResponder: authorizationProblem,
+      onDecision(req, decision) {
+        const availability = decision.moduleAvailability;
+        if (availability) req.planningAvailabilityDecision = { ...availability, decisionId: availability.availabilityDecisionId };
+      },
+    }),
     validator,
     controller(controllerMethod, payloadBuilder));
 }
 
-function createPlanningRouter({ planningRemoteApplicationPort, availabilityResolver } = {}) {
+function createPlanningRouter({ planningRemoteApplicationPort, availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry } = {}) {
   const router = express.Router();
   router.use(express.json({ limit: '32kb' }));
   router.use((req, _res, next) => { if (planningRemoteApplicationPort) req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
-  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), { availabilityResolver });
-  mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), { availabilityResolver });
-  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'getPlan', validateParams(true), 'getPlan', (req)=>({ planId:req.params.planId }), { availabilityResolver });
-  mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), { availabilityResolver });
-  mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), { availabilityResolver });
-  mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), { availabilityResolver });
-  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), { availabilityResolver });
+  const deps = { availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry };
+  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'getPlan', validateParams(true), 'getPlan', (req)=>({ planId:req.params.planId }), deps);
+  mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
+  mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), deps);
+  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), deps);
   return router;
 }
 
 function registerPlanningRoutes(app, options) { app.use('/api/v1', createPlanningRouter(options)); }
-module.exports = { createPlanningRouter, registerPlanningRoutes, activePermission, buildContext };
+module.exports = { createPlanningRouter, registerPlanningRoutes, authorizationProblem, buildContext };

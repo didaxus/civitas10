@@ -15,6 +15,7 @@ import { ScreenGate } from "../../authorization/components/ScreenGate";
 import { TenantAuthorizationProvider } from "../../authorization/AuthorizationProvider";
 import { civitasLogtoConfig } from "../../auth/logtoConfig";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
+import { PlanningRoute, planningRoutePattern } from "../../features/planning/PlanningRoute";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function AppContent() {
       <Route path={appRoutes.tenantGovernanceRoleNames.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceStructure.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceProvisioning.path} element={<TenantGovernanceRoute />} />
+      <Route path={planningRoutePattern} element={<PlanningRoute />} />
       <Route path="/:orgId" element={<OrganizationPage />} />
     </Routes>
   );

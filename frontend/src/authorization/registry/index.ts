@@ -8,10 +8,11 @@ import { lmsGroupsScreen } from "../../features/tenant/lms/groups.screen";
 import { governanceActions } from "../../features/governance/visual/governance.actions";
 import { ownerGovernanceScreen, tenantGovernanceScreen } from "../../features/governance/visual/governance.screen";
 import { compileVisualRegistry } from "./compile-visual-registry";
+import { planningVisualRegistryContribution } from "../../features/planning/planningRegistry";
 
 export const visualRegistry = compileVisualRegistry({
-  screens: [ownerOverviewScreen, ownerOrganizationsScreen, ownerCreateOrganizationScreen, ownerOrganizationStateScreen, ownerGovernanceScreen, ownerWorkerQueuesScreen, tenantGovernanceScreen, lmsGroupsScreen],
-  actions: [...ownerOrganizationActions, ...ownerRuntimeActions, ...governanceActions, ...lmsGroupsActions],
+  screens: [ownerOverviewScreen, ownerOrganizationsScreen, ownerCreateOrganizationScreen, ownerOrganizationStateScreen, ownerGovernanceScreen, ownerWorkerQueuesScreen, tenantGovernanceScreen, lmsGroupsScreen, ...planningVisualRegistryContribution.screens],
+  actions: [...ownerOrganizationActions, ...ownerRuntimeActions, ...governanceActions, ...lmsGroupsActions, ...planningVisualRegistryContribution.actions],
 });
 
 export type { VisualRegistry } from "./compile-visual-registry";

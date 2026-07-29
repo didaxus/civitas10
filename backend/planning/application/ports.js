@@ -10,4 +10,28 @@ function createConcurrencyPort(port) { return assertPort('PlanningConcurrencyPor
 function createAuditPort(port) { return assertPort('PlanningAuditPort', port, ['record']); }
 function createOutboxPort(port) { return assertPort('PlanningOutboxPort', port, ['enqueue']); }
 function createUnitOfWorkPort(port) { return assertPort('PlanningUnitOfWorkPort', port, ['transaction']); }
-module.exports = { createPlanningPersistencePort, createAuthorizationContextPort, createIdempotencyLedgerPort, createConcurrencyPort, createAuditPort, createOutboxPort, createUnitOfWorkPort };
+<<<<<<< ours
+
+const REQUIRED_PLANNING_PORTS = Object.freeze({
+  authorizationContextPort: createAuthorizationContextPort,
+  persistencePort: createPlanningPersistencePort,
+  unitOfWorkPort: createUnitOfWorkPort,
+  auditPort: createAuditPort,
+  outboxPort: createOutboxPort,
+  idempotencyLedgerPort: createIdempotencyLedgerPort,
+  concurrencyPort: createConcurrencyPort,
+});
+
+function createPlanningApplicationPorts(ports) {
+  if (!ports || typeof ports !== 'object') throw new Error('PlanningApplicationPorts is required');
+  return Object.freeze(Object.fromEntries(
+    Object.entries(REQUIRED_PLANNING_PORTS).map(([name, createPort]) => [name, createPort(ports[name])]),
+  ));
+}
+
+module.exports = { createPlanningPersistencePort, createAuthorizationContextPort, createIdempotencyLedgerPort, createConcurrencyPort, createAuditPort, createOutboxPort, createUnitOfWorkPort, createPlanningApplicationPorts, REQUIRED_PLANNING_PORTS };
+=======
+function createReviewRepositoryPort(port) { return assertPort('PlanningReviewRepositoryPort', port, ['loadEvents', 'append']); }
+function createReviewAuthorizationPolicyPort(port) { return assertPort('PlanningReviewAuthorizationPolicyPort', port, ['authorize']); }
+module.exports = { createPlanningPersistencePort, createAuthorizationContextPort, createIdempotencyLedgerPort, createConcurrencyPort, createAuditPort, createOutboxPort, createUnitOfWorkPort, createReviewRepositoryPort, createReviewAuthorizationPolicyPort };
+>>>>>>> theirs

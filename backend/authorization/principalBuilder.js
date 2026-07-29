@@ -83,6 +83,7 @@ async function buildAuthorizationPrincipal({ validatedToken, binding, resolveBin
     schemaVersion: PRINCIPAL_SCHEMA_VERSION,
     principalId: `principal_${crypto.createHash("sha256").update(`${claims.iss}:${subject}:${membershipBindingId}:${trusted.snapshotVersion}`).digest("hex").slice(0, 24)}`,
     principalType: trusted.principalType || "user",
+    tokenType: "organization",
     subject,
     issuer: claims.iss,
     audiences: Array.isArray(claims.aud) ? claims.aud : [claims.aud].filter(Boolean),

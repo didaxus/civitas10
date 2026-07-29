@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.dev/contracts/documents/generation-operation-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["operationId", "state", "version", "acceptedAt"],
+  "properties": {
+    "operationId": { "type": "string", "format": "uuid" },
+    "documentId": { "type": ["string", "null"], "format": "uuid" },
+    "state": { "enum": ["accepted", "queued", "running", "succeeded", "failed", "cancelled"] },
+    "version": { "type": "integer", "minimum": 1 },
+    "acceptedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": ["string", "null"], "format": "date-time" },
+    "problem": { "type": ["object", "null"] }
+  }
+}
