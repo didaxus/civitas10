@@ -1,0 +1,725 @@
+{
+  "$schema": "./schemas/data-scope-strategies.schema.json",
+  "schemaVersion": "civitas-data-scope-strategies-schema/v1",
+  "contractVersion": "civitas-data-scope-strategies/v2",
+  "status": "planned",
+  "lifecycle": {
+    "implementation": "planned",
+    "deployment": "planned",
+    "activation": "planned"
+  },
+  "ownership": {
+    "businessOwner": "civitas-authorization-governance",
+    "contractOwner": "civitas-authorization-boundary",
+    "runtimeOwner": "civitas-authorization-runtime"
+  },
+  "provenance": {
+    "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+    "issue": "#218",
+    "decision": "PR-A canonical contract materialization"
+  },
+  "strategies": [
+    {
+      "id": "organization",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [
+        "explicit_capability_approval_required"
+      ],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "organization_and_units",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.campus",
+        "organization.department"
+      ],
+      "allowedRelationships": [],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "self",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "self"
+      ],
+      "queryConstraintKind": "identity",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "academic_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "academic.stage",
+        "academic.period",
+        "academic.course",
+        "academic.cohort",
+        "academic.class"
+      ],
+      "allowedRelationships": [
+        "academic_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "teaching_assignments",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "academic.period",
+        "academic.subject",
+        "academic.course",
+        "academic.class"
+      ],
+      "allowedRelationships": [
+        "teaching_assignments"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "planning_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.department"
+      ],
+      "allowedRelationships": [
+        "planning_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "planning_editable",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.department"
+      ],
+      "allowedRelationships": [],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "planning_owned",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.department"
+      ],
+      "allowedRelationships": [],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "assigned_reviews",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "assigned_reviews"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "assigned_approvals",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "assigned_approvals"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "approved_plans",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "community_membership",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "community_membership"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "community_moderation",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "community_moderation"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "hr_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.department",
+        "administration.function"
+      ],
+      "allowedRelationships": [
+        "hr_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "payroll_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.department",
+        "administration.function"
+      ],
+      "allowedRelationships": [
+        "payroll_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "scheduling_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [
+        "organization.campus",
+        "organization.shift"
+      ],
+      "allowedRelationships": [
+        "scheduling_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "support_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "support_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "communication_relationship",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.organizationId",
+        "authorization.assignments"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [
+        "communication_relationship"
+      ],
+      "queryConstraintKind": "predicate",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "global_owner",
+      "version": 1,
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "requiredFacts": [
+        "principal.ownerContext"
+      ],
+      "allowedDimensionIds": [],
+      "allowedRelationships": [],
+      "queryConstraintKind": "identity",
+      "resourceAssertion": "required",
+      "denialReasons": [
+        "missing_fact",
+        "scope_mismatch",
+        "resource_outside_scope"
+      ],
+      "sensitiveModuleRestrictions": [],
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    }
+  ]
+}

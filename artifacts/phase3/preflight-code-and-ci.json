@@ -1,0 +1,115 @@
+{
+  "repository": "didaxus/civitas10",
+  "branch": "codex/congelar-claims-minimos-de-token-personalizado",
+  "commitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+  "baseSha": "7308efa06ceda89f70e0bdc6c6b2f7ae6c3493df",
+  "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+  "timestampUtc": "2026-07-29T04:33:10.596686Z",
+  "containsSensitiveData": false,
+  "testCategory": "preflight",
+  "result": "FAIL",
+  "commands": [
+    {
+      "toolOrCommand": "npm run authz:data-scope-v2:check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run taxonomy:contract-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run taxonomy:migration-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run authz:data-scope-contract-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run authz:data-scope-migration-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run organization-structure:data-scope-integration-check",
+      "exitCode": 1,
+      "result": "FAIL",
+      "classification": "PR #250 regression"
+    },
+    {
+      "toolOrCommand": "npm run logto:authz:contract-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run logto:custom-claims:check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run authz:permission-catalog:check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run authz:role-model:check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run authz:policy-contract-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm run authz:security-gate:check",
+      "exitCode": 1,
+      "result": "FAIL",
+      "classification": "Dependency installation failure"
+    },
+    {
+      "toolOrCommand": "npm run authz:runtime-consistency-check",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": null
+    },
+    {
+      "toolOrCommand": "npm ci (repository root)",
+      "exitCode": 1,
+      "result": "FAIL: repository has no root package-lock.json",
+      "classification": "Dependency installation failure"
+    },
+    {
+      "toolOrCommand": "npm ci (backend)",
+      "exitCode": 0,
+      "result": "PASS with 4 moderate npm audit findings",
+      "classification": "Environment preparation"
+    },
+    {
+      "toolOrCommand": "npm run authz:security-gate:check (after backend npm ci)",
+      "exitCode": 0,
+      "result": "PASS",
+      "classification": "Code gate"
+    }
+  ],
+  "githubChecks": {
+    "canonicalAuthorizationSecurityGate": "failure",
+    "moduleControlPlanePostgreSQLPersistenceGate": "failure",
+    "vercelPreviewComments": "success"
+  },
+  "finding": "Mandatory organization-structure/Data Scope integration gate fails with scope_template_not_found."
+}

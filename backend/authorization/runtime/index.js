@@ -1,5 +1,6 @@
 "use strict";
 module.exports = {
+  ...require("./authorizationFreshnessService"),
   ...require("./authorizationEvents"),
   ...require("./authorizationVersionService"),
   ...require("./cacheKeyRegistry"),

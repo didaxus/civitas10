@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.didaxus.com/contracts/authorization/role-path.schema.json",
+  "title": "Civitas Membership-Bound Role Path v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "rolePathId", "organizationId", "membershipBindingId", "membershipState", "logtoRoleId", "canonicalRoleId", "roleAssignmentState", "permissionId", "surface", "fragments", "tokenScopePresent", "rolePotentialVersion", "snapshotVersion"],
+  "properties": {
+    "schemaVersion": { "const": "civitas-role-path/v2" },
+    "rolePathId": { "type": "string", "minLength": 1 },
+    "organizationId": { "type": "string", "minLength": 1 },
+    "membershipBindingId": { "type": "string", "minLength": 8 },
+    "membershipState": { "enum": ["active", "revoked", "expired", "stale", "unknown"] },
+    "logtoRoleId": { "type": "string", "minLength": 1 },
+    "canonicalRoleId": { "type": "string", "minLength": 1 },
+    "roleAssignmentState": { "enum": ["active", "revoked", "expired", "stale", "unknown"] },
+    "permissionId": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z][a-z0-9_-]*)+$" },
+    "surface": { "enum": ["rest", "worker", "mcp"] },
+    "fragments": {
+      "type": "array", "minItems": 0, "uniqueItems": true,
+      "items": { "type": "object", "additionalProperties": false, "required": ["fragmentId", "version"], "properties": { "fragmentId": { "type": "string", "minLength": 1 }, "version": { "type": "string", "minLength": 1 } } }
+    },
+    "tokenScopePresent": { "type": "boolean" },
+    "rolePotentialVersion": { "type": "string", "minLength": 1 },
+    "snapshotVersion": { "type": "integer", "minimum": 1 }
+  }
+}

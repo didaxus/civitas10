@@ -1,0 +1,68 @@
+name: Unpack Phase 3 governance package
+
+on:
+  push:
+    branches:
+      - agent/freeze-phase-3-governance-contract-v2
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Expand and validate canonical package
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive='artifacts/phase3/CIVITAS-PHASE-3-CONTRACT-PACKAGE.zip'
+          checker='scripts/phase3/validate-phase3-contracts.mjs'
+          test -f "$archive"
+          test -f "$checker"
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+
+          # Trust only the validator from the original checkout.  Reject package entries
+          # that could replace validation or workflow code before extracting anything.
+          cp -- "$checker" "$temp_dir/validate-phase3-contracts.mjs"
+          checker_hash="$(sha256sum "$checker" | cut -d' ' -f1)"
+          git_blob_before="$(git hash-object "$checker")"
+          unzip -Z1 "$archive" > "$temp_dir/archive-entries"
+          if awk '
+            BEGIN { bad = 0 }
+            /(^|\/)\.\.($|\/)/ || /^\// || /\\/ { print "unsafe archive path: " $0; bad = 1 }
+            /^CIVITAS-PHASE-3-CONTRACT-PACKAGE\/(scripts|\.github\/workflows)(\/|$)/ {
+              print "protected archive path: " $0; bad = 1
+            }
+            END { exit bad }
+          ' "$temp_dir/archive-entries"; then :; else exit 1; fi
+          unzip -q "$archive" -d "$temp_dir"
+          source_dir="$temp_dir/CIVITAS-PHASE-3-CONTRACT-PACKAGE"
+          test -d "$source_dir"
+          cp -a "$source_dir"/. ./
+          test "$(sha256sum "$checker" | cut -d' ' -f1)" = "$checker_hash"
+          test "$(git hash-object "$checker")" = "$git_blob_before"
+          node "$temp_dir/validate-phase3-contracts.mjs" --root "$GITHUB_WORKSPACE" --sha "$GITHUB_SHA"
+          rm -f "$archive"
+          rm -f .github/workflows/unpack-phase3-governance-package.yml
+
+      - name: Commit expanded package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'docs(phase-3): expand governance contract package'
+          git push origin HEAD:agent/freeze-phase-3-governance-contract-v2

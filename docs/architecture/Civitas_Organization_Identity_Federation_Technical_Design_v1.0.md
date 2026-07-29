@@ -1,5 +1,8 @@
 # CIVITAS ORGANIZATION IDENTITY FEDERATION
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 ## LDAP-backed Enterprise SSO, JIT Provisioning, Directory Synchronization and RBAC/PBAC/ABAC Reconciliation
 
 **Documento:** CIV-ARCH-IDF-001  

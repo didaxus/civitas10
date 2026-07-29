@@ -48,6 +48,7 @@ const { registerIdentityFederationRoutes } = require("./routes/identityFederatio
 const { registerScimReconciliationRoutes } = require("./routes/scimReconciliationRoutes");
 const { registerScimUserRoutes } = require("./scim/users/routes");
 const { registerPlanningRoutes } = require("./planning/presentation/routes");
+const { buildPrincipalForRest } = require("./authorization/principalBuilder");
 
 const app = express();
 const port = 3000;
@@ -488,13 +489,6 @@ secureRoute.post(["/owner/organizations", "/organizations"], "ownerSensitiveWrit
 });
 
 
-function principalFromRequest(req) {
-  const subject = req.auth?.subject || req.user?.sub || req.user?.id;
-  const scopes = req.auth?.scopes instanceof Set ? req.auth.scopes : new Set(req.user?.scopes || []);
-  const organizationRoles = req.auth?.organizationRoles || req.user?.organizationRoles || [];
-  const rolePaths = organizationRoles.map((role) => ({ rolePathId: `${role}:${subject || "subject"}`, logtoRoleId: role, canonicalRoleId: role, roleNameCache: role, roleKey: role, membershipId: req.auth?.claims?.membership_id || req.user?.claims?.membership_id || `${subject || "subject"}:${role}`, tokenScopePresent: scopes.has(role) }));
-  return { subject, scopes, organizationRoles, rolePaths, claims: req.auth?.claims || req.user?.claims || {} };
-}
 function lmsGroupService() {
   return createLmsGroupLeadershipService({ entitlementRepository, dataScopeRepository, roleIdToName: roleMapFromRoles, auditPort: { async audit(event) { console.info(JSON.stringify({ type: "audit", ...event })); } } });
 }
@@ -512,17 +506,17 @@ const documentCreateHandler = async (_req, res) => { res.json({ data: "Document 
 
 
 secureRoute.get("/o/:organizationId/lms/groups", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["lms.groups.read"] }), requireOrg, requirePermission("lms.groups.read"), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().listGroups({ organizationId: req.params.organizationId, principal: principalFromRequest(req) })); }
+  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().listGroups({ organizationId: req.params.organizationId, principal: await buildPrincipalForRest(req, { permissionId: "lms.groups.read", surface: "rest" }) })); }
   catch (error) { return sendLmsGroupError(res, error); }
 });
 
 secureRoute.get("/o/:organizationId/lms/groups/:groupId", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["lms.groups.read"] }), requireOrg, requirePermission("lms.groups.read"), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().getGroupDetail({ organizationId: req.params.organizationId, groupId: req.params.groupId, principal: principalFromRequest(req) })); }
+  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().getGroupDetail({ organizationId: req.params.organizationId, groupId: req.params.groupId, principal: await buildPrincipalForRest(req, { permissionId: "lms.groups.read", surface: "rest" }) })); }
   catch (error) { return sendLmsGroupError(res, error); }
 });
 
 secureRoute.get("/o/:organizationId/lms/groups/:groupId/members", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["lms.group_members.read"] }), requireOrg, requirePermission("lms.group_members.read"), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().listGroupMembers({ organizationId: req.params.organizationId, groupId: req.params.groupId, principal: principalFromRequest(req) })); }
+  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().listGroupMembers({ organizationId: req.params.organizationId, groupId: req.params.groupId, principal: await buildPrincipalForRest(req, { permissionId: "lms.group_members.read", surface: "rest" }) })); }
   catch (error) { return sendLmsGroupError(res, error); }
 });
 

@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.local/authorization/data-scope-strategies.schema.json",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "contractVersion",
+    "status",
+    "lifecycle",
+    "ownership",
+    "provenance",
+    "strategies"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "string"
+    },
+    "contractVersion": {
+      "type": "string"
+    },
+    "status": {
+      "const": "planned"
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation",
+        "deployment",
+        "activation"
+      ],
+      "properties": {
+        "implementation": {
+          "const": "planned"
+        },
+        "deployment": {
+          "const": "planned"
+        },
+        "activation": {
+          "const": "planned"
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "minProperties": 2,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorityDocument",
+        "issue",
+        "decision"
+      ],
+      "properties": {
+        "authorityDocument": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceDocument": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issue": {
+          "type": "string",
+          "pattern": "^#"
+        },
+        "decision": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "strategies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "status",
+          "lifecycle",
+          "requiredFacts",
+          "allowedDimensionIds",
+          "allowedRelationships",
+          "queryConstraintKind",
+          "resourceAssertion",
+          "denialReasons",
+          "sensitiveModuleRestrictions",
+          "ownership",
+          "provenance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]+$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "const": "planned"
+          },
+          "lifecycle": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "implementation",
+              "deployment",
+              "activation"
+            ],
+            "properties": {
+              "implementation": {
+                "const": "planned"
+              },
+              "deployment": {
+                "const": "planned"
+              },
+              "activation": {
+                "const": "planned"
+              }
+            }
+          },
+          "requiredFacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowedDimensionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allowedRelationships": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "queryConstraintKind": {
+            "enum": [
+              "identity",
+              "predicate"
+            ]
+          },
+          "resourceAssertion": {
+            "const": "required"
+          },
+          "denialReasons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "sensitiveModuleRestrictions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ownership": {
+            "type": "object",
+            "minProperties": 2,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "authorityDocument",
+              "issue",
+              "decision"
+            ],
+            "properties": {
+              "authorityDocument": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sourceDocument": {
+                "type": "string",
+                "minLength": 1
+              },
+              "issue": {
+                "type": "string",
+                "pattern": "^#"
+              },
+              "decision": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

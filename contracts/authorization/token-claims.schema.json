@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.didaxus.com/contracts/authorization/token-claims.schema.json",
+  "title": "Civitas Organization Token Claims v2",
+  "type": "object",
+  "required": [
+    "sub",
+    "iss",
+    "aud",
+    "iat",
+    "exp",
+    "organization_id",
+    "https://civitas.didaxus.com/claims/organization_membership_id",
+    "https://civitas.didaxus.com/claims/organization_role_ids",
+    "https://civitas.didaxus.com/claims/authz_contract_version"
+  ],
+  "properties": {
+    "sub": {
+      "type": "string"
+    },
+    "iss": {
+      "type": "string",
+      "format": "uri"
+    },
+    "aud": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "iat": {
+      "type": "integer"
+    },
+    "exp": {
+      "type": "integer"
+    },
+    "organization_id": {
+      "type": "string"
+    },
+    "https://civitas.didaxus.com/claims/organization_membership_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "https://civitas.didaxus.com/claims/organization_role_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "not": {
+        "contains": {
+          "const": "owner_global"
+        }
+      },
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "https://civitas.didaxus.com/claims/authz_contract_version": {
+      "const": "2026-07-civitas-authz-v2"
+    },
+    "scope": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "x-civitas-custom-claim-allowlist": [
+    "https://civitas.didaxus.com/claims/organization_membership_id",
+    "https://civitas.didaxus.com/claims/organization_role_ids",
+    "https://civitas.didaxus.com/claims/authz_contract_version"
+  ],
+  "x-civitas-note": "Membership must be real Logto membership or trusted Civitas server binding; ABAC remains server-side."
+}

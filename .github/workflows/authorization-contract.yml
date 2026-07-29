@@ -61,6 +61,7 @@ jobs:
             'authz:policy-contract-check',
             'authz:data-scope-contract-check',
             'authz:data-scope-migration-check',
+            'authz:data-scope-v2:postgres-check',
             'logto:authz:contract-check',
             'authz:security-gate:check',
             'authz:runtime-contract-check',
