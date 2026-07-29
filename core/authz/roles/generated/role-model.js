@@ -10,14 +10,14 @@ const generated = Object.freeze({
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
-    "roleModelHash": "c3ad84d0228d0ff26a5243500dbe71134ef45ae4a7bf26c6a6e85685544768f5"
+    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19",
+    "roleModelHash": "bae8521986a4a0f303234f9c7fb1a8e7e9d93dc2fdee2def683e448455dabcc7"
   },
   "roleModel": {
     "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
-    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
-    "roleModelHash": "c3ad84d0228d0ff26a5243500dbe71134ef45ae4a7bf26c6a6e85685544768f5",
+    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19",
+    "roleModelHash": "bae8521986a4a0f303234f9c7fb1a8e7e9d93dc2fdee2def683e448455dabcc7",
     "bundles": [
       {
         "key": "org_documents_reader",
@@ -348,7 +348,7 @@ const generated = Object.freeze({
           "planning.milestones.read",
           "planning.milestones.update",
           "planning.minutes.delete",
-          "planning.plans.manage"
+          "planning.plans.approve"
         ],
         "allowedRoleKeys": [
           "organization_director",
@@ -362,10 +362,10 @@ const generated = Object.freeze({
         "key": "planning_author",
         "description": "planning_author canonical Phase 3 role-potential bundle",
         "permissionIds": [
+          "planning.plans.manage",
           "planning.plans.read",
           "planning.profile.manage",
-          "planning.profile.read",
-          "planning.proposals.update"
+          "planning.profile.read"
         ],
         "allowedRoleKeys": [
           "organization_teacher"
@@ -377,10 +377,10 @@ const generated = Object.freeze({
         "key": "planning_admin",
         "description": "planning_admin canonical Phase 3 role-potential bundle",
         "permissionIds": [
+          "planning.proposals.update",
           "planning.risks.delete",
           "planning.risks.export",
-          "planning.roadmaps.export",
-          "planning.surveys.approve"
+          "planning.roadmaps.export"
         ],
         "allowedRoleKeys": [
           "organization_admin",
@@ -393,6 +393,7 @@ const generated = Object.freeze({
         "key": "planning_production",
         "description": "planning_production canonical Phase 3 role-potential bundle",
         "permissionIds": [
+          "planning.surveys.approve",
           "planning.tasks.create",
           "planning.tasks.delete",
           "planning.votes.archive",
@@ -869,10 +870,10 @@ const generated = Object.freeze({
           "planning.approvals.export",
           "planning.budgets.approve",
           "planning.budgets.update",
+          "planning.proposals.update",
           "planning.risks.delete",
           "planning.risks.export",
           "planning.roadmaps.export",
-          "planning.surveys.approve",
           "platform.admin.export",
           "platform.approvals.archive",
           "platform.exports.approve",
@@ -985,7 +986,7 @@ const generated = Object.freeze({
           "planning.milestones.read",
           "planning.milestones.update",
           "planning.minutes.delete",
-          "planning.plans.manage",
+          "planning.plans.approve",
           "reports.admin.export",
           "reports.exports.approve",
           "reports.imports.delete",
@@ -1071,7 +1072,7 @@ const generated = Object.freeze({
           "planning.milestones.read",
           "planning.milestones.update",
           "planning.minutes.delete",
-          "planning.plans.manage",
+          "planning.plans.approve",
           "reports.admin.export",
           "reports.exports.approve",
           "reports.imports.delete",
@@ -1137,7 +1138,6 @@ const generated = Object.freeze({
           "crm.settings.create",
           "hr.admin.export",
           "hr.approvals.archive",
-          "hr.dashboards.read",
           "lms.assignments.read",
           "lms.attendance.manage",
           "lms.course_offerings.read",
@@ -1160,7 +1160,8 @@ const generated = Object.freeze({
           "planning.milestones.read",
           "planning.milestones.update",
           "planning.minutes.delete",
-          "planning.plans.manage",
+          "planning.plans.approve",
+          "planning.proposals.update",
           "planning.risks.delete",
           "planning.risks.export",
           "planning.roadmaps.export",
@@ -1311,10 +1312,10 @@ const generated = Object.freeze({
           "planning.approvals.export",
           "planning.budgets.approve",
           "planning.budgets.update",
+          "planning.plans.manage",
           "planning.plans.read",
           "planning.profile.manage",
           "planning.profile.read",
-          "planning.proposals.update",
           "scheduling.events.read"
         ],
         "activeExecutableScopeIds": [

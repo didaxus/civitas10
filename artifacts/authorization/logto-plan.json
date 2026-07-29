@@ -2,9 +2,9 @@
   "schemaVersion": "2026-07-logto-authz-plan-v1",
   "generatedAt": "1970-01-01T00:00:00.000Z",
   "contractVersion": "2026-07-civitas-authz-contract-v1",
-  "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
+  "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19",
   "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
-  "contractHash": "d6961f35368c1aa61e3fe7618543831e086489d23aa13ead6ae8c45e7e8f6e41",
+  "contractHash": "8a665ec1e3a982be02764acaa92778247809fe0e2f8e7fb80ea8a9b32c37bca9",
   "targetEnvironment": "https://auth.didaxus.com",
   "targetIdentifier": "https://civitas.didaxus.com/api",
   "remoteStateStatus": "verification_required",
@@ -479,9 +479,9 @@
   "warnings": [],
   "provenance": {
     "source": "scripts/logto/authorization-planner.js",
-    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
+    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19",
     "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
     "contractVersion": "2026-07-civitas-authz-contract-v1"
   },
-  "planHash": "b4f426828b94536aa24dd9788a8ae9383f8517ae3d52a0dceda7ec3555d6fbce"
+  "planHash": "d13149b7d6e25a6791c636310dab2c927b76c394a1929300ac8c6183a1e4dcd8"
 }

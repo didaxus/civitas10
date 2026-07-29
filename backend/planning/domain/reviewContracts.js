@@ -1,10 +1,10 @@
 const REVIEW_ACTIONS = Object.freeze({
-  ASSIGN: 'planning.review.assign', SUBMIT: 'planning.review.submit',
+  ASSIGN: 'planning.review.assign', ASSIGN_APPROVER:'planning.review.assign_approver', SUBMIT: 'planning.review.submit',
   APPROVE: 'planning.review.approve', REJECT: 'planning.review.reject',
   START_DRAFT: 'planning.review.draft_from_approved',
 });
 const REVIEW_EVENTS = Object.freeze({
-  ASSIGNED: 'planning.reviewer_assigned.v1', SUBMITTED: 'planning.review_submitted.v1',
+  ASSIGNED: 'planning.reviewer_assigned.v1', APPROVER_ASSIGNED:'planning.approver_assigned.v1', SUBMITTED: 'planning.review_submitted.v1',
   APPROVED: 'planning.review_approved.v1', REJECTED: 'planning.review_rejected.v1',
   DRAFT_STARTED: 'planning.draft_started_from_approved.v1',
 });
@@ -17,6 +17,7 @@ function command(type, value) {
 }
 const reviewCommands = Object.freeze({
   assignReviewer: (v) => command('planning.assign_reviewer.command.v1', v),
+  assignApprover: (v) => command('planning.assign_approver.command.v1', v),
   submitReview: (v) => command('planning.submit_review.command.v1', v),
   approve: (v) => command('planning.approve_review.command.v1', v),
   reject: (v) => command('planning.reject_review.command.v1', v),
