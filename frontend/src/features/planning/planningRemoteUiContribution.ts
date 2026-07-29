@@ -3,7 +3,7 @@ import { organizationScopedRouteTemplate } from "../../navigation/route-builders
 
 const catalogHash = "c".repeat(64);
 const manifestHash = "d".repeat(64);
-const base = organizationScopedRouteTemplate("/planning");
+const base = organizationScopedRouteTemplate("/planning/plans");
 const route = (suffix: string) => `${base}${suffix}`;
 
 export const planningRemoteUiContribution: ModuleUiContribution = {
@@ -13,10 +13,10 @@ export const planningRemoteUiContribution: ModuleUiContribution = {
   compatibility: { designSystemVersion: MODULE_UI_DESIGN_SYSTEM_VERSION, hostApiVersion: MODULE_UI_HOST_API_VERSION },
   routes: [
     { routeId: "planning.home", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: base, organizationScope: "required", screenId: "planning.home", status: "planned", permission: "planning.plans.read", breadcrumb: { labelKey: "planning.breadcrumb.home" } },
-    { routeId: "planning.plans.list", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/plans"), organizationScope: "required", screenId: "planning.plans.list", status: "planned", permission: "planning.plans.read", breadcrumb: { labelKey: "planning.breadcrumb.list", parentRouteId: "planning.home" } },
-    { routeId: "planning.plans.create", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/plans/create"), organizationScope: "required", screenId: "planning.plans.create", status: "planned", permission: "planning.plans.manage", breadcrumb: { labelKey: "planning.breadcrumb.create", parentRouteId: "planning.plans.list" } },
-    { routeId: "planning.plans.detail", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/plans/:planId"), organizationScope: "required", screenId: "planning.plans.detail", status: "planned", permission: "planning.plans.read", breadcrumb: { labelKey: "planning.breadcrumb.detail", parentRouteId: "planning.plans.list" } },
-    { routeId: "planning.plans.edit", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/plans/:planId/edit"), organizationScope: "required", screenId: "planning.plans.edit", status: "planned", permission: "planning.plans.manage", breadcrumb: { labelKey: "planning.breadcrumb.edit", parentRouteId: "planning.plans.detail" } },
+    { routeId: "planning.plans.list", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/list"), organizationScope: "required", screenId: "planning.plans.list", status: "planned", permission: "planning.plans.read", breadcrumb: { labelKey: "planning.breadcrumb.list", parentRouteId: "planning.home" } },
+    { routeId: "planning.plans.create", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/create"), organizationScope: "required", screenId: "planning.plans.create", status: "planned", permission: "planning.plans.manage", breadcrumb: { labelKey: "planning.breadcrumb.create", parentRouteId: "planning.plans.list" } },
+    { routeId: "planning.plans.detail", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/:planId"), organizationScope: "required", screenId: "planning.plans.detail", status: "planned", permission: "planning.plans.read", breadcrumb: { labelKey: "planning.breadcrumb.detail", parentRouteId: "planning.plans.list" } },
+    { routeId: "planning.plans.edit", moduleId: "planning", capabilityId: "planning.plans", pathTemplate: route("/:planId/edit"), organizationScope: "required", screenId: "planning.plans.edit", status: "planned", permission: "planning.plans.manage", breadcrumb: { labelKey: "planning.breadcrumb.edit", parentRouteId: "planning.plans.detail" } },
     { routeId: "planning.profile", moduleId: "planning", capabilityId: "planning.profile", pathTemplate: route("/profile"), organizationScope: "required", screenId: "planning.profile", status: "planned", permission: "planning.profile.read", breadcrumb: { labelKey: "planning.breadcrumb.profile", parentRouteId: "planning.home" } },
   ],
   screens: [
