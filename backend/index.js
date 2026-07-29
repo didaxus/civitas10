@@ -49,6 +49,9 @@ const { registerScimReconciliationRoutes } = require("./routes/scimReconciliatio
 const { registerScimUserRoutes } = require("./scim/users/routes");
 const { registerPlanningRoutes } = require("./planning/presentation/routes");
 const { buildPrincipalForRest } = require("./authorization/principalBuilder");
+const { AuthorizationExplainabilityQuery } = require("./authorization/explainability/AuthorizationExplainabilityQuery");
+const { evaluateOrganizationEntitlement } = require("./authorization/entitlements/entitlementEvaluator");
+const { createDataScopeEvaluator } = require("./authorization/data-scope/dataScopeEvaluator");
 
 const app = express();
 const port = 3000;
@@ -58,6 +61,24 @@ const API_RESOURCE = deploymentConfig.logtoResource;
 const OWNER_GLOBAL_ROLE = SHARED_AUTH.global.ownerRole;
 const OWNER_AUTHZ = SHARED_AUTH.global.permissions;
 const ORG_AUTHZ = SHARED_AUTH.organization.documentPermissions;
+const explanationSnapshots = new Map();
+
+const buildExplainabilityQuery = (req) => new AuthorizationExplainabilityQuery({
+  diagnosticAuthorizer: async ({ organizationId, surface }) => ({ allowed: Boolean(req.user) && organizationId === req.params.organizationId && (surface === "owner" || req.user.organizationId === organizationId) }),
+  subjectResolver: async ({ organizationId, subjectId }) => {
+    const roles = await listLogtoOrganizationUserRoles({ organizationId, userId: subjectId }).catch(() => null);
+    if (!roles) return null;
+    return { subject: subjectId, organizationId, scopes: roles.flatMap((role) => role.scopes || role.permissions || []), source: { available: true, source: "logto_organization_user_roles" }, rolePaths: roles.map((role) => ({ rolePathId: `${organizationId}:${subjectId}:${role.id}`, membershipId: `${organizationId}:${subjectId}`, canonicalRoleId: role.name, logtoRoleId: role.id })) };
+  },
+  entitlementEvaluator: async (input) => {
+    const roles = await listLogtoOrganizationRoles();
+    return evaluateOrganizationEntitlement({ ...input, repository: entitlementRepository, roleIdToName: roleMapFromRoles(roles) });
+  },
+  dataScopeEvaluator: (input) => createDataScopeEvaluator({ repository: dataScopeRepository }).evaluate(input),
+  resourceResolver: async () => null,
+  snapshotStore: { async save(id, snapshot) { explanationSnapshots.set(id, snapshot); }, async get(id) { return explanationSnapshots.get(id); } },
+  versions: { catalog: deploymentConfig.contract?.version || { available: false, source: null, reason: "catalog_version_not_available" } },
+});
 
 app.use(cors());
 // Planning presentation owns request parsing for its mounted API routes.
@@ -404,7 +425,7 @@ secureRoute.get("/owner/organizations/:organizationId/governance", "ownerRead", 
 });
 
 secureRoute.post("/owner/organizations/:organizationId/access-preview", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
-  try { const result = await previewAccess({ organizationId: req.params.organizationId, surface: "owner", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {} }); return res.json(result); }
+  try { const result = await previewAccess({ organizationId: req.params.organizationId, surface: "owner", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {}, explainabilityQuery: buildExplainabilityQuery(req) }); return res.json(result); }
   catch (error) { return sendPublicError(res, error, "OwnerGovernanceAccessPreviewError", "Failed to preview owner access"); }
 });
 
@@ -534,7 +555,7 @@ secureRoute.get("/o/:organizationId/governance", "organizationMemberRead", requi
 });
 
 secureRoute.post("/o/:organizationId/access-preview", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const result = await previewAccess({ organizationId: req.params.organizationId, surface: "tenant", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {} }); return res.json(result); }
+  try { assertTenantRouteMatchesContext(req); const result = await previewAccess({ organizationId: req.params.organizationId, surface: "tenant", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {}, explainabilityQuery: buildExplainabilityQuery(req) }); return res.json(result); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceAccessPreviewError", "Failed to preview tenant access"); }
 });
 

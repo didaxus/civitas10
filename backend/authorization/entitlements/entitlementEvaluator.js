@@ -4,7 +4,8 @@ const { ENTITLEMENT_REASON_CODES } = require("./entitlementReasonCodes");
 const { roleManifestContains, getRoleName } = require("./entitlementValidation");
 
 function asSet(value) { return value instanceof Set ? value : new Set(Array.isArray(value) ? value : []); }
-function buildDeniedPath(path, reasonCode, extra = {}) { return { rolePathId: path.rolePathId, logtoRoleId: path.logtoRoleId, tokenScopePresent: Boolean(path.tokenScopePresent), rolePotential: false, ceilingAllowed: false, tenantActivationEnabled: false, allowed: false, reasonCode, ...extra }; }
+function pathIdentity(path) { return { rolePathId: path.rolePathId, membershipId: path.membershipId || path.membershipBindingId, canonicalRoleId: path.canonicalRoleId, logtoRoleId: path.logtoRoleId }; }
+function buildDeniedPath(path, reasonCode, extra = {}) { return { ...pathIdentity(path), tokenScopePresent: Boolean(path.tokenScopePresent), rolePotential: false, ceilingAllowed: false, tenantActivationEnabled: false, allowed: false, reasonCode, ...extra }; }
 async function evaluateOrganizationEntitlement({ organizationId, subject, tokenScopes, rolePaths = [], permission, policyVersion, repository, roleIdToName = {}, currentPolicyVersion } = {}) {
   if (!repository || !repository.getLimit || !repository.getActivation) return { allowed: false, organizationId, subject, permission, policyVersion, evaluatedRolePaths: [], reasonCode: ENTITLEMENT_REASON_CODES.AUTHORIZATION_POLICY_UNAVAILABLE };
   const scopes = asSet(tokenScopes);
@@ -27,7 +28,7 @@ async function evaluateOrganizationEntitlement({ organizationId, subject, tokenS
     const activation = await repository.getActivation({ organizationId, logtoRoleId: path.logtoRoleId, permission });
     if (!activation) { evaluatedRolePaths.push(buildDeniedPath(path, ENTITLEMENT_REASON_CODES.TENANT_ACTIVATION_MISSING, { tokenScopePresent, rolePotential, ceilingAllowed: true })); continue; }
     if (activation.enabled !== true) { evaluatedRolePaths.push(buildDeniedPath(path, ENTITLEMENT_REASON_CODES.TENANT_ACTIVATION_DENIED, { tokenScopePresent, rolePotential, ceilingAllowed: true, tenantActivationEnabled: false })); continue; }
-    evaluatedRolePaths.push({ rolePathId: path.rolePathId, logtoRoleId: path.logtoRoleId, tokenScopePresent, rolePotential, ceilingAllowed: true, tenantActivationEnabled: true, allowed: true, reasonCode: ENTITLEMENT_REASON_CODES.ENTITLEMENT_ALLOWED });
+    evaluatedRolePaths.push({ ...pathIdentity(path), tokenScopePresent, rolePotential, ceilingAllowed: true, tenantActivationEnabled: true, allowed: true, reasonCode: ENTITLEMENT_REASON_CODES.ENTITLEMENT_ALLOWED });
   }
   const matched = evaluatedRolePaths.find((path) => path.allowed);
   return { allowed: Boolean(matched), organizationId, subject, permission, policyVersion: currentVersion || policyVersion, matchedRolePathId: matched?.rolePathId, evaluatedRolePaths, reasonCode: matched ? ENTITLEMENT_REASON_CODES.ENTITLEMENT_ALLOWED : (evaluatedRolePaths[0]?.reasonCode || ENTITLEMENT_REASON_CODES.OWNER_CEILING_MISSING) };
