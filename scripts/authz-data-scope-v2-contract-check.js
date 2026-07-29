@@ -10,6 +10,8 @@ function files(directory, relative = '') { const out=[]; for(const entry of fs.r
 const violations=[]
 for(const file of files(root)) { const text=fs.readFileSync(file,'utf8'); for(const term of forbidden) if(text.includes(term)) violations.push(`${path.relative(root,file)}:${term}`) }
 scope.assertScopeTemplateContracts()
+const assignmentMigration=fs.readFileSync(path.join(root,'backend/db/migrations/0026_data_scope_assignment_governance.sql'),'utf8')
+for(const column of ['strategy_id','target','provenance','snapshot_version']) if(!assignmentMigration.includes(column)) violations.push(`assignment migration missing:${column}`)
 if(violations.length) throw new Error(`obsolete Data Scope vocabulary:\n${violations.join('\n')}`)
 const artifact={schemaVersion:'2026-07-civitas-data-scope-contract-artifact-v2',...scope.SCOPE_REGISTRY_COMPATIBILITY}
 const target=path.join(root,'dist/data-scope.contract.json');const serialized=`${JSON.stringify(artifact,null,2)}\n`

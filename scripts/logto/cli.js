@@ -42,7 +42,9 @@ async function handleCustomClaims(mode, argv, env, options) {
     const planPath = argv[1]
     if (!planPath) throw new Error('apply-custom-claims requires a plan path')
     const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'))
-    return print({ mode, result: await applyCustomClaimsPlan({ plan, client: options.client, ...parseApplyOptions(argv, env) }) })
+    const config = loadLogtoBootstrapConfig(env, { requireCredentials: !options.client })
+    const client = options.client || createLogtoManagementApiClient(config, options.clientOptions)
+    return print({ mode, result: await applyCustomClaimsPlan({ plan, client, ...parseApplyOptions(argv, env) }) })
   }
   const plan = buildCustomClaimsPlan({ remoteScriptHash: options.remoteScriptHash || null, targetEnvironment: env.LOGTO_ENDPOINT || 'unknown' })
   if (mode === 'check-custom-claims') { const validation = validateCustomClaimsPlan(plan); return print({ mode, ok: validation.valid, validation, planHash: plan.planHash }) }

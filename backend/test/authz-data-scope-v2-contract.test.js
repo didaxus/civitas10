@@ -42,3 +42,8 @@ test('restricted strategy with missing assignment or relationship denies',()=>{
   const result=scope.composeRolePathConstraint({strategy:scope.DATA_SCOPE_STRATEGY_REGISTRY.teaching_assignments,organizationId:'org',subjectId:'teacher',assignments:[],candidates:[]})
   assert.equal(result.kind,'deny');assert.equal(result.reasonCode,'data_scope_assignment_missing')
 })
+
+test('durable assignments require membership, canonical role, governed template and exact strategy',async()=>{
+  const repository=scope.createInMemoryDataScopeRepository();const service=scope.createDataScopeAssignmentService({repository,taxonomyPort:{async resolvePublishedDimensionValue(){return{status:'active',value:{logtoOrganizationId:'org'}}}}})
+  await assert.rejects(()=>service.createAssignment({organizationId:'org',userId:'teacher',canonicalRoleId:'organization_teacher',logtoRoleId:'role_teacher',membershipId:'membership_123',capability:'lms',scopeKind:'dimension',dimensionKey:'academic.class',dimensionValueId:'class_7B',actorLogtoUserId:'admin'}),/scope_template_not_found/)
+})

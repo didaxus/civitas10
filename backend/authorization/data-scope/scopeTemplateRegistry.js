@@ -72,11 +72,11 @@ function assertAssignmentMatchesTemplate({ assignment, template, organizationId,
     if (config.enabled !== true) throw dataScopeError(DATA_SCOPE_REASON_CODES.TENANT_TEMPLATE_CONFIG_DISABLED);
   }
   if (assignment.capability !== template.capability) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_MISMATCH);
-  if (assignment.strategyId && assignment.strategyId !== template.strategyId) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_MISMATCH);
+  if (!assignment.strategyId || assignment.strategyId !== template.strategyId) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_MISMATCH);
   if (!template.allowedTargetKinds.includes(assignment.scopeKind)) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_TARGET_FORBIDDEN);
   if (assignment.dimensionKey && !template.allowedDimensionKeys.includes(assignment.dimensionKey)) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_TARGET_FORBIDDEN);
   if (assignment.relationshipKey && !template.allowedRelationshipKeys.includes(assignment.relationshipKey)) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_TARGET_FORBIDDEN);
-  if (assignment.roleKey && !template.allowedRoleKeys.includes(assignment.roleKey)) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_ROLE_FORBIDDEN);
+  if (!assignment.canonicalRoleId || !template.allowedRoleKeys.includes(assignment.canonicalRoleId)) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_ROLE_FORBIDDEN);
   return true;
 }
 

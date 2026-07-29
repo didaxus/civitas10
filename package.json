@@ -20,7 +20,7 @@
     "organization-structure:migration-check": "node scripts/organization-structure-migration-check.js",
     "authz:data-scope-contract-check": "node scripts/authz-data-scope-contract-check.js && node --test backend/test/authz-data-scope-contract.test.js",
     "authz:data-scope-v2:generate": "node scripts/authz-data-scope-v2-contract-check.js",
-    "authz:data-scope-v2:check": "node scripts/authz-data-scope-v2-contract-check.js --check && node --test backend/test/authz-data-scope-v2-contract.test.js",
+    "authz:data-scope-v2:check": "node scripts/authz-data-scope-v2-contract-check.js --check && node --test backend/test/authz-data-scope-v2-contract.test.js backend/test/authz-revocation-delegation-contract.test.js",
     "authz:data-scope-migration-check": "node scripts/authz-data-scope-migration-check.js",
     "organization-structure:data-scope-integration-check": "node scripts/organization-structure-data-scope-integration-check.js && node --test backend/test/authz-organization-structure-data-scope-integration.test.js",
     "organization-structure:reconciliation-check": "node scripts/organization-structure-reconciliation-check.js",

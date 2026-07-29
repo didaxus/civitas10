@@ -34,7 +34,8 @@ function createDataScopeAssignmentService({ repository, taxonomyPort, runtimeCon
   }
 
   async function validateMembershipBinding(input) {
-    if (!membershipPort) return;
+    if (!input.membershipId || !input.userId || !input.canonicalRoleId) throw dataScopeError(DATA_SCOPE_REASON_CODES.MEMBERSHIP_NOT_FOUND);
+    if (!membershipPort?.getMembershipRoleBinding) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOLVER_UNAVAILABLE);
     const binding = await membershipPort.getMembershipRoleBinding?.({ organizationId: input.organizationId, membershipId: input.membershipId, canonicalRoleId: input.canonicalRoleId || input.logtoRoleId, userId: input.userId });
     if (!binding) throw dataScopeError(DATA_SCOPE_REASON_CODES.MEMBERSHIP_NOT_FOUND);
     if (binding.organizationId && binding.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.MEMBERSHIP_NOT_FOUND);
@@ -46,9 +47,9 @@ function createDataScopeAssignmentService({ repository, taxonomyPort, runtimeCon
   async function validateAssignmentInput(input) {
     validateTarget(input);
     await validateMembershipBinding(input);
-    const template = await validateScopeTemplate({ input, templateRegistry });
     if (input.scopeKind === "dimension") await validateDimensionAssignment({ taxonomyPort, organizationId: input.organizationId, dimensionKey: input.dimensionKey, dimensionValueId: input.dimensionValueId, capability: input.capability });
     if (input.scopeKind !== "dimension") validateRelationshipKey(input.relationshipKey);
+    const template = await validateScopeTemplate({ input, templateRegistry });
     if (input.scopeKind === "unit" && unitPort?.getUnit) { const unit = await unitPort.getUnit({ organizationId: input.organizationId, unitId: input.unitId }); if (!unit) throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_UNKNOWN); if (unit.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_WRONG_TENANT); if (unit.status && unit.status !== "active") throw dataScopeError(DATA_SCOPE_REASON_CODES.UNIT_INACTIVE); }
     if (input.scopeKind === "resource" && resourcePort?.getResource) { const resource = await resourcePort.getResource({ organizationId: input.organizationId, resourceRef: input.resourceRef }); if (!resource) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_UNKNOWN); if (resource.organizationId !== input.organizationId) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_WRONG_TENANT); if (resource.status && !["active","published"].includes(resource.status)) throw dataScopeError(DATA_SCOPE_REASON_CODES.RESOURCE_FORBIDDEN); }
     return template;
@@ -61,6 +62,7 @@ function createDataScopeAssignmentService({ repository, taxonomyPort, runtimeCon
       return { valid: true, wouldGrant: { capability: input.capability, scopeKind: input.scopeKind, scopeTemplateId: template?.id || input.scopeTemplateId, scopeTemplateVersion: template?.version || input.scopeTemplateVersion, dimensionKey: input.dimensionKey, relationshipKey: input.relationshipKey, dimensionValueId: input.dimensionValueId, unitId: input.unitId, resourceRef: input.resourceRef }, warnings: [], mutated: false, policyVersion: await repository.getPolicyVersion(input.organizationId) };
     },
     async createAssignment(input) {
+      if (!templateRegistry || !input.scopeTemplateId || !input.scopeTemplateVersion || !input.strategyId) throw dataScopeError(DATA_SCOPE_REASON_CODES.TEMPLATE_UNKNOWN);
       const template = await validateAssignmentInput(input);
       if (input.expectedPolicyVersion && Number(input.expectedPolicyVersion) !== Number(await repository.getPolicyVersion(input.organizationId))) throw dataScopeError(DATA_SCOPE_REASON_CODES.POLICY_VERSION_CONFLICT);
       const now = input.validFrom || new Date().toISOString();

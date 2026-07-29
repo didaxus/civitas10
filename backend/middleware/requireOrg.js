@@ -16,25 +16,17 @@ async function requireOrg(req, res, next) {
   const tokenOrgId = req.user?.organizationId ?? null
   const hostOrgId = req.tenantContext?.organizationId ?? null
   const sessionOrgId = req.session?.organizationId ?? null
-  const presented = [hostOrgId, sessionOrgId, tokenOrgId, requestedOrgId].filter(Boolean)
+  const authoritative = [hostOrgId, sessionOrgId, tokenOrgId].filter(Boolean)
+  const presented = [...authoritative, requestedOrgId].filter(Boolean)
   if (presented.length && presented.some((organizationId) => organizationId !== presented[0])) {
-    return res.status(403).json({ error: 'organization_context_mismatch', tokenOrganizationId: tokenOrgId, requestedOrganizationId: requestedOrgId })
+    return res.status(403).json({ error: 'organization_context_mismatch' })
   }
-  const canonicalOrgId = hostOrgId || sessionOrgId || tokenOrgId || requestedOrgId
+  const canonicalOrgId = hostOrgId || sessionOrgId || tokenOrgId
 
   if (!canonicalOrgId) {
     return res.status(400).json({
       error: 'organization_context_required',
-      detail: 'No se encontró organizationId en token ni en la request',
-    })
-  }
-
-  if (tokenOrgId && requestedOrgId && tokenOrgId !== requestedOrgId) {
-    return res.status(403).json({
-      error: 'organization_context_mismatch',
-      detail: 'La organización solicitada no coincide con la del token',
-      tokenOrganizationId: tokenOrgId,
-      requestedOrganizationId: requestedOrgId,
+      detail: 'No se encontró un contexto organizacional autenticado',
     })
   }
 
