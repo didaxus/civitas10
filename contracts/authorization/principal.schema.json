@@ -99,13 +99,16 @@
         ],
         "properties": {
           "delegatorPrincipalId": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "delegatePrincipalId": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "organizationId": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "scope": {
             "type": "array",
