@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.example/planning/lms/v1/handoff.schema.json",
+  "title": "Planning LMS handoff v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "handoffId", "organizationId", "plan"],
+  "properties": {
+    "schemaVersion": { "const": "civitas.planning-lms-handoff/v1" },
+    "handoffId": { "type": "string", "minLength": 1 },
+    "organizationId": { "type": "string", "minLength": 1 },
+    "plan": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version", "title"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "version": { "type": "integer", "minimum": 1 }, "title": { "type": "string", "minLength": 1 } }
+    },
+    "audiences": {
+      "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["id", "organizationId"], "properties": { "id": { "type": "string", "minLength": 1 }, "organizationId": { "type": "string", "minLength": 1 } } }
+    }
+  }
+}
