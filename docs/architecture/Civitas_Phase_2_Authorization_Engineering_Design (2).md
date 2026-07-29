@@ -1,5 +1,8 @@
 # Civitas Phase 2 — Diseño de Ingeniería de Autorización, Data Scope y Sistema Visual
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 **Estado:** especificación técnica previa a implementación  
 **Versión:** 1.0 — 2026-07-12  
 **Repositorio:** [lssmanager/civitas10](https://github.com/lssmanager/civitas10)  

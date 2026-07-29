@@ -1,0 +1,19 @@
+{
+  "scope": "shared_authorization_ci",
+  "base": "main",
+  "branch": "fix/sync-authorization-ci-main",
+  "classifications": {
+    "missing_jose": "CI_BOOTSTRAP_FAILURE",
+    "postgres_on_conflict_42P10": "CONTRACT_INTEGRATION_FAILURE",
+    "missing_integration_tables_after_reset": "TEST_ISOLATION_FAILURE"
+  },
+  "changes": [
+    "canonical_backend_dependency_bootstrap",
+    "separate_postgres_jobs",
+    "tenant_scoped_operation_idempotency",
+    "single_migration_per_test_process",
+    "lease_aware_integration_event_tests"
+  ],
+  "dataScopeV2Modified": false,
+  "logtoClaimsModified": false
+}

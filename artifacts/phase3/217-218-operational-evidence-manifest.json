@@ -1,0 +1,244 @@
+{
+  "repository": "didaxus/civitas10",
+  "branch": "codex/congelar-claims-minimos-de-token-personalizado",
+  "commitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+  "baseSha": "7308efa06ceda89f70e0bdc6c6b2f7ae6c3493df",
+  "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+  "timestampUtc": "2026-07-29T04:33:10.596686Z",
+  "containsSensitiveData": false,
+  "testCategory": "evidence-manifest",
+  "result": "INCOMPLETE",
+  "sameShaEvidenceComplete": false,
+  "artifacts": [
+    {
+      "artifactPath": "artifacts/phase3/217/logto-custom-claims-apply.json",
+      "sha256": "75ebcdd1e56bad039efa59aaad7764997ab0140d1522c808c920e50491b4fd0a",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "logto-apply",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/logto-custom-claims-drift.json",
+      "sha256": "339029fa62e3d1694836eb03e9f91ddbf85d2c6f4910006d32b95ae3d7ae9f7e",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "logto-drift",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/logto-custom-claims-idempotency.json",
+      "sha256": "3fda55d5778639b2def30b46c03363ad77d2a9d4770be10cabe0ba919e0eeef3",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "logto-idempotency",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/logto-custom-claims-plan.json",
+      "sha256": "722635d829ea37509d9bdaf4733bc63969126825282d6ab8be0047ddef9bedc2",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "logto-plan",
+      "result": "NOT_EXECUTED_REMOTE",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/logto-custom-claims-rollback.json",
+      "sha256": "4e32c250ab3c5addc6c7bbfad4c61743998bea5da20a6b11d144d4058c2fc23e",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "logto-rollback",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/logto-custom-token-context-capability.json",
+      "sha256": "45dd75d298203c4bb009edaaad9dabc9e81348cfced3fa27e9776cb466188d67",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "logto-capability",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/principal-runtime-matrix.json",
+      "sha256": "6eb163dea897921f89df69d3cf826b5aea209edec18a4d84019ffab79341cb81",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "deployed-runtime",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/real-token-validation.json",
+      "sha256": "f0adf5bdae06c8422d5d3dbf011dc724074e0d4fd1a21a43643ed3456cdc3385",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "real-token",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/217/revocation-and-freshness-evidence.json",
+      "sha256": "366fc49008fe896c36148614191b2a8110e5c1053fffcd60259dfa0147389392",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "freshness",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/assignment-enforcement-matrix.json",
+      "sha256": "e1ccf60aff1f8ece2708628b541f5a8e4930c21a9a4e9f7967966261b37d817c",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "assignment-enforcement",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/legacy-reference-inventory.json",
+      "sha256": "b8793cb24444c67b5728185c725222e84f4d652168f539866c1017d7e7cf89bc",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "postgres-inventory",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/migration-apply.json",
+      "sha256": "3a50e4890d83aa80b59bbc4080bb6086c2ac53a14ebe8903c2f2956ad8979f2e",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "migration-apply",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/migration-dry-run.json",
+      "sha256": "9dd0ee28b741d727ac9b0c0be6858a7d45961db7f3524dda0d64e8f9130d81ab",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "migration-dry-run",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/migration-idempotency.json",
+      "sha256": "6275f00c89783772adb2ac75a496f1707f06bce3e69f69c08c05b505c2692b9a",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "migration-idempotency",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/migration-rollback.json",
+      "sha256": "fb34d39483ddc2f52a61799515b56475e7296f08dc52a5871f9a19c6093bc261",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "migration-rollback",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/multi-tenant-operation-matrix.json",
+      "sha256": "4eb7fa6ca6c7a57d1d998bd3bbfa3271187dd508b0634942a21060cf1b6d7b8d",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "multi-tenant-operations",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/postgres-assignment-roundtrip.json",
+      "sha256": "47581fd878ed556eeb630783564c191a02612b77ffde7182db9c4e2fe8341a4e",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "postgres-roundtrip",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/taxonomy-v2-reconciliation-plan.json",
+      "sha256": "4a860320c021c8eafd637654bea8ffcb0c7866f17ee20862482664fc67a16156",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "migration-reconciliation",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/218/zero-active-legacy-references.json",
+      "sha256": "a508ba4e6f695248d4252251f0155ba0ef9a859d2c51678be1c144d90febcc0b",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "legacy-zero-scan",
+      "result": "PARTIAL_CODE_ONLY",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/authorization-resilience-matrix.json",
+      "sha256": "1877c8d442d8cc130efb6d0dea16f7103558721057057c3de0a927afaac70349",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "resilience",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/operational-audit-redaction.json",
+      "sha256": "d5a130bcfa8def22e7313cff9ab877ed49b017d2e46610918d665d44ffd89ffb",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "audit-redaction",
+      "result": "NOT_EXECUTED",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/preflight-code-and-ci.json",
+      "sha256": "78ad05585d13cdf395a69acd1289192fe64f770b747b463c477ac758cbe72bc3",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "preflight",
+      "result": "FAIL",
+      "containsSensitiveData": false
+    },
+    {
+      "artifactPath": "artifacts/phase3/security-regression-217-218.json",
+      "sha256": "399cc1232857c184da4fe30d13420f517edf4f0ed7cc655c8cd3b7e7d4dbda11",
+      "sourceCommitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+      "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+      "generatedAt": "2026-07-29T04:33:10.596686Z",
+      "testCategory": "security-regression",
+      "result": "PARTIAL_CODE_ONLY",
+      "containsSensitiveData": false
+    }
+  ]
+}

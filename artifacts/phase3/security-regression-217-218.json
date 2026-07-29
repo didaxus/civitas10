@@ -1,0 +1,20 @@
+{
+  "repository": "didaxus/civitas10",
+  "branch": "codex/congelar-claims-minimos-de-token-personalizado",
+  "commitSha": "4b19a866f6eb6ff46c9d21d3d4eab6fd21aa999f",
+  "baseSha": "7308efa06ceda89f70e0bdc6c6b2f7ae6c3493df",
+  "environment": "local isolated code preflight only; no Logto/PostgreSQL/Redis/backend deployment credentials",
+  "timestampUtc": "2026-07-29T04:33:10.596686Z",
+  "containsSensitiveData": false,
+  "testCategory": "security-regression",
+  "result": "PARTIAL_CODE_ONLY",
+  "executed": [
+    "authz:security-gate:check after backend dependency install"
+  ],
+  "notExecuted": [
+    "deployed cross-tenant attacks",
+    "real JWT attacks",
+    "real PostgreSQL/Redis attacks"
+  ],
+  "blocker": "No operational environment."
+}

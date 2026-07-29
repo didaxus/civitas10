@@ -1,5 +1,8 @@
 # CIVITAS Phase 3 — Authority and Precedence
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 **Contract version:** `civitas-phase3-authority/v1`  
 **Repository:** `didaxus/civitas10`  
 **Status:** `normative`  

@@ -1,14 +1,21 @@
 "use strict";
 const { ENTITLEMENT_REASON_CODES } = require("./entitlementReasonCodes");
 const { assertLogtoId, validateEntitlementChange } = require("./entitlementValidation");
+const { AUTHORIZATION_EVENT_TYPES } = require("../runtime/authorizationEvents");
 
 function entitlementError(code, message = code) { return Object.assign(new Error(message), { code }); }
 function requireRuntimePort(runtimeConsistencyPort) {
   if (!runtimeConsistencyPort?.incrementPolicyVersion || !runtimeConsistencyPort?.enqueueOutbox || !runtimeConsistencyPort?.audit) throw entitlementError("runtime_consistency_port_required");
 }
-function createEntitlementService({ repository, runtimeConsistencyPort, roleIdToName = {} } = {}) {
+function createEntitlementService({ repository, runtimeConsistencyPort, authorizationFreshnessService, roleIdToName = {} } = {}) {
   if (!repository) throw new Error("repository_required");
   async function mutateVersion(event) {
+    if (authorizationFreshnessService?.invalidate) {
+      const eventType = event.eventType === "authorization.entitlement_limit.changed" ? AUTHORIZATION_EVENT_TYPES.CEILING_CHANGED : event.eventType === "authorization.role_activation.changed" ? AUTHORIZATION_EVENT_TYPES.ACTIVATION_CHANGED : event.eventType;
+      const snapshot = await authorizationFreshnessService.invalidate({ ...event, eventType, actorUserId: event.actorLogtoUserId });
+      if (runtimeConsistencyPort?.audit) await runtimeConsistencyPort.audit({ ...event, policyVersion: snapshot.policyVersion });
+      return snapshot.policyVersion;
+    }
     requireRuntimePort(runtimeConsistencyPort);
     const policyVersion = await runtimeConsistencyPort.incrementPolicyVersion(event);
     if (repository.setPolicyVersion) await repository.setPolicyVersion(event.organizationId, policyVersion);

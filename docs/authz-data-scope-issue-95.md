@@ -1,5 +1,8 @@
 # Issue #95 Authorization Data Scope Engine
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 The data-scope engine is backend authorization over rows/resources after JWT, organization path, canonical scope, role path, owner ceiling, tenant activation, contextual policies, and resource ownership have been evaluated. It is not an OAuth scope, role, visual filter, JWT claim payload, frontend condition, or group permission.
 
 `authorization_scope_assignments` intentionally stores only `dimension`, `unit`, and `resource` targets. `organization` and `self` are strategies, not assignment rows. `identity.self` is therefore resolved dynamically through adapter ownership and is never materialized as an assignment.

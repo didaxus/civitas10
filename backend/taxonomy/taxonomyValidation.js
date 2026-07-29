@@ -1,13 +1,7 @@
 "use strict";
 const { TAXONOMY_REASON_CODES } = require("./taxonomyReasonCodes");
-const KNOWN_DIMENSIONS = Object.freeze({
-  "academic.section": { displayName: "Academic section", valueKind: "hierarchy", hierarchyAllowed: true, multiAssignmentAllowed: false, capabilities: ["lms", "analytics"] },
-  "academic.subject": { displayName: "Academic subject", valueKind: "enumeration", hierarchyAllowed: false, multiAssignmentAllowed: true, capabilities: ["lms", "analytics"] },
-  "academic.grade_level": { displayName: "Academic grade level", valueKind: "hierarchy", hierarchyAllowed: true, multiAssignmentAllowed: true, capabilities: ["lms", "analytics"] },
-  "organization.campus": { displayName: "Campus", valueKind: "hierarchy", hierarchyAllowed: true, multiAssignmentAllowed: true, capabilities: ["lms", "scheduling", "analytics"] },
-  "organization.department": { displayName: "Department", valueKind: "hierarchy", hierarchyAllowed: true, multiAssignmentAllowed: true, capabilities: ["crm", "support", "analytics"] },
-  "administration.function": { displayName: "Administrative function", valueKind: "enumeration", hierarchyAllowed: false, multiAssignmentAllowed: true, capabilities: ["support", "analytics"] },
-});
+const { TAXONOMY_DIMENSIONS } = require('../authorization/data-scope/taxonomyDimensionsRegistry');
+const KNOWN_DIMENSIONS = Object.freeze(Object.fromEntries(Object.values(TAXONOMY_DIMENSIONS).map((dimension) => [dimension.key, Object.freeze({ ...dimension, hierarchyAllowed: dimension.hierarchyBehavior !== 'none', multiAssignmentAllowed: dimension.allowMultiple, capabilities: dimension.allowedCapabilities })])));
 const VALUE_STATUSES = Object.freeze(["draft", "active", "deprecating", "archived"]);
 const CHANGE_CLASSES = Object.freeze(["presentation-only", "taxonomy-semantic", "authorization-affecting"]);
 function taxonomyError(code, message = code, safeDetails) { return Object.assign(new Error(message), { code, safeDetails }); }

@@ -1,5 +1,8 @@
 # Civitas — Especificación UX/UI del Organization Governance Workspace
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 **Estado:** Normativo de diseño e implementación para Phase 2  
 **Fecha:** 2026-07-16  
 **Épica:** [#129](https://github.com/lssmanager/civitas10/issues/129)  
