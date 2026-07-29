@@ -1,5 +1,8 @@
 # Civitas — Modelo normativo de autorización: RBAC, PBAC y ABAC
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 **Estado:** Normativo para Phase 2  
 **Fecha:** 2026-07-15  
 **Fuente de decisión:** ADR de autorización #127  

@@ -1,5 +1,8 @@
 # CIVITAS Data Scope Taxonomy v2
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 **Contract version:** `civitas-data-scope-taxonomy/v2`  
 **Implements:** issue #218  
 **Status:** `normative / blocking`
