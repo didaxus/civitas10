@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "civitas-role-path/v2",
+  "rolePathId": "role/path/fragment",
+  "membershipBinding": {
+    "membershipBindingId": "membership_001",
+    "principal": {
+      "principalId": "principal_001",
+      "subject": "subject_001"
+    },
+    "organizationId": "organization_001",
+    "membershipState": "active"
+  },
+  "logtoRoleId": "role_001",
+  "canonicalRoleId": "organization_admin",
+  "roleAssignmentState": "active",
+  "permissionBinding": {
+    "permissionId": "org.documents.read",
+    "surface": "organization_portal"
+  },
+  "roleModelVersion": "civitas-role-model/v2",
+  "authorizationContractVersion": "civitas-authorization-foundation/v2",
+  "snapshotVersion": 1
+}
