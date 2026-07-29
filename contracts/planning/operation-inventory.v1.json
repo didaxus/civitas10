@@ -1,0 +1,12 @@
+{
+  "$schema": "./operation-inventory.v1.schema.json",
+  "schemaVersion": "planning-operation-inventory/v1",
+  "operations": [
+    {"openapiOperationId":"planningPlansCreate","runtimeOperation":"planning.plans.create","method":"POST","route":"/o/{organizationId}/planning/plans","action":"planning.plans.create","applicationService":"createPlan","permission":"planning.plans.manage","requestSchema":"#/components/schemas/PlanningPlanCreateRequest","resultSchema":"#/components/schemas/PlanningPlanEnvelope","event":"planning.plan.created.v1"},
+    {"openapiOperationId":"planningPlansList","runtimeOperation":"planning.plans.list","method":"GET","route":"/o/{organizationId}/planning/plans","action":"planning.plans.list","applicationService":"listPlans","permission":"planning.plans.read","requestSchema":null,"resultSchema":"#/components/schemas/PlanningPlanCollectionEnvelope","event":null},
+    {"openapiOperationId":"planningPlansRead","runtimeOperation":"planning.plans.read","method":"GET","route":"/o/{organizationId}/planning/plans/{planId}","action":"planning.plans.read","applicationService":"readPlan","permission":"planning.plans.read","requestSchema":null,"resultSchema":"#/components/schemas/PlanningPlanEnvelope","event":null},
+    {"openapiOperationId":"planningPlansUpdate","runtimeOperation":"planning.plans.update","method":"PATCH","route":"/o/{organizationId}/planning/plans/{planId}","action":"planning.plans.update","applicationService":"updatePlan","permission":"planning.plans.manage","requestSchema":"#/components/schemas/PlanningPlanUpdateRequest","resultSchema":"#/components/schemas/PlanningPlanEnvelope","event":"planning.plan.updated.v1"},
+    {"openapiOperationId":"planningProfileRead","runtimeOperation":"planning.profile.read","method":"GET","route":"/o/{organizationId}/planning/profile","action":"planning.profile.read","applicationService":"readProfile","permission":"planning.profile.read","requestSchema":null,"resultSchema":"#/components/schemas/PlanningProfileEnvelope","event":null},
+    {"openapiOperationId":"planningProfileReplace","runtimeOperation":"planning.profile.replace","method":"PUT","route":"/o/{organizationId}/planning/profile","action":"planning.profile.replace","applicationService":"replaceProfile","permission":"planning.profile.manage","requestSchema":"#/components/schemas/PlanningProfileReplaceRequest","resultSchema":"#/components/schemas/PlanningProfileEnvelope","event":"planning.profile.updated.v1"}
+  ]
+}
