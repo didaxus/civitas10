@@ -4,7 +4,23 @@
   "title": "Civitas Authorization Principal v2",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "principalId", "principalType", "subject", "issuer", "audiences", "organizationId", "membershipBindingId", "membershipBindingSource", "organizationRoleIds", "scopes", "rolePaths", "authzContractVersion", "issuedAt", "expiresAt", "snapshotVersion", "provenance"],
+  "required": [
+    "schemaVersion",
+    "principalId",
+    "principalType",
+    "subject",
+    "issuer",
+    "audiences",
+    "organizationId",
+    "membershipBindingId",
+    "membershipBindingSource",
+    "organizationRoleIds",
+    "authzContractVersion",
+    "issuedAt",
+    "expiresAt",
+    "snapshotVersion",
+    "rolePaths"
+  ],
   "properties": {
     "schemaVersion": { "const": "civitas-principal/v2" },
     "principalId": { "type": "string", "minLength": 8 },
@@ -23,8 +39,33 @@
     "expiresAt": { "type": "string", "format": "date-time" },
     "snapshotVersion": { "type": "integer", "minimum": 1 },
     "provenance": {
-      "type": "object", "additionalProperties": false, "required": ["bindingRecordVersion", "resolvedAt"],
-      "properties": { "bindingRecordVersion": { "type": "string", "minLength": 1 }, "resolvedAt": { "type": "string", "format": "date-time" }, "tokenIdHash": { "type": "string" } }
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tokenIdHash": {
+          "type": "string"
+        },
+        "bindingRecordVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resolvedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tokenContractVersion": {
+          "const": "2026-07-civitas-authz-v2"
+        }
+      }
+    },
+    "rolePaths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "role-path.schema.json"
+      }
     }
   }
 }

@@ -1,0 +1,663 @@
+{
+  "$schema": "./schemas/application-service-registry.schema.json",
+  "schemaVersion": "civitas-application-service-registry-schema/v1",
+  "contractVersion": "civitas-application-service-registry/v1",
+  "status": "planned",
+  "lifecycle": {
+    "implementation": "planned",
+    "deployment": "planned",
+    "activation": "planned"
+  },
+  "ownership": {
+    "businessOwner": "civitas-architecture-governance",
+    "contractOwner": "civitas-delivery-platform",
+    "runtimeOwner": "civitas-api-platform"
+  },
+  "provenance": {
+    "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+    "issue": "#193",
+    "decision": "PR-A canonical registry materialization"
+  },
+  "services": [
+    {
+      "moduleId": "analytics",
+      "capabilityId": "analytics.organization-overview",
+      "applicationServiceId": "analyticsOrganizationOverviewReadService",
+      "permissionId": "analytics.dashboards.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/analytics.yaml",
+          "operationId": "analyticsOrganizationOverviewRead",
+          "method": "GET",
+          "path": "/o/{organizationId}/analytics/organization-overviews/current"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-analytics-boundary",
+        "applicationOwner": "civitas-analytics-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/analytics.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "community",
+      "capabilityId": "community.groups",
+      "applicationServiceId": "communityGroupsListService",
+      "permissionId": "community.groups.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/community.yaml",
+          "operationId": "communityGroupsList",
+          "method": "GET",
+          "path": "/o/{organizationId}/community/groups"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-community-boundary",
+        "applicationOwner": "civitas-community-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/community.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "crm",
+      "capabilityId": "crm.contacts",
+      "applicationServiceId": "crmContactsListService",
+      "permissionId": "crm.contacts.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/crm.yaml",
+          "operationId": "crmContactsList",
+          "method": "GET",
+          "path": "/o/{organizationId}/crm/contacts"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-crm-boundary",
+        "applicationOwner": "civitas-crm-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/crm.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "hr",
+      "capabilityId": "hr.employees",
+      "applicationServiceId": "hrEmployeesListService",
+      "permissionId": "hr.employees.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/hr.yaml",
+          "operationId": "hrEmployeesList",
+          "method": "GET",
+          "path": "/o/{organizationId}/hr/employees"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-hr-boundary",
+        "applicationOwner": "civitas-hr-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/hr.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "lms",
+      "capabilityId": "lms.courses",
+      "applicationServiceId": "lmsCoursesListService",
+      "permissionId": "lms.courses.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/lms.yaml",
+          "operationId": "lmsCoursesList",
+          "method": "GET",
+          "path": "/o/{organizationId}/lms/courses"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-lms-boundary",
+        "applicationOwner": "civitas-lms-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/lms.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "marketing",
+      "capabilityId": "marketing.campaigns",
+      "applicationServiceId": "marketingCampaignsListService",
+      "permissionId": "marketing.campaigns.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/marketing.yaml",
+          "operationId": "marketingCampaignsList",
+          "method": "GET",
+          "path": "/o/{organizationId}/marketing/campaigns"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-marketing-boundary",
+        "applicationOwner": "civitas-marketing-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/marketing.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "payments",
+      "capabilityId": "payments.invoices",
+      "applicationServiceId": "paymentsInvoicesListService",
+      "permissionId": "payments.invoices.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/payments.yaml",
+          "operationId": "paymentsInvoicesList",
+          "method": "GET",
+          "path": "/o/{organizationId}/payments/invoices"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-payments-boundary",
+        "applicationOwner": "civitas-payments-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/payments.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "planning",
+      "capabilityId": "planning.plans",
+      "applicationServiceId": "planningPlansCreateService",
+      "permissionId": "planning.plans.manage",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "post",
+        "effect": "write"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/planning.yaml",
+          "operationId": "planningPlansCreate",
+          "method": "POST",
+          "path": "/o/{organizationId}/planning/plans"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-planning-boundary",
+        "applicationOwner": "civitas-planning-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/planning.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "planning",
+      "capabilityId": "planning.plans",
+      "applicationServiceId": "planningPlansListService",
+      "permissionId": "planning.plans.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/planning.yaml",
+          "operationId": "planningPlansList",
+          "method": "GET",
+          "path": "/o/{organizationId}/planning/plans"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-planning-boundary",
+        "applicationOwner": "civitas-planning-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/planning.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "planning",
+      "capabilityId": "planning.plans",
+      "applicationServiceId": "planningPlansReadService",
+      "permissionId": "planning.plans.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/planning.yaml",
+          "operationId": "planningPlansRead",
+          "method": "GET",
+          "path": "/o/{organizationId}/planning/plans/{planId}"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-planning-boundary",
+        "applicationOwner": "civitas-planning-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/planning.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "planning",
+      "capabilityId": "planning.plans",
+      "applicationServiceId": "planningPlansUpdateService",
+      "permissionId": "planning.plans.manage",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "patch",
+        "effect": "write"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/planning.yaml",
+          "operationId": "planningPlansUpdate",
+          "method": "PATCH",
+          "path": "/o/{organizationId}/planning/plans/{planId}"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-planning-boundary",
+        "applicationOwner": "civitas-planning-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/planning.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "planning",
+      "capabilityId": "planning.profile",
+      "applicationServiceId": "planningProfileReadService",
+      "permissionId": "planning.profile.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/planning.yaml",
+          "operationId": "planningProfileRead",
+          "method": "GET",
+          "path": "/o/{organizationId}/planning/profile"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-planning-boundary",
+        "applicationOwner": "civitas-planning-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/planning.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "planning",
+      "capabilityId": "planning.profile",
+      "applicationServiceId": "planningProfileReplaceService",
+      "permissionId": "planning.profile.manage",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "put",
+        "effect": "write"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/planning.yaml",
+          "operationId": "planningProfileReplace",
+          "method": "PUT",
+          "path": "/o/{organizationId}/planning/profile"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-planning-boundary",
+        "applicationOwner": "civitas-planning-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/planning.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "reports",
+      "capabilityId": "reports.executive-summary",
+      "applicationServiceId": "reportsExecutiveSummaryReadService",
+      "permissionId": "analytics.reports.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/reports.yaml",
+          "operationId": "reportsExecutiveSummaryRead",
+          "method": "GET",
+          "path": "/o/{organizationId}/reports/executive-summaries/current"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-reports-boundary",
+        "applicationOwner": "civitas-reports-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/reports.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "scheduling",
+      "capabilityId": "scheduling.bookings",
+      "applicationServiceId": "schedulingBookingsListService",
+      "permissionId": "scheduling.bookings.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/scheduling.yaml",
+          "operationId": "schedulingBookingsList",
+          "method": "GET",
+          "path": "/o/{organizationId}/scheduling/bookings"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-scheduling-boundary",
+        "applicationOwner": "civitas-scheduling-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/scheduling.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    },
+    {
+      "moduleId": "support",
+      "capabilityId": "support.tickets",
+      "applicationServiceId": "supportTicketsListService",
+      "permissionId": "support.tickets.read",
+      "dataScopeStrategyId": "organization",
+      "operation": {
+        "kind": "get",
+        "effect": "read"
+      },
+      "restOperationRefs": [
+        {
+          "document": "contracts/openapi/modules/support.yaml",
+          "operationId": "supportTicketsList",
+          "method": "GET",
+          "path": "/o/{organizationId}/support/tickets"
+        }
+      ],
+      "mcp": {
+        "exposure": "none",
+        "toolRefs": []
+      },
+      "status": "planned",
+      "lifecycle": {
+        "implementation": "planned",
+        "deployment": "planned",
+        "activation": "planned"
+      },
+      "ownership": {
+        "businessOwner": "civitas-support-boundary",
+        "applicationOwner": "civitas-support-application",
+        "deliveryOwner": "civitas-api-platform"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/22-CIVITAS-DELIVERY-SURFACE-PARITY-V1.md",
+        "sourceDocument": "contracts/openapi/modules/support.yaml",
+        "issue": "#193",
+        "decision": "PR-A canonical registry reconciliation"
+      }
+    }
+  ]
+}

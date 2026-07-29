@@ -9,7 +9,7 @@ const generated = Object.freeze({
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
+    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
   },
   "catalog": {
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
@@ -61,6 +61,21 @@ const generated = Object.freeze({
         "compatibility": "none"
       },
       {
+        "name": "analytics.dashboards.read",
+        "namespace": "analytics",
+        "moduleId": "analytics",
+        "capabilityId": "analytics.organization-overview",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
         "name": "analytics.exports.approve",
         "namespace": "analytics",
         "moduleId": null,
@@ -95,6 +110,21 @@ const generated = Object.freeze({
         "namespace": "analytics",
         "moduleId": null,
         "capabilityId": "analytics.records",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
+        "name": "analytics.reports.read",
+        "namespace": "analytics",
+        "moduleId": "reports",
+        "capabilityId": "reports.executive-summary",
         "surface": "organization",
         "targetStatus": "planned",
         "observedImplementation": "absent",
@@ -160,6 +190,21 @@ const generated = Object.freeze({
         "observedImplementation": "absent",
         "dataScopeStrategy": "organization",
         "risk": "high",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
+        "name": "community.groups.read",
+        "namespace": "community",
+        "moduleId": "community",
+        "capabilityId": "community.groups",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
@@ -350,6 +395,21 @@ const generated = Object.freeze({
         "namespace": "hr",
         "moduleId": null,
         "capabilityId": "hr.dashboards",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
+        "name": "hr.employees.read",
+        "namespace": "hr",
+        "moduleId": "hr",
+        "capabilityId": "hr.employees",
         "surface": "organization",
         "targetStatus": "planned",
         "observedImplementation": "absent",
@@ -643,6 +703,21 @@ const generated = Object.freeze({
         "namespace": "lms",
         "moduleId": null,
         "capabilityId": "lms.course_offerings",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
+        "name": "lms.courses.read",
+        "namespace": "lms",
+        "moduleId": "lms",
+        "capabilityId": "lms.courses",
         "surface": "organization",
         "targetStatus": "planned",
         "observedImplementation": "absent",
@@ -1631,6 +1706,21 @@ const generated = Object.freeze({
         "compatibility": "none"
       },
       {
+        "name": "payments.invoices.read",
+        "namespace": "payments",
+        "moduleId": "payments",
+        "capabilityId": "payments.invoices",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
         "name": "payments.metrics.export",
         "namespace": "payments",
         "moduleId": null,
@@ -2321,6 +2411,21 @@ const generated = Object.freeze({
         "compatibility": "none"
       },
       {
+        "name": "scheduling.bookings.read",
+        "namespace": "scheduling",
+        "moduleId": "scheduling",
+        "capabilityId": "scheduling.bookings",
+        "surface": "organization",
+        "targetStatus": "planned",
+        "observedImplementation": "absent",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [],
+        "policyRequirements": [],
+        "screenActionIds": [],
+        "compatibility": "none"
+      },
+      {
         "name": "scheduling.events.create",
         "namespace": "scheduling",
         "moduleId": null,
@@ -2699,7 +2804,7 @@ const generated = Object.freeze({
       "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
       "contractVersion": "2026-07-civitas-permission-catalog-v1",
       "baselineAudit": "#167 observed legacy baseline; target is canonical Phase 3 contract",
-      "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
+      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
     },
     "legacyBaselineObserved": [
       {
@@ -2950,7 +3055,7 @@ const generated = Object.freeze({
         "reason": "Governance IDs are blocked pending explicit namespace decision; consumers must not infer target permissions."
       }
     ],
-    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
+    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
   },
   "activePermissions": [
     {
@@ -3074,4 +3179,4 @@ const catalog = Object.freeze(generated.catalog)
 const permissions = Object.freeze(catalog.permissions.map(Object.freeze))
 const activePermissions = Object.freeze(generated.activePermissions.map(Object.freeze))
 const permissionsByName = Object.freeze(Object.fromEntries(permissions.map((permission) => [permission.name, permission])))
-module.exports = { generated, catalog, catalogHash: '710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9', permissions, activePermissions, permissionsByName }
+module.exports = { generated, catalog, catalogHash: '46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799', permissions, activePermissions, permissionsByName }

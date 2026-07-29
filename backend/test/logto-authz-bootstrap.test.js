@@ -143,7 +143,8 @@ test('management client redacts secrets, retries 429/5xx, honors no-retry 4xx, a
 
 test('custom claims flow is separate and never expands scopes', () => {
   const plan = buildCustomClaimsPlan()
-  assert.equal(plan.operations.length, 0)
+  assert.equal(plan.operations.length, 1)
+  assert.equal(plan.claims.length, 3)
   assert.equal(validateCustomClaimsPlan(plan).valid, true)
   assert.equal(validateCustomClaimsPlan({ claims: ['https://civitas.didaxus.com/claims/effectivePermissions'] }).valid, false)
 })
