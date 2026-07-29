@@ -1,0 +1,16 @@
+{
+  "sub": "user-123",
+  "iss": "https://identity.civitas.example/oidc",
+  "aud": "https://api.civitas.example",
+  "iat": 1785283200,
+  "exp": 1785286800,
+  "organization_id": "org-123",
+  "https://civitas.didaxus.com/claims/organization_membership_id": "membership-123",
+  "https://civitas.didaxus.com/claims/organization_role_ids": [
+    "role-teacher"
+  ],
+  "https://civitas.didaxus.com/claims/authz_contract_version": "civitas-authorization-foundation/v2",
+  "https://civitas.didaxus.com/claims/data_scope_ids": [
+    "scope-1"
+  ]
+}

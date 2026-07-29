@@ -13,7 +13,7 @@
     "authz:policy-contract-check": "node scripts/authorization/check-policy-runtime.js && node --test backend/test/authz-policy-contract.test.js backend/test/authz-canonical-core-contract.test.js backend/test/governance-operation-registry-contract.test.js",
     "authz:tenant-contract-check": "node scripts/authorization/check-tenant-routes.js && node --test backend/test/authz-tenant-entitlement-contract.test.js backend/test/lms-group-leadership-contract.test.js",
     "authz:entitlement-contract-check": "node scripts/authorization/check-entitlement-overlay.js && node --test backend/test/authz-tenant-entitlement-contract.test.js",
-    "test": "npm run authz:permission-catalog:check && npm run authz:role-model:check && npm run authz:naming:check && npm run logto:authz:contract-check && npm run authz:scope-contract-check && npm run authz:delegation-contract-check && npm run authz:policy-contract-check && npm run authz:security-gate:check && npm run authz:tenant-contract-check && npm run authz:entitlement-contract-check",
+    "test": "npm run authz:permission-catalog:check && npm run authz:role-model:check && npm run authz:naming:check && npm run authz:token-claims:check && npm run logto:authz:contract-check && npm run authz:scope-contract-check && npm run authz:delegation-contract-check && npm run authz:policy-contract-check && npm run authz:security-gate:check && npm run authz:tenant-contract-check && npm run authz:entitlement-contract-check",
     "taxonomy:contract-check": "node scripts/taxonomy/contract-check.js && node --test backend/test/authz-taxonomy-contract.test.js",
     "taxonomy:migration-check": "node scripts/taxonomy/migration-check.js",
     "organization-structure:contract-check": "node scripts/organization-structure-contract-check.js && node --test backend/test/authz-organization-structure-contract.test.js",
@@ -98,6 +98,7 @@
     "modules:docker-contracts-smoke": "npm run docker:contracts:smoke",
     "ui:p3-012:check": "npm run ui:p3-012:registry-check && npm run ui:p3-012:navigation-check && npm run ui:p3-012:route-safety-check && npm run ui:p3-012:authorization-parity-check && npm run ui:p3-012:lifecycle-check && npm run ui:p3-012:no-parallel-navigation-check && npm run ui:p3-012:no-frontend-authority-check && npm run ui:p3-012:inventory-check",
     "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
-    "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check"
+    "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check",
+    "authz:token-claims:check": "node scripts/authorization/check-token-claims.mjs"
   }
 }
