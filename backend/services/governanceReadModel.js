@@ -103,7 +103,7 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
   const logtoOrganizationId = organizationId || safeString(organization?.id) || safeString(organization?.logtoOrganizationId);
   const rolesSlice = await buildRolesGovernanceSlice({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId });
   const structureSlice = await buildStructureGovernanceSlice(logtoOrganizationId);
-  const aliasesNavigation = buildAliasesNavigationPolicy(logtoOrganizationId);
+  const aliasesNavigation = { ...buildAliasesNavigationPolicy(logtoOrganizationId), aliasesTenantEditable: true, aliases: rolesSlice.roles.map((role) => ({ roleId: role.id, canonicalKey: role.canonicalKey, defaultLabel: role.defaultName, displayName: role.displayName, editableBy: "tenant", provenance: role.labelProvenance })) };
   const diagnostics = roleCatalogDiagnostics({ roles: rolesSlice.roles, aliasesNavigation });
   return {
     contractVersion: GOVERNANCE_READ_MODEL_CONTRACT_VERSION,

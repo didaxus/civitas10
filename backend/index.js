@@ -37,7 +37,7 @@ const { createIdempotencyKey, getOrganizationProvisioningDraft, saveOrganization
 const { buildBootstrapStatus } = require("./services/ownerBootstrapStatus");
 const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./services/ownerCapabilitySurfaces");
 const { buildGovernanceReadModel, assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
-const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
+const { updateOwnerCeilings, updateTenantActivations, updateRoleAlias, resetRoleAlias, registerCanonicalRoles, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
 const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
 const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
 const { requireGlobalOwner } = require("./authorization/guards");
@@ -541,6 +541,24 @@ secureRoute.post("/o/:organizationId/access-preview", "organizationMemberRead", 
 secureRoute.put("/o/:organizationId/governance/navigation-preferences", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
   try { assertTenantRouteMatchesContext(req); return res.json(updateNavigationPreferences({ organizationId: req.params.organizationId, preferences: req.body?.preferences || [], actorLogtoUserId: actorId(req), surface: "tenant" })); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceNavigationError", "Failed to update navigation preferences"); }
+});
+
+secureRoute.put("/o/:organizationId/governance/role-aliases/:canonicalRoleId", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try {
+    assertTenantRouteMatchesContext(req);
+    registerCanonicalRoles(await listLogtoOrganizationRoles());
+    const result = await updateRoleAlias({ organizationId: req.params.organizationId, canonicalRoleId: req.params.canonicalRoleId, alias: req.body?.alias, expectedEtag: req.get("If-Match"), actorLogtoUserId: actorId(req) });
+    res.set("ETag", result.etag); return res.json({ contractVersion: "2026-07-civitas10-role-label-v1", label: result });
+  } catch (error) { return sendPublicError(res, error, "TenantRoleAliasUpdateError", "Failed to update role alias"); }
+});
+
+secureRoute.delete("/o/:organizationId/governance/role-aliases/:canonicalRoleId", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try {
+    assertTenantRouteMatchesContext(req);
+    registerCanonicalRoles(await listLogtoOrganizationRoles());
+    const result = await resetRoleAlias({ organizationId: req.params.organizationId, canonicalRoleId: req.params.canonicalRoleId, expectedEtag: req.get("If-Match"), actorLogtoUserId: actorId(req) });
+    res.set("ETag", result.etag); return res.json({ contractVersion: "2026-07-civitas10-role-label-v1", label: result });
+  } catch (error) { return sendPublicError(res, error, "TenantRoleAliasResetError", "Failed to reset role alias"); }
 });
 
 secureRoute.get("/o/:organizationId/governance/audit", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
