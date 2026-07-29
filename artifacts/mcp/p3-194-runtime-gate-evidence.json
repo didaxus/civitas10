@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "p3-194-mcp-runtime-gate-evidence/v1",
+  "issue": "#194",
+  "status": "pass",
+  "generatedAt": "2026-07-29T00:00:00.000Z",
+  "controls": {
+    "trustedPrincipalAndTenant": "pass",
+    "applicationServiceOnlyHandlers": "pass",
+    "delegationCeilings": "pass",
+    "confirmationReplayProtection": "pass",
+    "criticalAudit": "pass",
+    "timeoutAndKillSwitch": "pass"
+  },
+  "tests": ["backend/test/application-service-tool-gateway.test.js", "backend/test/planning-write-tools.test.js"]
+}
