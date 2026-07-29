@@ -19,7 +19,7 @@ Governance screens compose the public exports from `frontend/src/shared/ui/index
 Reusable primitives:
 
 - `OrganizationContextHeader` — compact entity context with breadcrumb, status and action slots; do not pair it with a second page hero for the same organization.
-- `GovernanceSectionNav` — grouped vertical rail with route links and the shared mobile select fallback.
+- `GovernanceSectionNav` — primitive retained for non-workspace consumers. It must not be mounted inside Governance: organization navigation belongs exclusively to the blue `AppShell` sidebar.
 - `RoleSelector` — controlled role selector that shows canonical role IDs, tenant aliases and status without replacing the stable ID.
 - `PermissionGroupAccordion` — accessible domain accordion with group/row toggles, mixed state and counts.
 - `FilterBar` — composable search/filter/reset toolbar suitable for URL-backed state supplied by the screen.

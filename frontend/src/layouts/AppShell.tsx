@@ -60,6 +60,13 @@ export const AppShell = ({ area, children, navItems, organizationId, showBackBut
     if (!isMobile) setMobileOpen(false);
   }, [isMobile]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setMobileOpen(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [mobileOpen]);
+
   return (
     <div
       className={`civitas-shell civitas-shell-${area}`}
@@ -76,7 +83,7 @@ export const AppShell = ({ area, children, navItems, organizationId, showBackBut
             <img src={civitasLogoFullDark} alt="Civitas" className="civitas-brand-logo" />
           </Link>
         </div>
-        {resolvedNavItems[0]?.label === "Resolved navigation is required" ? <div className="civitas-nav-link" data-navigation-contract="navigation-required-but-empty">Resolved navigation is required for this shell area.</div> : <NavCollapse items={resolvedNavItems} label={areaLabel[area]} />}
+        {resolvedNavItems[0]?.label === "Resolved navigation is required" ? <div className="civitas-nav-link" data-navigation-contract="navigation-required-but-empty">Resolved navigation is required for this shell area.</div> : <NavCollapse items={resolvedNavItems} label={areaLabel[area]} onNavigate={() => setMobileOpen(false)} />}
       </aside>
       <div className="civitas-shell-content">
         <header className="civitas-topbar">

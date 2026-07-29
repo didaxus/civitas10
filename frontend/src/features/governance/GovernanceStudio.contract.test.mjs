@@ -45,17 +45,17 @@ test("context scopes preserve owner platform access and tenant organization enfo
 test("governance sections are route-backed vertical navigation", () => {
   assert.match(routes, /governance\/access-policy\/roles/);
   assert.match(routes, /governance\/organization-model\/structure/);
-  assert.match(routes, /governance\/groups/);
-  assert.match(routes, /governance\/data-scopes/);
+  assert.match(routes, /governance\/organization-model\/groups/);
+  assert.match(routes, /governance\/access-policy\/scope-assignments/);
   assert.match(routes, /governance\/access-policy\/role-names/);
-  assert.match(routes, /governance\/preview/);
-  assert.match(routes, /governance\/audit/);
+  assert.match(routes, /governance\/control\/access-explorer/);
+  assert.match(routes, /governance\/control\/audit/);
   assert.doesNotMatch(page, /WorkspaceShell|SectionNavigation|GovernanceSectionNav/);
   assert.match(page, /<section className="min-w-0"/);
-  assert.match(workspaceContract, /Access policy/);
-  assert.match(workspaceContract, /Organization model/);
-  assert.match(workspaceContract, /Control and evidence/);
-  assert.match(workspaceContract, /People segmentation/);
+  assert.match(workspaceContract, /Política de acceso/);
+  assert.match(workspaceContract, /Modelo de organización/);
+  assert.match(workspaceContract, /Control y evidencia/);
+  assert.match(workspaceContract, /Segmentación de personas/);
   assert.match(page, /OrganizationContextHeader/);
   assert.doesNotMatch(page, /<Tabs|useSearchParams/);
 });
@@ -272,8 +272,8 @@ test("governance read model contract validates real mounted fixture", () => {
 
 
 test("legacy governance root stays in the persistent organization shell", () => {
-  assert.doesNotMatch(appSource, /OwnerGovernanceLegacyRedirect/);
+  assert.match(appSource, /OrganizationRedirect/);
   assert.match(routes, /ownerOrganizationOperationsRoute = defineRoute\("\/owner\/organizations\/:organizationId\/operations"\)/);
   const legacyRouteLine = appSource.split("\n").find((line) => line.includes("appRoutes.ownerOrganizationGovernance.path")) || "";
-  assert.match(legacyRouteLine, /GovernanceStudioPage surface="owner"/);
+  assert.match(legacyRouteLine, /OrganizationRedirect/);
 });
