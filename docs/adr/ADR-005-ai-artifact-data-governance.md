@@ -14,6 +14,7 @@ Propuesto — **BLOCKED para implementar #198** hasta que Arquitectura, Segurida
 
 ## Relacionado
 
+- #197
 - #198
 - ADR-001: MCP Boundary in Civitas
 - ADR-002: REST API Boundary for Civitas v1
@@ -238,4 +239,3 @@ Proveedor, modelo, API, región, DPA, términos, lista de subprocesadores, KMS/c
 - [ ] Pruebas demuestran que outputs, retries, tools y webhooks no mutan canon sin aceptación humana.
 - [ ] Borrado incluye derivados/proveedor y la liberación de hold reanuda solicitudes pendientes.
 - [ ] Observabilidad no captura contenido ni secretos y se verificó con canarios sintéticos.
-
