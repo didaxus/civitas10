@@ -80,12 +80,40 @@ test('planning rejects a cross-organization route before availability and remote
   assert.equal(result.remoteCalls, 0);
 });
 
-test('planned planning permission is denied by the shared PBAC catalog and never calls availability or remote runtime', async () => {
+test('planning checks availability before the planned permission and never calls the remote runtime', async () => {
   const result = await requestPlanning(auth());
   assert.equal(result.response.status, 403);
   assert.equal(result.body.code, 'permission_inactive');
-  assert.equal(result.availabilityCalls, 0);
+  assert.equal(result.availabilityCalls, 1);
   assert.equal(result.remoteCalls, 0);
+});
+
+test('all six HTTP routes deny before the remote transport boundary and PUT plan is not mounted', async () => {
+  const calls = [];
+  const port = Object.fromEntries(Object.keys(require('../planning/application/remotePort').NAMED_USE_CASES).map((method) => [method, async () => { calls.push(method); return { ok: true, value: {} }; }]));
+  const app = express();
+  app.use(createPlanningRouter({ planningRemoteApplicationPort: port }));
+  const server = app.listen(0);
+  const base = `http://127.0.0.1:${server.address().port}/o/${ORG}/planning`;
+  try {
+    const cases = [
+      ['POST', `${base}/plans`, { title: 'Plan' }],
+      ['GET', `${base}/plans`],
+      ['GET', `${base}/plans/plan_A`],
+      ['PATCH', `${base}/plans/plan_A`, { title: 'Updated' }],
+      ['GET', `${base}/profile`],
+      ['PUT', `${base}/profile`, { planningMode: 'standard', preferences: {} }],
+    ];
+    for (const [method, url, body] of cases) {
+      const response = await fetch(url, { method, headers: { 'content-type': 'application/json', 'x-correlation-id': 'corr-http-six' }, ...(body ? { body: JSON.stringify(body) } : {}) });
+      assert.equal(response.status, 401, `${method} ${url}`);
+      const problemBody = await response.json();
+      assert.equal(problemBody.correlationId, 'corr-http-six');
+    }
+    const removed = await fetch(`${base}/plans/plan_A`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title: 'No longer accepted' }) });
+    assert.equal(removed.status, 404);
+    assert.deepEqual(calls, [], 'pre-controller denials must not invoke the remote transport boundary');
+  } finally { await new Promise((resolve) => server.close(resolve)); }
 });
 
 function responseDouble() {
@@ -119,7 +147,7 @@ test('PBAC Data Scope denial restricts access and cannot grant it', async () => 
   assert.equal(nextCalled, false);
 });
 
-test('RFC 9457 mapping covers authorization and remote 404/409/412/503/504 statuses', () => {
+test('RFC 9457 mapping covers authorization and remote 404/409/412/422/503/504 statuses', () => {
   for (const status of [401, 403]) {
     const res = responseDouble();
     authorizationProblem(res, { status, error: status === 401 ? 'Unauthorized' : 'Forbidden', code: 'denied' });
@@ -128,7 +156,13 @@ test('RFC 9457 mapping covers authorization and remote 404/409/412/503/504 statu
   }
   for (const [code, status] of [
     [REMOTE_PROBLEM_CODES.NOT_FOUND, 404], [REMOTE_PROBLEM_CODES.CONFLICT, 409],
-    [REMOTE_PROBLEM_CODES.PRECONDITION, 412], [REMOTE_PROBLEM_CODES.UNAVAILABLE, 503],
+    [REMOTE_PROBLEM_CODES.PRECONDITION, 412], [REMOTE_PROBLEM_CODES.VALIDATION, 422], [REMOTE_PROBLEM_CODES.UNAVAILABLE, 503],
     [REMOTE_PROBLEM_CODES.TIMEOUT, 504],
   ]) assert.equal(toRfc9457Problem(problem(code, 'test')).status, status);
+});
+
+test('RFC 9457 remote errors retain correlation and authorization decision identifiers', () => {
+  const body = toRfc9457Problem(problem(REMOTE_PROBLEM_CODES.NOT_FOUND, 'not_found', { correlationId: 'corr_A', decisionId: 'decision_A' }));
+  assert.equal(body.correlationId, 'corr_A');
+  assert.equal(body.decisionId, 'decision_A');
 });

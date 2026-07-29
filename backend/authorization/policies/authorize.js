@@ -107,12 +107,12 @@ async function authorize(input) {
   if (requiredCatalogHash && requiredCatalogHash !== catalogHash) return denyDecision(context, POLICY_REASON_CODES.REGISTRY_CATALOG_MISMATCH, { requiredCatalogHash, catalogHash });
   const permission = permissionsByName[context.authorization.permission];
   if (!permission) return denyDecision(context, POLICY_REASON_CODES.PERMISSION_UNKNOWN);
+  const moduleAvailability = await resolveModuleAvailability(context, permission);
+  if (moduleAvailability) return denyDecision(context, moduleAvailability.reasonCode, moduleAvailability.metadata);
   if (permission.status !== "active") return denyDecision(context, POLICY_REASON_CODES.PERMISSION_INACTIVE, { status: permission.status });
   if (!permissionSurfaceMatches(permission, context.request.surface)) return denyDecision(context, POLICY_REASON_CODES.CONSUMER_SURFACE_MISMATCH, { permissionSurface: permission.surface });
   if (!surfaceMatches(context)) return denyDecision(context, POLICY_REASON_CODES.SURFACE_MISMATCH);
   if (!context.principal.scopes.has(context.authorization.permission)) return denyDecision(context, POLICY_REASON_CODES.PERMISSION_MISSING);
-  const moduleAvailability = await resolveModuleAvailability(context, permission);
-  if (moduleAvailability) return denyDecision(context, moduleAvailability.reasonCode, moduleAvailability.metadata);
   const rolePotentialFailure = validateRolePotential(context);
   if (rolePotentialFailure) return denyDecision(context, rolePotentialFailure);
   let matchedRolePathId = context.rolePaths.find((path) => path.rolePotentialDecision?.allowed)?.rolePathId || context.rolePaths[0]?.rolePathId;
