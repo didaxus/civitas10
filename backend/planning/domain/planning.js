@@ -48,9 +48,7 @@ class Planning {
 
   static create({ organizationId, id = randomUUID(), profileId, name, content, actorId, now = new Date() }) {
     required(actorId, "actorId");
-    if (content == null || typeof content !== "object" || Array.isArray(content)) {
-      throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content must be an object");
-    }
+    if (content === undefined) throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content is required");
     const aggregate = new Planning({
       organizationId, id, profileId, name, state: PLANNING_STATES.DRAFT,
       currentVersion: 1, revision: 1,
@@ -63,7 +61,7 @@ class Planning {
 
   static restore(snapshot) { return new Planning(snapshot); }
 
-  revise({ content, actorId, now = new Date() }) {
+  revise({ name, content, actorId, now = new Date() }) {
     required(actorId, "actorId");
     if (this.state === PLANNING_STATES.APPROVED) {
       throw new PlanningDomainError(ERROR_CODES.APPROVED_VERSION_IMMUTABLE, "Approved versions cannot be modified");
@@ -71,10 +69,9 @@ class Planning {
     if (![PLANNING_STATES.DRAFT, PLANNING_STATES.REJECTED].includes(this.state)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_TRANSITION, `Cannot revise a plan in ${this.state}`);
     }
-    if (content == null || typeof content !== "object" || Array.isArray(content)) {
-      throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content must be an object");
-    }
+    if (content === undefined) throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content is required");
     if (this.state === PLANNING_STATES.REJECTED) this.#transition(PLANNING_STATES.DRAFT, actorId, now);
+    if (name !== undefined) this.name = required(name, "name");
     this.currentVersion += 1;
     this.revision += 1;
     this.updatedAt = now;

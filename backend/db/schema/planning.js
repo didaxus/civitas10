@@ -1,6 +1,6 @@
 "use strict";
 const { sql } = require("drizzle-orm");
-const { pgTable, varchar, integer, timestamp, jsonb, primaryKey, foreignKey, uniqueIndex, index } = require("drizzle-orm/pg-core");
+const { pgTable, varchar, integer, timestamp, jsonb, primaryKey, foreignKey, unique, uniqueIndex, index } = require("drizzle-orm/pg-core");
 
 const planningProfiles = pgTable("planning_profiles", {
   organizationId: varchar("organization_id", { length: 128 }).notNull(),
@@ -39,9 +39,11 @@ const planningAudit = pgTable("planning_audit", {
 }, (t) => ({ pk: primaryKey({ columns: [t.organizationId, t.id] }), planFk: foreignKey({ columns: [t.organizationId, t.planId], foreignColumns: [planningPlans.organizationId, planningPlans.id] }), planIdx: index("planning_audit_org_plan_idx").on(t.organizationId, t.planId, t.createdAt) }));
 
 const planningIdempotency = pgTable("planning_idempotency", {
-  organizationId: varchar("organization_id", { length: 128 }).notNull(), key: varchar("idempotency_key", { length: 200 }).notNull(),
+  organizationId: varchar("organization_id", { length: 128 }).notNull(), principalId: varchar("principal_id", { length: 180 }),
+  authenticatedClientId: varchar("authenticated_client_id", { length: 180 }), operationId: varchar("operation_id", { length: 180 }).notNull(),
+  key: varchar("idempotency_key", { length: 200 }).notNull(),
   fingerprint: varchar("fingerprint", { length: 128 }).notNull(), result: jsonb("result").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-}, (t) => ({ pk: primaryKey({ columns: [t.organizationId, t.key] }) }));
+}, (t) => ({ callerOperationKey: unique("planning_idempotency_caller_operation_key").on(t.organizationId, t.principalId, t.authenticatedClientId, t.operationId, t.key).nullsNotDistinct() }));
 
 module.exports = { planningAudit, planningIdempotency, planningPlans, planningProfiles, planningVersions };

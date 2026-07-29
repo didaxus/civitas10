@@ -45,8 +45,11 @@ create table planning_audit (
 create index planning_audit_org_plan_idx on planning_audit(organization_id, plan_id, created_at);
 
 create table planning_idempotency (
-  organization_id varchar(128) not null, idempotency_key varchar(200) not null, fingerprint varchar(128) not null,
-  result jsonb not null, created_at timestamptz not null default now(), primary key (organization_id, idempotency_key)
+  organization_id varchar(128) not null, principal_id varchar(180), authenticated_client_id varchar(180),
+  operation_id varchar(180) not null, idempotency_key varchar(200) not null, fingerprint varchar(128) not null,
+  result jsonb not null, created_at timestamptz not null default now(),
+  constraint planning_idempotency_caller_ck check (principal_id is not null or authenticated_client_id is not null),
+  unique nulls not distinct (organization_id, principal_id, authenticated_client_id, operation_id, idempotency_key)
 );
 
 -- Canonical outbox remains integration_outbox_events; this tenant-aware index prevents duplicate aggregate revisions.

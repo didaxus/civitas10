@@ -47,11 +47,37 @@ test("unit of work rolls back aggregate, audit, outbox and idempotency", async (
     const created = await tx.persistencePort.createPlan({ organizationId: "tenant-a", planId: "rollback", profileId: "profile", name: "Rollback", content: {}, actorId: "actor" });
     await tx.auditPort.record({ organizationId: "tenant-a", targetId: created.planId, action: "planning.plan.created", actorId: "actor", correlationId: "corr" });
     await tx.outboxPort.enqueue({ type: "planning.plan.created", organizationId: "tenant-a", aggregateId: created.planId, aggregateVersion: created.version, payload: created, correlationId: "corr" });
-    await tx.idempotencyLedgerPort.recordSuccess({ organizationId: "tenant-a", key: "request", fingerprint: "hash", result: created });
+    await tx.idempotencyLedgerPort.recordSuccess({ organizationId: "tenant-a", principalId: "actor", operationId: "planning.plans.create", key: "request", fingerprint: "hash", result: created });
     throw new Error("force rollback");
   }), /force rollback/);
   for (const table of ["planning_plans", "planning_audit", "planning_idempotency"]) assert.equal((await pool.query(`select 1 from ${table}`)).rowCount, 0);
   assert.equal((await pool.query("select 1 from integration_outbox_events where logto_organization_id='tenant-a' and aggregate_type='planning.plan'")).rowCount, 0);
+});
+
+test("each side-effect boundary rolls back every earlier PostgreSQL component", async () => {
+  for (const stopAfter of ["aggregate", "audit", "outbox", "idempotency"]) {
+    await assert.rejects(() => adapter.transaction(async (tx) => {
+      const created = await tx.persistencePort.createPlan({ organizationId: "tenant-a", planId: `rollback-${stopAfter}`, name: "Rollback", content: {}, actorId: "actor" });
+      if (stopAfter === "aggregate") throw new Error(stopAfter);
+      await tx.auditPort.record({ organizationId: "tenant-a", targetId: created.planId, action: "planning.plan.created", actorId: "actor", correlationId: "corr" });
+      if (stopAfter === "audit") throw new Error(stopAfter);
+      await tx.outboxPort.enqueue({ type: "planning.plan.created", organizationId: "tenant-a", aggregateId: created.planId, aggregateVersion: created.version, payload: created, correlationId: "corr" });
+      if (stopAfter === "outbox") throw new Error(stopAfter);
+      await tx.idempotencyLedgerPort.recordSuccess({ organizationId: "tenant-a", principalId: "actor", operationId: "planning.plans.create", key: stopAfter, fingerprint: "hash", result: created });
+      throw new Error(stopAfter);
+    }), new RegExp(stopAfter));
+    for (const table of ["planning_plans", "planning_audit", "planning_idempotency"]) assert.equal((await pool.query(`select 1 from ${table}`)).rowCount, 0);
+    assert.equal((await pool.query("select 1 from integration_outbox_events where logto_organization_id='tenant-a' and aggregate_type='planning.plan'")).rowCount, 0);
+  }
+});
+
+test("cursor pagination is opaque, stable and enforces the requested limit", async () => {
+  for (let index = 0; index < 4; index++) await adapter.createPlan({ organizationId: "tenant-a", planId: `p-${index}`, name: `Plan ${index}`, content: {}, actorId: "actor" });
+  const first = await adapter.persistencePort.listPlans({ organizationId: "tenant-a", constraints: { limit: 2 } });
+  assert.equal(first.items.length, 2); assert.ok(first.page.nextCursor); assert.equal(first.page.nextCursor.includes("p-"), false);
+  const second = await adapter.persistencePort.listPlans({ organizationId: "tenant-a", constraints: { limit: 2, cursor: first.page.nextCursor } });
+  assert.equal(second.items.length, 2);
+  assert.equal(new Set([...first.items, ...second.items].map((item) => item.planId)).size, 4);
 });
 
 test("database protects approved version history from update and delete", async () => {

@@ -65,7 +65,7 @@ test('read plan validates tenant data scope before lookup or disclosure', async 
   const p = ports({ plans: [{ planId: 'p1', organizationId: 'org-1', title: 'A' }] });
   const result = await createPlanningApplicationServices(p).readPlan({ planId: 'p1' }, context('getPlan'));
   assert.equal(result.ok, true);
-  assert.deepEqual(p.calls.map(([name]) => name).slice(0, 3), ['scope', 'readPlan', 'scope']);
+  assert.deepEqual(p.calls.map(([name]) => name).slice(0, 4), ['scope', 'transaction', 'readPlan', 'scope']);
 });
 
 test('construction rejects every missing mandatory application port', () => {
@@ -103,6 +103,19 @@ test('update plan rejects stale If-Match and approved-plan mutation', async () =
   const approvedPorts = ports({ plans: [{ planId: 'p2', organizationId: 'org-1', title: 'A', status: 'approved', version: '1' }] });
   const approved = await createPlanningApplicationServices(approvedPorts).updatePlan({ planId: 'p2', title: 'B' }, context('updatePlan', { concurrency: { etag: '1' } }));
   assert.equal(approved.problem.detailKey, 'approved_plan_mutation_denied');
+});
+
+test('update and profile replacement require If-Match before repository access', async () => {
+  for (const [method, useCase, command] of [['updatePlan', 'updatePlan', { planId: 'p1' }], ['replaceProfile', 'replaceProfile', { planningMode: 'agile' }]]) {
+    const p = ports();
+    const result = await createPlanningApplicationServices(p)[method](command, context(useCase));
+    assert.equal(result.problem.code, 'planning.remote.precondition_required');
+    assert.equal(p.calls.some(([name]) => ['readPlan', 'readProfile', 'updatePlan', 'replaceProfile'].includes(name)), false);
+  }
+});
+
+test('application service exposes exactly the six named services', () => {
+  assert.deepEqual(Object.keys(createPlanningApplicationServices(ports())).sort(), ['createPlan', 'listPlans', 'readPlan', 'readProfile', 'replaceProfile', 'updatePlan']);
 });
 
 test('idempotency fingerprint conflict and replay are enforced', async () => {
