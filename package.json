@@ -104,14 +104,11 @@
     "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
     "contracts:referential-integrity:check": "node scripts/contracts/referential-integrity-check.mjs",
     "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check",
-    "mcp:structural-check": "node scripts/mcp/structural-gate.mjs",
-    "mcp:contract-check": "npm run mcp:structural-check && node --test backend/test/mcp-governed-runtime.test.js"
+    "planning:contract-check": "node scripts/planning/contract-check.mjs"
   },
   "dependencies": {
     "jose": "5.9.6",
-    "pg": "8.16.3"
-  },
-  "devDependencies": {
-    "acorn": "^8.15.0"
+    "pg": "8.16.3",
+    "yaml": "2.8.1"
   }
 }

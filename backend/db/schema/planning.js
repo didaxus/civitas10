@@ -16,6 +16,7 @@ const planningPlans = pgTable("planning_plans", {
   id: varchar("id", { length: 180 }).notNull(),
   profileId: varchar("profile_id", { length: 180 }).notNull(),
   name: varchar("name", { length: 255 }).notNull(),
+  planType: varchar("plan_type", { length: 32 }).notNull().default("operational"),
   state: varchar("state", { length: 32 }).notNull().default("draft"),
   currentVersion: integer("current_version").notNull().default(1),
   revision: integer("revision").notNull().default(1),
@@ -29,6 +30,8 @@ const planningVersions = pgTable("planning_versions", {
   content: jsonb("content").notNull(), createdBy: varchar("created_by", { length: 180 }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   approvedBy: varchar("approved_by", { length: 180 }), approvedAt: timestamp("approved_at", { withTimezone: true }),
+  sourceVersion: integer("source_version"), sourceHash: varchar("source_hash", { length: 64 }),
+  sourceActor: varchar("source_actor", { length: 180 }), sourceAt: timestamp("source_at", { withTimezone: true }), sourceReason: varchar("source_reason", { length: 2000 }),
 }, (t) => ({ pk: primaryKey({ columns: [t.organizationId, t.planId, t.version] }), planFk: foreignKey({ columns: [t.organizationId, t.planId], foreignColumns: [planningPlans.organizationId, planningPlans.id] }), historyIdx: index("planning_versions_org_plan_created_idx").on(t.organizationId, t.planId, t.createdAt) }));
 
 const planningAudit = pgTable("planning_audit", {

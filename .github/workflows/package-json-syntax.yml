@@ -17,6 +17,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Reject unresolved merge markers
+        run: node scripts/ci/check-merge-markers.mjs
+
+      - name: Test merge-marker checker
+        run: node --test scripts/ci/check-merge-markers.test.mjs
+
       - name: Parse every package.json as strict JSON
         shell: bash
         run: |

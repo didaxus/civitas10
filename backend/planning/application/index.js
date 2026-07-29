@@ -4,4 +4,5 @@ module.exports = {
   ...require('./ports'),
   ...require('./services'),
   ...require('./reviewWorkflowService'),
+  ...require('./lmsPort'),
 };

@@ -9,25 +9,214 @@
   "serviceIdentityRequired": true,
   "maximumRequestBytes": 32768,
   "maximumResponseBytes": 65536,
-  "requiredHeaders": ["Content-Type", "Accept", "X-Civitas-Contract-Version", "X-Civitas-Execution-Context", "X-Correlation-Id"],
-  "idempotency": { "scope": "organization + authenticated client/principal + operationId + key", "writes": "required", "reads": "forbidden", "conflictStatus": 409 },
-  "concurrency": { "mutations": "If-Match", "staleStatus": 412, "lastWriteWins": false },
-  "operations": {
-    "planning.plans.create": { "method": "POST", "path": "/private/planning-runtime/v1/plans", "useCase": "createPlan", "idempotency": "required", "concurrency": "none", "resultSchema": "#/components/schemas/Plan" },
-    "planning.plans.list": { "method": "POST", "path": "/private/planning-runtime/v1/plans:list", "useCase": "listPlans", "idempotency": "forbidden", "pagination": "cursor", "resultSchema": "#/components/schemas/PlanPage" },
-    "planning.plans.get": { "method": "POST", "path": "/private/planning-runtime/v1/plans:get", "useCase": "getPlan", "idempotency": "forbidden", "resultSchema": "#/components/schemas/Plan" },
-    "planning.plans.update": { "method": "POST", "path": "/private/planning-runtime/v1/plans:update", "useCase": "updatePlan", "idempotency": "required", "concurrency": "If-Match", "resultSchema": "#/components/schemas/Plan" },
-    "planning.profile.get": { "method": "POST", "path": "/private/planning-runtime/v1/profile:get", "useCase": "getProfile", "idempotency": "forbidden", "resultSchema": "#/components/schemas/Profile" },
-    "planning.profile.replace": { "method": "POST", "path": "/private/planning-runtime/v1/profile:replace", "useCase": "replaceProfile", "idempotency": "required", "concurrency": "If-Match", "resultSchema": "#/components/schemas/Profile" }
+  "requiredHeaders": [
+    "Content-Type",
+    "Accept",
+    "X-Civitas-Contract-Version",
+    "X-Civitas-Execution-Context",
+    "X-Correlation-Id"
+  ],
+  "idempotency": {
+    "scope": "organization + authenticated client/principal + operationId + key",
+    "writes": "required",
+    "reads": "forbidden",
+    "conflictStatus": 409
   },
-  "plannedNotMounted": ["planning.plans.archive", "planning.sources.*", "planning.graph.*", "planning.ai.*"],
-  "problems": ["validation", "not_found", "conflict", "precondition_failed", "authorization_context", "contract_mismatch", "tenant_mismatch", "idempotency_conflict", "unavailable", "timeout"],
-  "events": ["planning.plan.created.v1", "planning.profile.updated.v1"],
+  "concurrency": {
+    "mutations": "If-Match",
+    "staleStatus": 412,
+    "lastWriteWins": false
+  },
+  "operations": {
+    "planning.plans.create": {
+      "method": "POST",
+      "path": "/private/planning-runtime/v1/plans",
+      "useCase": "createPlan",
+      "idempotency": "required",
+      "concurrency": "none",
+      "resultSchema": "#/components/schemas/Plan"
+    },
+    "planning.plans.list": {
+      "method": "POST",
+      "path": "/private/planning-runtime/v1/plans:list",
+      "useCase": "listPlans",
+      "idempotency": "forbidden",
+      "pagination": "cursor",
+      "resultSchema": "#/components/schemas/PlanPage"
+    },
+    "planning.plans.update": {
+      "method": "POST",
+      "path": "/private/planning-runtime/v1/plans:update",
+      "useCase": "updatePlan",
+      "idempotency": "required",
+      "concurrency": "If-Match",
+      "resultSchema": "#/components/schemas/Plan"
+    },
+    "planning.profile.replace": {
+      "method": "POST",
+      "path": "/private/planning-runtime/v1/profile:replace",
+      "useCase": "replaceProfile",
+      "idempotency": "required",
+      "concurrency": "If-Match",
+      "resultSchema": "#/components/schemas/Profile"
+    },
+    "planning.plans.read": {
+      "method": "POST",
+      "path": "/private/planning-runtime/v1/plans:read",
+      "useCase": "readPlan",
+      "idempotency": "forbidden",
+      "resultSchema": "#/components/schemas/Plan"
+    },
+    "planning.profile.read": {
+      "method": "POST",
+      "path": "/private/planning-runtime/v1/profile:read",
+      "useCase": "readProfile",
+      "idempotency": "forbidden",
+      "resultSchema": "#/components/schemas/Profile"
+    }
+  },
+  "plannedNotMounted": [
+    "planning.plans.archive",
+    "planning.sources.*",
+    "planning.graph.*",
+    "planning.ai.*"
+  ],
+  "problems": [
+    "validation",
+    "not_found",
+    "conflict",
+    "precondition_failed",
+    "authorization_context",
+    "contract_mismatch",
+    "tenant_mismatch",
+    "idempotency_conflict",
+    "unavailable",
+    "timeout"
+  ],
+  "events": [
+    "planning.plan.created.v1",
+    "planning.profile.updated.v1"
+  ],
   "components": {
     "schemas": {
-      "Plan": { "required": ["planId", "organizationId", "title", "status", "version", "updatedAt"], "properties": { "planId": {"type":"string"}, "organizationId": {"type":"string"}, "title": {"type":"string", "maxLength": 160}, "description": {"type":["string","null"], "maxLength": 4000}, "status": {"enum":["draft","approved","archived"]}, "version": {"type":"string"}, "updatedAt": {"type":"string", "format":"date-time"} } },
-      "PlanPage": { "required": ["items", "page"], "properties": { "items": {"type":"array", "items":{"$ref":"#/components/schemas/Plan"}}, "page": {"required":["nextCursor","hasMore","limit"], "properties": {"nextCursor":{"type":["string","null"]}, "hasMore":{"type":"boolean"}, "limit":{"type":"integer","minimum":1,"maximum":100}}} } },
-      "Profile": { "required": ["organizationId", "planningMode", "preferences", "version", "updatedAt"], "properties": { "organizationId": {"type":"string"}, "planningMode": {"enum":["standard","curriculum","strategic"]}, "preferences": {"type":"object", "additionalProperties": false, "properties": {"fiscalYearStart":{"type":"string","pattern":"^[0-9]{2}-[0-9]{2}$"}}}, "version": {"type":"string"}, "updatedAt": {"type":"string", "format":"date-time"} } }
+      "Plan": {
+        "required": [
+          "planId",
+          "organizationId",
+          "title",
+          "status",
+          "version",
+          "updatedAt"
+        ],
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 4000
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "approved",
+              "archived"
+            ]
+          },
+          "version": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PlanPage": {
+        "required": [
+          "items",
+          "page"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Plan"
+            }
+          },
+          "page": {
+            "required": [
+              "nextCursor",
+              "hasMore",
+              "limit"
+            ],
+            "properties": {
+              "nextCursor": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "hasMore": {
+                "type": "boolean"
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              }
+            }
+          }
+        }
+      },
+      "Profile": {
+        "required": [
+          "organizationId",
+          "planningMode",
+          "preferences",
+          "version",
+          "updatedAt"
+        ],
+        "properties": {
+          "organizationId": {
+            "type": "string"
+          },
+          "planningMode": {
+            "enum": [
+              "standard",
+              "curriculum",
+              "strategic"
+            ]
+          },
+          "preferences": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "fiscalYearStart": {
+                "type": "string",
+                "pattern": "^[0-9]{2}-[0-9]{2}$"
+              }
+            }
+          },
+          "version": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
     }
   }
 }

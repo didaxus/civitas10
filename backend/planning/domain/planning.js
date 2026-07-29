@@ -2,22 +2,9 @@
 
 const { randomUUID } = require("node:crypto");
 const { ERROR_CODES, PlanningDomainError } = require("./errors");
+const { PLANNING_STATES, TRANSITIONS, isPlanningState, canTransition } = require("./stateMachine");
 
-const PLANNING_STATES = Object.freeze({
-  DRAFT: "draft",
-  IN_REVIEW: "in_review",
-  APPROVED: "approved",
-  REJECTED: "rejected",
-  ARCHIVED: "archived",
-});
-
-const TRANSITIONS = Object.freeze({
-  [PLANNING_STATES.DRAFT]: [PLANNING_STATES.IN_REVIEW, PLANNING_STATES.ARCHIVED],
-  [PLANNING_STATES.IN_REVIEW]: [PLANNING_STATES.APPROVED, PLANNING_STATES.REJECTED],
-  [PLANNING_STATES.REJECTED]: [PLANNING_STATES.DRAFT, PLANNING_STATES.ARCHIVED],
-  [PLANNING_STATES.APPROVED]: [PLANNING_STATES.ARCHIVED],
-  [PLANNING_STATES.ARCHIVED]: [],
-});
+const PLAN_TYPES = Object.freeze(["strategic", "tactical", "operational", "project", "curriculum"]);
 
 function required(value, name) {
   if (typeof value !== "string" || !value.trim()) {
@@ -36,6 +23,7 @@ class Planning {
     this.id = required(snapshot.id, "id");
     this.profileId = required(snapshot.profileId, "profileId");
     this.name = required(snapshot.name, "name");
+    this.planType = required(snapshot.planType, "planType");
     this.state = snapshot.state;
     this.currentVersion = snapshot.currentVersion;
     this.revision = snapshot.revision;
@@ -46,13 +34,13 @@ class Planning {
     this.#assertInvariant();
   }
 
-  static create({ organizationId, id = randomUUID(), profileId, name, content, actorId, now = new Date() }) {
+  static create({ organizationId, id = randomUUID(), profileId, name, planType = "operational", content, actorId, now = new Date() }) {
     required(actorId, "actorId");
     if (content == null || typeof content !== "object" || Array.isArray(content)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content must be an object");
     }
     const aggregate = new Planning({
-      organizationId, id, profileId, name, state: PLANNING_STATES.DRAFT,
+      organizationId, id, profileId, name, planType, state: PLANNING_STATES.DRAFT,
       currentVersion: 1, revision: 1,
       versions: [{ version: 1, state: PLANNING_STATES.DRAFT, content: clone(content), createdBy: actorId, createdAt: now }],
       createdAt: now, updatedAt: now,
@@ -68,13 +56,13 @@ class Planning {
     if (this.state === PLANNING_STATES.APPROVED) {
       throw new PlanningDomainError(ERROR_CODES.APPROVED_VERSION_IMMUTABLE, "Approved versions cannot be modified");
     }
-    if (![PLANNING_STATES.DRAFT, PLANNING_STATES.REJECTED].includes(this.state)) {
+    if (![PLANNING_STATES.DRAFT, PLANNING_STATES.CHANGES_REQUESTED].includes(this.state)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_TRANSITION, `Cannot revise a plan in ${this.state}`);
     }
     if (content == null || typeof content !== "object" || Array.isArray(content)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content must be an object");
     }
-    if (this.state === PLANNING_STATES.REJECTED) this.#transition(PLANNING_STATES.DRAFT, actorId, now);
+    if (this.state === PLANNING_STATES.CHANGES_REQUESTED) this.#transition(PLANNING_STATES.DRAFT, actorId, now);
     this.currentVersion += 1;
     this.revision += 1;
     this.updatedAt = now;
@@ -90,12 +78,25 @@ class Planning {
     return this;
   }
 
+  draftFromApproved({ content, sourceHash, actorId, reason, now = new Date() }) {
+    required(actorId, "actorId"); required(sourceHash, "sourceHash"); required(reason, "reason");
+    if (!/^[a-f0-9]{64}$/.test(sourceHash)) throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "sourceHash must be a SHA-256 digest");
+    if (this.state !== PLANNING_STATES.APPROVED) throw new PlanningDomainError(ERROR_CODES.INVALID_TRANSITION, "Only an approved plan can source a draft");
+    const sourceVersion = this.currentVersion;
+    const source = this.versions.find((item) => item.version === sourceVersion);
+    this.#transition(PLANNING_STATES.DRAFT, actorId, now, reason);
+    this.currentVersion += 1; this.revision += 1; this.updatedAt = now;
+    this.versions.push({ version:this.currentVersion, state:PLANNING_STATES.DRAFT, content:clone(content ?? source.content), createdBy:actorId, createdAt:now, sourceVersion, sourceHash, sourceActor:actorId, sourceAt:now, sourceReason:reason });
+    this.#record("planning.plan.draft_started_from_approved", actorId, { version:this.currentVersion, sourceVersion, sourceHash, reason });
+    this.#assertInvariant(); return this;
+  }
+
   #transition(toState, actorId, now, reason = null) {
-    if (!(TRANSITIONS[this.state] || []).includes(toState)) {
+    if (!canTransition(this.state, toState)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_TRANSITION, `Transition ${this.state} -> ${toState} is not allowed`, { from: this.state, to: toState });
     }
-    if (toState === PLANNING_STATES.REJECTED && !String(reason || "").trim()) {
-      throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "A rejection reason is required");
+    if (toState === PLANNING_STATES.CHANGES_REQUESTED && !String(reason || "").trim()) {
+      throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "A changes-requested reason is required");
     }
     const from = this.state;
     this.state = toState;
@@ -118,13 +119,13 @@ class Planning {
   pullEvents() { const events = this._events; this._events = []; return clone(events); }
 
   toSnapshot() {
-    return clone({ organizationId: this.organizationId, id: this.id, profileId: this.profileId, name: this.name,
+    return clone({ organizationId: this.organizationId, id: this.id, profileId: this.profileId, name: this.name, planType:this.planType,
       state: this.state, currentVersion: this.currentVersion, revision: this.revision,
       versions: this.versions, createdAt: this.createdAt, updatedAt: this.updatedAt });
   }
 
   #assertInvariant() {
-    if (!Object.values(PLANNING_STATES).includes(this.state) || !Number.isInteger(this.currentVersion) || this.currentVersion < 1 ||
+    if (!isPlanningState(this.state) || !PLAN_TYPES.includes(this.planType) || !Number.isInteger(this.currentVersion) || this.currentVersion < 1 ||
         !Number.isInteger(this.revision) || this.revision < 1 || this.versions.length < 1 ||
         !this.versions.some((item) => item.version === this.currentVersion)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "Invalid planning aggregate snapshot");
@@ -137,4 +138,4 @@ class Planning {
   }
 }
 
-module.exports = { Planning, PLANNING_STATES, TRANSITIONS };
+module.exports = { Planning, PLANNING_STATES, TRANSITIONS, PLAN_TYPES };
