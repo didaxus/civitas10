@@ -2,15 +2,20 @@
 
 const crypto = require("node:crypto");
 const { permissionsByName, rolePermissionAssignments } = require("../../core/authz");
-const { createInMemoryEntitlementRepository } = require("../authorization/entitlements/entitlementRepository");
 const { createEntitlementService } = require("../authorization/entitlements/entitlementService");
 const { evaluateOrganizationEntitlement } = require("../authorization/entitlements/entitlementEvaluator");
 const { createAuthorizationFreshnessService } = require("../authorization/runtime/authorizationFreshnessService");
+const { createInMemoryRoleLabelRepository, createRoleLabelResolver, createRoleLabelService } = require("../domain/role-labels");
 
 const entitlementRepository = createInMemoryEntitlementRepository();
 const runtimeAuditEvents = [];
 const runtimeOutboxEvents = [];
 const runtimeCacheInvalidations = [];
+const roleLabelRepository = createInMemoryRoleLabelRepository();
+const canonicalRolesById = new Map();
+const canonicalRoleCatalog = { async getById({ canonicalRoleId }) { return canonicalRolesById.get(canonicalRoleId) || null; } };
+const roleLabelResolver = createRoleLabelResolver({ repository: roleLabelRepository, canonicalRoleCatalog });
+const roleLabelService = createRoleLabelService({ repository: roleLabelRepository, resolver: roleLabelResolver, canonicalRoleCatalog });
 
 const runtimeConsistencyPort = {
   async incrementPolicyVersion({ organizationId }) { return entitlementRepository.incrementPolicyVersion(organizationId); },
@@ -32,22 +37,29 @@ function canonicalRoleKey(name = "") {
   return `organization_${raw.replace(/-org$/i, "").replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "").toLowerCase()}`;
 }
 function displayName(name = "") { return String(name || "").replace(/-org$/i, "").replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()); }
+function registerCanonicalRoles(roles = []) {
+  for (const role of roles) { const id = roleId(role); if (id) canonicalRolesById.set(id, { canonicalRoleId: id, canonicalKey: canonicalRoleKey(roleName(role)), defaultName: displayName(roleName(role)) }); }
+}
 function safeMemberDisplay(user = {}) { return user.id || user.userId || user.logtoUserId ? hashSubject(user.id || user.userId || user.logtoUserId) : "member_unknown"; }
 function activeOrganizationPermissions() { return Object.values(permissionsByName).filter((permission) => permission?.surface === "organization" && permission.status === "active" && !permission.name.startsWith("owner.")).map((permission) => permission.name).sort(); }
 
 async function listRoleView({ roles = [], members = [], memberRolesByUserId = new Map(), organizationId }) {
+  registerCanonicalRoles(roles);
   const limits = await entitlementRepository.listLimits({ organizationId });
   const byRole = new Map();
   for (const role of roles) {
     const id = roleId(role);
     if (!id) continue;
-    const canonicalKey = canonicalRoleKey(roleName(role));
+    const label = await roleLabelResolver.resolve({ organizationId, canonicalRoleId: id });
+    const canonicalKey = label.canonicalKey;
     if (!canonicalKey.startsWith("organization_")) continue;
     const potentialPermissions = rolePermissionAssignments[canonicalKey] || [];
     byRole.set(id, {
       id,
       canonicalKey,
-      displayName: displayName(roleName(role)),
+      displayName: label.effectiveAlias,
+      defaultName: label.defaultName,
+      labelProvenance: label.provenance,
       assignedMemberCount: 0,
       potentialPermissions,
       ceilingCoverage: potentialPermissions.length ? limits.filter((limit) => limit.logtoRoleId === id && limit.allowed === true).length / potentialPermissions.length : 0,
@@ -64,6 +76,7 @@ async function listRoleView({ roles = [], members = [], memberRolesByUserId = ne
 }
 
 async function buildPermissionRows({ organizationId, roles = [] }) {
+  registerCanonicalRoles(roles);
   const permissions = activeOrganizationPermissions();
   const policyVersion = await entitlementRepository.getPolicyVersion(organizationId);
   const rows = [];
@@ -92,18 +105,22 @@ async function buildPermissionRows({ organizationId, roles = [] }) {
   return rows;
 }
 
-async function buildMemberView({ members = [], memberRolesByUserId = new Map() }) {
-  return members.map((user) => {
+async function buildMemberView({ organizationId, members = [], memberRolesByUserId = new Map() }) {
+  const output = [];
+  for (const user of members) {
     const userId = user.id || user.userId || user.logtoUserId;
-    return {
+    const memberRoles = memberRolesByUserId.get(userId) || [];
+    registerCanonicalRoles(memberRoles);
+    output.push({
       id: userId,
       display: safeMemberDisplay(user),
       roleIds: (memberRolesByUserId.get(userId) || []).map(roleId).filter(Boolean),
-      roleAliases: (memberRolesByUserId.get(userId) || []).map((role) => displayName(roleName(role))).filter(Boolean),
+      roleAliases: (await Promise.all(memberRoles.map((role) => roleLabelResolver.resolve({ organizationId, canonicalRoleId: roleId(role) })))).map((label) => label.effectiveAlias),
       dataScopeSummary: "not_configured",
       allowedAssignmentActions: [],
-    };
-  });
+    });
+  }
+  return output;
 }
 
 async function buildRolesGovernanceSlice({ organizationId, roles = [], members = [], memberRolesByUserId = new Map() }) {
@@ -111,10 +128,10 @@ async function buildRolesGovernanceSlice({ organizationId, roles = [], members =
     contractVersion: "2026-07-civitas10-governance-roles-v1",
     policyVersion: await entitlementRepository.getPolicyVersion(organizationId),
     roles: await listRoleView({ roles, members, memberRolesByUserId, organizationId }),
-    members: await buildMemberView({ members, memberRolesByUserId }),
+    members: await buildMemberView({ organizationId, members, memberRolesByUserId }),
     permissionMatrix: await buildPermissionRows({ organizationId, roles }),
-    auditEvents: runtimeAuditEvents.filter((event) => event.organizationId === organizationId).slice(-25),
-    outboxEvents: runtimeOutboxEvents.filter((event) => event.organizationId === organizationId).slice(-25),
+    auditEvents: await auditPort.list({ organizationId, limit: 25 }),
+    outboxEvents: await outboxPort.list({ organizationId, limit: 25 }),
   };
 }
 
@@ -125,5 +142,7 @@ async function updateTenantActivations({ organizationId, actorLogtoUserId, chang
   return createEntitlementService({ repository: entitlementRepository, runtimeConsistencyPort, authorizationFreshnessService, roleIdToName }).upsertTenantActivations({ organizationId, actorLogtoUserId, changes, expectedPolicyVersion, reason, decisionId });
 }
 function roleMapFromRoles(roles = []) { return Object.fromEntries(roles.map((role) => [roleId(role), canonicalRoleKey(roleName(role))]).filter(([id]) => id)); }
+async function updateRoleAlias(input) { return roleLabelService.update(input); }
+async function resetRoleAlias(input) { return roleLabelService.reset(input); }
 
-module.exports = { entitlementRepository, runtimeAuditEvents, runtimeOutboxEvents, runtimeCacheInvalidations, authorizationFreshnessService, buildRolesGovernanceSlice, updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, canonicalRoleKey };
+module.exports = { entitlementRepository, runtimeAuditEvents, runtimeOutboxEvents, runtimeCacheInvalidations, authorizationFreshnessService, roleLabelRepository, roleLabelResolver, buildRolesGovernanceSlice, updateOwnerCeilings, updateTenantActivations, updateRoleAlias, resetRoleAlias, registerCanonicalRoles, roleMapFromRoles, canonicalRoleKey };

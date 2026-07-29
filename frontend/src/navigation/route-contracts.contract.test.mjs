@@ -58,8 +58,8 @@ test("settings and profile are not published when inactive", () => {
 
 test("tenant topology is declared and organization-scoped", () => {
   assert.match(routes, /export const tenantNavigationTree/);
-  assert.match(routes, /tenantGovernanceRoute = defineRoute\("\/o\/:organizationId\/settings\/governance"\)/);
-  assert.match(routes, /tenantLmsGradesRoute = defineRoute\("\/o\/:organizationId\/lms\/grades"\)/);
+  assert.match(routes, /tenantGovernanceRoute = defineRoute\("\/settings\/governance"\)/);
+  assert.match(routes, /tenantLmsGradesRoute = defineRoute\("\/lms\/grades"\)/);
   assert.match(orgLayout, /materializeNavigationTree\(tenantNavigationTree, \{ organizationId \}\)/);
 });
 
