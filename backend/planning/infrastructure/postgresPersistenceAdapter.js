@@ -1,7 +1,7 @@
 "use strict";
 
 const { randomUUID, createHash } = require("node:crypto");
-const { Planning } = require("../domain/planning");
+const { Planning, PLANNING_STATES } = require("../domain/planning");
 const { ERROR_CODES, PlanningDomainError } = require("../domain/errors");
 
 function digest(value) { return createHash("sha256").update(JSON.stringify(value)).digest("hex"); }
@@ -34,25 +34,30 @@ function createPostgresPlanningPersistence({ pool }) {
       },
       async save(aggregate, { expectedRevision = aggregate.revision - 1 } = {}) {
         const snapshot = aggregate.toSnapshot();
-        const update = await db.query(`update planning_plans set profile_id=$3,name=$4,state=$5,current_version=$6,revision=$7,updated_at=$8
-          where organization_id=$1 and id=$2 and revision=$9`, [snapshot.organizationId, snapshot.id, snapshot.profileId, snapshot.name, snapshot.state, snapshot.currentVersion, snapshot.revision, snapshot.updatedAt, expectedRevision]);
+        const update = await db.query(`update planning_plans set profile_id=$3,name=$4,plan_type=$5,state=$6,current_version=$7,revision=$8,updated_at=$9
+          where organization_id=$1 and id=$2 and revision=$10`, [snapshot.organizationId, snapshot.id, snapshot.profileId, snapshot.name, snapshot.planType, snapshot.state, snapshot.currentVersion, snapshot.revision, snapshot.updatedAt, expectedRevision]);
         if (!update.rowCount) {
-          const insert = expectedRevision === 0 && await db.query(`insert into planning_plans(organization_id,id,profile_id,name,state,current_version,revision,created_at,updated_at)
-            values($1,$2,$3,$4,$5,$6,$7,$8,$9) on conflict do nothing`, [snapshot.organizationId, snapshot.id, snapshot.profileId, snapshot.name, snapshot.state, snapshot.currentVersion, snapshot.revision, snapshot.createdAt, snapshot.updatedAt]);
+          const insert = expectedRevision === 0 && await db.query(`insert into planning_plans(organization_id,id,profile_id,name,plan_type,state,current_version,revision,created_at,updated_at)
+            values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) on conflict do nothing`, [snapshot.organizationId, snapshot.id, snapshot.profileId, snapshot.name, snapshot.planType, snapshot.state, snapshot.currentVersion, snapshot.revision, snapshot.createdAt, snapshot.updatedAt]);
           if (!insert?.rowCount) throw new PlanningDomainError(ERROR_CODES.VERSION_CONFLICT, "Planning aggregate was concurrently modified");
         }
         for (const version of snapshot.versions) {
-          await db.query(`insert into planning_versions(organization_id,plan_id,version,state,content,created_by,created_at,approved_by,approved_at)
-            values($1,$2,$3,$4,$5,$6,$7,$8,$9) on conflict (organization_id,plan_id,version) do update
-            set state=excluded.state,approved_by=excluded.approved_by,approved_at=excluded.approved_at
-            where planning_versions.state <> 'approved'`, [snapshot.organizationId, snapshot.id, version.version, version.state, version.content, version.createdBy, version.createdAt, version.approvedBy || null, version.approvedAt || null]);
+          const existing = await db.query("select state,content,approved_by,approved_at from planning_versions where organization_id=$1 and plan_id=$2 and version=$3", [snapshot.organizationId, snapshot.id, version.version]);
+          if (existing.rows[0]?.state === PLANNING_STATES.APPROVED) {
+            const row=existing.rows[0];
+            if (version.state !== PLANNING_STATES.APPROVED || JSON.stringify(row.content) !== JSON.stringify(version.content) || row.approved_by !== version.approvedBy || new Date(row.approved_at).getTime() !== new Date(version.approvedAt).getTime()) throw new PlanningDomainError(ERROR_CODES.APPROVED_VERSION_IMMUTABLE, "Approved versions cannot be modified");
+            continue;
+          }
+          await db.query(`insert into planning_versions(organization_id,plan_id,version,state,content,created_by,created_at,approved_by,approved_at,source_version,source_hash,source_actor,source_at,source_reason)
+            values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) on conflict (organization_id,plan_id,version) do update
+            set state=excluded.state,approved_by=excluded.approved_by,approved_at=excluded.approved_at`, [snapshot.organizationId, snapshot.id, version.version, version.state, version.content, version.createdBy, version.createdAt, version.approvedBy || null, version.approvedAt || null, version.sourceVersion || null, version.sourceHash || null, version.sourceActor || null, version.sourceAt || null, version.sourceReason || null]);
         }
         return aggregate;
       },
       async createPlan(input) {
         const profileId = input.profileId || "default";
         await db.query("insert into planning_profiles(organization_id,id) values($1,$2) on conflict do nothing", [input.organizationId, profileId]);
-        const aggregate = Planning.create({ organizationId: input.organizationId, id: input.planId || input.id, profileId, name: input.name || input.title, content: input.content || input.payload || {}, actorId: input.actorId || "system" });
+        const aggregate = Planning.create({ organizationId: input.organizationId, id: input.planId || input.id, profileId, name: input.name || input.title, planType:input.planType || "operational", content: input.content || input.payload || {}, actorId: input.actorId || "system" });
         await persistencePort.save(aggregate, { expectedRevision: 0 });
         return dto(aggregate);
       },
@@ -100,7 +105,7 @@ function createPostgresPlanningPersistence({ pool }) {
   return { ...root.persistencePort, ...root, transaction, executeAtomically: transaction };
 }
 
-function mapAggregate(plan, versions) { return { organizationId: plan.organization_id, id: plan.id, profileId: plan.profile_id, name: plan.name, state: plan.state, currentVersion: plan.current_version, revision: plan.revision, createdAt: plan.created_at, updatedAt: plan.updated_at, versions: versions.map((v) => ({ version: v.version, state: v.state, content: v.content, createdBy: v.created_by, createdAt: v.created_at, approvedBy: v.approved_by, approvedAt: v.approved_at })) }; }
+function mapAggregate(plan, versions) { return { organizationId: plan.organization_id, id: plan.id, profileId: plan.profile_id, name: plan.name, planType:plan.plan_type, state: plan.state, currentVersion: plan.current_version, revision: plan.revision, createdAt: plan.created_at, updatedAt: plan.updated_at, versions: versions.map((v) => ({ version: v.version, state: v.state, content: v.content, createdBy: v.created_by, createdAt: v.created_at, approvedBy: v.approved_by, approvedAt: v.approved_at, sourceVersion:v.source_version, sourceHash:v.source_hash, sourceActor:v.source_actor, sourceAt:v.source_at, sourceReason:v.source_reason })) }; }
 function dto(aggregate) { const s = aggregate.toSnapshot(); const current = s.versions.find((v) => v.version === s.currentVersion); return { organizationId: s.organizationId, planId: s.id, profileId: s.profileId, name: s.name, status: s.state, content: current.content, version: s.revision, planVersion: s.currentVersion, updatedAt: s.updatedAt }; }
 function profileDto(row) { return { organizationId: row.organization_id, profileId: row.id, configuration: row.configuration, version: row.version, updatedAt: row.updated_at }; }
 
