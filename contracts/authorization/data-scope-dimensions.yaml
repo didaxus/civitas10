@@ -1,5 +1,7 @@
 {
   "$schema": "./schemas/data-scope-dimensions.schema.json",
+  "contract": "civitas.authorization.data-scope-dimensions",
+  "version": "2026-07-civitas-data-scope-dimensions-v2",
   "schemaVersion": "civitas-data-scope-dimensions-schema/v1",
   "contractVersion": "civitas-data-scope-dimensions/v2",
   "status": "planned",

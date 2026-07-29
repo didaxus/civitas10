@@ -10,8 +10,6 @@ function createConcurrencyPort(port) { return assertPort('PlanningConcurrencyPor
 function createAuditPort(port) { return assertPort('PlanningAuditPort', port, ['record']); }
 function createOutboxPort(port) { return assertPort('PlanningOutboxPort', port, ['enqueue']); }
 function createUnitOfWorkPort(port) { return assertPort('PlanningUnitOfWorkPort', port, ['transaction']); }
-<<<<<<< ours
-
 const REQUIRED_PLANNING_PORTS = Object.freeze({
   authorizationContextPort: createAuthorizationContextPort,
   persistencePort: createPlanningPersistencePort,
@@ -29,9 +27,6 @@ function createPlanningApplicationPorts(ports) {
   ));
 }
 
-module.exports = { createPlanningPersistencePort, createAuthorizationContextPort, createIdempotencyLedgerPort, createConcurrencyPort, createAuditPort, createOutboxPort, createUnitOfWorkPort, createPlanningApplicationPorts, REQUIRED_PLANNING_PORTS };
-=======
 function createReviewRepositoryPort(port) { return assertPort('PlanningReviewRepositoryPort', port, ['loadEvents', 'append']); }
 function createReviewAuthorizationPolicyPort(port) { return assertPort('PlanningReviewAuthorizationPolicyPort', port, ['authorize']); }
-module.exports = { createPlanningPersistencePort, createAuthorizationContextPort, createIdempotencyLedgerPort, createConcurrencyPort, createAuditPort, createOutboxPort, createUnitOfWorkPort, createReviewRepositoryPort, createReviewAuthorizationPolicyPort };
->>>>>>> theirs
+module.exports = { createPlanningPersistencePort, createAuthorizationContextPort, createIdempotencyLedgerPort, createConcurrencyPort, createAuditPort, createOutboxPort, createUnitOfWorkPort, createPlanningApplicationPorts, REQUIRED_PLANNING_PORTS, createReviewRepositoryPort, createReviewAuthorizationPolicyPort };

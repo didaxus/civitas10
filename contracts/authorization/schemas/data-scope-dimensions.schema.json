@@ -4,6 +4,8 @@
   "type": "object",
   "required": [
     "$schema",
+    "contract",
+    "version",
     "schemaVersion",
     "contractVersion",
     "status",
@@ -15,6 +17,12 @@
   "properties": {
     "$schema": {
       "type": "string"
+    },
+    "contract": {
+      "const": "civitas.authorization.data-scope-dimensions"
+    },
+    "version": {
+      "const": "2026-07-civitas-data-scope-dimensions-v2"
     },
     "schemaVersion": {
       "type": "string"

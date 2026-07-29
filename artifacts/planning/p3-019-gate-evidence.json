@@ -228,7 +228,7 @@
         "backend/services/moduleAvailabilityResolver.js",
         "backend/services/moduleControlPlane.js"
       ],
-      "hash": "7a7f393e221bb4d48a1ff6c71bc5743eee5a7f7d1ebe14b98d495e9ee9c8a7cb"
+      "hash": "54732374a7362499683da2de73d3ef8035a717332a31662e5ea73a38cc83a8c1"
     },
     "frontend_routes_actions_screens": {
       "algorithm": "sha256",
@@ -242,7 +242,7 @@
         "frontend/src/features/planning/planningApi.ts",
         "frontend/src/features/planning/planningRemoteUiContribution.ts"
       ],
-      "hash": "493cfecb29f1fc9bbb11d400d38df2d9cdd88c9da40dd6325ebc9a6b97d2587e"
+      "hash": "5c9e045233b4504343f9ca64842ac15bc39269290ab2043afe456d85105afda3"
     },
     "planning_events": {
       "algorithm": "sha256",
@@ -253,7 +253,7 @@
         "contracts/events/planning/schemas/planning-plan-created-v1.schema.json",
         "contracts/events/planning/schemas/planning-profile-updated-v1.schema.json"
       ],
-      "hash": "33175899669f50edb246d1fe8cc00e71db350ca37b0e36e33eabbd7833473f13"
+      "hash": "6b9f17629366ccd91d868835732992c3250aa6bc260f2923c4dd39ce25db5a5f"
     }
   },
   "activationEntries": [

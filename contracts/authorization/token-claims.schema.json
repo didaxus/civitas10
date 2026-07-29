@@ -42,7 +42,8 @@
       "type": "integer"
     },
     "organization_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "https://civitas.didaxus.com/claims/organization_membership_id": {
       "type": "string",
