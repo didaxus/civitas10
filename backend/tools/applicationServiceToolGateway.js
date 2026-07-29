@@ -4,6 +4,7 @@ const TOOL_PROBLEMS = Object.freeze({
   DISABLED: 'tool_disabled', INVALID: 'invalid_tool_input', CONSENT: 'consent_required',
   REPLAY: 'idempotency_conflict', PRECONDITION: 'precondition_failed', DELEGATION: 'delegation_ceiling_exceeded',
   TENANT: 'tenant_mismatch', APPROVAL: 'maker_checker_required', SELF_APPROVAL: 'self_approval_denied', TIMEOUT: 'tool_timeout',
+  CONFIRMATION_POLICY: 'confirmation_policy_mismatch',
 });
 
 class ToolExecutionError extends Error {
@@ -16,6 +17,10 @@ function stableJson(value) {
   return JSON.stringify(value);
 }
 function fingerprint(value) { return crypto.createHash('sha256').update(stableJson(value)).digest('hex'); }
+function normalizedDiff(before = {}, after = {}) {
+  const keys = [...new Set([...Object.keys(before || {}), ...Object.keys(after || {})])].sort();
+  return Object.freeze(keys.filter((key) => stableJson(before?.[key]) !== stableJson(after?.[key])).map((key) => Object.freeze({ path: `/${key}`, before: before?.[key] ?? null, after: after?.[key] ?? null })));
+}
 function required(value, name) { if (typeof value !== 'string' || !value.trim()) throw new ToolExecutionError(TOOL_PROBLEMS.INVALID, { field: name }); return value.trim(); }
 function withTimeout(promise, timeoutMs) {
   let timer;
@@ -51,10 +56,12 @@ function createApplicationServiceToolGateway({ tools, applicationServices, killS
       if (existing.status === 'running') throw new ToolExecutionError(TOOL_PROBLEMS.REPLAY, { reason: 'in_progress' });
     }
 
-    const consent = await consentVerifier.verify({ proof: request.consentProof, actorId, tenantId, toolId, fingerprint: requestFingerprint });
+    const confirmationPolicyVersion = required(definition.confirmationPolicyVersion, 'confirmationPolicyVersion');
+    if (request.confirmationPolicyVersion !== confirmationPolicyVersion) throw new ToolExecutionError(TOOL_PROBLEMS.CONFIRMATION_POLICY);
+    const consent = await consentVerifier.verify({ proof: request.consentProof, actorId, tenantId, toolId, toolVersion: definition.version, confirmationPolicyVersion, fingerprint: requestFingerprint, nonce: request.confirmationNonce });
     if (!consent?.verified) throw new ToolExecutionError(TOOL_PROBLEMS.CONSENT);
     const decision = await authorization.authorize({ actorId, delegatorId: trustedContext.delegatorId || null, tenantId, toolId, permission: definition.permission, delegationCeiling: trustedContext.delegationCeiling });
-    if (!decision?.allowed) throw new ToolExecutionError(decision?.reason === 'delegation_ceiling' ? TOOL_PROBLEMS.DELEGATION : TOOL_PROBLEMS.INVALID);
+    if (!trustedContext.delegationCeiling?.includes(definition.permission) || !decision?.allowed) throw new ToolExecutionError(decision?.reason === 'delegation_ceiling' || !trustedContext.delegationCeiling?.includes(definition.permission) ? TOOL_PROBLEMS.DELEGATION : TOOL_PROBLEMS.INVALID);
     if (definition.requiresIfMatch && !request.ifMatch) throw new ToolExecutionError(TOOL_PROBLEMS.PRECONDITION);
     if (definition.makerChecker) {
       const approval = await approvals.verify({ approvalId: request.approvalId, tenantId, toolId, fingerprint: requestFingerprint });
@@ -69,7 +76,8 @@ function createApplicationServiceToolGateway({ tools, applicationServices, killS
     try {
       const result = await withTimeout(Promise.resolve().then(() => service(command, Object.freeze({ tenantId, actorId, delegatorId: trustedContext.delegatorId || null, correlationId, decisionId: decision.decisionId, ifMatch: request.ifMatch }))), definition.timeoutMs || 5000);
       await idempotency.succeed({ tenantId, toolId, key, fingerprint: requestFingerprint, result });
-      await audit.record({ decisionId: decision.decisionId, actorId, delegatorId: trustedContext.delegatorId || null, tenantId, toolId, toolVersion: definition.version, correlationId, effect: definition.effect, outcome: 'succeeded', startedAt, completedAt: clock().toISOString() });
+      const diff = definition.diff ? normalizedDiff(definition.diff.before(input), definition.diff.after(input, result)) : [];
+      await audit.record({ decisionId: decision.decisionId, actorId, delegatorId: trustedContext.delegatorId || null, tenantId, toolId, toolVersion: definition.version, confirmationPolicyVersion, correlationId, effect: definition.effect, critical: definition.risk === 'R2', normalizedDiff: diff, outcome: 'succeeded', startedAt, completedAt: clock().toISOString() });
       return result;
     } catch (error) {
       await idempotency.fail({ tenantId, toolId, key, fingerprint: requestFingerprint, code: error.code || 'application_service_failed' });
@@ -80,4 +88,4 @@ function createApplicationServiceToolGateway({ tools, applicationServices, killS
   return Object.freeze({ execute, listTools: () => [...exposed.values()].map(({ validateInput, buildCommand, ...publicDefinition }) => publicDefinition) });
 }
 
-module.exports = { createApplicationServiceToolGateway, ToolExecutionError, TOOL_PROBLEMS, fingerprint };
+module.exports = { createApplicationServiceToolGateway, ToolExecutionError, TOOL_PROBLEMS, fingerprint, normalizedDiff };

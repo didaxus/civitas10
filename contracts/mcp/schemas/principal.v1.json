@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.local/mcp/principal.v1.json",
+  "title": "Civitas MCP principal v1",
+  "oneOf": [
+    { "$ref": "#/$defs/user" },
+    { "$ref": "#/$defs/agent" },
+    { "$ref": "#/$defs/system" }
+  ],
+  "$defs": {
+    "base": { "type": "object", "required": ["schemaVersion", "type", "subjectId", "authenticatedClientId", "tenantId"], "properties": { "schemaVersion": { "const": "civitas.mcp.principal/v1" }, "type": { "enum": ["user", "agent", "system"] }, "subjectId": { "type": "string", "minLength": 1 }, "authenticatedClientId": { "type": "string", "minLength": 1 }, "tenantId": { "type": "string", "minLength": 1 }, "delegation": { "$ref": "delegation-chain.v1.json" } }, "additionalProperties": false },
+    "user": { "allOf": [{ "$ref": "#/$defs/base" }, { "properties": { "type": { "const": "user" } } }] },
+    "agent": { "allOf": [{ "$ref": "#/$defs/base" }, { "properties": { "type": { "const": "agent" } } }] },
+    "system": { "allOf": [{ "$ref": "#/$defs/base" }, { "properties": { "type": { "const": "system" } } }] }
+  }
+}

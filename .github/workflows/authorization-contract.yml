@@ -56,6 +56,7 @@ jobs:
             'integration:p3-010:redaction-check',
             'integration:p3-010:no-parallel-outbox-check',
             'integration:p3-010:operation-contract-check',
+            'mcp:contract-check',
             'authz:permission-catalog:check',
             'authz:role-model:check',
             'authz:policy-contract-check',
@@ -108,6 +109,9 @@ jobs:
 
       - name: Validate operation resource contract
         run: npm run integration:p3-010:operation-contract-check
+
+      - name: Validate governed MCP boundary
+        run: npm run mcp:contract-check
 
       - name: Validate canonical permission catalog
         run: npm run authz:permission-catalog:check

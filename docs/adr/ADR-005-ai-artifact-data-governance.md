@@ -8,6 +8,10 @@ Propuesto — **BLOCKED para implementar #198** hasta que Arquitectura, Segurida
 
 2026-07-29
 
+## Versión del documento
+
+`ADR-005 v0.2.0` (revisión solicitada; no aprobada). Esta versión es la unidad exacta que deben revisar los owners. Toda modificación de contenido incrementa la versión y deja sin efecto una revisión anterior hasta que la persona revisora confirme expresamente la nueva versión.
+
 ## Relacionado
 
 - #197
@@ -157,11 +161,74 @@ No se atribuye una aprobación a personas que no la hayan emitido. Cada revisor 
 | Seguridad | Security owner | **Pendiente — BLOCKER** | Threat model; `RESTRICTED` fail-closed; secretos/redacción; cifrado y RBAC; proveedor; borrado/hold verificables; abuso y supply chain | Pendiente de revisión humana |
 | Legal/Privacy | Legal/Privacy owner | **Pendiente — BLOCKER** | Bases/finalidades; consentimiento y menores; plazos (incluidos 7 años); derechos; DPA, región/subprocesadores; transferencias; definición y liberación de holds | Pendiente de revisión humana |
 
+### Solicitudes de revisión humana
+
+Se solicita expresamente, sin presumir respuesta, que:
+
+1. el **Architecture owner** revise `ADR-005 v0.2.0`, resuelva `OD-01`, `OD-02` y la integración canónica, y emita `Aprobado`, `Aprobado con condiciones` o `Rechazado`;
+2. el **Security owner** revise `ADR-005 v0.2.0`, el threat model y los controles/proveedor todavía no seleccionados, y emita una de esas decisiones;
+3. el **Legal/Privacy owner** revise `ADR-005 v0.2.0`, determine si se activa una DPIA y valide base, transferencias, plazos, derechos y holds antes de emitir una decisión.
+
+La solicitud no es una aprobación. CI verde, merge, firma de contrato, ausencia de comentarios, autoría o coautoría del ADR y aprobación genérica de un PR **no** satisfacen estas solicitudes.
+
+### Registro de aprobaciones reales
+
+No hay aprobaciones humanas registradas para `ADR-005 v0.2.0` al 2026-07-29. Sólo se añade una fila cuando existe evidencia inequívoca emitida por la persona; no se crean filas placeholder ni se infiere identidad.
+
+| Identidad humana verificable | Rol/owner | Fecha ISO-8601 | Versión revisada | Decisión | Condiciones y estado | Evidencia inmutable |
+|---|---|---|---|---|---|---|
+| _Ninguna_ | — | — | — | — | — | — |
+
+Una aprobación condicionada no cambia el gate: cada condición se registra con owner, deadline y evidencia de cierre; luego la misma disciplina confirma su cierre sobre la versión vigente. Una cuenta de servicio, bot, proveedor, test o firma contractual no puede ocupar `Identidad humana verificable`.
+
 **Decisión registrada al 2026-07-29:** `NO-GO / BLOCKED`. Se acepta este texto únicamente como propuesta de baseline para revisión; **no se autoriza implementar ni activar #198 con datos, proveedores o usuarios reales**. El cambio a `Accepted / GO` requiere las tres decisiones `Aprobado`, cero blocker abierto, enlaces a evidencias, y una última resolución explícita del Architecture owner. Cualquier aprobación condicionada mantiene `BLOCKED` hasta cerrar y registrar la condición.
 
-La verificación de este gate y cualquier decisión de no implementación se registra en
-`docs/audits/phase-3/50-CIVITAS-197-HUMAN-APPROVAL-GATE.md`. Ese registro no sustituye
-ninguna de las aprobaciones humanas exigidas por esta tabla.
+## Checklist trazable de readiness
+
+Leyenda: `[x]` significa que el ADR define el requisito, **no** que el control esté implementado o aprobado. `Estado` refleja evidencia real a la fecha. Ningún ítem `PENDIENTE` puede reinterpretarse como PASS por CI o revisión documental.
+
+| ID | Dominio | Requisito verificable | Owner humano que acepta | Evidencia exigida | Estado |
+|---|---|---|---|---|---|
+| CL-01 | Clasificación | [x] Inventario por tipo, tenant y finalidad; máxima clasificación heredada; desconocido=`RESTRICTED` | Data owner + Legal/Privacy | inventario versionado y casos de herencia/fail-closed | **PENDIENTE / BLOCKER** |
+| CL-02 | Minimización | [x] Allowlist de campos, redacción/pseudonimización previa y justificación campo-finalidad | Data owner + Legal/Privacy | mapa campo-finalidad y prueba con fixtures sintéticos | **PENDIENTE / BLOCKER** |
+| CL-03 | Encryption | [x] TLS en tránsito, cifrado en reposo, claves por entorno, rotación, backup y almacén de hold cubiertos | Security owner | diseño KMS, versiones/configuración y prueba de rotación/recuperación | **PENDIENTE / BLOCKER** |
+| CL-04 | Access | [x] Tenant isolation, mínimo privilegio, autorización server-side, acceso break-glass temporal y revisión periódica | Architecture + Security | matriz rol/operación/dato, pruebas cross-tenant y acta de access review | **PENDIENTE / BLOCKER** |
+| CL-05 | Provider transfer | [x] DPA, región, mecanismo, subprocesadores, no-training, borrado, incidente y cambio material evaluados | Security + Legal/Privacy | ficha de versión de proveedor/modelo/términos/DPA y evaluación firmada | **PENDIENTE / BLOCKER** |
+| CL-06 | Logging | [x] Esquema allowlist sin contenido/secretos, redacción antes de emitir, auditoría append-only y alertas | Security owner | schema versionado, canarios sintéticos y prueba de acceso/integridad | **PENDIENTE / BLOCKER** |
+| CL-07 | Retention/deletion | [x] TTL por artefacto, cascada a derivados/backups/DLQ/proveedor, restauración y certificado verificables | Data owner + Legal/Privacy | policy-as-code y pruebas de expiración, restore y DSAR end-to-end | **PENDIENTE / BLOCKER** |
+| CL-08 | Legal hold | [x] Alcance identificable, segregación, Legal-only, liberación autorizada y reanudación automática de borrado | Records/Legal | runbook y prueba sintética hold/release/deletion pending | **PENDIENTE / BLOCKER** |
+| CL-09 | Provenance/license | [x] Fuentes, hashes, prompt/modelo/config y transformaciones; licencia y límites de reutilización por fuente | Architecture + Legal/Privacy | manifest de provenance/licencia versionado y muestreo trazable | **PENDIENTE / BLOCKER** |
+| CL-10 | Human acceptance | [x] Diff/fuentes visibles, identidad y permiso vigentes, versión optimista, motivo y nueva revisión canónica | Product + Architecture | test de no-mutación para output/retry/tool/webhook y evento auditado | **PENDIENTE / BLOCKER** |
+
+## Decisiones abiertas
+
+| ID | Decisión pendiente | Opciones que deben evaluarse | Owner de decisión | Criterio/evidencia de cierre | Estado |
+|---|---|---|---|---|---|
+| OD-01 | Esquema/store de artefactos y provenance | almacén dedicado o extensión gobernada por módulo | Architecture | ADR/schema versionado, aislamiento y cascada demostrados | **ABIERTO / BLOCKER** |
+| OD-02 | Semántica de concurrencia y aceptación de alto impacto | optimistic lock; doble control por capacidad | Architecture + Product | operaciones clasificadas y pruebas stale/double-control | **ABIERTO / BLOCKER** |
+| OD-03 | Proveedor, modelo, región y versión | ninguno seleccionado; alternativa local incluida | Security + Legal/Privacy | evaluación sobre versiones y términos exactos | **ABIERTO / BLOCKER** |
+| OD-04 | Base jurídica y aviso por finalidad/jurisdicción | contrato, obligación, interés legítimo o consentimiento según proceda | Legal/Privacy | RoPA/finalidad y texto de aviso versionados | **ABIERTO / BLOCKER** |
+| OD-05 | Retención de auditoría y SLA de borrado | 7 años propuestos y SLAs aún no validados | Legal/Privacy | schedule jurisdiccional aprobado y executable policy | **ABIERTO / BLOCKER** |
+| OD-06 | Reutilización para evaluación/fine-tuning | prohibida por defecto o finalidad separada | Legal/Privacy + Data owner | evaluación nueva; no-training permanece mientras esté abierto | **ABIERTO / BLOCKER** |
+
+## Triggers de threat model y DPIA
+
+El **threat model es obligatorio antes del primer piloto**, y se reabre ante un modelo/proveedor/región/subprocesador nuevo, tool use o RAG nuevo, acceso a otra clase de datos, cambio de frontera de tenant/trust, ejecución de acciones, fine-tuning, plugins, nuevas rutas de exportación o incidente. Debe cubrir como mínimo prompt injection indirecta, exfiltración, confused deputy, cross-tenant leakage, poisoning, insecure output/tool execution, supply chain, abuso, disponibilidad, secretos, reidentificación y borrado/hold incompletos. Security registra versión, assets/DFD, supuestos, amenazas, mitigaciones, riesgo residual y aceptante humano.
+
+Legal/Privacy debe hacer y registrar el **screening DPIA antes de datos reales**. Disparan DPIA completa, como mínimo: datos `RESTRICTED` o de categorías especiales; menores o personas vulnerables; evaluación/perfilado, monitoring sistemático o decisión con efecto significativo; combinación de datasets, inferencias nuevas o gran escala; biometría; transferencia internacional o proveedor/subprocesador nuevo; tecnología novedosa con alto riesgo; imposibilidad práctica de ejercer derechos; o riesgo residual alto del threat model. La ausencia de trigger también requiere conclusión humana documentada con versión y fecha; no la decide el equipo técnico ni CI.
+
+## Baselines y referencias versionadas
+
+Esta propuesta se revisa contra versiones concretas, no contra “latest” implícito:
+
+- `ADR-005 v0.2.0`, 2026-07-29 (este documento; **propuesto**);
+- ADR-001, estado `Accepted` (versión de repositorio en el commit que apruebe este ADR; falta fijar SHA en `OD-01`);
+- ADR-002, Civitas REST API `v1`, 2026-07-17;
+- ADR-003, Module Catalog `v2`, 2026-07-22;
+- taxonomía de Data Scope `v2` y pipeline de autorización `v2` de Phase 3;
+- NIST AI RMF `1.0` (2023), NIST AI 600-1 `1.0` (2024), ISO/IEC 27001:2022 e ISO/IEC 42001:2023 como referencias de control, **no como certificaciones de Civitas**.
+
+Proveedor, modelo, API, región, DPA, términos, lista de subprocesadores, KMS/cipher suite, esquema de logs, policy de retención y threat model están **SIN VERSIÓN / NO SELECCIONADOS** y son blockers. Antes de revisión final, cada evidencia debe identificar nombre, versión/fecha, digest o URL inmutable y owner; una referencia flotante no cierra un ítem.
 
 ## Checklist de salida para #198
 

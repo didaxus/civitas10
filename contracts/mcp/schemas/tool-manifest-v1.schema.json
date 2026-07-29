@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.example/contracts/mcp/tool-manifest-v1.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "moduleId", "gateEvidence", "confirmationPolicyVersion", "tools", "runtimeControls"],
+  "properties": {
+    "schemaVersion": { "const": "civitas-mcp-tool-manifest/v1" },
+    "moduleId": { "type": "string", "minLength": 1 },
+    "gateEvidence": { "type": "object", "required": ["applicationServices", "issue188", "issue194"] },
+    "confirmationPolicyVersion": { "type": "string", "minLength": 1 },
+    "tools": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["toolId", "version", "applicationServiceId", "permissionId", "risk", "effect", "idempotency", "ifMatch", "makerChecker", "status"], "properties": { "toolId": { "type": "string" }, "version": { "type": "string" }, "applicationServiceId": { "type": "string" }, "permissionId": { "type": "string" }, "risk": { "enum": ["R0", "R1", "R2"] }, "effect": { "enum": ["read", "write", "approval", "destructive"] }, "idempotency": { "enum": ["required", "forbidden"] }, "ifMatch": { "enum": ["required", "none"] }, "makerChecker": { "type": "boolean" }, "status": { "enum": ["planned", "active", "disabled"] } }, "additionalProperties": false } },
+    "runtimeControls": { "type": "object" }
+  },
+  "additionalProperties": false
+}
