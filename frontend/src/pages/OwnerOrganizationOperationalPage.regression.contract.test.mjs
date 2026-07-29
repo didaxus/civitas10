@@ -31,7 +31,7 @@ test("http states are mapped explicitly", () => {
 test("organization detail routes are isolated by a route boundary below the app shell", () => {
   assert.match(appSource, /OwnerOrganizationRouteBoundary/);
   assert.match(appSource, /path=\{appRoutes\.ownerOrganizationState\.path\} element=\{<OwnerRouteGuard><OwnerOrganizationContextRoute>/);
-  assert.match(appSource, /path=\{appRoutes\.ownerOrganizationGovernance\.path\} element=\{<OwnerRouteGuard><OwnerOrganizationContextRoute>/);
+  assert.match(appSource, /path=\{appRoutes\.ownerOrganizationGovernanceRoles\.path\} element=\{<OwnerRouteGuard><OwnerOrganizationContextRoute>/);
 });
 
 test("directory cards and governance links preserve the real organization id", () => {

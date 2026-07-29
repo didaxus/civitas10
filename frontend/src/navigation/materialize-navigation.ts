@@ -41,22 +41,14 @@ export const buildOwnerNavigationTree = ({ organizationId, organizationName }: O
       label: group.label,
       iconKey: "governance",
       structural: true,
-      children: group.items.map(governanceItemToNavigationNode),
+      children: group.items.filter((item) => item.id !== "identity-provisioning").map(governanceItemToNavigationNode),
     } as NavigationNode));
 
-  const workspaceLabel = organizationName?.trim() || "Selected organization";
+  void organizationName;
   return [
-    ...baseTree,
-    {
-      path: `/owner/organizations/${encodeURIComponent(organizationId)}/workspace`,
-      label: workspaceLabel,
-      iconKey: "organizations",
-      structural: true,
-      children: [
-        appRoutes.ownerOrganizationState,
-        { ...appRoutes.ownerOrganizationGovernance, children: governanceChildren },
-        appRoutes.ownerOrganizationOperations,
-      ],
-    },
+    { path: appRoutes.ownerOrganizations.path, label: "Volver al directorio", iconKey: "directory" },
+    appRoutes.ownerOrganizationState,
+    { ...appRoutes.ownerOrganizationGovernance, path: `/owner/organizations/${encodeURIComponent(organizationId)}/governance-section`, build: undefined, route: undefined, label: "Gobierno", structural: true, children: governanceChildren },
+    appRoutes.ownerOrganizationOperations,
   ];
 };
