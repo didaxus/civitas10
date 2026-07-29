@@ -6,6 +6,7 @@ export type PlanningPlan = { planId: string; organizationId: string; title: stri
 export type PlanningProfile = { organizationId: string; planningMode: string; preferences?: Record<string, unknown>; version: string };
 export type PlanningListResponse = { items: PlanningPlan[]; page?: { limit?: number; cursor?: string } };
 export type PlanningPlanInput = { title: string; description?: string; status?: PlanningPlanStatus };
+export type ProductionHandoffOperation = { operationId:string; handoffId:string; planId:string; planVersion:number; state:"accepted"|"running"|"succeeded"|"failed"|"timed_out"|"cancelled"|"rolled_back"; result?:Record<string,unknown>; updatedAt?:string };
 export type PlanningProblemCode = "validation" | "precondition_failed" | "conflict" | "module_unavailable" | "module_incompatible" | "authorization_context" | "archived" | "stale" | string;
 export class PlanningApiError extends Error { constructor(message: string, public status?: number, public code?: PlanningProblemCode, public details?: unknown) { super(message); this.name = "PlanningApiError"; } }
 
@@ -16,6 +17,7 @@ export const planningCacheKeys = {
   plans: (organizationId: string) => ["planning", organizationId, "plans"] as const,
   plan: (organizationId: string, planId: string) => ["planning", organizationId, "plan", planId] as const,
   profile: (organizationId: string) => ["planning", organizationId, "profile"] as const,
+  handoffs: (organizationId: string) => ["planning", organizationId, "production-handoffs"] as const,
 };
 export type PlanningUiAccess = { availability: { state: "available" | "unavailable" | "degraded"; executable: boolean; readOnly: boolean; reasonCode: string; version: string }; authorization: { allowed: boolean; reasonCode: string; decisionId?: string; snapshotVersion?: string } };
 const assertUiAccess = (value: unknown): PlanningUiAccess => { const access = (value as { result?: unknown })?.result ?? value; if (!access || typeof access !== "object" || typeof (access as PlanningUiAccess).availability?.executable !== "boolean" || typeof (access as PlanningUiAccess).authorization?.allowed !== "boolean") throw new PlanningApiError("Planning access contract failed", 502, "contract_invalid"); return access as PlanningUiAccess; };
@@ -32,4 +34,6 @@ export const usePlanningApi = () => { const { organizationApiFetch } = useApi();
   updatePlan: async (organizationId: string, planId: string, input: PlanningPlanInput, etag: string, signal?: AbortSignal) => { try { return assertPlan(await organizationApiFetch(organizationId, `${root(organizationId)}/${encodeURIComponent(planId)}`, { method: "PUT", body: JSON.stringify(input), headers: { "If-Match": etag, "Idempotency-Key": crypto.randomUUID() }, signal })); } catch (e) { mapError(e); } },
   getProfile: async (organizationId: string, signal?: AbortSignal) => { try { return assertProfile(await organizationApiFetch(organizationId, `${root(organizationId)}/profile`, { signal })); } catch (e) { mapError(e); } },
   replaceProfile: async (organizationId: string, profile: Partial<PlanningProfile>, signal?: AbortSignal) => { try { return assertProfile(await organizationApiFetch(organizationId, `${root(organizationId)}/profile`, { method: "PUT", body: JSON.stringify(profile), headers: { "Idempotency-Key": crypto.randomUUID() }, signal })); } catch (e) { mapError(e); } },
+  listProductionHandoffs: async (organizationId:string,signal?:AbortSignal) => { try { const value=await organizationApiFetch(organizationId,`${root(organizationId)}/production-handoffs`,{signal}) as {items:ProductionHandoffOperation[]}; return value.items; } catch(e){mapError(e);} },
+  actOnProductionHandoff: async (organizationId:string,operationId:string,action:"reconcile"|"cancel"|"rollback",target?:Record<string,unknown>) => { try { return await organizationApiFetch(organizationId,`${root(organizationId)}/production-handoffs/${encodeURIComponent(operationId)}/${action}`,{method:"POST",body:JSON.stringify({target}),headers:{"Idempotency-Key":crypto.randomUUID()}}) as ProductionHandoffOperation; } catch(e){mapError(e);} },
 }), [organizationApiFetch]); };

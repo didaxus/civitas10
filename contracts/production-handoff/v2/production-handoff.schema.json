@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://contracts.civitas.example/production-handoff/v2/production-handoff.schema.json","title":"Planning production handoff","type":"object","additionalProperties":false,
+  "required":["contractVersion","handoffId","organizationId","plan","contentHash","outputSpecs","priorities","dependencies","acceptanceCriteria","governedReferences","provenance","authorization","correlationId","operationId"],
+  "properties":{
+    "contractVersion":{"const":"civitas-production-handoff/v2"},"handoffId":{"type":"string","minLength":1},"organizationId":{"type":"string","minLength":1},
+    "plan":{"type":"object","additionalProperties":false,"required":["id","version","state","immutable"],"properties":{"id":{"type":"string"},"version":{"type":["integer","string"]},"state":{"const":"approved"},"immutable":{"const":true}}},
+    "contentHash":{"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "outputSpecs":{"$ref":"#/$defs/nonEmptyObjects"},"priorities":{"$ref":"#/$defs/nonEmptyObjects"},"dependencies":{"$ref":"#/$defs/nonEmptyObjects"},"acceptanceCriteria":{"$ref":"#/$defs/nonEmptyObjects"},"governedReferences":{"$ref":"#/$defs/nonEmptyObjects"},
+    "provenance":{"type":"object","additionalProperties":false,"required":["kind","approvedAt","approvedBy","sourceVersion","decisionId"],"properties":{"kind":{"enum":["civitas-approved-plan","civitas-approved-release"]},"approvedAt":{"type":"string","format":"date-time"},"approvedBy":{"type":"string"},"sourceVersion":{"type":"string"},"decisionId":{"type":"string"}}},
+    "authorization":{"type":"object","additionalProperties":false,"required":["permission","dataScope","decisionId"],"properties":{"permission":{"const":"planning.production_handoffs.manage"},"dataScope":{"const":"approved_plans"},"decisionId":{"type":"string"}}},
+    "correlationId":{"type":"string"},"operationId":{"type":"string"}
+  },"$defs":{"nonEmptyObjects":{"type":"array","minItems":1,"items":{"type":"object"}}}
+}
