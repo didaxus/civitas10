@@ -1,6 +1,7 @@
 "use strict";
 
-const { explainAuthorization, hashSubject, redact } = require("../authorization/diagnostics");
+const { explainAuthorization, hashSubject } = require("../authorization/diagnostics");
+const { governanceAuditRepository } = require("./governanceAuditRepository");
 
 const GOVERNANCE_OPERATIONS_CONTRACT_VERSION = "2026-07-civitas10-governance-operations-v1";
 const REGISTERED_SCREENS = Object.freeze(new Map([
@@ -11,18 +12,14 @@ const REGISTERED_SCREENS = Object.freeze(new Map([
 const REGISTERED_ACTIONS = Object.freeze(new Set(["governance.access.preview", "documents.read", "documents.create", "owner.organizations.read"]));
 
 const navigationPolicies = new Map();
-const operationAuditEvents = [];
 const rateLimitBuckets = new Map();
 
 function nowIso() { return new Date().toISOString(); }
 function actorId(req) { return req?.user?.sub || req?.user?.id || "system"; }
-function eventId() { return `govop_${operationAuditEvents.length + 1}`; }
 function policyKey(organizationId) { return String(organizationId || ""); }
 
-function audit({ organizationId, actorLogtoUserId, action, targetType = "governance", targetId = null, result = "success", reason = "recorded", before, after }) {
-  const event = { id: eventId(), organizationId, actorLogtoUserId, action, targetType, targetId, result, reason, before: redact(before), after: redact(after), contractVersion: GOVERNANCE_OPERATIONS_CONTRACT_VERSION, createdAt: nowIso() };
-  operationAuditEvents.push(event);
-  return event;
+function audit({ organizationId, actorLogtoUserId, action, targetType = "governance", targetId = null, result = "success", reason = "recorded", before, after, decisionId = null, decisionSnapshot = null, sourceVersions = {}, correlationId = null, causationId = null }) {
+  return governanceAuditRepository.tenant(organizationId).append({ actorId: actorLogtoUserId, operation: action, targetType, targetId, outcome: result, reasonCode: reason, before, after, decisionId, decisionSnapshot, sourceVersions, correlationId, causationId });
 }
 
 function defaultPolicy(organizationId) {
@@ -113,8 +110,16 @@ async function previewAccess({ organizationId, surface, body = {}, actorLogtoUse
   return response;
 }
 
-function listGovernanceAuditEvents({ organizationId, limit = 50 } = {}) {
-  return operationAuditEvents.filter((event) => !organizationId || event.organizationId === organizationId).slice(-Math.min(Number(limit) || 50, 100)).reverse().map((event) => ({ ...event, actorId: event.actorLogtoUserId ? hashSubject(event.actorLogtoUserId) : "system", actorLogtoUserId: undefined }));
+function auditProjection(event) {
+  return { ...event, id: event.eventId, action: event.operation, actorId: event.actor === "system" ? "system" : `sub_${event.actor.split(":").at(-1)}`, targetType: event.target.type, targetId: event.target.opaqueId, result: event.outcome, reason: event.reasonCode, before: event.change.before, after: event.change.after, contractVersion: GOVERNANCE_OPERATIONS_CONTRACT_VERSION, createdAt: event.recordedAt };
 }
+function listGovernanceAuditPage({ organizationId, ...query } = {}) {
+  if (!organizationId) throw new TypeError("organizationId is required");
+  const page = governanceAuditRepository.tenant(organizationId).list(query);
+  return { ...page, events: page.events.map(auditProjection) };
+}
+function listGovernanceAuditEvents(input = {}) { return listGovernanceAuditPage(input).events; }
+function getGovernanceAuditEvent({ organizationId, eventId }) { return governanceAuditRepository.tenant(organizationId).detail(eventId); }
+function exportGovernanceAuditEvents({ organizationId, ...input }) { return governanceAuditRepository.tenant(organizationId).export(input); }
 
-module.exports = { GOVERNANCE_OPERATIONS_CONTRACT_VERSION, buildAliasesNavigationPolicy, updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, audit, actorId };
+module.exports = { GOVERNANCE_OPERATIONS_CONTRACT_VERSION, buildAliasesNavigationPolicy, updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, listGovernanceAuditPage, getGovernanceAuditEvent, exportGovernanceAuditEvents, audit, actorId };
