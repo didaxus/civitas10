@@ -104,11 +104,11 @@
     "planning:p3-014:contract-check": "node scripts/planning/p3-014-contract-check.mjs && node --test backend/test/planning-p3-014-contract.test.js",
     "contracts:referential-integrity:check": "node scripts/contracts/referential-integrity-check.mjs",
     "planning:p3-019:check": "node scripts/planning/p3-019-gate.mjs check",
-    "phase3:production-readiness:drill": "node scripts/phase3/production-readiness-drill.mjs",
-    "test:phase3:observability": "node --test backend/test/phase3-observability-contract.test.js"
+    "planning:contract-check": "node scripts/planning/contract-check.mjs"
   },
   "dependencies": {
     "jose": "5.9.6",
-    "pg": "8.16.3"
+    "pg": "8.16.3",
+    "yaml": "2.8.1"
   }
 }

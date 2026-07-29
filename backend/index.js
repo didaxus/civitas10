@@ -47,8 +47,12 @@ const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipServic
 const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
 const { registerScimReconciliationRoutes } = require("./routes/scimReconciliationRoutes");
 const { registerScimUserRoutes } = require("./scim/users/routes");
-const { registerPlanningRoutes } = require("./planning/presentation/routes");
 const { buildPrincipalForRest } = require("./authorization/principalBuilder");
+const { createPlanningRuntime } = require("./planning/composition/createPlanningRuntime");
+const { getPool } = require("./lib/db");
+const { NAMED_USE_CASES } = require("./planning/application/remotePort");
+const { createModuleAvailabilityResolver, createStaticOperationRegistry, createPostgresAvailabilityStateRepository } = require("./services/moduleAvailabilityResolver");
+const { createUnavailableEntitlementProvider, createUnavailableDataScopeProvider } = require("./authorization/policies/providers");
 
 const app = express();
 const port = 3000;
@@ -60,10 +64,37 @@ const OWNER_AUTHZ = SHARED_AUTH.global.permissions;
 const ORG_AUTHZ = SHARED_AUTH.organization.documentPermissions;
 
 app.use(cors());
-// Planning presentation owns request parsing for its mounted API routes.
-registerPlanningRoutes(app);
+app.use(express.json({ limit: "32kb" }));
+
+// Planning is fail-closed: composition errors leave its routes unmounted and are
+// reported by health/readiness without changing any module lifecycle record.
+const planningStatus = { state: "unavailable", mounted: false, reason: "composition_not_attempted" };
+try {
+  const operationRegistry = createStaticOperationRegistry(Object.values(NAMED_USE_CASES).map((spec) => ({ moduleId: "planning", capabilityId: spec.capabilityId, operationId: spec.operationId, executionKind: spec.executionKind })));
+  const moduleControlPlaneService = { repository: { async listBindings() { return []; } }, async getOrganizationModule() { return null; }, async resolveModuleVersion() { return null; }, async evaluateModuleRuntimeCompatibility() { return { compatible: false }; } };
+  const availabilityResolver = createModuleAvailabilityResolver({ moduleControlPlaneService, operationRegistry, stateRepository: createPostgresAvailabilityStateRepository({ pool: getPool() }) });
+  const runtime = createPlanningRuntime({
+    pool: getPool(),
+    authorizationContextPort: { async validateDataScope({ context }) { return { allowed: Boolean(context.authorizationDecision?.allowed), decisionId: context.authorizationDecision?.decisionId }; } },
+    availabilityResolver,
+    authorizationProviders: { entitlementProvider: createUnavailableEntitlementProvider(), dataScopeProvider: createUnavailableDataScopeProvider() },
+    authorizationResourceResolver: (req) => ({ type: req.params.planId ? "planning.plan" : "planning", id: req.params.planId || req.params.organizationId, organizationId: req.params.organizationId }),
+    authenticationAudienceMiddleware: (req, res, next) => requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [NAMED_USE_CASES[req.planningUseCase].permission] })(req, res, next),
+    organizationContextMiddleware: requireOrg,
+    canonicalPrincipalMiddleware: async (req, res, next) => { try { const spec = NAMED_USE_CASES[req.planningUseCase]; req.principal = await buildPrincipalForRest(req, { permissionId: spec.permission, surface: "rest", organizationId: req.params.organizationId }); return next(); } catch (error) { return res.status(error.status || 403).json({ error: error.name, code: error.code || "principal_build_failed" }); } },
+  });
+  app.use('/api/v1', runtime.router);
+  Object.assign(planningStatus, { state: "ready", mounted: true, reason: null });
+} catch (error) {
+  Object.assign(planningStatus, { state: "unavailable", mounted: false, reason: "composition_failed", error: error.message });
+}
 // Orden canónico de middlewares tenant: requireOrganizationAccess → requireOrg → requirePermission → requireSeats (solo si aplica) → handler.
 const secureRoute = createSecurityPolicyRegistry({ app });
+
+secureRoute.get("/readiness", "health", (_req, res) => {
+  const ready = planningStatus.mounted && planningStatus.state === "ready";
+  return res.status(ready ? 200 : 503).json({ status: ready ? "ready" : "not_ready", components: { planning: planningStatus } });
+});
 
 const summarizeStatus = (statuses) => {
   if (statuses.includes("unhealthy")) return "unhealthy";
@@ -194,8 +225,10 @@ secureRoute.get("/health", "health", async (_req, res) => {
       redis: redis.status === "healthy" ? "ok" : "unhealthy",
       logto: logto.status === "healthy" ? "ok" : logto.status,
       worker: worker.status === "healthy" ? "ok" : worker.status,
+      planning: planningStatus.mounted ? "ok" : "unavailable",
     },
     details: { database, redis, logto, worker },
+    planning: planningStatus,
     db: database.status === "healthy" ? "connected" : "disconnected",
     redis: redis.status === "healthy" ? "connected" : "disconnected",
   });

@@ -1,0 +1,4 @@
+const test=require('node:test'); const assert=require('node:assert/strict');
+const { recoverDocumentOperations, jobId }=require('../documents/documentQueue');
+test('crash recovery requeues every stale persisted running operation with deterministic ids',async()=>{ const jobs=[]; const ids=await recoverDocumentOperations({repository:{recoverStale:async()=>[{id:'one',organizationId:'a'},{id:'two',organizationId:'b'}]},producer:{enqueue:async(op)=>jobs.push(jobId(op.id))},clock:()=>new Date('2026-07-29T00:00:00Z')}); assert.deepEqual(ids,['one','two']); assert.deepEqual(jobs,['document-generation-one','document-generation-two']); });
+test('worker logs cannot include input, blob, file reference or signed URL by contract',()=>{ const source=require('node:fs').readFileSync(require.resolve('../documents/documentQueue'),'utf8'); assert.doesNotMatch(source,/job\.data\.(parameters|content|blob|fileReference)|signed|downloadUrl/); });

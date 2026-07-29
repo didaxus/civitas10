@@ -10,6 +10,7 @@ const requiredScenarios = [
 ];
 const requiredSurfaces = ['openapi','private_runtime_schema','generated_clients','backend_routes_actions_services','frontend_routes_actions_screens','planning_events'];
 const activationEvidence = ['contracts','consumers','tests','deployment','observability','rollback'];
+const plannedSurfaceFiles = ['frontend/src/features/planning/planningRemoteUiContribution.ts'];
 const hashInputs = {
   openapi: ['contracts/openapi/civitas-api.yaml','contracts/openapi/modules/planning.yaml','contracts/openapi/common/parameters.yaml','contracts/openapi/common/responses.yaml','contracts/openapi/common/schemas.yaml','contracts/openapi/common/security.yaml'],
   private_runtime_schema: ['contracts/federation/planning-runtime/v1/schema.json','backend/planning/infrastructure/runtimeContractV1.js','backend/planning/application/dtos.js'],
@@ -27,6 +28,10 @@ for(const id of requiredScenarios){ const row=evidence.scenarios?.find(s=>s.id==
 for(const surface of requiredSurfaces){ const row=evidence.parity?.[surface]; if(!row) fail(`missing parity surface ${surface}`); else if(row.hash !== currentHashes()[surface].hash) fail(`hash drift for ${surface}: expected ${currentHashes()[surface].hash}, found ${row.hash}`); }
 for(const entry of [...(evidence.scenarios||[]), ...(evidence.activationEntries||[])]){
   if(entry.status === 'active') for(const key of activationEvidence) if(entry.evidence?.[key] !== 'pass') fail(`active entry ${entry.id} lacks passing ${key} evidence`);
+}
+for(const file of plannedSurfaceFiles){
+  const source=fs.readFileSync(path.join(root,file),'utf8');
+  if(/status:\s*["']active["']/.test(source)) fail(`Planning routes, actions, and screens must remain planned during the gate: ${file}`);
 }
 if(!/without data deletion/i.test(evidence.rollback?.principle||'')) fail('rollback principle must document rollback without data deletion');
 if(!evidence.canary?.stages?.length) fail('missing canary stages');

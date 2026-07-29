@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/tool-manifest-v1.schema.json",
+  "schemaVersion": "civitas-mcp-tool-manifest/v1",
+  "moduleId": "planning",
+  "gateEvidence": {
+    "applicationServices": "active",
+    "issue188": "artifacts/planning/p3-019-gate-evidence.json",
+    "issue194": "artifacts/mcp/p3-194-runtime-gate-evidence.json"
+  },
+  "confirmationPolicyVersion": "civitas-confirmation-policy/2026-07-01",
+  "tools": [
+    { "toolId": "planning.plan.create", "version": "1.0.0", "applicationServiceId": "createPlan", "permissionId": "planning.plans.manage", "risk": "R2", "effect": "write", "idempotency": "required", "ifMatch": "none", "makerChecker": true, "status": "active" },
+    { "toolId": "planning.plan.update", "version": "1.0.0", "applicationServiceId": "updatePlan", "permissionId": "planning.plans.manage", "risk": "R2", "effect": "write", "idempotency": "required", "ifMatch": "required", "makerChecker": true, "status": "active" },
+    { "toolId": "planning.review.submit", "version": "1.0.0", "applicationServiceId": "submitReview", "permissionId": "planning.plans.manage", "risk": "R2", "effect": "write", "idempotency": "required", "ifMatch": "required", "makerChecker": true, "status": "active" },
+    { "toolId": "planning.review.decide", "version": "1.0.0", "applicationServiceId": "approve", "permissionId": "planning.plans.manage", "risk": "R2", "effect": "approval", "idempotency": "required", "ifMatch": "required", "makerChecker": true, "status": "active" },
+    { "toolId": "documents.generate", "version": "1.0.0", "applicationServiceId": "requestGeneration", "permissionId": "org.documents.create", "risk": "R2", "effect": "write", "idempotency": "required", "ifMatch": "none", "makerChecker": true, "status": "active" }
+  ],
+  "runtimeControls": { "delegationCeiling": "required", "normalizedDiff": true, "criticalAudit": true, "timeout": true, "killSwitchScopes": ["global", "module", "tenant", "tool", "version"] }
+}

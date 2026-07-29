@@ -11,9 +11,9 @@ const REMOTE_PROBLEM_CODES = Object.freeze({
 const NAMED_USE_CASES = Object.freeze({
   createPlan: { capabilityId:'planning.plans', operationId:'planning.plans.create', actionId:'planning.plans.create', permission:'planning.plans.manage', executionKind:'write', idempotency:'required', concurrency:'none', planned:true },
   listPlans: { capabilityId:'planning.plans', operationId:'planning.plans.list', actionId:'planning.plans.read', permission:'planning.plans.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
-  getPlan: { capabilityId:'planning.plans', operationId:'planning.plans.get', actionId:'planning.plans.read', permission:'planning.plans.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
+  readPlan: { capabilityId:'planning.plans', operationId:'planning.plans.read', actionId:'planning.plans.read', permission:'planning.plans.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
   updatePlan: { capabilityId:'planning.plans', operationId:'planning.plans.update', actionId:'planning.plans.update', permission:'planning.plans.manage', executionKind:'write', idempotency:'required', concurrency:'if-match', planned:true },
-  getProfile: { capabilityId:'planning.profile', operationId:'planning.profile.get', actionId:'planning.profile.read', permission:'planning.profile.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
+  readProfile: { capabilityId:'planning.profile', operationId:'planning.profile.read', actionId:'planning.profile.read', permission:'planning.profile.read', executionKind:'read', idempotency:'forbidden', concurrency:'none', planned:true },
   replaceProfile: { capabilityId:'planning.profile', operationId:'planning.profile.replace', actionId:'planning.profile.replace', permission:'planning.profile.manage', executionKind:'write', idempotency:'required', concurrency:'if-match', planned:true }
 });
 function assertPlanningRemoteCallContext(context, useCase){
