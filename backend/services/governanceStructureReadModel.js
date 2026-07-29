@@ -1,18 +1,28 @@
 "use strict";
 
-const { createTaxonomyService, createTaxonomyPublicationService } = require("../taxonomy");
-const { createUnitService } = require("../organization-structure");
-const { createDataScopeAssignmentService, isEffectiveAssignment } = require("../authorization/data-scope");
+const { createInMemoryTaxonomyRepository, createTaxonomyService, createTaxonomyPublicationService } = require("../taxonomy");
+const { createInMemoryOrganizationStructureRepository, createUnitService } = require("../organization-structure");
+const { createPostgresDataScopeRepository, createDataScopeAssignmentService, isEffectiveAssignment } = require("../authorization/data-scope");
 
-function createGovernanceStructureReadModel({ taxonomyRepository, unitRepository, dataScopeRepository, runtimeConsistencyPort, auditPort, outboxPort } = {}) {
-  if (!taxonomyRepository || !unitRepository || !dataScopeRepository || !runtimeConsistencyPort || !auditPort || !outboxPort) throw new Error("governance_structure_ports_required");
+const taxonomyRepository = createInMemoryTaxonomyRepository();
+const unitRepository = createInMemoryOrganizationStructureRepository();
+// Production scope assignments must never disappear on process restart.
+const dataScopeRepository = createPostgresDataScopeRepository();
+const structureAuditEvents = [];
+const structureOutboxEvents = [];
+
+const runtimeConsistencyPort = {
+  async incrementPolicyVersion(event) { return dataScopeRepository.incrementPolicyVersion(event.organizationId); },
+  async enqueueOutbox(event) { structureOutboxEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
+  async audit(event) { structureAuditEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
+};
 
 const safeActor = (req) => req?.user?.sub || req?.user?.id || "system";
 
 function taxonomyService() { return createTaxonomyService({ repository: taxonomyRepository, runtimeConsistencyPort }); }
 function taxonomyPublicationService() { return createTaxonomyPublicationService({ repository: taxonomyRepository, runtimeConsistencyPort }); }
 function unitService() { return createUnitService({ repository: unitRepository, taxonomyPort: taxonomyService(), runtimeConsistencyPort }); }
-function dataScopeService() { return createDataScopeAssignmentService({ repository: dataScopeRepository, taxonomyPort: taxonomyService(), unitPort: unitRepository, runtimeConsistencyPort }); }
+function dataScopeService() { return createDataScopeAssignmentService({ repository: dataScopeRepository, taxonomyPort: taxonomyService(), unitPort: unitRepository }); }
 
 async function taxonomySummary(organizationId) {
   await taxonomyService().ensureDefinitions();
@@ -32,7 +42,7 @@ async function unitsSummary(organizationId) {
 async function dataScopesSummary(organizationId) {
   const policyVersion = await dataScopeRepository.getPolicyVersion(organizationId);
   const assignments = await dataScopeRepository.listAssignments({ organizationId });
-  return { policyVersion, items: assignments.map((assignment) => ({ id: assignment.id, principalId: assignment.logtoUserId || assignment.logtoRoleId, roleId: assignment.logtoRoleId || null, capability: assignment.capability, action: assignment.action || "read", scopeType: assignment.scopeKind, taxonomyIds: assignment.dimensionValueId ? [assignment.dimensionValueId] : [], unitIds: assignment.unitId ? [assignment.unitId] : [], resourceSummary: assignment.resourceRef || assignment.dimensionValueId || assignment.unitId || assignment.scopeKind, effective: isEffectiveAssignment(assignment), source: assignment.sourceType || "explicit", reason: assignment.status === "active" ? "active" : assignment.status, unresolvedReason: assignment.status === "active" ? null : assignment.status, sourceVersion: String(policyVersion) })) };
+  return { policyVersion, items: assignments.map((assignment) => ({ id: assignment.id, organizationId: assignment.logtoOrganizationId, membershipId: assignment.membershipId, canonicalRoleId: assignment.canonicalRoleId, capability: assignment.capability, action: assignment.action || "read", scopeType: assignment.scopeKind, target: assignment.target, resourceSummary: assignment.resourceRef || assignment.dimensionValueId || assignment.unitId || assignment.scopeKind, effective: isEffectiveAssignment(assignment), source: assignment.sourceType || "explicit", reason: assignment.status === "active" ? "active" : assignment.status, unresolvedReason: assignment.status === "active" ? null : assignment.status, sourceVersion: String(policyVersion) })) };
 }
 
 async function buildStructureGovernanceSlice(organizationId) {
