@@ -1,1 +1,1 @@
-module.exports = { ...require('./applicationServiceToolGateway'), ...require('./planningWriteTools') };
+module.exports = { ...require('./applicationServiceToolGateway'), ...require('./planningMcpTools') };

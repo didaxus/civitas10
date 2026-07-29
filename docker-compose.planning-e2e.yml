@@ -1,0 +1,17 @@
+services:
+  planning-postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_DB: civitas_planning_e2e
+      POSTGRES_USER: civitas
+      POSTGRES_PASSWORD: civitas-e2e-only
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U civitas -d civitas_planning_e2e"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    ports: ["55432:5432"]
+    volumes: ["planning-e2e-data:/var/lib/postgresql/data"]
+
+volumes:
+  planning-e2e-data: {}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.local/mcp/consent.v1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "principalId", "tenantId", "toolId", "toolVersion", "argumentDigest", "nonce", "expiresAt"],
+  "properties": {
+    "schemaVersion": { "const": "civitas.mcp.consent/v1" }, "principalId": { "type": "string", "minLength": 1 }, "tenantId": { "type": "string", "minLength": 1 }, "toolId": { "type": "string", "minLength": 1 }, "toolVersion": { "type": "string", "minLength": 1 }, "argumentDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }, "nonce": { "type": "string", "minLength": 16 }, "expiresAt": { "type": "string", "format": "date-time" }, "issuedAt": { "type": "string", "format": "date-time" }
+  }
+}

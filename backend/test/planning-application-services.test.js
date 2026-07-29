@@ -6,9 +6,9 @@ function context(useCase, overrides = {}) {
   const base = {
     createPlan: ['planning.plans', 'planning.plans.create', 'planning.plans.create', 'planning.plans.manage', 'write', { key: 'idem-1' }],
     listPlans: ['planning.plans', 'planning.plans.list', 'planning.plans.read', 'planning.plans.read', 'read', null],
-    getPlan: ['planning.plans', 'planning.plans.get', 'planning.plans.read', 'planning.plans.read', 'read', null],
+    readPlan: ['planning.plans', 'planning.plans.read', 'planning.plans.read', 'planning.plans.read', 'read', null],
     updatePlan: ['planning.plans', 'planning.plans.update', 'planning.plans.update', 'planning.plans.manage', 'write', { key: 'idem-1' }],
-    getProfile: ['planning.profile', 'planning.profile.get', 'planning.profile.read', 'planning.profile.read', 'read', null],
+    readProfile: ['planning.profile', 'planning.profile.read', 'planning.profile.read', 'planning.profile.read', 'read', null],
     replaceProfile: ['planning.profile', 'planning.profile.replace', 'planning.profile.replace', 'planning.profile.manage', 'write', { key: 'idem-1' }],
   }[useCase];
   return {
@@ -48,22 +48,22 @@ test('create plan validates scope, records idempotency, audit and outbox atomica
   const services = createPlanningApplicationServices(p);
   const result = await services.createPlan({ title: 'Roadmap' }, context('createPlan'));
   assert.equal(result.ok, true);
-  assert.equal(result.value.organizationId, 'org-1');
+  assert.equal(result.value.id, 'p1');
   assert.deepEqual(p.calls.map(([name]) => name), ['scope', 'transaction', 'createPlan', 'audit', 'outbox']);
-  assert.equal(p.ledger.get('idem-1').result.planId, 'p1');
+  assert.equal(p.ledger.get('idem-1').result.id, 'p1');
 });
 
 test('list plans applies constraints before persistence lookup returns page', async () => {
   const p = ports({ plans: [{ planId: 'p1', organizationId: 'org-1', title: 'A' }, { planId: 'p2', organizationId: 'org-1', title: 'B', archived: true }] });
   const result = await createPlanningApplicationServices(p).listPlans({ limit: 1000 }, context('listPlans'));
   assert.equal(result.ok, true);
-  assert.equal(result.value.items.length, 1);
+  assert.equal(result.value.data.length, 1);
   assert.equal(p.calls.find(([name]) => name === 'listPlans')[1].constraints.limit, 100);
 });
 
 test('read plan validates tenant data scope before lookup or disclosure', async () => {
   const p = ports({ plans: [{ planId: 'p1', organizationId: 'org-1', title: 'A' }] });
-  const result = await createPlanningApplicationServices(p).readPlan({ planId: 'p1' }, context('getPlan'));
+  const result = await createPlanningApplicationServices(p).readPlan({ planId: 'p1' }, context('readPlan'));
   assert.equal(result.ok, true);
   assert.deepEqual(p.calls.map(([name]) => name).slice(0, 3), ['scope', 'readPlan', 'scope']);
 });
@@ -89,7 +89,7 @@ test('scope evaluator is fail-closed for missing or indeterminate decisions', as
 
 test('cross-tenant records are hidden after persistence lookup', async () => {
   const p = ports({ plans: [{ planId: 'foreign', organizationId: 'org-2', title: 'Secret' }] });
-  const result = await createPlanningApplicationServices(p).readPlan({ planId: 'foreign' }, context('getPlan'));
+  const result = await createPlanningApplicationServices(p).readPlan({ planId: 'foreign' }, context('readPlan'));
   assert.equal(result.ok, false);
   assert.equal(result.problem.code, 'planning.remote.tenant_mismatch');
   assert.equal(result.problem.category, 'not_found');
@@ -110,7 +110,7 @@ test('idempotency fingerprint conflict and replay are enforced', async () => {
   const services = createPlanningApplicationServices(p);
   const ctx = context('createPlan', { idempotency: { key: 'same-key', requestFingerprint: 'fp-1' } });
   assert.equal((await services.createPlan({ title: 'A' }, ctx)).ok, true);
-  assert.equal((await services.createPlan({ title: 'A' }, ctx)).value.planId, 'p1');
+  assert.equal((await services.createPlan({ title: 'A' }, ctx)).value.id, 'p1');
   const conflict = await services.createPlan({ title: 'A' }, context('createPlan', { idempotency: { key: 'same-key', requestFingerprint: 'fp-2' } }));
   assert.equal(conflict.problem.code, 'planning.remote.idempotency_conflict');
 });
@@ -118,7 +118,7 @@ test('idempotency fingerprint conflict and replay are enforced', async () => {
 test('read and replace profile enforce scope, If-Match, audit, outbox and idempotency', async () => {
   const p = ports({ profiles: [{ organizationId: 'org-1', planningMode: 'standard', preferences: {}, version: '1' }] });
   const services = createPlanningApplicationServices(p);
-  assert.equal((await services.readProfile({}, context('getProfile'))).ok, true);
+  assert.equal((await services.readProfile({}, context('readProfile'))).ok, true);
   const result = await services.replaceProfile({ planningMode: 'agile', preferences: {}, ifMatch: '1' }, context('replaceProfile', { concurrency: { etag: '1' } }));
   assert.equal(result.ok, true);
   assert.ok(p.calls.some(([name]) => name === 'audit'));

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "contractVersion": "civitas-mcp-planning-tools/v1",
+  "status": "active",
+  "activationPrerequisites": ["#188", "#194"],
+  "tools": [
+    { "toolId": "civitas.planning.plans.search", "version": "1.0.0", "applicationServiceId": "listPlans", "permissionId": "planning.plans.read", "effect": "read", "risk": "R0", "limits": { "maxPageSize": 50, "maxCursorLength": 512, "maxOutputBytes": 65536, "timeoutMs": 2000 } },
+    { "toolId": "civitas.planning.plans.read", "version": "1.0.0", "applicationServiceId": "readPlan", "permissionId": "planning.plans.read", "effect": "read", "risk": "R0", "limits": { "maxOutputBytes": 65536, "timeoutMs": 2000 } },
+    { "toolId": "civitas.planning.roadmaps.read", "version": "1.0.0", "applicationServiceId": "readRoadmap", "permissionId": "planning.plans.read", "effect": "read", "risk": "R0", "limits": { "maxOutputBytes": 65536, "timeoutMs": 2000 } },
+    { "toolId": "civitas.planning.plans.validate", "version": "1.0.0", "applicationServiceId": "validatePlan", "permissionId": "planning.plans.read", "effect": "read", "risk": "R0", "dryRun": true, "forbiddenEffects": ["persistence", "mutation_audit", "outbox"], "limits": { "maxOutputBytes": 65536, "timeoutMs": 2000 } }
+  ]
+}

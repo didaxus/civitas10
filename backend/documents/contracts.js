@@ -20,7 +20,7 @@ function privateDocument(document) {
 }
 
 function generationReadModel(operation) {
-  return Object.freeze({ operationId: operation.id, documentId: operation.documentId || null, state: operation.state, version: operation.version, acceptedAt: operation.acceptedAt, completedAt: operation.completedAt || null, problem: operation.problem || null });
+  return Object.freeze({ operationId: operation.id, documentId: operation.documentId || null, state: operation.state, version: operation.version, attempts: operation.attempts || 0, maxAttempts: operation.maxAttempts || 3, acceptedAt: operation.acceptedAt, completedAt: operation.completedAt || null, problem: operation.problem || null });
 }
 
 module.exports = { DOCUMENT_VISIBILITIES, GENERATION_STATES, DocumentContractError, assertOpaqueReference, publicDocument, privateDocument, generationReadModel };
