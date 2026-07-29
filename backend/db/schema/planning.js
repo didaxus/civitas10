@@ -43,8 +43,9 @@ const planningAudit = pgTable("planning_audit", {
 
 const planningIdempotency = pgTable("planning_idempotency", {
   organizationId: varchar("organization_id", { length: 128 }).notNull(), key: varchar("idempotency_key", { length: 200 }).notNull(),
+  principalId: varchar("principal_id", { length: 180 }).notNull(), operationId: varchar("operation_id", { length: 180 }).notNull(),
   fingerprint: varchar("fingerprint", { length: 128 }).notNull(), result: jsonb("result").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-}, (t) => ({ pk: primaryKey({ columns: [t.organizationId, t.key] }) }));
+}, (t) => ({ pk: primaryKey({ columns: [t.organizationId, t.principalId, t.operationId, t.key] }) }));
 
 module.exports = { planningAudit, planningIdempotency, planningPlans, planningProfiles, planningVersions };

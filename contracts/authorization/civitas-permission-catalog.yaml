@@ -1888,6 +1888,21 @@
       "compatibility": "none"
     },
     {
+      "name": "planning.plans.approve",
+      "namespace": "planning",
+      "moduleId": null,
+      "capabilityId": "planning.plans",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "declared_planned",
+      "dataScopeStrategy": "assigned_approvals",
+      "risk": "critical",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none"
+    },
+    {
       "name": "planning.plans.manage",
       "namespace": "planning",
       "moduleId": null,

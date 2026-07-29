@@ -47,11 +47,35 @@ test("unit of work rolls back aggregate, audit, outbox and idempotency", async (
     const created = await tx.persistencePort.createPlan({ organizationId: "tenant-a", planId: "rollback", profileId: "profile", name: "Rollback", content: {}, actorId: "actor" });
     await tx.auditPort.record({ organizationId: "tenant-a", targetId: created.planId, action: "planning.plan.created", actorId: "actor", correlationId: "corr" });
     await tx.outboxPort.enqueue({ type: "planning.plan.created", organizationId: "tenant-a", aggregateId: created.planId, aggregateVersion: created.version, payload: created, correlationId: "corr" });
-    await tx.idempotencyLedgerPort.recordSuccess({ organizationId: "tenant-a", key: "request", fingerprint: "hash", result: created });
+    await tx.idempotencyLedgerPort.recordSuccess({ organizationId: "tenant-a", principalId: "actor", operationId: "planning.plans.create", key: "request", fingerprint: "hash", result: created });
     throw new Error("force rollback");
   }), /force rollback/);
   for (const table of ["planning_plans", "planning_audit", "planning_idempotency"]) assert.equal((await pool.query(`select 1 from ${table}`)).rowCount, 0);
   assert.equal((await pool.query("select 1 from integration_outbox_events where logto_organization_id='tenant-a' and aggregate_type='planning.plan'")).rowCount, 0);
+});
+
+test("public persistence operations retain title, description, profile fields and opaque cursor", async () => {
+  const created = await adapter.persistencePort.createPlan({ organizationId:"tenant-a", title:"Original", description:"First", planType:"curriculum", content:{ description:"First" }, actorId:"author" });
+  const updated = await adapter.persistencePort.updatePlan({ organizationId:"tenant-a", planId:created.planId, title:"Renamed", description:"Second", ifMatch:created.version, actorId:"author" });
+  assert.equal(updated.title, "Renamed"); assert.equal(updated.description, "Second");
+
+  const initialProfile = await adapter.persistencePort.readProfile({ organizationId:"tenant-a" });
+  const replaced = await adapter.persistencePort.replaceProfile({ organizationId:"tenant-a", planningMode:"strategic", preferences:{ fiscalYearStart:"07-01" }, ifMatch:initialProfile.version });
+  assert.deepEqual(replaced.configuration, { planningMode:"strategic", preferences:{ fiscalYearStart:"07-01" } });
+
+  await adapter.persistencePort.createPlan({ organizationId:"tenant-a", title:"Another", content:{}, actorId:"author" });
+  const first = await adapter.persistencePort.listPlans({ organizationId:"tenant-a", constraints:{ limit:1 } });
+  assert.equal(first.items.length, 1); assert.equal(first.page.hasMore, true); assert.ok(first.page.nextCursor);
+  const second = await adapter.persistencePort.listPlans({ organizationId:"tenant-a", constraints:{ limit:1, cursor:first.page.nextCursor } });
+  assert.equal(second.items.length, 1); assert.notEqual(second.items[0].planId, first.items[0].planId);
+});
+
+test("PostgreSQL idempotency ledger scopes the same key by principal and operation", async () => {
+  const common = { organizationId:"tenant-a", key:"shared", fingerprint:"fp", result:{ id:"p1" } };
+  await adapter.idempotencyLedgerPort.recordSuccess({ ...common, principalId:"author-a", operationId:"planning.plans.create" });
+  await adapter.idempotencyLedgerPort.recordSuccess({ ...common, principalId:"author-b", operationId:"planning.plans.create" });
+  assert.ok(await adapter.idempotencyLedgerPort.lookup({ organizationId:"tenant-a", principalId:"author-a", operationId:"planning.plans.create", key:"shared" }));
+  assert.ok(await adapter.idempotencyLedgerPort.lookup({ organizationId:"tenant-a", principalId:"author-b", operationId:"planning.plans.create", key:"shared" }));
 });
 
 test("database protects approved version history from update and delete", async () => {

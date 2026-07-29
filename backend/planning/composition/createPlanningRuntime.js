@@ -36,9 +36,9 @@ function createPlanningRuntime(deps = {}) {
   const planningRemoteApplicationPort = createPlanningRemoteApplicationPort({
     createPlan: (input, context) => services.createPlan(commands.createPlan(input), context),
     listPlans: (input, context) => services.listPlans(queries.listPlans(input), context),
-    getPlan: (input, context) => services.readPlan(queries.readPlan(input), context),
+    readPlan: (input, context) => services.readPlan(queries.readPlan(input), context),
     updatePlan: (input, context) => services.updatePlan(commands.updatePlan(input), context),
-    getProfile: (input, context) => services.readProfile(queries.readProfile(input), context),
+    readProfile: (input, context) => services.readProfile(queries.readProfile(input), context),
     replaceProfile: (input, context) => services.replaceProfile(commands.replaceProfile(input), context),
   });
   const authorizationRegistry = deps.authorizationRegistry || createDefaultPolicyRegistry();

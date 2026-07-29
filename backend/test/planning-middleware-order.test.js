@@ -9,7 +9,7 @@ test('auth, audience, organization and canonical principal exist before Planning
   const seen = [];
   const prerequisite = (name, assign) => (req, _res, next) => { assign(req); seen.push(name); next(); };
   const app = express();
-  const remote = Object.fromEntries(['createPlan','listPlans','getPlan','updatePlan','getProfile','replaceProfile'].map((name) => [name, async () => ({ ok: true, value: [] })]));
+  const remote = Object.fromEntries(['createPlan','listPlans','readPlan','updatePlan','readProfile','replaceProfile'].map((name) => [name, async () => ({ ok: true, value: [] })]));
   app.use(createPlanningRouter({ planningRemoteApplicationPort: remote,
     availabilityResolver: { async resolve() { throw new Error('authorization reached'); } },
     authorizationProviders: {}, authorizationRegistry: createDefaultPolicyRegistry(), authorizationResourceResolver(req) {

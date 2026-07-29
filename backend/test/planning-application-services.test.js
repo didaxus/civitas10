@@ -34,7 +34,7 @@ function ports(seed = {}) {
       async replaceProfile(input) { calls.push(['replaceProfile', input]); const row = { organizationId: input.organizationId, planningMode: input.planningMode, preferences: input.preferences, version: '2' }; profiles.set(input.organizationId, row); return row; },
     },
     authorizationContextPort: { async validateDataScope(input) { calls.push(['scope', input]); return seed.scopeDecision === undefined ? { allowed: true } : seed.scopeDecision; } },
-    idempotencyLedgerPort: { async lookup({ key }) { return ledger.get(key) || null; }, async recordSuccess({ key, fingerprint, result }) { ledger.set(key, { fingerprint, result }); } },
+    idempotencyLedgerPort: { async lookup(scope) { return ledger.get(`${scope.organizationId}:${scope.principalId}:${scope.operationId}:${scope.key}`) || null; }, async recordSuccess({ organizationId, principalId, operationId, key, fingerprint, result }) { ledger.set(`${organizationId}:${principalId}:${operationId}:${key}`, { fingerprint, result }); } },
     concurrencyPort: { async assertIfMatch(input) { calls.push(['ifMatch', input]); } },
     auditPort: { async record(input) { calls.push(['audit', input]); if (seed.failAudit) throw new Error('audit unavailable'); } },
     outboxPort: { async enqueue(input) { calls.push(['outbox', input]); if (seed.failOutbox) throw new Error('outbox unavailable'); } },
@@ -50,7 +50,7 @@ test('create plan validates scope, records idempotency, audit and outbox atomica
   assert.equal(result.ok, true);
   assert.equal(result.value.id, 'p1');
   assert.deepEqual(p.calls.map(([name]) => name), ['scope', 'transaction', 'createPlan', 'audit', 'outbox']);
-  assert.equal(p.ledger.get('idem-1').result.id, 'p1');
+  assert.equal([...p.ledger.values()][0].result.id, 'p1');
 });
 
 test('list plans applies constraints before persistence lookup returns page', async () => {
@@ -105,6 +105,13 @@ test('update plan rejects stale If-Match and approved-plan mutation', async () =
   assert.equal(approved.problem.detailKey, 'approved_plan_mutation_denied');
 });
 
+test('update plan requires If-Match for an existing resource', async () => {
+  const p = ports({ plans: [{ planId:'p1', organizationId:'org-1', title:'A', status:'draft', version:'1' }] });
+  const result = await createPlanningApplicationServices(p).updatePlan({ planId:'p1', title:'B' }, context('updatePlan'));
+  assert.equal(result.ok, false); assert.equal(result.problem.code, 'planning.remote.precondition_required');
+  assert.equal(p.calls.some(([name]) => name === 'updatePlan'), false);
+});
+
 test('idempotency fingerprint conflict and replay are enforced', async () => {
   const p = ports();
   const services = createPlanningApplicationServices(p);
@@ -115,6 +122,16 @@ test('idempotency fingerprint conflict and replay are enforced', async () => {
   assert.equal(conflict.problem.code, 'planning.remote.idempotency_conflict');
 });
 
+test('idempotency is isolated by tenant, principal and operation', async () => {
+  const p = ports();
+  const services = createPlanningApplicationServices(p);
+  const first = await services.createPlan({ title: 'A' }, context('createPlan', { subjectId: 'author-a', idempotency: { key: 'shared', requestFingerprint: 'fp-a' } }));
+  const second = await services.createPlan({ title: 'B' }, context('createPlan', { subjectId: 'author-b', idempotency: { key: 'shared', requestFingerprint: 'fp-b' } }));
+  assert.equal(first.ok, true); assert.equal(second.ok, true);
+  assert.equal(p.ledger.size, 2);
+  assert.deepEqual([...p.ledger.keys()].sort(), ['org-1:author-a:planning.plans.create:shared', 'org-1:author-b:planning.plans.create:shared']);
+});
+
 test('read and replace profile enforce scope, If-Match, audit, outbox and idempotency', async () => {
   const p = ports({ profiles: [{ organizationId: 'org-1', planningMode: 'standard', preferences: {}, version: '1' }] });
   const services = createPlanningApplicationServices(p);
@@ -123,6 +140,14 @@ test('read and replace profile enforce scope, If-Match, audit, outbox and idempo
   assert.equal(result.ok, true);
   assert.ok(p.calls.some(([name]) => name === 'audit'));
   assert.ok(p.calls.some(([name]) => name === 'outbox'));
+});
+
+test('replace profile requires If-Match for an existing resource', async () => {
+  const p = ports({ profiles: [{ organizationId: 'org-1', planningMode: 'standard', preferences: {}, version: '1' }] });
+  const result = await createPlanningApplicationServices(p).replaceProfile({ planningMode: 'strategic', preferences: {} }, context('replaceProfile'));
+  assert.equal(result.ok, false);
+  assert.equal(result.problem.code, 'planning.remote.precondition_required');
+  assert.equal(p.calls.some(([name]) => name === 'replaceProfile'), false);
 });
 
 test('audit and outbox failures roll back the write and idempotency record', async () => {

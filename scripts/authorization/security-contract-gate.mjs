@@ -48,7 +48,7 @@ export function buildSecurityGateInventory({ fixtures = false } = {}) {
   assertSet(errors, 'namespace_contract', new Set(catalog.phase3Namespaces), new Set(EXPECTED_NAMESPACES), 'Phase 3 namespace set');
   assertSet(errors, 'role_contract', new Set(catalog.organizationRoles), new Set(EXPECTED_ROLES), 'Phase 3 organization role set');
   if (catalog.organizationRoles.length !== 13 || !catalog.organizationRoles.includes('organization_groupleader')) addError(errors, 'role_contract', '13-role model must include organization_groupleader', { actualCount: catalog.organizationRoles.length });
-  if (catalog.permissions.length !== 167) addError(errors, 'permission_cardinality', 'catalog must contain 167 permissions', { actual: catalog.permissions.length });
+  if (catalog.permissions.length !== 168) addError(errors, 'permission_cardinality', 'catalog must contain 168 permissions', { actual: catalog.permissions.length });
   if (catalog.legacyDecisions.length !== 10) addError(errors, 'legacy_cardinality', 'catalog must contain 10 explicit legacy decisions', { actual: catalog.legacyDecisions.length });
   if (catalog.catalogHash !== catalogArtifact._generated.catalogHash) addError(errors, 'catalog_hash_mismatch', 'authored/generated catalog hashes differ', { catalogHash: catalog.catalogHash, generated: catalogArtifact._generated.catalogHash });
   if (roleArtifact.roleModel.roleModelVersion !== logtoPlan.roleModelVersion) addError(errors, 'role_model_version_mismatch', 'Logto plan roleModelVersion must match role model artifact', { roleModelVersion: roleArtifact.roleModel.roleModelVersion, logtoPlan: logtoPlan.roleModelVersion });

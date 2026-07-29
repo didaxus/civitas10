@@ -1,9 +1,9 @@
-const { randomUUID } = require('node:crypto');
+const { randomUUID, createHash } = require('node:crypto');
 const { REVIEW_ACTIONS, REVIEW_EVENTS, rehydrateReviewWorkflow, workflow, ReviewWorkflowError } = require('../domain');
 
 class ReviewApplicationError extends Error { constructor(code, details) { super(code); this.name='ReviewApplicationError'; this.code=code; this.details=details; } }
-const actionFor = { assignReviewer:REVIEW_ACTIONS.ASSIGN, submitReview:REVIEW_ACTIONS.SUBMIT, approve:REVIEW_ACTIONS.APPROVE, reject:REVIEW_ACTIONS.REJECT, draftFromApproved:REVIEW_ACTIONS.START_DRAFT };
-const handlerFor = { assignReviewer:'assign', submitReview:'submit', approve:'approve', reject:'reject', draftFromApproved:'draftFromApproved' };
+const actionFor = { assignReviewer:REVIEW_ACTIONS.ASSIGN, assignApprover:REVIEW_ACTIONS.ASSIGN_APPROVER, submitReview:REVIEW_ACTIONS.SUBMIT, approve:REVIEW_ACTIONS.APPROVE, reject:REVIEW_ACTIONS.REJECT, draftFromApproved:REVIEW_ACTIONS.START_DRAFT };
+const handlerFor = { assignReviewer:'assign', assignApprover:'assign', submitReview:'submit', approve:'approve', reject:'reject', draftFromApproved:'draftFromApproved' };
 function fingerprint(command) { return JSON.stringify(Object.keys(command).sort().reduce((o,k)=>(o[k]=command[k],o),{})); }
 
 function createReviewWorkflowService(ports, options={}) {
@@ -29,13 +29,19 @@ function createReviewWorkflowService(ports, options={}) {
       if (!authorization?.allowed) throw new ReviewApplicationError('authorization_denied', { decisionId:authorization?.decisionId, reason:authorization?.reason });
       if (operation === 'approve' && command.actorId === resource.authorId) throw new ReviewApplicationError('self_approval_denied');
       let event;
-      try { event=workflow[handlerFor[operation]](state, { ...command, eventId:uuid(), decisionId:command.decisionId || uuid(), occurredAt:clock().toISOString() }); }
+      const occurredAt=clock().toISOString();
+      const makerChecker=operation==='approve'?await repo.getActivePolicy?.({organizationId:command.organizationId}):null;
+      if(operation==='approve'&&(!makerChecker||authorization.dataScope!=='assigned_approvals'||authorization.permission!=='planning.plans.approve')) throw new ReviewApplicationError('approval_policy_or_scope_required');
+      if(operation==='approve'&&(!command.approvedSnapshot||typeof command.approvedSnapshot!=='object'||Array.isArray(command.approvedSnapshot))) throw new ReviewApplicationError('approved_snapshot_required');
+      const approval=operation==='approve'?{ snapshotHash:createHash('sha256').update(JSON.stringify(command.approvedSnapshot)).digest('hex'), provenance:{ organizationId:command.organizationId,planId:command.planId,planVersion:command.planVersion,actorId:command.actorId,approvedAt:occurredAt,policyVersion:makerChecker.policy_version },policyVersion:makerChecker.policy_version }:{};
+      try { event=workflow[handlerFor[operation]](state, { ...command, ...(operation==='assignApprover'?{assignmentType:'approver'}:{}), ...approval,eventId:uuid(), reviewRequestId:command.reviewRequestId||uuid(), decisionId:command.decisionId || uuid(), occurredAt }); }
       catch (error) { if (error instanceof ReviewWorkflowError) throw new ReviewApplicationError(error.code); throw error; }
       await repo.append({ organizationId:command.organizationId, planId:command.planId, expectedVersion:state.version, event });
       const result=Object.freeze({ organizationId:command.organizationId, planId:command.planId, status:event.type, version:event.aggregateVersion, etag:String(event.aggregateVersion), event });
       const audit={ organizationId:command.organizationId, action, actorId:command.actorId, targetId:command.planId, decisionId:authorization.decisionId, correlationId:context.correlationId, eventId:event.eventId };
       await (tx.audit || ports.audit)?.record(audit);
-      await (tx.outbox || ports.outbox)?.enqueue({ eventId:event.eventId, type:event.type, organizationId:command.organizationId, aggregateId:command.planId, aggregateVersion:event.aggregateVersion, payload:event, correlationId:context.correlationId });
+      const safeEvent={...event};delete safeEvent.approvedSnapshot;delete safeEvent.baseSnapshot;
+      await (tx.outbox || ports.outbox)?.enqueue({ eventId:event.eventId, type:event.type, organizationId:command.organizationId, aggregateId:command.planId, aggregateVersion:event.aggregateVersion, payload:safeEvent, correlationId:context.correlationId });
       await ledger?.recordSuccess({ organizationId:command.organizationId, operation:action, key, fingerprint:fp, result });
       return result;
     });

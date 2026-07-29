@@ -51,7 +51,7 @@ class Planning {
 
   static restore(snapshot) { return new Planning(snapshot); }
 
-  revise({ content, actorId, now = new Date() }) {
+  revise({ content, name = this.name, actorId, now = new Date() }) {
     required(actorId, "actorId");
     if (this.state === PLANNING_STATES.APPROVED) {
       throw new PlanningDomainError(ERROR_CODES.APPROVED_VERSION_IMMUTABLE, "Approved versions cannot be modified");
@@ -62,6 +62,7 @@ class Planning {
     if (content == null || typeof content !== "object" || Array.isArray(content)) {
       throw new PlanningDomainError(ERROR_CODES.INVALID_ARGUMENT, "content must be an object");
     }
+    this.name = required(name, "name");
     if (this.state === PLANNING_STATES.CHANGES_REQUESTED) this.#transition(PLANNING_STATES.DRAFT, actorId, now);
     this.currentVersion += 1;
     this.revision += 1;

@@ -6,6 +6,12 @@ const { requireAuthorization } = require('../../authorization/policies');
 const { NAMED_USE_CASES, PLANNING_MODULE_ID, REMOTE_PROBLEM_CODES, problem } = require('../application/remotePort');
 const { toRfc9457Problem } = require('./problemMapper');
 const { envelopeDto } = require('../application/dtos');
+const { schemas, validate } = require('./requestSchemas');
+
+const validateParams = (includePlan = false) => validateRequest([['params', includePlan ? schemas.planParams : schemas.organizationParams]]);
+const validateBody = (kind) => validateRequest([['body', schemas[kind]]]);
+const validateHeaders = (...kinds) => validateRequest(kinds.map((kind) => ['headers', schemas[kind]]));
+const validateQuery = () => validateRequest([['query', schemas.listQuery]]);
 
 function validateRequest(parts) { return (req, res, next) => {
   const violations = parts.flatMap(([source, schema]) => validate(schema, source === 'body' ? (req.body || {}) : source === 'query' ? coerceQuery(req.query) : source === 'headers' ? req.headers : req.params, source));
@@ -50,17 +56,20 @@ function authorizationProblem(res, { status, error, code, decisionId }) {
 
 function routeUseCase(useCase) { return (req, _res, next) => { req.planningUseCase = useCase; next(); }; }
 
-function controller(method, payloadBuilder) {
+function controller(method, payloadBuilder, timeoutMs = 30_000) {
   return async (req, res) => {
     const port = req.app.locals.planningRemoteApplicationPort;
     if (!port || typeof port[method] !== 'function') return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'remote', { detailKey:'PlanningRemoteApplicationPort is not configured.', correlationId: correlationId(req) }));
     const context = buildContext(req, req.planningUseCase);
     let result;
-    try { result = await port[method](payloadBuilder(req), context); }
+    let timer;
+    const requestedDeadline = context.deadline ? Date.parse(context.deadline) - Date.now() : timeoutMs;
+    const effectiveTimeout = Math.max(1, Math.min(Number.isFinite(requestedDeadline) ? requestedDeadline : timeoutMs, timeoutMs));
+    try { result = await Promise.race([port[method](payloadBuilder(req), context), new Promise((_resolve, reject) => { timer = setTimeout(() => reject(Object.assign(new Error('Planning request timed out'), { name:'TimeoutError' })), effectiveTimeout); })]); }
     catch (error) {
       const timedOut = error?.name === 'TimeoutError' || error?.code === 'ETIMEDOUT' || error?.code === 'ESOCKETTIMEDOUT';
       return sendProblem(res, problem(timedOut ? REMOTE_PROBLEM_CODES.TIMEOUT : REMOTE_PROBLEM_CODES.UNAVAILABLE, timedOut ? 'runtime_timeout' : 'runtime_unavailable', { correlationId: context.correlationId, decisionId: context.authorizationDecision?.decisionId, retryable: true }));
-    }
+    } finally { clearTimeout(timer); }
     if (!result.ok) return sendProblem(res, result.problem);
     if (result.value?.etag || result.value?.version) res.set('ETag', String(result.value.etag || result.value.version));
     const publicResult = method === 'listPlans' ? result.value : envelopeDto(result.value, { correlationId: result.correlationId || correlationId(req) });
@@ -112,26 +121,13 @@ function createPlanningRouter(options = {}) {
   router.use(express.json({ limit: '32kb' }));
   router.use((req, _res, next) => { req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
   const deps = { availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry, preAuthorizationMiddleware };
-  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), deps);
-  mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), deps);
+  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('createPlan'), validateHeaders('idempotencyHeaders')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params.organizationId }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', [validateParams(), validateQuery()], 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined, status:req.query.status }), deps);
   mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'readPlan', validateParams(true), 'readPlan', (req)=>({ planId:req.params.planId }), deps);
-  mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
+  mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('updatePlan'), validateHeaders('idempotencyHeaders', 'concurrencyHeaders')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
   mount(router, 'get', '/o/:organizationId/planning/profile', 'readProfile', validateParams(), 'readProfile', ()=>({}), deps);
-  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), deps);
-  const handoffGuard = (req,res,next) => {
-    const scopes = req.auth?.scopes instanceof Set ? req.auth.scopes : new Set(req.auth?.scopes || req.user?.scopes || []);
-    const decision = req.authorizationDecision || {};
-    if (!scopes.has('planning.production_handoffs.manage')) return res.status(403).json(problemBody('handoff_permission_required','Canonical handoff permission is required.',403));
-    if (decision.dataScope?.strategy !== 'approved_plans' && req.auth?.dataScope !== 'approved_plans') return res.status(403).json(problemBody('handoff_scope_required','approved_plans scope is required.',403));
-    next();
-  };
-  router.get('/o/:organizationId/planning/production-handoffs', validateParams(), handoffGuard, async(req,res)=>res.json({items:await productionHandoffOperations?.list(req.params.organizationId) || []}));
-  router.get('/o/:organizationId/planning/production-handoffs/:operationId', validateParams(), handoffGuard, async(req,res)=>{const value=await productionHandoffOperations?.findById(req.params.organizationId,req.params.operationId);return value?res.json(value):res.status(404).json(problemBody('handoff_operation_not_found','Handoff operation not found.',404));});
-  for (const action of ['reconcile','cancel','rollback']) router.post(`/o/:organizationId/planning/production-handoffs/:operationId/${action}`,validateParams(),handoffGuard,async(req,res)=>{
-    if (!productionHandoffService) return res.status(503).json(problemBody('handoff_service_unavailable','Handoff service unavailable.',503));
-    const operation=await productionHandoffOperations.findById(req.params.organizationId,req.params.operationId); if(!operation)return res.status(404).json(problemBody('handoff_operation_not_found','Handoff operation not found.',404));
-    try { return res.json(await productionHandoffService[action](operation.contract,req.body?.target)); } catch(error){ return res.status(error.status||409).json(problemBody(error.reasonCode||'handoff_action_failed',error.message,error.status||409)); }
-  });
+  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('replaceProfile'), validateHeaders('idempotencyHeaders', 'concurrencyHeaders')], 'replaceProfile', (req)=>({ ...req.body }), deps);
+  router.use((error, req, res, _next) => sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNEXPECTED, 'unexpected', { detailKey:'Planning request failed safely.', correlationId:correlationId(req), decisionId:req.authorizationDecision?.decisionId, retryable:false })));
   return router;
 }
 

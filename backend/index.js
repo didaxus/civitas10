@@ -52,7 +52,9 @@ const { createPlanningRuntime } = require("./planning/composition/createPlanning
 const { getPool } = require("./lib/db");
 const { NAMED_USE_CASES } = require("./planning/application/remotePort");
 const { createModuleAvailabilityResolver, createStaticOperationRegistry, createPostgresAvailabilityStateRepository } = require("./services/moduleAvailabilityResolver");
-const { createUnavailableEntitlementProvider, createUnavailableDataScopeProvider } = require("./authorization/policies/providers");
+const { createEntitlementPolicyProvider, createDataScopePolicyProvider } = require("./authorization/policies/providers");
+const { createProductionModuleControlPlaneService } = require("./services/moduleControlPlane");
+const { createDataScopeEvaluator } = require("./authorization/data-scope");
 
 const app = express();
 const port = 3000;
@@ -71,20 +73,22 @@ app.use(express.json({ limit: "32kb" }));
 const planningStatus = { state: "unavailable", mounted: false, reason: "composition_not_attempted" };
 try {
   const operationRegistry = createStaticOperationRegistry(Object.values(NAMED_USE_CASES).map((spec) => ({ moduleId: "planning", capabilityId: spec.capabilityId, operationId: spec.operationId, executionKind: spec.executionKind })));
-  const moduleControlPlaneService = { repository: { async listBindings() { return []; } }, async getOrganizationModule() { return null; }, async resolveModuleVersion() { return null; }, async evaluateModuleRuntimeCompatibility() { return { compatible: false }; } };
+  const moduleControlPlaneService = createProductionModuleControlPlaneService({ pool: getPool() });
   const availabilityResolver = createModuleAvailabilityResolver({ moduleControlPlaneService, operationRegistry, stateRepository: createPostgresAvailabilityStateRepository({ pool: getPool() }) });
+  const entitlementProvider = createEntitlementPolicyProvider({ repository: entitlementRepository, authorizationFreshnessService });
+  const dataScopeProvider = createDataScopePolicyProvider({ evaluator:createDataScopeEvaluator({ repository:dataScopeRepository }) });
   const runtime = createPlanningRuntime({
     pool: getPool(),
     authorizationContextPort: { async validateDataScope({ context }) { return { allowed: Boolean(context.authorizationDecision?.allowed), decisionId: context.authorizationDecision?.decisionId }; } },
     availabilityResolver,
-    authorizationProviders: { entitlementProvider: createUnavailableEntitlementProvider(), dataScopeProvider: createUnavailableDataScopeProvider() },
+    authorizationProviders: { entitlementProvider, dataScopeProvider },
     authorizationResourceResolver: (req) => ({ type: req.params.planId ? "planning.plan" : "planning", id: req.params.planId || req.params.organizationId, organizationId: req.params.organizationId }),
     authenticationAudienceMiddleware: (req, res, next) => requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [NAMED_USE_CASES[req.planningUseCase].permission] })(req, res, next),
     organizationContextMiddleware: requireOrg,
     canonicalPrincipalMiddleware: async (req, res, next) => { try { const spec = NAMED_USE_CASES[req.planningUseCase]; req.principal = await buildPrincipalForRest(req, { permissionId: spec.permission, surface: "rest", organizationId: req.params.organizationId }); return next(); } catch (error) { return res.status(error.status || 403).json({ error: error.name, code: error.code || "principal_build_failed" }); } },
   });
   app.use('/api/v1', runtime.router);
-  Object.assign(planningStatus, { state: "ready", mounted: true, reason: null });
+  Object.assign(planningStatus, { state: "mounted_fail_closed", mounted: true, reason: "operation_availability_is_tenant_resolved" });
 } catch (error) {
   Object.assign(planningStatus, { state: "unavailable", mounted: false, reason: "composition_failed", error: error.message });
 }

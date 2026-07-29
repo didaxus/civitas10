@@ -44,8 +44,8 @@ async function requestPlanning(authContext, organizationId = ORG) {
     planningRemoteApplicationPort: {
       createPlan: async () => ({ ok: true, value: {} }),
       listPlans: async () => { remoteCalls += 1; return { ok: true, value: [] }; },
-      getPlan: async () => ({ ok: true, value: {} }), updatePlan: async () => ({ ok: true, value: {} }),
-      getProfile: async () => ({ ok: true, value: {} }), replaceProfile: async () => ({ ok: true, value: {} }),
+      readPlan: async () => ({ ok: true, value: {} }), updatePlan: async () => ({ ok: true, value: {} }),
+      readProfile: async () => ({ ok: true, value: {} }), replaceProfile: async () => ({ ok: true, value: {} }),
     },
     availabilityResolver: { resolve: async () => { availabilityCalls += 1; return { executable: true, decisionId: 'availability_A', state: 'available' }; } },
     authorizationProviders: {}, authorizationRegistry: require('../authorization/policies').createDefaultPolicyRegistry(),
@@ -100,7 +100,7 @@ test('all six HTTP routes deny before the remote transport boundary and PUT plan
   const calls = [];
   const port = Object.fromEntries(Object.keys(require('../planning/application/remotePort').NAMED_USE_CASES).map((method) => [method, async () => { calls.push(method); return { ok: true, value: {} }; }]));
   const app = express();
-  app.use(createPlanningRouter({ planningRemoteApplicationPort: port }));
+  app.use(createPlanningRouter({ planningRemoteApplicationPort: port, availabilityResolver:{ resolve:async()=>({ executable:false }) }, authorizationProviders:{}, authorizationRegistry:require('../authorization/policies').createDefaultPolicyRegistry(), authorizationResourceResolver:()=>({}), preAuthorizationMiddleware:[(_req,res)=>res.status(401).type('application/problem+json').json({ correlationId:_req.headers['x-correlation-id'] })] }));
   const server = app.listen(0);
   const base = `http://127.0.0.1:${server.address().port}/o/${ORG}/planning`;
   try {

@@ -7,10 +7,10 @@ const stringId = Object.freeze({ type: 'string', minLength: 1, maxLength: 128, p
 const schemas = Object.freeze({
   organizationParams: { type: 'object', required: ['organizationId'], properties: { organizationId: stringId } },
   planParams: { type: 'object', required: ['organizationId', 'planId'], properties: { organizationId: stringId, planId: stringId } },
-  createPlan: { type: 'object', required: ['title'], additionalProperties: false, properties: { title: { type: 'string', minLength: 1, maxLength: 160 }, description: { type: ['string', 'null'], maxLength: 4000 } } },
+  createPlan: { type: 'object', required: ['title', 'planType'], additionalProperties: false, properties: { title: { type: 'string', minLength: 1, maxLength: 160 }, planType: { enum: ['strategic', 'tactical', 'operational', 'project', 'curriculum'] }, description: { type: ['string', 'null'], maxLength: 4000 } } },
   updatePlan: { type: 'object', minProperties: 1, additionalProperties: false, properties: { title: { type: 'string', minLength: 1, maxLength: 160 }, description: { type: ['string', 'null'], maxLength: 4000 } } },
   replaceProfile: { type: 'object', required: ['planningMode', 'preferences'], additionalProperties: false, properties: { planningMode: { enum: ['standard', 'curriculum', 'strategic'] }, preferences: { type: 'object', additionalProperties: false, properties: { fiscalYearStart: { type: 'string', pattern: /^[0-9]{2}-[0-9]{2}$/ } } } } },
-  listQuery: { type: 'object', additionalProperties: false, properties: { cursor: { type: 'string', maxLength: 512 }, limit: { type: 'integer', minimum: 1, maximum: 100 }, status: { enum: ['draft', 'approved', 'archived'] } } },
+  listQuery: { type: 'object', additionalProperties: false, properties: { cursor: { type: 'string', maxLength: 512 }, limit: { type: 'integer', minimum: 1, maximum: 100 }, status: { enum: ['draft', 'in_review', 'changes_requested', 'approved', 'archived'] } } },
   idempotencyHeaders: { type: 'object', required: ['idempotency-key'], properties: { 'idempotency-key': { type: 'string', minLength: 8, maxLength: 255 } } },
   concurrencyHeaders: { type: 'object', required: ['if-match'], properties: { 'if-match': { type: 'string', minLength: 1, maxLength: 128 } } },
 });
