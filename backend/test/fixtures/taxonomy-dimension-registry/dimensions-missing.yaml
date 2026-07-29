@@ -1,0 +1,23 @@
+{
+  "$schema": "./schemas/data-scope-dimensions.schema.json",
+  "contract": "civitas.authorization.data-scope-dimensions",
+  "version": "2026-07-civitas-data-scope-dimensions-v2",
+  "schemaVersion": "civitas-data-scope-dimensions-schema/v1",
+  "contractVersion": "civitas-data-scope-dimensions/v2",
+  "status": "planned",
+  "lifecycle": {
+    "implementation": "planned",
+    "deployment": "planned",
+    "activation": "planned"
+  },
+  "ownership": {
+    "businessOwner": "civitas-authorization-governance",
+    "contractOwner": "civitas-authorization-boundary",
+    "runtimeOwner": "civitas-authorization-runtime"
+  },
+  "provenance": {
+    "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+    "issue": "#218",
+    "decision": "PR-A canonical contract materialization"
+  }
+}
