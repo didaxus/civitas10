@@ -1,0 +1,27 @@
+name: Package JSON syntax
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate package.json files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Parse every package.json as strict JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' manifest; do
+            echo "Validating ${manifest#./}"
+            node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$manifest"
+          done < <(find . -name node_modules -prune -o -name package.json -type f -print0)
