@@ -7,7 +7,7 @@ function runtime() { let policyVersion = 30; const events = []; return { events,
 test("taxonomy keeps platform definitions separate from tenant-owned values", async () => {
   const repo = createInMemoryTaxonomyRepository(); const rt = runtime(); const service = createTaxonomyService({ repository: repo, runtimeConsistencyPort: rt });
   await service.ensureDefinitions();
-  assert.deepEqual(Object.keys(KNOWN_DIMENSIONS).sort(), ["academic.grade_level","academic.section","academic.subject","administration.function","organization.campus","organization.department"].sort());
+  assert.deepEqual(Object.keys(KNOWN_DIMENSIONS).sort(), ["academic.class","academic.cohort","academic.course","academic.period","academic.stage","academic.subject","administration.function","organization.campus","organization.department","organization.shift"].sort());
   const a = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.subject", stableKey: "mathematics", displayName: "Mathematics", actorLogtoUserId: "user_a" });
   const b = await service.createValue({ organizationId: "org_b", dimensionKey: "academic.subject", stableKey: "mathematics", displayName: "Math", actorLogtoUserId: "user_b" });
   assert.notEqual(a.id, b.id);
@@ -28,10 +28,10 @@ test("publication activates drafts and #95 resolver only accepts active UUID val
 
 test("stable keys are immutable after activation; rename is presentation-only", async () => {
   const repo = createInMemoryTaxonomyRepository(); const rt = runtime(); const service = createTaxonomyService({ repository: repo, runtimeConsistencyPort: rt }); const publication = createTaxonomyPublicationService({ repository: repo, runtimeConsistencyPort: rt });
-  const value = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.section", stableKey: "primary", displayName: "Primary", actorLogtoUserId: "user_a" });
+  const value = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.stage", stableKey: "primary", displayName: "Primary", actorLogtoUserId: "user_a" });
   await publication.publish({ organizationId: "org_a", actorLogtoUserId: "user_a" });
-  await assert.rejects(() => service.updateValue({ organizationId: "org_a", dimensionKey: "academic.section", valueId: value.id, patch: { stableKey: "elementary" }, actorLogtoUserId: "user_a" }), /taxonomy_stable_key_immutable/);
-  const renamed = await service.updateValue({ organizationId: "org_a", dimensionKey: "academic.section", valueId: value.id, patch: { displayName: "Elementary" }, actorLogtoUserId: "user_a" });
+  await assert.rejects(() => service.updateValue({ organizationId: "org_a", dimensionKey: "academic.stage", valueId: value.id, patch: { stableKey: "elementary" }, actorLogtoUserId: "user_a" }), /taxonomy_stable_key_immutable/);
+  const renamed = await service.updateValue({ organizationId: "org_a", dimensionKey: "academic.stage", valueId: value.id, patch: { displayName: "Elementary" }, actorLogtoUserId: "user_a" });
   assert.equal(renamed.id, value.id);
 });
 
@@ -47,9 +47,9 @@ test("archive is blocked when impact is unknown and archived values never author
 
 test("hierarchy rejects cross tenant parents and detects cycles", async () => {
   const repo = createInMemoryTaxonomyRepository(); const service = createTaxonomyService({ repository: repo, runtimeConsistencyPort: runtime() });
-  const a = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.section", stableKey: "primary", displayName: "Primary", actorLogtoUserId: "user_a" });
-  const b = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.section", stableKey: "grade_1", displayName: "Grade 1", actorLogtoUserId: "user_a", parentValueId: a.id });
-  await assert.rejects(() => service.createValue({ organizationId: "org_b", dimensionKey: "academic.section", stableKey: "other", displayName: "Other", actorLogtoUserId: "user_b", parentValueId: a.id }), /taxonomy_parent_cross_tenant/);
+  const a = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.stage", stableKey: "primary", displayName: "Primary", actorLogtoUserId: "user_a" });
+  const b = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.stage", stableKey: "grade_1", displayName: "Grade 1", actorLogtoUserId: "user_a", parentValueId: a.id });
+  await assert.rejects(() => service.createValue({ organizationId: "org_b", dimensionKey: "academic.stage", stableKey: "other", displayName: "Other", actorLogtoUserId: "user_b", parentValueId: a.id }), /taxonomy_parent_cross_tenant/);
   const { assertParentAllowed } = require("../taxonomy");
   assert.throws(() => assertParentAllowed({ definition: { hierarchyAllowed: true }, child: a, parent: b, ancestorLoader: () => [a] }), /taxonomy_cycle_detected/);
 });

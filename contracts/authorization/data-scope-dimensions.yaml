@@ -1,0 +1,16 @@
+{
+  "contract": "civitas.authorization.data-scope-dimensions",
+  "version": "2026-07-v2",
+  "dimensions": {
+    "academic.stage": { "displayName": "Academic stage", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": false, "capabilities": ["lms", "analytics"] },
+    "academic.period": { "displayName": "Academic period", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
+    "academic.subject": { "displayName": "Academic subject", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "analytics"] },
+    "academic.course": { "displayName": "Academic course", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
+    "academic.cohort": { "displayName": "Academic cohort", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["lms", "analytics"] },
+    "academic.class": { "displayName": "Academic class", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
+    "organization.campus": { "displayName": "Campus", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
+    "organization.shift": { "displayName": "Shift", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
+    "organization.department": { "displayName": "Department", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["crm", "support", "analytics"] },
+    "administration.function": { "displayName": "Administrative function", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["support", "analytics"] }
+  }
+}

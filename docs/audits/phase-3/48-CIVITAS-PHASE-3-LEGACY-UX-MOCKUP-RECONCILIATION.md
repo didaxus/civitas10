@@ -1,5 +1,8 @@
 # CIVITAS Phase 3 — Legacy UX Navigation Mockup Reconciliation
 
+> **Historical legacy strings: explicitly marked.** Any `academic.section` or `academic.grade_level` below is retained only as historical/migration evidence; it is not an active alias.
+
+
 - **Version:** 1.0
 - **Status:** reconciled audit / non-normative source review
 - **Repository:** `didaxus/civitas10`
