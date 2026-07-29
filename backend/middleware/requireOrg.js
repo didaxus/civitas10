@@ -11,11 +11,16 @@ async function requireOrg(req, res, next) {
     req.params?.org_id ??
     req.params?.id ??
     req.params?.organizationId ??
-    req.body?.org_id ??
     null
 
   const tokenOrgId = req.user?.organizationId ?? null
-  const canonicalOrgId = tokenOrgId || requestedOrgId
+  const hostOrgId = req.tenantContext?.organizationId ?? null
+  const sessionOrgId = req.session?.organizationId ?? null
+  const presented = [hostOrgId, sessionOrgId, tokenOrgId, requestedOrgId].filter(Boolean)
+  if (presented.length && presented.some((organizationId) => organizationId !== presented[0])) {
+    return res.status(403).json({ error: 'organization_context_mismatch', tokenOrganizationId: tokenOrgId, requestedOrganizationId: requestedOrgId })
+  }
+  const canonicalOrgId = hostOrgId || sessionOrgId || tokenOrgId || requestedOrgId
 
   if (!canonicalOrgId) {
     return res.status(400).json({
