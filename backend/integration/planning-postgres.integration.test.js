@@ -59,4 +59,19 @@ test("database protects approved version history from update and delete", async 
   await adapter.save(item, { expectedRevision: 1 });
   await assert.rejects(() => pool.query("update planning_versions set content='{}' where organization_id='tenant-a' and plan_id='colliding-id'"), { code: "23514" });
   await assert.rejects(() => pool.query("delete from planning_versions where organization_id='tenant-a' and plan_id='colliding-id'"), { code: "23514" });
+  await assert.rejects(() => pool.query("insert into planning_versions(organization_id,plan_id,version,state,content,created_by) values('tenant-a','colliding-id',1,'draft','{\"changed\":true}','attacker') on conflict (organization_id,plan_id,version) do update set content=excluded.content"), { code:"23514" });
+});
+
+test("draft from approved persists provenance and preserves approved history", async () => {
+  const item = await seed("tenant-a");
+  item.transition(PLANNING_STATES.IN_REVIEW, { actorId:"author" });
+  item.transition(PLANNING_STATES.APPROVED, { actorId:"reviewer" });
+  await adapter.save(item, { expectedRevision:1 });
+  const approved = await adapter.findById("tenant-a", "colliding-id");
+  approved.draftFromApproved({ actorId:"author", sourceHash:"b".repeat(64), reason:"Compensated assumptions" });
+  await adapter.save(approved, { expectedRevision:approved.revision - 2 });
+  const rows = await pool.query("select version,state,source_version,source_hash,source_actor,source_reason from planning_versions where organization_id=$1 and plan_id=$2 order by version", ["tenant-a", "colliding-id"]);
+  assert.equal(rows.rowCount, 2);
+  assert.equal(rows.rows[0].state, "approved");
+  assert.deepEqual(rows.rows[1], { version:2, state:"draft", source_version:1, source_hash:"b".repeat(64), source_actor:"author", source_reason:"Compensated assumptions" });
 });
