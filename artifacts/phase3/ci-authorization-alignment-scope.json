@@ -1,0 +1,14 @@
+{
+  "included": [
+    "shared CI bootstrap",
+    "PostgreSQL job separation",
+    "Integration Events test isolation",
+    "tenant-scoped operation idempotency"
+  ],
+  "excluded": [
+    "Data Scope v2 projection governance",
+    "scope template resolution",
+    "Logto custom claims",
+    "issue closure"
+  ]
+}
