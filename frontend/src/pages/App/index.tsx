@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { LogtoProvider, useLogto } from "@logto/react";
-import { Routes, Route, Navigate, useParams } from "react-router";
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router";
 import Landing from "./Landing";
 import Callback from "../Callback";
 import OrganizationPage from "../OrganizationPage";
@@ -15,6 +15,7 @@ import { ScreenGate } from "../../authorization/components/ScreenGate";
 import { TenantAuthorizationProvider } from "../../authorization/AuthorizationProvider";
 import { civitasLogtoConfig } from "../../auth/logtoConfig";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
+import { TenantContextProvider, useTenantContext } from "../../tenant/TenantContextProvider";
 
 function App() {
   return (
@@ -37,12 +38,18 @@ function OwnerOrganizationContextRoute({ children }: { children: ReactNode }) {
 
 
 function TenantGovernanceRoute() {
-  const { organizationId = "" } = useParams();
+  const { organizationId } = useTenantContext();
   return (
     <TenantAuthorizationProvider organizationId={organizationId}>
       <ScreenGate screenId="tenant-governance"><GovernanceStudioPage surface="tenant" /></ScreenGate>
     </TenantAuthorizationProvider>
   );
+}
+
+function LegacyTenantSettingsRedirect() {
+  const location = useLocation();
+  const suffix = location.pathname.split("/settings/")[1] || "governance";
+  return <Navigate to={`/settings/${suffix}${location.search}${location.hash}`} replace />;
 }
 
 function AppContent() {
@@ -69,11 +76,12 @@ function AppContent() {
       <Route path={appRoutes.ownerOrganizationGovernancePeopleSegmentation.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerSystem.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-worker-queues"><OwnerWorkerQueuesPage /></ScreenGate></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerWorkerQueues.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-worker-queues"><OwnerWorkerQueuesPage /></ScreenGate></OwnerRouteGuard>} />
-      <Route path={appRoutes.tenantGovernance.path} element={<TenantGovernanceRoute />} />
-      <Route path={appRoutes.tenantGovernanceRoles.path} element={<TenantGovernanceRoute />} />
-      <Route path={appRoutes.tenantGovernanceRoleNames.path} element={<TenantGovernanceRoute />} />
-      <Route path={appRoutes.tenantGovernanceStructure.path} element={<TenantGovernanceRoute />} />
-      <Route path={appRoutes.tenantGovernanceProvisioning.path} element={<TenantGovernanceRoute />} />
+      <Route path={appRoutes.tenantGovernance.path} element={<TenantContextProvider><TenantGovernanceRoute /></TenantContextProvider>} />
+      <Route path={appRoutes.tenantGovernanceRoles.path} element={<TenantContextProvider><TenantGovernanceRoute /></TenantContextProvider>} />
+      <Route path={appRoutes.tenantGovernanceRoleNames.path} element={<TenantContextProvider><TenantGovernanceRoute /></TenantContextProvider>} />
+      <Route path={appRoutes.tenantGovernanceStructure.path} element={<TenantContextProvider><TenantGovernanceRoute /></TenantContextProvider>} />
+      <Route path={appRoutes.tenantGovernanceProvisioning.path} element={<TenantContextProvider><TenantGovernanceRoute /></TenantContextProvider>} />
+      <Route path="/o/:legacyOrganization/settings/*" element={<TenantContextProvider><LegacyTenantSettingsRedirect /></TenantContextProvider>} />
       <Route path="/:orgId" element={<OrganizationPage />} />
     </Routes>
   );

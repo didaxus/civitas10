@@ -36,7 +36,7 @@ const { createOrganizationProvisioningRecorder } = require("./services/organizat
 const { createIdempotencyKey, getOrganizationProvisioningDraft, saveOrganizationProvisioningDraft } = require("./services/organizationProvisioningDrafts");
 const { buildBootstrapStatus } = require("./services/ownerBootstrapStatus");
 const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./services/ownerCapabilitySurfaces");
-const { buildGovernanceReadModel, assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
+const { buildGovernanceReadModel } = require("./services/governanceReadModel");
 const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
 const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
 const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
@@ -49,9 +49,7 @@ const { registerScimReconciliationRoutes } = require("./routes/scimReconciliatio
 const { registerScimUserRoutes } = require("./scim/users/routes");
 const { registerPlanningRoutes } = require("./planning/presentation/routes");
 const { buildPrincipalForRest } = require("./authorization/principalBuilder");
-const { AuthorizationExplainabilityQuery } = require("./authorization/explainability/AuthorizationExplainabilityQuery");
-const { evaluateOrganizationEntitlement } = require("./authorization/entitlements/entitlementEvaluator");
-const { createDataScopeEvaluator } = require("./authorization/data-scope/dataScopeEvaluator");
+const { createTenantContextMiddleware, tenantOrganizationId } = require("./middleware/tenantContext");
 
 const app = express();
 const port = 3000;
@@ -85,6 +83,7 @@ app.use(cors());
 registerPlanningRoutes(app);
 // Orden canónico de middlewares tenant: requireOrganizationAccess → requireOrg → requirePermission → requireSeats (solo si aplica) → handler.
 const secureRoute = createSecurityPolicyRegistry({ app });
+const requireTenantContext = createTenantContextMiddleware();
 
 const summarizeStatus = (statuses) => {
   if (statuses.includes("unhealthy")) return "unhealthy";
@@ -407,8 +406,8 @@ secureRoute.get("/owner/organizations/:organizationId/governance/identity", "own
   return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: req.params.organizationId, surface: "owner", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" });
 });
 
-secureRoute.get("/o/:organizationId/settings/governance/identity", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: req.params.organizationId, surface: "tenant", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" }); }
+secureRoute.get("/organization/settings/governance/identity", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
+  try { return res.status(501).json({ contractVersion: "2026-07-civitas10-identity-federation-v1", organizationId: tenantOrganizationId(req), surface: "tenant", status: "planned", reason: "identity_federation_handlers_policies_and_tests_pending" }); }
   catch (error) { return sendPublicError(res, error, "TenantIdentityFederationError", "Failed to load identity federation surface"); }
 });
 
@@ -526,105 +525,104 @@ const documentListHandler = async (_req, res) => {
 const documentCreateHandler = async (_req, res) => { res.json({ data: "Document created" }); };
 
 
-secureRoute.get("/o/:organizationId/lms/groups", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["lms.groups.read"] }), requireOrg, requirePermission("lms.groups.read"), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().listGroups({ organizationId: req.params.organizationId, principal: await buildPrincipalForRest(req, { permissionId: "lms.groups.read", surface: "rest" }) })); }
+secureRoute.get("/session/context", "organizationMemberRead", requireOrganizationAccess({ allowAuthOnly: true }), requireTenantContext, (req, res) => res.json({ tenantContext: req.tenantContext }));
+
+secureRoute.get("/organization/lms/groups", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: ["lms.groups.read"] }), requireTenantContext, requireOrg, requirePermission("lms.groups.read"), async (req, res) => {
+  try { return res.json(await lmsGroupService().listGroups({ organizationId: tenantOrganizationId(req), principal: await buildPrincipalForRest(req, { permissionId: "lms.groups.read", surface: "rest" }) })); }
   catch (error) { return sendLmsGroupError(res, error); }
 });
 
-secureRoute.get("/o/:organizationId/lms/groups/:groupId", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["lms.groups.read"] }), requireOrg, requirePermission("lms.groups.read"), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().getGroupDetail({ organizationId: req.params.organizationId, groupId: req.params.groupId, principal: await buildPrincipalForRest(req, { permissionId: "lms.groups.read", surface: "rest" }) })); }
+secureRoute.get("/organization/lms/groups/:groupId", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: ["lms.groups.read"] }), requireTenantContext, requireOrg, requirePermission("lms.groups.read"), async (req, res) => {
+  try { return res.json(await lmsGroupService().getGroupDetail({ organizationId: tenantOrganizationId(req), groupId: req.params.groupId, principal: await buildPrincipalForRest(req, { permissionId: "lms.groups.read", surface: "rest" }) })); }
   catch (error) { return sendLmsGroupError(res, error); }
 });
 
-secureRoute.get("/o/:organizationId/lms/groups/:groupId/members", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["lms.group_members.read"] }), requireOrg, requirePermission("lms.group_members.read"), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(await lmsGroupService().listGroupMembers({ organizationId: req.params.organizationId, groupId: req.params.groupId, principal: await buildPrincipalForRest(req, { permissionId: "lms.group_members.read", surface: "rest" }) })); }
+secureRoute.get("/organization/lms/groups/:groupId/members", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: ["lms.group_members.read"] }), requireTenantContext, requireOrg, requirePermission("lms.group_members.read"), async (req, res) => {
+  try { return res.json(await lmsGroupService().listGroupMembers({ organizationId: tenantOrganizationId(req), groupId: req.params.groupId, principal: await buildPrincipalForRest(req, { permissionId: "lms.group_members.read", surface: "rest" }) })); }
   catch (error) { return sendLmsGroupError(res, error); }
 });
 
-secureRoute.get("/o/:organizationId/governance", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
+secureRoute.get("/organization/governance", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
   try {
-    assertTenantRouteMatchesContext(req);
-    const logtoOrganization = await getLogtoOrganizationById(req.params.organizationId);
+    const logtoOrganization = await getLogtoOrganizationById(tenantOrganizationId(req));
     const roles = await listLogtoOrganizationRoles();
-    const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
-    const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId }));
+    const members = await listLogtoOrganizationUsers({ organizationId: tenantOrganizationId(req) }).catch(() => []);
+    const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: tenantOrganizationId(req), userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
+    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: tenantOrganizationId(req), surface: "tenant", roles, members, memberRolesByUserId }));
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceReadModelError", "Failed to build tenant governance read model");
   }
 });
 
-secureRoute.post("/o/:organizationId/access-preview", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const result = await previewAccess({ organizationId: req.params.organizationId, surface: "tenant", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {}, explainabilityQuery: buildExplainabilityQuery(req) }); return res.json(result); }
+secureRoute.post("/organization/access-preview", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
+  try { const result = await previewAccess({ organizationId: tenantOrganizationId(req), surface: "tenant", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {} }); return res.json(result); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceAccessPreviewError", "Failed to preview tenant access"); }
 });
 
-secureRoute.put("/o/:organizationId/governance/navigation-preferences", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(updateNavigationPreferences({ organizationId: req.params.organizationId, preferences: req.body?.preferences || [], actorLogtoUserId: actorId(req), surface: "tenant" })); }
+secureRoute.put("/organization/governance/navigation-preferences", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try { return res.json(updateNavigationPreferences({ organizationId: tenantOrganizationId(req), preferences: req.body?.preferences || [], actorLogtoUserId: actorId(req), surface: "tenant" })); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceNavigationError", "Failed to update navigation preferences"); }
 });
 
-secureRoute.get("/o/:organizationId/governance/audit", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
+secureRoute.get("/organization/governance/audit", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
+  try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: listGovernanceAuditEvents({ organizationId: tenantOrganizationId(req), limit: req.query?.limit }) }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceAuditError", "Failed to load governance audit events"); }
 });
 
-secureRoute.put("/o/:organizationId/governance/role-activations", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+secureRoute.put("/organization/governance/role-activations", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
   try {
-    assertTenantRouteMatchesContext(req);
     const roles = await listLogtoOrganizationRoles();
-    const result = await updateTenantActivations({ organizationId: req.params.organizationId, actorLogtoUserId: req.user?.sub || req.user?.id, changes: req.body?.changes || [], expectedPolicyVersion: req.body?.expectedPolicyVersion, roleIdToName: roleMapFromRoles(roles), reason: req.body?.reason || "tenant_activation_update" });
+    const result = await updateTenantActivations({ organizationId: tenantOrganizationId(req), actorLogtoUserId: req.user?.sub || req.user?.id, changes: req.body?.changes || [], expectedPolicyVersion: req.body?.expectedPolicyVersion, roleIdToName: roleMapFromRoles(roles), reason: req.body?.reason || "tenant_activation_update" });
     return res.json({ contractVersion: "2026-07-civitas10-governance-roles-v1", ...result });
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceActivationError", "Failed to update tenant role activations");
   }
 });
 
-secureRoute.post("/o/:organizationId/governance/member-role-assignments", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+secureRoute.post("/organization/governance/member-role-assignments", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
   try {
-    assertTenantRouteMatchesContext(req);
     const roleId = String(req.body?.logtoRoleId || "");
     const userId = String(req.body?.logtoUserId || "");
     if (!roleId || !userId) return res.status(400).json({ error: "ValidationError", message: "logtoUserId and logtoRoleId are required." });
-    await assignOrganizationRoleToUser({ organizationId: req.params.organizationId, userId, organizationRoleId: roleId });
-    return res.status(202).json({ contractVersion: "2026-07-civitas10-governance-roles-v1", status: "accepted", organizationId: req.params.organizationId, target: { logtoUserId: userId, logtoRoleId: roleId } });
+    await assignOrganizationRoleToUser({ organizationId: tenantOrganizationId(req), userId, organizationRoleId: roleId });
+    return res.status(202).json({ contractVersion: "2026-07-civitas10-governance-roles-v1", status: "accepted", organizationId: tenantOrganizationId(req), target: { logtoUserId: userId, logtoRoleId: roleId } });
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceRoleAssignmentError", "Failed to assign organization role");
   }
 });
 
 
-secureRoute.post("/o/:organizationId/governance/taxonomy/values", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const value = await createTaxonomyValue({ organizationId: req.params.organizationId, body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.status(201).json({ contractVersion: "2026-07-civitas10-governance-structure-v1", value }); }
+secureRoute.post("/organization/governance/taxonomy/values", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try { const value = await createTaxonomyValue({ organizationId: tenantOrganizationId(req), body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.status(201).json({ contractVersion: "2026-07-civitas10-governance-structure-v1", value }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceTaxonomyValueError", "Failed to create taxonomy value"); }
 });
 
-secureRoute.post("/o/:organizationId/governance/taxonomy/publish", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const result = await publishTaxonomy({ organizationId: req.params.organizationId, body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.json({ contractVersion: "2026-07-civitas10-governance-structure-v1", ...result }); }
+secureRoute.post("/organization/governance/taxonomy/publish", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try { const result = await publishTaxonomy({ organizationId: tenantOrganizationId(req), body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.json({ contractVersion: "2026-07-civitas10-governance-structure-v1", ...result }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceTaxonomyPublishError", "Failed to publish taxonomy catalog"); }
 });
 
-secureRoute.post("/o/:organizationId/governance/units", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const unit = await createGovernanceUnit({ organizationId: req.params.organizationId, body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.status(201).json({ contractVersion: "2026-07-civitas10-governance-structure-v1", unit }); }
+secureRoute.post("/organization/governance/units", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try { const unit = await createGovernanceUnit({ organizationId: tenantOrganizationId(req), body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.status(201).json({ contractVersion: "2026-07-civitas10-governance-structure-v1", unit }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceUnitError", "Failed to create organization unit"); }
 });
 
-secureRoute.post("/o/:organizationId/governance/units/:unitId/activate", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const unit = await activateGovernanceUnit({ organizationId: req.params.organizationId, unitId: req.params.unitId, actorLogtoUserId: safeActor(req) }); return res.json({ contractVersion: "2026-07-civitas10-governance-structure-v1", unit }); }
+secureRoute.post("/organization/governance/units/:unitId/activate", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try { const unit = await activateGovernanceUnit({ organizationId: tenantOrganizationId(req), unitId: req.params.unitId, actorLogtoUserId: safeActor(req) }); return res.json({ contractVersion: "2026-07-civitas10-governance-structure-v1", unit }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceUnitActivateError", "Failed to activate organization unit"); }
 });
 
-secureRoute.post("/o/:organizationId/governance/data-scopes", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); const result = await createDataScope({ organizationId: req.params.organizationId, body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.status(201).json({ contractVersion: "2026-07-civitas10-governance-structure-v1", ...result }); }
+secureRoute.post("/organization/governance/data-scopes", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
+  try { const result = await createDataScope({ organizationId: tenantOrganizationId(req), body: req.body || {}, actorLogtoUserId: safeActor(req) }); return res.status(201).json({ contractVersion: "2026-07-civitas10-governance-structure-v1", ...result }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceDataScopeError", "Failed to create data-scope assignment"); }
 });
 
 const documentReadPolicies = ["same-organization", "membership-required"];
 const documentCreatePolicies = ["same-organization", "membership-required", "critical-operation-audited"];
 
-secureRoute.get("/o/:organizationId/documents", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), requireAuthorization({ permission: ORG_AUTHZ.documentsRead, actionId: "documents.read", surface: "organization", operation: "read", policies: documentReadPolicies }), documentListHandler);
+secureRoute.get("/organization/documents", "organizationMemberRead", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), requireAuthorization({ permission: ORG_AUTHZ.documentsRead, actionId: "documents.read", surface: "organization", operation: "read", policies: documentReadPolicies }), documentListHandler);
 
-secureRoute.post("/o/:organizationId/documents", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), requireAuthorization({ permission: ORG_AUTHZ.documentsCreate, actionId: "documents.create", surface: "organization", operation: "create", policies: documentCreatePolicies, auditIntentResolver: (req) => ({ decisionId: req.authorizationDecision?.decisionId, action: "documents.create", actorSubject: req.auth?.subject || req.user?.sub || req.user?.id, organizationId: req.params.organizationId, targetType: "document", reason: req.body?.reason || "document_create", reasonRequired: false, idempotencyRequired: false }) }), documentCreateHandler);
+secureRoute.post("/organization/documents", "organizationAdminWrite", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireTenantContext, requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), requireAuthorization({ permission: ORG_AUTHZ.documentsCreate, actionId: "documents.create", surface: "organization", operation: "create", policies: documentCreatePolicies, auditIntentResolver: (req) => ({ decisionId: req.authorizationDecision?.decisionId, action: "documents.create", actorSubject: req.auth?.subject || req.user?.sub || req.user?.id, organizationId: tenantOrganizationId(req), targetType: "document", reason: req.body?.reason || "document_create", reasonRequired: false, idempotencyRequired: false }) }), documentCreateHandler);
 
 registerScimUserRoutes({ secureRoute });
 

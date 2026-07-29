@@ -20,6 +20,7 @@ import { AuditDiagnosticsModule } from "./modules/audit/AuditDiagnosticsModule";
 import { IdentityProvisioningModule } from "./modules/identity-provisioning/IdentityProvisioningModule";
 import { governanceDisplayName } from "./adapters/governance-view-model";
 import { flattenGovernanceWorkspaceItems, type GovernanceWorkspaceItemId } from "./governance-workspace-contract";
+import { useOptionalTenantContext } from "../../tenant/TenantContextProvider";
 
 type LegacyGovernanceTabId = "overview" | "roles-permissions" | "taxonomy" | "structure" | "groups" | "data-scopes" | "aliases-navigation" | "access-preview" | "audit-diagnostics" | "members";
 
@@ -130,8 +131,9 @@ const GovernanceModules = ({ activeItemId, model, operationalModel, previewOwner
 
 export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }) => {
   const params = useParams();
+  const tenantContext = useOptionalTenantContext();
   const location = useLocation();
-  const organizationId = params.organizationId ?? params.orgId ?? "";
+  const organizationId = surface === "tenant" ? tenantContext?.organizationId ?? "" : params.organizationId ?? params.orgId ?? "";
   const governanceApi = useGovernanceApi();
   const ownerApi = useOwnerApi();
   const activeItemId = activeItemFromLocation(surface, location.pathname, location.search);
