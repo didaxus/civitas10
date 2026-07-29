@@ -1,1 +1,80 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://civitas.didaxus.com/contracts/authorization/role-path.schema.json","title":"Civitas Membership-Bound Role Path v2","type":"object","additionalProperties":false,"required":["schemaVersion","rolePathId","organizationId","membershipBindingId","membershipState","logtoRoleId","canonicalRoleId","roleAssignmentState","permissionId","rolePotentialVersion","snapshotVersion"],"properties":{"schemaVersion":{"const":"civitas-role-path/v2"},"rolePathId":{"type":"string"},"organizationId":{"type":"string"},"membershipBindingId":{"type":"string"},"membershipState":{"enum":["active","revoked","expired","stale","unknown"]},"logtoRoleId":{"type":"string"},"canonicalRoleId":{"type":"string","pattern":"^organization_[a-z]+$"},"roleAssignmentState":{"enum":["active","revoked","expired","stale","unknown"]},"permissionId":{"type":"string"},"rolePotentialVersion":{"type":"string"},"snapshotVersion":{"type":"integer","minimum":1}}}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.didaxus.com/contracts/authorization/role-path.schema.json",
+  "title": "Civitas Membership-Bound Role Path v2",
+  "description": "A complete, active authorization path. Identity and tenant values occur only inside membershipBinding so consumers cannot compose a principal, organization, membership, permission, or surface from different paths.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "rolePathId",
+    "membershipBinding",
+    "logtoRoleId",
+    "canonicalRoleId",
+    "roleAssignmentState",
+    "permissionBinding",
+    "roleModelVersion",
+    "authorizationContractVersion",
+    "snapshotVersion"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "civitas-role-path/v2" },
+    "rolePathId": { "$ref": "#/$defs/canonicalId" },
+    "membershipBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["membershipBindingId", "principal", "organizationId", "membershipState"],
+      "properties": {
+        "membershipBindingId": { "$ref": "#/$defs/canonicalId" },
+        "principal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["principalId", "subject"],
+          "properties": {
+            "principalId": { "$ref": "#/$defs/canonicalId" },
+            "subject": { "$ref": "#/$defs/canonicalId" }
+          }
+        },
+        "organizationId": { "$ref": "#/$defs/canonicalId" },
+        "membershipState": { "const": "active" }
+      }
+    },
+    "logtoRoleId": { "$ref": "#/$defs/canonicalId" },
+    "canonicalRoleId": {
+      "type": "string",
+      "pattern": "^organization_[a-z][a-z0-9]*(?:_[a-z0-9]+)*$",
+      "not": { "const": "owner_global" }
+    },
+    "roleAssignmentState": { "const": "active" },
+    "permissionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permissionId", "surface"],
+      "properties": {
+        "permissionId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"
+        },
+        "surface": {
+          "enum": ["organization_portal", "core_manager", "worker_event", "mcp"]
+        }
+      }
+    },
+    "roleModelVersion": {
+      "type": "string",
+      "pattern": "^civitas-role-model/v[1-9][0-9]*$"
+    },
+    "authorizationContractVersion": {
+      "type": "string",
+      "pattern": "^civitas-authorization-foundation/v[1-9][0-9]*$"
+    },
+    "snapshotVersion": { "type": "integer", "minimum": 1 }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+    }
+  }
+}
