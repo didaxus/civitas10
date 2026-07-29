@@ -1,0 +1,64 @@
+{
+  "$schema": "./schemas/owner-scope-templates.schema.json",
+  "schemaVersion": "civitas-owner-scope-templates-schema/v1",
+  "contractVersion": "civitas-owner-scope-templates/v2",
+  "status": "planned",
+  "lifecycle": {
+    "implementation": "planned",
+    "deployment": "planned",
+    "activation": "planned"
+  },
+  "ownership": {
+    "businessOwner": "civitas-authorization-governance",
+    "contractOwner": "civitas-authorization-boundary",
+    "runtimeOwner": "civitas-authorization-runtime"
+  },
+  "provenance": {
+    "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+    "issue": "#218",
+    "decision": "PR-A canonical contract materialization"
+  },
+  "templates": [
+    {
+      "id": "owner.organization-administration",
+      "version": 1,
+      "status": "planned",
+      "publicationStatus": "planned",
+      "availabilityGate": "owner_approval_required",
+      "canonicalRoleId": "organization_admin",
+      "capabilityIds": [
+        "org.members",
+        "org.roles"
+      ],
+      "permissionIds": [
+        "org.members.read",
+        "org.roles.create"
+      ],
+      "dataScopeStrategyId": "organization_and_units",
+      "allowedTargetKinds": [
+        "organization",
+        "organization_unit"
+      ],
+      "allowedDimensionIds": [
+        "organization.campus",
+        "organization.department"
+      ],
+      "allowedRelationships": [],
+      "riskLimits": [
+        "standard",
+        "high"
+      ],
+      "tenantMay": "narrow_only",
+      "ownership": {
+        "businessOwner": "civitas-authorization-governance",
+        "contractOwner": "civitas-authorization-boundary",
+        "runtimeOwner": "civitas-authorization-runtime"
+      },
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    }
+  ]
+}

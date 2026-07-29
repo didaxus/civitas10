@@ -3,14 +3,14 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9"
+    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
   },
-  "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9",
+  "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
   "contractVersion": "2026-07-civitas-permission-catalog-v1",
   "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
   "contractVersionRecorded": "2026-07-civitas-permission-catalog-v1",
   "counts": {
-    "permissions": 160,
+    "permissions": 167,
     "namespaces": 14,
     "organizationRoles": 13,
     "legacyDecisions": 10,
