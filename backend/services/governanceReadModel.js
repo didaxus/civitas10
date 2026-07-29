@@ -1,9 +1,6 @@
 "use strict";
 
 const { GOVERNANCE_READ_MODEL_CONTRACT_VERSION, GOVERNANCE_OPERATION_REGISTRY_VERSION, governanceOperationRegistry, moduleInventory } = require("../../core/governance/operation-registry.cjs");
-const { buildRolesGovernanceSlice } = require("./governanceRolesReadModel");
-const { buildStructureGovernanceSlice } = require("./governanceStructureReadModel");
-const { buildAliasesNavigationPolicy, listGovernanceAuditEvents } = require("./governanceOperationsReadModel");
 
 const MODULE_KEYS = Object.freeze(["overview", "identity-provisioning", "permissions", "members", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]);
 const TENANT_MODULES = Object.freeze(new Set(["identity-provisioning", "permissions", "members", "data-scope", "taxonomy", "units", "aliases-navigation", "access-preview"]));
@@ -96,6 +93,12 @@ function buildPermissionMatrix(versions) {
   ];
 }
 
+function createGovernanceReadModel({ roles, structure, operations } = {}) {
+  if (!roles || !structure || !operations) throw new Error("governance_read_model_ports_required");
+  const { buildRolesGovernanceSlice } = roles;
+  const { buildStructureGovernanceSlice } = structure;
+  const { buildAliasesNavigationPolicy, listGovernanceAuditEvents } = operations;
+
 async function buildGovernanceReadModel({ organization, organizationId, surface, stale = false, drift = false, roles = [], members = [], memberRolesByUserId = new Map() } = {}) {
   if (!["owner", "tenant"].includes(surface)) { const error = new Error("Invalid governance surface."); error.status = 500; error.code = "GOVERNANCE_SURFACE_INVALID"; throw error; }
   const versions = buildVersions({ stale, drift });
@@ -103,7 +106,8 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
   const logtoOrganizationId = organizationId || safeString(organization?.id) || safeString(organization?.logtoOrganizationId);
   const rolesSlice = await buildRolesGovernanceSlice({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId });
   const structureSlice = await buildStructureGovernanceSlice(logtoOrganizationId);
-  const aliasesNavigation = buildAliasesNavigationPolicy(logtoOrganizationId);
+  const aliasesNavigation = await buildAliasesNavigationPolicy(logtoOrganizationId);
+  const operationAudits = await listGovernanceAuditEvents({ organizationId: logtoOrganizationId });
   const diagnostics = roleCatalogDiagnostics({ roles: rolesSlice.roles, aliasesNavigation });
   return {
     contractVersion: GOVERNANCE_READ_MODEL_CONTRACT_VERSION,
@@ -134,10 +138,10 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
     dataScopes: structureSlice.dataScopes.items,
     aliasesNavigation,
     accessPreviews: [],
-    auditSummary: { totalEvents: rolesSlice.auditEvents.length + structureSlice.auditEvents.length + listGovernanceAuditEvents({ organizationId: logtoOrganizationId }).length, latestEventAt: rolesSlice.auditEvents.at(-1)?.createdAt || structureSlice.auditEvents.at(-1)?.createdAt || listGovernanceAuditEvents({ organizationId: logtoOrganizationId })[0]?.createdAt || null, redaction: "actor_subjects_before_after_tokens_and_connector_secrets_redacted" },
+    auditSummary: { totalEvents: rolesSlice.auditEvents.length + structureSlice.auditEvents.length + operationAudits.length, latestEventAt: rolesSlice.auditEvents.at(-1)?.createdAt || structureSlice.auditEvents.at(-1)?.createdAt || operationAudits[0]?.createdAt || null, redaction: "actor_subjects_before_after_tokens_and_connector_secrets_redacted" },
     auditEvents: [
       ...[...rolesSlice.auditEvents, ...structureSlice.auditEvents].map((event, index) => ({ id: `audit_${index + 1}`, actorId: event.actorLogtoUserId ? "redacted_actor" : "system", organizationId: logtoOrganizationId, target: event.targetType || event.permission || "governance", action: event.action, reason: event.reason || "governance_mutation", contractVersion: GOVERNANCE_READ_MODEL_CONTRACT_VERSION, createdAt: event.createdAt })),
-      ...listGovernanceAuditEvents({ organizationId: logtoOrganizationId }),
+      ...operationAudits,
     ],
     diagnostics: [
       { code: "governance_read_model_projection", severity: "info", message: "Aggregate read model is mounted; feature writes remain in owning APIs." },
@@ -145,6 +149,9 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
       ...diagnostics,
     ],
   };
+}
+
+return { buildGovernanceReadModel };
 }
 
 function assertTenantRouteMatchesContext(req) {
@@ -158,4 +165,5 @@ function assertTenantRouteMatchesContext(req) {
   }
 }
 
-module.exports = { GOVERNANCE_READ_MODEL_CONTRACT_VERSION, GOVERNANCE_OPERATION_REGISTRY_VERSION, governanceOperationRegistry, moduleInventory, buildGovernanceReadModel, assertTenantRouteMatchesContext };
+
+module.exports = { GOVERNANCE_READ_MODEL_CONTRACT_VERSION, GOVERNANCE_OPERATION_REGISTRY_VERSION, governanceOperationRegistry, moduleInventory, createGovernanceReadModel, assertTenantRouteMatchesContext };

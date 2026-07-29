@@ -2,27 +2,12 @@
 
 const crypto = require("node:crypto");
 const { permissionsByName, rolePermissionAssignments } = require("../../core/authz");
-const { createInMemoryEntitlementRepository } = require("../authorization/entitlements/entitlementRepository");
 const { createEntitlementService } = require("../authorization/entitlements/entitlementService");
 const { evaluateOrganizationEntitlement } = require("../authorization/entitlements/entitlementEvaluator");
 const { createAuthorizationFreshnessService } = require("../authorization/runtime/authorizationFreshnessService");
 
-const entitlementRepository = createInMemoryEntitlementRepository();
-const runtimeAuditEvents = [];
-const runtimeOutboxEvents = [];
-const runtimeCacheInvalidations = [];
-
-const runtimeConsistencyPort = {
-  async incrementPolicyVersion({ organizationId }) { return entitlementRepository.incrementPolicyVersion(organizationId); },
-  async enqueueOutbox(event) { runtimeOutboxEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
-  async audit(event) { runtimeAuditEvents.push({ ...event, createdAt: new Date().toISOString() }); return event; },
-};
-const authorizationFreshnessService = createAuthorizationFreshnessService({
-  versionService: { increment: async ({ organizationId }) => ({ policyVersion: await entitlementRepository.incrementPolicyVersion(organizationId) }), getVersion: async (organizationId) => ({ policyVersion: await entitlementRepository.getPolicyVersion(organizationId) }) },
-  cachePort: { async invalidateOrganization(event) { runtimeCacheInvalidations.push({ ...event, createdAt: new Date().toISOString() }); } },
-  eventPort: { async publish(event) { runtimeOutboxEvents.push({ ...event, createdAt: new Date().toISOString() }); } },
-});
-
+function createGovernanceRolesReadModel({ entitlementRepository, runtimeConsistencyPort, authorizationFreshnessService, auditPort, outboxPort } = {}) {
+  if (!entitlementRepository || !runtimeConsistencyPort || !authorizationFreshnessService || !auditPort || !outboxPort) throw new Error("governance_roles_ports_required");
 function hashSubject(value) { return value ? `sub_${crypto.createHash("sha256").update(String(value)).digest("hex").slice(0, 12)}` : null; }
 function roleId(role = {}) { return role.id || role.organizationRoleId || role.roleId || null; }
 function roleName(role = {}) { return role.name || role.nameCache || role.key || roleId(role); }
@@ -113,8 +98,8 @@ async function buildRolesGovernanceSlice({ organizationId, roles = [], members =
     roles: await listRoleView({ roles, members, memberRolesByUserId, organizationId }),
     members: await buildMemberView({ members, memberRolesByUserId }),
     permissionMatrix: await buildPermissionRows({ organizationId, roles }),
-    auditEvents: runtimeAuditEvents.filter((event) => event.organizationId === organizationId).slice(-25),
-    outboxEvents: runtimeOutboxEvents.filter((event) => event.organizationId === organizationId).slice(-25),
+    auditEvents: await auditPort.list({ organizationId, limit: 25 }),
+    outboxEvents: await outboxPort.list({ organizationId, limit: 25 }),
   };
 }
 
@@ -126,4 +111,7 @@ async function updateTenantActivations({ organizationId, actorLogtoUserId, chang
 }
 function roleMapFromRoles(roles = []) { return Object.fromEntries(roles.map((role) => [roleId(role), canonicalRoleKey(roleName(role))]).filter(([id]) => id)); }
 
-module.exports = { entitlementRepository, runtimeAuditEvents, runtimeOutboxEvents, runtimeCacheInvalidations, authorizationFreshnessService, buildRolesGovernanceSlice, updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, canonicalRoleKey };
+return { buildRolesGovernanceSlice, updateOwnerCeilings, updateTenantActivations, roleMapFromRoles };
+}
+
+module.exports = { createGovernanceRolesReadModel, canonicalRoleKey, roleMapFromRoles };

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "p3-016-inventory/v1",
+  "baseSha": "7de22afe1cf0e0f60b72fb5d2c9890e3a451e786",
+  "status": "blocked",
+  "reasonCode": "P3_015_EXECUTABLE_PERSISTENCE_NOT_AVAILABLE",
+  "openPullRequestMatches": [],
+  "reuse": [
+    "contracts/federation/planning-runtime/v1/schema.json",
+    "contracts/openapi/modules/planning.yaml",
+    "backend/planning/infrastructure/moduleExecutionContext.js",
+    "backend/planning/application/remotePort.js",
+    "backend/planning/application/ports.js",
+    "backend/services/integrationEvents.js",
+    "backend/db/migrations/0020_integration_events_operations.sql"
+  ],
+  "extend": [
+    "backend/planning/application/services.js",
+    "backend/planning/application/dtos.js",
+    "backend/test/planning-application-services.test.js"
+  ],
+  "missing": [
+    "P3-015 Planning aggregate and immutable version implementation",
+    "P3-015 tenant-bound PostgreSQL repositories",
+    "P3-015 Planning migration and rollback",
+    "Planning transaction adapter sharing state, audit, idempotency and outbox",
+    "real PostgreSQL concurrency and two-tenant evidence",
+    "registered independently deployable Agora runtime implementation root"
+  ],
+  "conflicting": [
+    "Existing application-service factory has only fake persistence evidence and cannot establish PostgreSQL guarantees",
+    "planning.plan.updated.v1 is emitted by existing code without a P3-014 registered event schema"
+  ],
+  "outOfScope": ["frontend", "LMS", "AI", "graph", "sources", "MCP writes", "provider adapters"],
+  "stablePortsAlreadyPresent": [
+    "PlanningPersistencePort",
+    "PlanningAuthorizationContextPort",
+    "PlanningIdempotencyLedgerPort",
+    "PlanningConcurrencyPort",
+    "PlanningAuditPort",
+    "PlanningOutboxPort",
+    "PlanningUnitOfWorkPort"
+  ],
+  "servicesPresent": ["createPlan", "listPlans", "readPlan", "updatePlan", "readProfile", "replaceProfile"],
+  "operationalLifecycle": "PLANNED",
+  "completionClaim": false
+}
