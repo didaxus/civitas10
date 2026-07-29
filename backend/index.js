@@ -39,7 +39,7 @@ const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./se
 const { buildGovernanceReadModel } = require("./services/governanceReadModel");
 const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
 const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
-const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
+const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, listGovernanceAuditPage, getGovernanceAuditEvent, exportGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
 const { requireGlobalOwner } = require("./authorization/guards");
 const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
@@ -433,6 +433,16 @@ secureRoute.post("/owner/organizations/:organizationId/access-preview", "ownerRe
 secureRoute.get("/owner/organizations/:organizationId/governance/audit", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
   try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: await listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
   catch (error) { return sendPublicError(res, error, "OwnerGovernanceAuditError", "Failed to load governance audit events"); }
+});
+
+secureRoute.get("/owner/organizations/:organizationId/governance/audit/:eventId", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
+  const detail = getGovernanceAuditEvent({ organizationId: req.params.organizationId, eventId: req.params.eventId });
+  return detail ? res.json(detail) : res.status(404).json({ error: "AuditEventNotFound" });
+});
+
+secureRoute.post("/owner/organizations/:organizationId/governance/audit/export", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerRuntimeOperationsExecute] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
+  try { return res.json(exportGovernanceAuditEvents({ organizationId: req.params.organizationId, actorId: actorId(req), capabilityGranted: true, correlationId: req.get("X-Correlation-Id"), filters: req.body?.filters || {} })); }
+  catch (error) { return sendPublicError(res, error, "OwnerGovernanceAuditExportError", "Failed to export governance audit events"); }
 });
 
 secureRoute.put("/owner/organizations/:organizationId/governance/entitlement-ceilings", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerRuntimeOperationsExecute] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
