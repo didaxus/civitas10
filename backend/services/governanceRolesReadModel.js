@@ -2,7 +2,6 @@
 
 const crypto = require("node:crypto");
 const { permissionsByName, rolePermissionAssignments } = require("../../core/authz");
-const { createInMemoryEntitlementRepository } = require("../authorization/entitlements/entitlementRepository");
 const { createEntitlementService } = require("../authorization/entitlements/entitlementService");
 const { evaluateOrganizationEntitlement } = require("../authorization/entitlements/entitlementEvaluator");
 const { createAuthorizationFreshnessService } = require("../authorization/runtime/authorizationFreshnessService");
@@ -131,8 +130,8 @@ async function buildRolesGovernanceSlice({ organizationId, roles = [], members =
     roles: await listRoleView({ roles, members, memberRolesByUserId, organizationId }),
     members: await buildMemberView({ organizationId, members, memberRolesByUserId }),
     permissionMatrix: await buildPermissionRows({ organizationId, roles }),
-    auditEvents: runtimeAuditEvents.filter((event) => event.organizationId === organizationId).slice(-25),
-    outboxEvents: runtimeOutboxEvents.filter((event) => event.organizationId === organizationId).slice(-25),
+    auditEvents: await auditPort.list({ organizationId, limit: 25 }),
+    outboxEvents: await outboxPort.list({ organizationId, limit: 25 }),
   };
 }
 
