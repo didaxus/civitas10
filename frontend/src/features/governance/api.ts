@@ -6,7 +6,7 @@ import { validateGovernanceReadModel, type GovernanceAccessPreview, type Governa
 const assertAccessPreview = (response: unknown): GovernanceAccessPreview => {
   if (!response || typeof response !== "object") throw new Error("Governance access preview contract failed at $: response must be an object");
   const value = response as GovernanceAccessPreview;
-  if (!value.subjectId || !value.decision || typeof value.decision.allowed !== "boolean") throw new Error("Governance access preview contract failed at $.decision: decision must include allowed boolean");
+  if (value.aggregateVersion !== "authorization-explanation/v2" || !value.summary || typeof value.summary.allowed !== "boolean" || !Array.isArray(value.rolePathMatrix)) throw new Error("Governance access preview contract failed: expected authorization-explanation/v2 backend aggregate");
   if (value.mutated !== false) throw new Error("Governance access preview contract failed at $.mutated: preview must be read-only");
   return value;
 };
