@@ -70,6 +70,7 @@ jobs:
             'authz:policy-contract-check',
             'authz:data-scope-contract-check',
             'authz:data-scope-migration-check',
+            'authz:data-scope-v2:postgres-check',
             'logto:authz:contract-check',
             'authz:security-gate:check',
             'authz:runtime-contract-check',
@@ -204,6 +205,11 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres@localhost:5432/civitas_p3_006
         run: npm run modules:p3-006:postgres-check
+
+      - name: Run PostgreSQL Data Scope v2 migration and round-trip gate
+        env:
+          TEST_DATABASE_URL: postgres://postgres@localhost:5432/civitas_p3_005
+        run: npm run authz:data-scope-v2:postgres-check
 
       - name: Run PostgreSQL integration events gate
         env:
