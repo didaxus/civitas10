@@ -5,6 +5,7 @@ const { randomUUID, createHash } = require('node:crypto');
 const { requireAuthorization } = require('../../authorization/policies');
 const { NAMED_USE_CASES, PLANNING_MODULE_ID, REMOTE_PROBLEM_CODES, problem } = require('../application/remotePort');
 const { toRfc9457Problem } = require('./problemMapper');
+const { envelopeDto } = require('../application/dtos');
 
 const ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH']);
@@ -70,7 +71,8 @@ function controller(method, payloadBuilder) {
     const result = await port[method](payloadBuilder(req), buildContext(req, req.planningUseCase));
     if (!result.ok) return sendProblem(res, result.problem);
     if (result.value?.etag || result.value?.version) res.set('ETag', String(result.value.etag || result.value.version));
-    return res.status(method === 'createPlan' ? 201 : 200).json(result.value);
+    const publicResult = method === 'listPlans' ? result.value : envelopeDto(result.value, { correlationId: result.correlationId || correlationId(req) });
+    return res.status(method === 'createPlan' ? 201 : 200).json(publicResult);
   };
 }
 
@@ -108,10 +110,9 @@ function createPlanningRouter({ planningRemoteApplicationPort, availabilityResol
   const deps = { availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry };
   mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), deps);
   mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), deps);
-  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'getPlan', validateParams(true), 'getPlan', (req)=>({ planId:req.params.planId }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'readPlan', validateParams(true), 'readPlan', (req)=>({ planId:req.params.planId }), deps);
   mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
-  mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
-  mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), deps);
+  mount(router, 'get', '/o/:organizationId/planning/profile', 'readProfile', validateParams(), 'readProfile', ()=>({}), deps);
   mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), deps);
   return router;
 }
