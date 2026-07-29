@@ -3,7 +3,6 @@
   "$id": "https://civitas.didaxus.com/contracts/authorization/token-claims.schema.json",
   "title": "Civitas Organization Token Claims v2",
   "type": "object",
-  "additionalProperties": false,
   "required": [
     "sub",
     "iss",
@@ -17,8 +16,7 @@
   ],
   "properties": {
     "sub": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "iss": {
       "type": "string",
@@ -27,16 +25,12 @@
     "aud": {
       "oneOf": [
         {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
         },
         {
           "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
           "items": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         }
       ]
@@ -48,25 +42,38 @@
       "type": "integer"
     },
     "organization_id": {
-      "type": "string",
-      "minLength": 1
+      "type": "string"
     },
     "https://civitas.didaxus.com/claims/organization_membership_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 8
     },
     "https://civitas.didaxus.com/claims/organization_role_ids": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
+      "not": {
+        "contains": {
+          "const": "owner_global"
+        }
+      },
       "items": {
         "type": "string",
         "minLength": 1
       }
     },
     "https://civitas.didaxus.com/claims/authz_contract_version": {
-      "const": "civitas-authorization-foundation/v2"
+      "const": "2026-07-civitas-authz-v2"
+    },
+    "scope": {
+      "type": "string"
     }
   },
-  "x-civitas-note": "Membership must be real Logto membership or trusted Civitas server binding."
+  "additionalProperties": false,
+  "x-civitas-custom-claim-allowlist": [
+    "https://civitas.didaxus.com/claims/organization_membership_id",
+    "https://civitas.didaxus.com/claims/organization_role_ids",
+    "https://civitas.didaxus.com/claims/authz_contract_version"
+  ],
+  "x-civitas-note": "Membership must be real Logto membership or trusted Civitas server binding; ABAC remains server-side."
 }

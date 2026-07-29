@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "2026-07-civitas-data-scope-contract-artifact-v2",
+  "dimensionRegistryVersion": "2026-07-civitas-data-scope-dimensions-v2",
+  "dimensionRegistryHash": "6ba90a928c8817ea7fd77cc504b0e3284e1f8b715419136c7e4be55aa169219e",
+  "strategyRegistryVersion": "2026-07-civitas-data-scope-strategies-v2",
+  "strategyRegistryHash": "00b5dde4671fa51bf8d9c362c66739979b88fb4376fa9a0f97d0046d9aa7584d",
+  "templateRegistryVersion": "2026-07-owner-scope-templates-v2",
+  "templateRegistryHash": "aa56597e96c0b3b7c34c6f1f426b366bc4411a3d937f14e796ba6d672cdf4c8b"
+}
