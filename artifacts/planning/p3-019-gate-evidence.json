@@ -242,7 +242,7 @@
         "frontend/src/features/planning/planningApi.ts",
         "frontend/src/features/planning/planningRemoteUiContribution.ts"
       ],
-      "hash": "5c9e045233b4504343f9ca64842ac15bc39269290ab2043afe456d85105afda3"
+      "hash": "1f632f1219db141f7c62b93fbc43372e6143ed865d35d1d4da8f208bc422eaca"
     },
     "planning_events": {
       "algorithm": "sha256",

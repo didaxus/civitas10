@@ -7,7 +7,7 @@ const base = organizationScopedRouteTemplate("/planning/plans");
 const route = (suffix: string) => `${base}${suffix}`;
 
 export const planningRemoteUiContribution: ModuleUiContribution = {
-  contract: { schemaVersion: MODULE_UI_CONTRACT_VERSION, uiContractVersion: MODULE_UI_CONTRACT_VERSION, contributionVersion: "1.0.0", status: "active" },
+  contract: { schemaVersion: MODULE_UI_CONTRACT_VERSION, uiContractVersion: MODULE_UI_CONTRACT_VERSION, contributionVersion: "1.0.0", status: "planned" },
   identity: { moduleId: "planning", moduleVersion: "0.1.0", catalogHash, manifestHash },
   artifact: { entrypoint: { artifactId: "planning-remote-ui.js", contentType: "text/javascript; charset=utf-8", sizeBytes: 4096 }, integrity: "sha256-planningRemoteUiImplementationStable", assetManifest: { manifestVersion: "civitas-module-ui-assets/v1", integrity: "sha256-planningRemoteUiAssetGraphStable", assets: [{ artifactId: "planning-remote-ui.js", integrity: "sha256-planningRemoteUiImplementationStable", contentType: "text/javascript; charset=utf-8", sizeBytes: 4096 }] } },
   compatibility: { designSystemVersion: MODULE_UI_DESIGN_SYSTEM_VERSION, hostApiVersion: MODULE_UI_HOST_API_VERSION },
