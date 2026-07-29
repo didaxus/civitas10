@@ -47,7 +47,7 @@ test("requireOrg with suspended org returns 403 with action", async () => {
   };
   const { requireOrg } = require("../middleware/requireOrg");
   const r = res();
-  await requireOrg({ params: { id: "org-1" } }, r, () => assert.fail("next should not be called"));
+  await requireOrg({ user: { organizationId: "org-1" }, params: { id: "org-1" } }, r, () => assert.fail("next should not be called"));
   assert.equal(r.statusCode, 403);
   assert.ok(r.body.action);
   delete require.cache[requireOrgPath];
@@ -76,8 +76,15 @@ test("requireOrg rejects token/request organization mismatch", async () => {
   await requireOrg({ user: { organizationId: "org-A" }, params: { organizationId: "org-B" } }, r, () => assert.fail("next should not be called"));
   assert.equal(r.statusCode, 403);
   assert.equal(r.body.error, "organization_context_mismatch");
-  assert.equal(r.body.tokenOrganizationId, "org-A");
-  assert.equal(r.body.requestedOrganizationId, "org-B");
+  assert.deepEqual(r.body, { error: "organization_context_mismatch" });
+});
+
+test("requireOrg never treats a route parameter as tenant authority", async () => {
+  const { requireOrg } = require("../middleware/requireOrg");
+  const r = res();
+  await requireOrg({ params: { organizationId: "org-route-only" } }, r, () => assert.fail("next should not be called"));
+  assert.equal(r.statusCode, 400);
+  assert.equal(r.body.error, "organization_context_required");
 });
 
 test("requireOrg with tenant token and no param uses token organization", async () => {

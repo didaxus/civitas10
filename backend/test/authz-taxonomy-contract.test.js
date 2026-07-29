@@ -7,7 +7,7 @@ function runtime() { let policyVersion = 30; const events = []; return { events,
 test("taxonomy keeps platform definitions separate from tenant-owned values", async () => {
   const repo = createInMemoryTaxonomyRepository(); const rt = runtime(); const service = createTaxonomyService({ repository: repo, runtimeConsistencyPort: rt });
   await service.ensureDefinitions();
-  assert.deepEqual(Object.keys(KNOWN_DIMENSIONS).sort(), ["academic.class","academic.cohort","academic.course","academic.period","academic.stage","academic.subject","administration.function","organization.campus","organization.department","organization.shift"].sort());
+  assert.deepEqual(Object.keys(KNOWN_DIMENSIONS).sort(), ["academic.stage","academic.period","academic.subject","academic.course","academic.cohort","academic.class","organization.campus","organization.shift","organization.department","administration.function"].sort());
   const a = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.subject", stableKey: "mathematics", displayName: "Mathematics", actorLogtoUserId: "user_a" });
   const b = await service.createValue({ organizationId: "org_b", dimensionKey: "academic.subject", stableKey: "mathematics", displayName: "Math", actorLogtoUserId: "user_b" });
   assert.notEqual(a.id, b.id);

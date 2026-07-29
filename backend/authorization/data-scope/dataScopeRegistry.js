@@ -2,8 +2,7 @@
 const {DATA_SCOPE_STRATEGY_REGISTRY,STRATEGY_NAMES,getDataScopeStrategy}=require("./dataScopeStrategyRegistry");
 const STRATEGY_TYPES=STRATEGY_NAMES;
 const RELATIONSHIP_KEYS=Object.freeze(["academic.assigned_group","academic.assigned_course","academic.related_student","planning.relationship","planning.editable","planning.owner","planning.assigned_review","planning.assigned_approval","planning.approved_plan","community.member","community.moderator","hr.managed_employee","hr.self","payroll.managed_employee","payroll.self","scheduling.participant","scheduling.owner","support.assignee","support.requester","communication.sender","communication.recipient"]);
-const { DIMENSION_REGISTRY }=require("../../taxonomy/taxonomyDimensionRegistry");
-const TAXONOMY_DIMENSION_KEYS=Object.freeze(Object.keys(DIMENSION_REGISTRY.dimensions));
+const {TAXONOMY_DIMENSION_KEYS}=require("./taxonomyDimensionsRegistry");
 const DATA_SCOPE_STRATEGIES=Object.freeze({
   organization_director:{ lms:{...DATA_SCOPE_STRATEGY_REGISTRY.organization}, analytics:{...DATA_SCOPE_STRATEGY_REGISTRY.organization_and_units}, reports:{...DATA_SCOPE_STRATEGY_REGISTRY.organization_and_units}},
   organization_headdirector:{ lms:{...DATA_SCOPE_STRATEGY_REGISTRY.organization_and_units,requiredDimensionKeys:Object.freeze(["academic.stage"])}},

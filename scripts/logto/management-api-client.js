@@ -54,7 +54,17 @@ function createLogtoManagementApiClient(config, { transport = fetch, now = () =>
       }
     }
   }
-  return { requestJson, getAccessToken, clearTokenCache: () => { tokenCache = null } }
+  const customJwtPath = config.customJwtScriptPath
+  const assertCustomJwtPath = () => { if (!customJwtPath) throw new LogtoBootstrapError('LOGTO_CUSTOM_JWT_SCRIPT_PATH is required for deployed custom JWT operations', { code: 'LOGTO_CUSTOM_JWT_PATH_REQUIRED' }); return customJwtPath }
+  const getCustomJwtScript = async () => requestJson('GET', assertCustomJwtPath(), { allow404: true })
+  const replaceCustomJwtScript = async ({ source, expectedCurrentHash, idempotencyKey }) => {
+    const current = await getCustomJwtScript()
+    const currentSource = current?.script || current?.source || ''
+    const currentHash = require('crypto').createHash('sha256').update(currentSource).digest('hex')
+    if ((expectedCurrentHash || null) !== (current ? currentHash : null)) throw new LogtoBootstrapError('stale custom JWT script', { code: 'LOGTO_CUSTOM_JWT_SCRIPT_STALE', details: { expectedCurrentHash, currentHash: current ? currentHash : null } })
+    return requestJson('PATCH', assertCustomJwtPath(), { body: { script: source }, correlationId: idempotencyKey })
+  }
+  return { requestJson, getAccessToken, getCustomJwtScript, replaceCustomJwtScript, clearTokenCache: () => { tokenCache = null } }
 }
 function httpError(message, status, body, details) { const retryable = classifyHttpError(status).retryable; return new LogtoBootstrapError(message, { code: status === 429 ? 'LOGTO_RATE_LIMITED' : 'LOGTO_HTTP_ERROR', status, retryable, details: { ...details, body } }) }
 module.exports = { createLogtoManagementApiClient, retryAfterMs }

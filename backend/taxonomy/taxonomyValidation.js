@@ -1,7 +1,7 @@
 "use strict";
 const { TAXONOMY_REASON_CODES } = require("./taxonomyReasonCodes");
-const { DIMENSION_REGISTRY } = require("./taxonomyDimensionRegistry");
-const KNOWN_DIMENSIONS = DIMENSION_REGISTRY.dimensions;
+const { TAXONOMY_DIMENSIONS } = require('../authorization/data-scope/taxonomyDimensionsRegistry');
+const KNOWN_DIMENSIONS = Object.freeze(Object.fromEntries(Object.values(TAXONOMY_DIMENSIONS).map((dimension) => [dimension.key, Object.freeze({ ...dimension, hierarchyAllowed: dimension.hierarchyBehavior !== 'none', multiAssignmentAllowed: dimension.allowMultiple, capabilities: dimension.allowedCapabilities })])));
 const VALUE_STATUSES = Object.freeze(["draft", "active", "deprecating", "archived"]);
 const CHANGE_CLASSES = Object.freeze(["presentation-only", "taxonomy-semantic", "authorization-affecting"]);
 function taxonomyError(code, message = code, safeDetails) { return Object.assign(new Error(message), { code, safeDetails }); }

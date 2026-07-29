@@ -1,16 +1,193 @@
 {
-  "contract": "civitas.authorization.data-scope-dimensions",
-  "version": "2026-07-v2",
-  "dimensions": {
-    "academic.stage": { "displayName": "Academic stage", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": false, "capabilities": ["lms", "analytics"] },
-    "academic.period": { "displayName": "Academic period", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
-    "academic.subject": { "displayName": "Academic subject", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "analytics"] },
-    "academic.course": { "displayName": "Academic course", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
-    "academic.cohort": { "displayName": "Academic cohort", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["lms", "analytics"] },
-    "academic.class": { "displayName": "Academic class", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
-    "organization.campus": { "displayName": "Campus", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
-    "organization.shift": { "displayName": "Shift", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["lms", "scheduling", "analytics"] },
-    "organization.department": { "displayName": "Department", "valueKind": "hierarchy", "hierarchyAllowed": true, "multiAssignmentAllowed": true, "capabilities": ["crm", "support", "analytics"] },
-    "administration.function": { "displayName": "Administrative function", "valueKind": "enumeration", "hierarchyAllowed": false, "multiAssignmentAllowed": true, "capabilities": ["support", "analytics"] }
-  }
+  "$schema": "./schemas/data-scope-dimensions.schema.json",
+  "schemaVersion": "civitas-data-scope-dimensions-schema/v1",
+  "contractVersion": "civitas-data-scope-dimensions/v2",
+  "status": "planned",
+  "lifecycle": {
+    "implementation": "planned",
+    "deployment": "planned",
+    "activation": "planned"
+  },
+  "ownership": {
+    "businessOwner": "civitas-authorization-governance",
+    "contractOwner": "civitas-authorization-boundary",
+    "runtimeOwner": "civitas-authorization-runtime"
+  },
+  "provenance": {
+    "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+    "issue": "#218",
+    "decision": "PR-A canonical contract materialization"
+  },
+  "dimensions": [
+    {
+      "id": "academic.stage",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "academic.period",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "academic.subject",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "academic.course",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "academic.cohort",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "academic.class",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "organization.campus",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "organization.shift",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "organization.department",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    },
+    {
+      "id": "administration.function",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
+        "issue": "#218",
+        "decision": "PR-A canonical contract materialization"
+      }
+    }
+  ]
 }
