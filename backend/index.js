@@ -36,10 +36,12 @@ const { createOrganizationProvisioningRecorder } = require("./services/organizat
 const { createIdempotencyKey, getOrganizationProvisioningDraft, saveOrganizationProvisioningDraft } = require("./services/organizationProvisioningDrafts");
 const { buildBootstrapStatus } = require("./services/ownerBootstrapStatus");
 const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./services/ownerCapabilitySurfaces");
-const { buildGovernanceReadModel, assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
-const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
-const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
-const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
+const { assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
+const { safeActor } = require("./services/governanceStructureReadModel");
+const { actorId } = require("./services/governanceOperationsReadModel");
+const { createGovernanceComposition } = require("./governance/compositionRoot");
+const governance = createGovernanceComposition({ pool: require("./lib/db").getPool() });
+const { buildGovernanceReadModel, updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository, createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, dataScopeRepository, updateNavigationPreferences, previewAccess, listGovernanceAuditEvents } = governance;
 const { requireGlobalOwner } = require("./authorization/guards");
 const { organizationPath } = require("./routes/tenantRoutes");
 const { emptyCatalogPayload, getCatalogHealth, getCountryPhoneCode, listCities, listCountries, listStatesByCountry, parsePositiveInteger, searchLocations } = require("./services/locations");
@@ -409,7 +411,7 @@ secureRoute.post("/owner/organizations/:organizationId/access-preview", "ownerRe
 });
 
 secureRoute.get("/owner/organizations/:organizationId/governance/audit", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
-  try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
+  try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: await listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
   catch (error) { return sendPublicError(res, error, "OwnerGovernanceAuditError", "Failed to load governance audit events"); }
 });
 
@@ -539,12 +541,12 @@ secureRoute.post("/o/:organizationId/access-preview", "organizationMemberRead", 
 });
 
 secureRoute.put("/o/:organizationId/governance/navigation-preferences", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json(updateNavigationPreferences({ organizationId: req.params.organizationId, preferences: req.body?.preferences || [], actorLogtoUserId: actorId(req), surface: "tenant" })); }
+  try { assertTenantRouteMatchesContext(req); return res.json(await updateNavigationPreferences({ organizationId: req.params.organizationId, preferences: req.body?.preferences || [], actorLogtoUserId: actorId(req), surface: "tenant", expectedVersion: req.body?.expectedVersion })); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceNavigationError", "Failed to update navigation preferences"); }
 });
 
 secureRoute.get("/o/:organizationId/governance/audit", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
-  try { assertTenantRouteMatchesContext(req); return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
+  try { assertTenantRouteMatchesContext(req); return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: await listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceAuditError", "Failed to load governance audit events"); }
 });
 
