@@ -25,8 +25,8 @@
     {
       "operationId": "governance.readModel",
       "method": "GET",
-      "pattern": "/o/{organizationId}/governance",
-      "expressPattern": "/o/:organizationId/governance",
+      "pattern": "/organization/governance",
+      "expressPattern": "/organization/governance",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
@@ -68,8 +68,8 @@
     {
       "operationId": "governance.roleActivations",
       "method": "PUT",
-      "pattern": "/o/{organizationId}/governance/role-activations",
-      "expressPattern": "/o/:organizationId/governance/role-activations",
+      "pattern": "/organization/governance/role-activations",
+      "expressPattern": "/organization/governance/role-activations",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -90,8 +90,8 @@
     {
       "operationId": "governance.memberRoleAssignments",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/member-role-assignments",
-      "expressPattern": "/o/:organizationId/governance/member-role-assignments",
+      "pattern": "/organization/governance/member-role-assignments",
+      "expressPattern": "/organization/governance/member-role-assignments",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -113,8 +113,8 @@
     {
       "operationId": "governance.taxonomyValues",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/taxonomy/values",
-      "expressPattern": "/o/:organizationId/governance/taxonomy/values",
+      "pattern": "/organization/governance/taxonomy/values",
+      "expressPattern": "/organization/governance/taxonomy/values",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -135,8 +135,8 @@
     {
       "operationId": "governance.taxonomyPublish",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/taxonomy/publish",
-      "expressPattern": "/o/:organizationId/governance/taxonomy/publish",
+      "pattern": "/organization/governance/taxonomy/publish",
+      "expressPattern": "/organization/governance/taxonomy/publish",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -157,8 +157,8 @@
     {
       "operationId": "governance.units",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/units",
-      "expressPattern": "/o/:organizationId/governance/units",
+      "pattern": "/organization/governance/units",
+      "expressPattern": "/organization/governance/units",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -179,8 +179,8 @@
     {
       "operationId": "governance.dataScopes",
       "method": "POST",
-      "pattern": "/o/{organizationId}/governance/data-scopes",
-      "expressPattern": "/o/:organizationId/governance/data-scopes",
+      "pattern": "/organization/governance/data-scopes",
+      "expressPattern": "/organization/governance/data-scopes",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -224,8 +224,8 @@
     {
       "operationId": "governance.accessPreview",
       "method": "POST",
-      "pattern": "/o/{organizationId}/access-preview",
-      "expressPattern": "/o/:organizationId/access-preview",
+      "pattern": "/organization/access-preview",
+      "expressPattern": "/organization/access-preview",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
@@ -247,8 +247,8 @@
     {
       "operationId": "governance.navigationPreferences",
       "method": "PUT",
-      "pattern": "/o/{organizationId}/governance/navigation-preferences",
-      "expressPattern": "/o/:organizationId/governance/navigation-preferences",
+      "pattern": "/organization/governance/navigation-preferences",
+      "expressPattern": "/organization/governance/navigation-preferences",
       "surface": "tenant",
       "permission": "org.documents.create",
       "policies": [
@@ -292,8 +292,8 @@
     {
       "operationId": "governance.audit",
       "method": "GET",
-      "pattern": "/o/{organizationId}/governance/audit",
-      "expressPattern": "/o/:organizationId/governance/audit",
+      "pattern": "/organization/governance/audit",
+      "expressPattern": "/organization/governance/audit",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [
@@ -336,8 +336,8 @@
     {
       "operationId": "governance.identityProvisioning",
       "method": "GET",
-      "pattern": "/o/{organizationId}/settings/governance/identity",
-      "expressPattern": "/o/:organizationId/settings/governance/identity",
+      "pattern": "/organization/settings/governance/identity",
+      "expressPattern": "/organization/settings/governance/identity",
       "surface": "tenant",
       "permission": "org.documents.read",
       "policies": [

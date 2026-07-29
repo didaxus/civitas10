@@ -1,16 +1,12 @@
 import { useState } from "react";
 import { DataTable, EmptyState, FormField, SectionCard, StatusPill, type DataTableColumn } from "../../../../shared/ui";
-import type { ActionId, ScreenId } from "../../../../authorization/contracts/ids";
-import type { GovernanceAccessPreview, GovernanceAccessPreviewRequest, GovernanceSurface, PermissionMatrixReason } from "../../contracts";
-import { formatSourceVersions, reasonLabel } from "../permission-matrix/reason-format";
-
-const previewVersions = (preview: GovernanceAccessPreview) => formatSourceVersions(preview.decision.sourceVersions as PermissionMatrixReason["sourceVersions"]);
+import type { GovernanceAccessPreview, GovernanceAccessPreviewRequest, GovernanceSurface } from "../../contracts";
 
 const columns: DataTableColumn<GovernanceAccessPreview>[] = [
   { key: "subject", header: "Subject", render: (preview) => <span className="font-medium text-text">{preview.subjectId}</span> },
-  { key: "target", header: "Target", render: (preview) => preview.actionId || preview.screenId || "Not specified" },
-  { key: "decision", header: "Decision", render: (preview) => <StatusPill status={preview.decision.allowed ? "success" : "danger"}>{preview.decision.allowed ? "Allowed" : "Denied"}</StatusPill> },
-  { key: "reason", header: "Reason", render: (preview) => <div><span>{reasonLabel(preview.decision.reason as PermissionMatrixReason["code"])}</span><p className="text-xs text-muted">{previewVersions(preview)}</p></div> },
+  { key: "target", header: "Permission", render: (preview) => preview.permission },
+  { key: "decision", header: "Decision", render: (preview) => <StatusPill status={preview.summary.allowed ? "success" : "danger"}>{preview.summary.allowed ? "Allowed" : "Denied"}</StatusPill> },
+  { key: "reason", header: "First decisive reason", render: (preview) => preview.summary.firstDecisiveReason },
 ];
 
 export const AccessPreviewUnavailable = () => (
@@ -22,7 +18,6 @@ export const AccessPreviewUnavailable = () => (
 export const AccessPreviewModule = ({ organizationId, surface, previews, onPreview }: { organizationId: string; surface: GovernanceSurface; previews: readonly GovernanceAccessPreview[]; onPreview: (request: GovernanceAccessPreviewRequest) => Promise<GovernanceAccessPreview> }) => {
   const [subjectId, setSubjectId] = useState("");
   const [targetId, setTargetId] = useState("");
-  const [targetType, setTargetType] = useState<"action" | "screen">("action");
   const [previewResult, setPreviewResult] = useState<GovernanceAccessPreview | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +26,7 @@ export const AccessPreviewModule = ({ organizationId, surface, previews, onPrevi
     setLoading(true);
     setError(null);
     try {
-      const request: GovernanceAccessPreviewRequest = { organizationId, surface, subjectId, actionId: targetType === "action" ? targetId as ActionId : undefined, screenId: targetType === "screen" ? targetId as ScreenId : undefined };
+      const request: GovernanceAccessPreviewRequest = { organizationId, surface, subjectId, permission: targetId };
       const result = await onPreview(request);
       setPreviewResult(result);
     } catch (caught) {
@@ -45,14 +40,14 @@ export const AccessPreviewModule = ({ organizationId, surface, previews, onPrevi
 
   return (
     <SectionCard title="Access preview" description="Simulate an authorization decision for this selected organization." actions={<StatusPill status="success">Read-only</StatusPill>}>
-      <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto_auto]" data-access-preview-flow="actor-action-simulate-explanation">
+      <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]" data-access-preview-flow="actor-action-simulate-explanation">
         <FormField id="governance-preview-subject" label="Actor or role"><input id="governance-preview-subject" className="civitas-input" value={subjectId} onChange={(event) => setSubjectId(event.target.value)} placeholder="user or role id" /></FormField>
-        <FormField id="governance-preview-target" label="Action or screen"><input id="governance-preview-target" className="civitas-input" value={targetId} onChange={(event) => setTargetId(event.target.value)} placeholder="permission or screen id" /></FormField>
-        <FormField id="governance-preview-type" label="Type"><select id="governance-preview-type" className="civitas-input" value={targetType} onChange={(event) => setTargetType(event.target.value as "action" | "screen")}><option value="action">Action</option><option value="screen">Screen</option></select></FormField>
+        <FormField id="governance-preview-target" label="Permission"><input id="governance-preview-target" className="civitas-input" value={targetId} onChange={(event) => setTargetId(event.target.value)} placeholder="canonical permission id" /></FormField>
         <button type="button" className="civitas-primary-button self-end" disabled={!subjectId || !targetId || loading} onClick={() => void simulatePreview()}>{loading ? "Previewing..." : "Preview access"}</button>
       </div>
       {error ? <p className="mt-3 text-sm text-danger-strong">{error}</p> : null}
-      <DataTable columns={columns} data={[...visiblePreviews]} getKey={(preview, index) => `${preview.subjectId}-${preview.actionId || preview.screenId}-${index}`} emptyState={<EmptyState message="No access previews"><p className="text-sm text-muted-strong">Run a preview when the service is available, or review returned preview rows here.</p></EmptyState>} />
+      <DataTable columns={columns} data={[...visiblePreviews]} getKey={(preview, index) => `${preview.decisionId}-${index}`} emptyState={<EmptyState message="No access previews"><p className="text-sm text-muted-strong">Run a preview when the service is available, or review returned preview rows here.</p></EmptyState>} />
+      {previewResult?.selectedDependencyGraph ? <div className="mt-4" aria-label="Selected authorization dependency list"><h3 className="font-medium">Selected dependency path</h3><ol className="mt-2 list-decimal pl-5 text-sm">{previewResult.selectedDependencyGraph.nodes.map((node) => <li key={node.id}>{node.layer}: {node.passed ? "passed" : `denied (${node.reasonCode || "reason unavailable"})`}</li>)}</ol></div> : null}
     </SectionCard>
   );
 };

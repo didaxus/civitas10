@@ -2,7 +2,7 @@ import type { IconKey } from "../authorization/contracts/ids";
 import { defineRoute, type DefinedRoute, type RouteParams } from "./route-builders";
 
 export const OWNER_NAVIGATION_CONTRACT_VERSION = 2;
-export const TENANT_NAVIGATION_CONTRACT_VERSION = 1;
+export const TENANT_NAVIGATION_CONTRACT_VERSION = 2;
 
 export type AppRoute = {
   path: string;
@@ -37,13 +37,13 @@ const ownerOrganizationGovernanceAuditRoute = defineRoute("/owner/organizations/
 const ownerOrganizationGovernancePeopleSegmentationRoute = defineRoute("/owner/organizations/:organizationId/governance/people-segmentation");
 const ownerOrganizationGovernanceProvisioningRoute = defineRoute("/owner/organizations/:organizationId/governance/identity-provisioning");
 const ownerOrganizationOperationsRoute = defineRoute("/owner/organizations/:organizationId/operations");
-const tenantGovernanceRoute = defineRoute("/o/:organizationId/settings/governance");
-const tenantGovernanceRolesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/roles");
-const tenantGovernanceRoleNamesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/role-names");
-const tenantGovernanceStructureRoute = defineRoute("/o/:organizationId/settings/governance/organization-model/structure");
-const tenantGovernanceProvisioningRoute = defineRoute("/o/:organizationId/settings/governance/identity-provisioning");
-const tenantLmsGradesRoute = defineRoute("/o/:organizationId/lms/grades");
-const tenantLmsGroupsRoute = defineRoute("/o/:organizationId/lms/groups");
+const tenantGovernanceRoute = defineRoute("/settings/governance");
+const tenantGovernanceRolesRoute = defineRoute("/settings/governance/access-policy/roles");
+const tenantGovernanceRoleNamesRoute = defineRoute("/settings/governance/access-policy/role-names");
+const tenantGovernanceStructureRoute = defineRoute("/settings/governance/organization-model/structure");
+const tenantGovernanceProvisioningRoute = defineRoute("/settings/governance/identity-provisioning");
+const tenantLmsGradesRoute = defineRoute("/lms/grades");
+const tenantLmsGroupsRoute = defineRoute("/lms/groups");
 const ownerLogsRoute = staticRoute("/owner/logs");
 const ownerSystemRoute = staticRoute("/owner/system");
 const ownerWorkerQueuesRoute = staticRoute("/owner/system/worker-queues");
