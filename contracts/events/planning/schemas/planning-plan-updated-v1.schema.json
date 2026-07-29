@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.local/events/planning/planning-plan-created-v1.schema.json",
+  "title": "Planning plan updated event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eventId",
+    "eventType",
+    "version",
+    "occurredAt",
+    "organizationId",
+    "actor",
+    "correlationId",
+    "decision",
+    "causation",
+    "sensitivity",
+    "payload",
+    "diff"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "const": "planning.plan.updated.v1"
+    },
+    "version": {
+      "const": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "organizationId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "user",
+            "service",
+            "system"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "redacted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decisionId",
+        "policyVersion",
+        "reason"
+      ],
+      "properties": {
+        "decisionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policyVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    },
+    "causation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "causationId"
+      ],
+      "properties": {
+        "causationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parentEventId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "sensitivity": {
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ]
+    },
+    "payload": {
+      "$ref": "#/$defs/safePayload"
+    },
+    "diff": {
+      "$ref": "#/$defs/redactedDiff"
+    }
+  },
+  "$defs": {
+    "safeKey": {
+      "not": {
+        "pattern": "([sS]ecret|[pP]assword|[tT]oken|[aA]pi[_-]?[kK]ey|[aA]uthorization|[bB]earer|[pP]rivate[_-]?[kK]ey|[cC]redential|[cC]ookie|[eE]mail|[pP]hone|[aA]ddress|[nN]ame)"
+      }
+    },
+    "safeScalar": {
+      "type": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "null"
+      ],
+      "not": {
+        "pattern": "([bB]earer\\s+|[aA]uthorization:|[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+|\\w+:\\w+@)"
+      }
+    },
+    "safePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planId",
+        "status",
+        "redacted"
+      ],
+      "properties": {
+        "planId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "archived"
+          ]
+        },
+        "redacted": {
+          "const": true
+        },
+        "safeSummary": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "maxItems": 50
+        }
+      }
+    },
+    "redactedDiff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "redacted",
+        "changes"
+      ],
+      "properties": {
+        "redacted": {
+          "const": true
+        },
+        "changes": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/diffEntry"
+          }
+        }
+      }
+    },
+    "diffEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "op"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^/[A-Za-z0-9_/-]+$",
+          "$ref": "#/$defs/safeKey"
+        },
+        "op": {
+          "enum": [
+            "add",
+            "replace",
+            "remove"
+          ]
+        },
+        "before": {
+          "enum": [
+            "[redacted]",
+            null
+          ]
+        },
+        "after": {
+          "enum": [
+            "[redacted]",
+            null
+          ]
+        },
+        "classification": {
+          "enum": [
+            "public",
+            "internal",
+            "confidential",
+            "restricted"
+          ]
+        }
+      }
+    }
+  }
+}

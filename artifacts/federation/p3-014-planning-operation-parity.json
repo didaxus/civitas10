@@ -4,12 +4,60 @@
   "publicBasePath": "/api/v1/o/{organizationId}/planning",
   "privateContract": "planning-runtime/v1",
   "operations": [
-    { "operationId": "planningPlansCreate", "routeId": "planning.plans.create", "actionId": "planning.plans.create", "service": "createPlan", "runtimeOperation": "planning.plans.create", "status": "planned" },
-    { "operationId": "planningPlansList", "routeId": "planning.plans.list", "actionId": "planning.plans.list", "service": "listPlans", "runtimeOperation": "planning.plans.list", "status": "planned" },
-    { "operationId": "planningPlansRead", "routeId": "planning.plans.read", "actionId": "planning.plans.read", "service": "getPlan", "runtimeOperation": "planning.plans.get", "status": "planned" },
-    { "operationId": "planningPlansUpdate", "routeId": "planning.plans.update", "actionId": "planning.plans.update", "service": "updatePlan", "runtimeOperation": "planning.plans.update", "status": "planned" },
-    { "operationId": "planningProfileRead", "routeId": "planning.profile.read", "actionId": "planning.profile.read", "service": "getProfile", "runtimeOperation": "planning.profile.get", "status": "planned" },
-    { "operationId": "planningProfileReplace", "routeId": "planning.profile.replace", "actionId": "planning.profile.replace", "service": "replaceProfile", "runtimeOperation": "planning.profile.replace", "status": "planned" }
+    {
+      "operationId": "planningPlansCreate",
+      "routeId": "planning.plans.create",
+      "actionId": "planning.plans.create",
+      "service": "createPlan",
+      "runtimeOperation": "planning.plans.create",
+      "status": "planned"
+    },
+    {
+      "operationId": "planningPlansList",
+      "routeId": "planning.plans.list",
+      "actionId": "planning.plans.list",
+      "service": "listPlans",
+      "runtimeOperation": "planning.plans.list",
+      "status": "planned"
+    },
+    {
+      "operationId": "planningPlansRead",
+      "routeId": "planning.plans.read",
+      "actionId": "planning.plans.read",
+      "service": "readPlan",
+      "runtimeOperation": "planning.plans.read",
+      "status": "planned"
+    },
+    {
+      "operationId": "planningPlansUpdate",
+      "routeId": "planning.plans.update",
+      "actionId": "planning.plans.update",
+      "service": "updatePlan",
+      "runtimeOperation": "planning.plans.update",
+      "status": "planned"
+    },
+    {
+      "operationId": "planningProfileRead",
+      "routeId": "planning.profile.read",
+      "actionId": "planning.profile.read",
+      "service": "readProfile",
+      "runtimeOperation": "planning.profile.read",
+      "status": "planned"
+    },
+    {
+      "operationId": "planningProfileReplace",
+      "routeId": "planning.profile.replace",
+      "actionId": "planning.profile.replace",
+      "service": "replaceProfile",
+      "runtimeOperation": "planning.profile.replace",
+      "status": "planned"
+    }
   ],
-  "plannedNotMounted": ["planning.plans.archive", "planning.sources.*", "planning.graph.*", "planning.ai.*", "planning.mcp.*"]
+  "plannedNotMounted": [
+    "planning.plans.archive",
+    "planning.sources.*",
+    "planning.graph.*",
+    "planning.ai.*",
+    "planning.mcp.*"
+  ]
 }

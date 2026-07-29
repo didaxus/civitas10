@@ -5,6 +5,7 @@ const { randomUUID, createHash } = require('node:crypto');
 const { requireAuthorization } = require('../../authorization/policies');
 const { NAMED_USE_CASES, PLANNING_MODULE_ID, REMOTE_PROBLEM_CODES, problem } = require('../application/remotePort');
 const { toRfc9457Problem } = require('./problemMapper');
+const { envelopeDto } = require('../application/dtos');
 
 const ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH']);
@@ -70,7 +71,8 @@ function controller(method, payloadBuilder) {
     const result = await port[method](payloadBuilder(req), buildContext(req, req.planningUseCase));
     if (!result.ok) return sendProblem(res, result.problem);
     if (result.value?.etag || result.value?.version) res.set('ETag', String(result.value.etag || result.value.version));
-    return res.status(method === 'createPlan' ? 201 : 200).json(result.value);
+    const publicResult = method === 'listPlans' ? result.value : envelopeDto(result.value, { correlationId: result.correlationId || correlationId(req) });
+    return res.status(method === 'createPlan' ? 201 : 200).json(publicResult);
   };
 }
 
@@ -78,6 +80,7 @@ function mount(router, method, path, useCase, validator, controllerMethod, paylo
   const spec = NAMED_USE_CASES[useCase];
   router[method](path,
     routeUseCase(useCase),
+    ...deps.preAuthorizationMiddleware,
     requireAuthorization({
       permission: spec.permission,
       actionId: spec.actionId,
@@ -86,7 +89,7 @@ function mount(router, method, path, useCase, validator, controllerMethod, paylo
       policies: ['same-organization', 'membership-required'],
       providers: {
         ...deps.authorizationProviders,
-        moduleAvailabilityResolver: deps.availabilityResolver || { async resolve() { return { executable: false, state: 'unavailable', reasonCode: 'runtime_unavailable' }; } },
+        moduleAvailabilityResolver: deps.availabilityResolver,
       },
       registry: deps.authorizationRegistry,
       targetResolver: () => ({ moduleId: PLANNING_MODULE_ID, capability: spec.capabilityId, executionKind: spec.executionKind }),
@@ -101,26 +104,30 @@ function mount(router, method, path, useCase, validator, controllerMethod, paylo
     controller(controllerMethod, payloadBuilder));
 }
 
-function createPlanningRouter({ planningRemoteApplicationPort, availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry } = {}) {
+function assertRouterDependencies(deps) {
+  const requiredObjects = ['planningRemoteApplicationPort', 'availabilityResolver', 'authorizationProviders', 'authorizationRegistry'];
+  for (const name of requiredObjects) if (!deps[name] || typeof deps[name] !== 'object') throw new TypeError(`Planning router requires ${name}`);
+  if (typeof deps.availabilityResolver.resolve !== 'function') throw new TypeError('Planning router requires availabilityResolver.resolve');
+  if (typeof deps.authorizationResourceResolver !== 'function') throw new TypeError('Planning router requires authorizationResourceResolver');
+  if (!Array.isArray(deps.preAuthorizationMiddleware) || !deps.preAuthorizationMiddleware.length || deps.preAuthorizationMiddleware.some((item) => typeof item !== 'function')) throw new TypeError('Planning router requires preAuthorizationMiddleware');
+  for (const method of Object.keys(NAMED_USE_CASES)) if (typeof deps.planningRemoteApplicationPort[method] !== 'function') throw new TypeError(`Planning router requires planningRemoteApplicationPort.${method}`);
+}
+
+function createPlanningRouter(options = {}) {
+  assertRouterDependencies(options);
+  const { planningRemoteApplicationPort, availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry, preAuthorizationMiddleware } = options;
   const router = express.Router();
   router.use(express.json({ limit: '32kb' }));
-  router.use((req, _res, next) => { if (planningRemoteApplicationPort) req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
-  const deps = { availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry };
+  router.use((req, _res, next) => { req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
+  const deps = { availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry, preAuthorizationMiddleware };
   mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), deps);
   mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), deps);
-  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'getPlan', validateParams(true), 'getPlan', (req)=>({ planId:req.params.planId }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'readPlan', validateParams(true), 'readPlan', (req)=>({ planId:req.params.planId }), deps);
   mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
-  mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
-  mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), deps);
+  mount(router, 'get', '/o/:organizationId/planning/profile', 'readProfile', validateParams(), 'readProfile', ()=>({}), deps);
   mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), deps);
   return router;
 }
 
-function registerPlanningRoutes(app, options = {}) {
-  app.use('/api/v1', createPlanningRouter(options));
-  if (options.authoringService) {
-    const { createPlanningAuthoringRouter } = require('./authoringRoutes');
-    app.use('/api/v1/o/:organizationId/planning', createPlanningAuthoringRouter(options.authoringService));
-  }
-}
-module.exports = { createPlanningRouter, registerPlanningRoutes, authorizationProblem, buildContext };
+function registerPlanningRoutes(app, options) { app.use('/api/v1', createPlanningRouter(options)); }
+module.exports = { createPlanningRouter, registerPlanningRoutes, authorizationProblem, buildContext, assertRouterDependencies };
