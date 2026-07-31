@@ -19,6 +19,9 @@ export type UseAsyncOperationResult<T> = AsyncState<T> & {
   setError: (error: string | null) => void;
 };
 
+/**
+ * Hook centralizado para gestión de estados de carga/error en operaciones asíncronas.
+ */
 export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperationResult<T> {
   const [state, setState] = useState<AsyncState<T>>({
     data: initialValue ?? null,
@@ -28,6 +31,7 @@ export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperation
 
   const execute = useCallback(async (operation: () => Promise<T>): Promise<T | null> => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
+
     try {
       const result = await operation();
       setState((prev) => ({ ...prev, data: result, loading: false }));
@@ -103,6 +107,9 @@ export const AsyncStateRenderer = ({
   return <>{children}</>;
 };
 
+/**
+ * Hook especializado para operaciones que se ejecutan automáticamente al montar.
+ */
 export function useAutoFetch<T>(
   fetchFn: () => Promise<T>,
   dependencies: React.DependencyList
