@@ -13,39 +13,12 @@ export type AsyncState<T = unknown> = {
  * Resultado del hook useAsyncOperation.
  */
 export type UseAsyncOperationResult<T> = AsyncState<T> & {
-  /** Función para ejecutar la operación */
   execute: (operation: () => Promise<T>) => Promise<T | null>;
-  /** Función para resetear el estado a valores iniciales */
   reset: () => void;
-  /** Función para actualizar datos sin cambiar loading/error */
   setData: (data: T | null) => void;
-  /** Función para establecer error manualmente */
   setError: (error: string | null) => void;
 };
 
-/**
- * Hook centralizado para gestión de estados de carga/error en operaciones asíncronas.
- * Reemplaza el patrón repetido de useState para loading, error y data en cada módulo.
- * 
- * @template T - Tipo de dato esperado
- * @param initialValue - Valor inicial para data (opcional, default: null)
- * @returns Objeto con estado estandarizado y funciones de control
- * 
- * @example
- * ```tsx
- * const { data, loading, error, execute } = useAsyncOperation<GovernanceReadModel>();
- * 
- * useEffect(() => {
- *   execute(() => governanceApi.getOwnerGovernance(organizationId));
- * }, [organizationId]);
- * 
- * if (loading) return <StateRegion><p>Loading...</p></StateRegion>;
- * if (error) return <SectionCard title="Error" description={error} />;
- * if (!data) return <EmptyState />;
- * 
- * return <GovernanceModules model={data} />;
- * ```
- */
 export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperationResult<T> {
   const [state, setState] = useState<AsyncState<T>>({
     data: initialValue ?? null,
@@ -53,12 +26,8 @@ export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperation
     error: null,
   });
 
-  /**
-   * Ejecuta una operación asíncrona actualizando automáticamente los estados.
-   */
   const execute = useCallback(async (operation: () => Promise<T>): Promise<T | null> => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
-
     try {
       const result = await operation();
       setState((prev) => ({ ...prev, data: result, loading: false }));
@@ -70,9 +39,6 @@ export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperation
     }
   }, []);
 
-  /**
-   * Resetea el estado a valores iniciales.
-   */
   const reset = useCallback(() => {
     setState({
       data: initialValue ?? null,
@@ -81,16 +47,10 @@ export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperation
     });
   }, [initialValue]);
 
-  /**
-   * Actualiza data sin afectar loading o error.
-   */
   const setData = useCallback((data: T | null) => {
     setState((prev) => ({ ...prev, data }));
   }, []);
 
-  /**
-   * Establece error manualmente.
-   */
   const setError = useCallback((error: string | null) => {
     setState((prev) => ({ ...prev, error }));
   }, []);
@@ -105,24 +65,7 @@ export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperation
 }
 
 /**
- * Componente UI estandarizado para mostrar estados de carga/error.
- * Se usa junto con useAsyncOperation para renderizar el estado apropiado.
- * 
- * @example
- * ```tsx
- * const { data, loading, error } = useAsyncOperation<GovernanceReadModel>();
- * 
- * return (
- *   <AsyncStateRenderer
- *     loading={loading}
- *     error={error}
- *     emptyMessage="No hay datos disponibles"
- *     loadingMessage="Cargando datos de governance..."
- *   >
- *     {data && <GovernanceModules model={data} />}
- *   </AsyncStateRenderer>
- * );
- * ```
+ * Componente UI simple para estados de carga/error sin dependencias externas.
  */
 export const AsyncStateRenderer = ({
   loading,
@@ -141,8 +84,8 @@ export const AsyncStateRenderer = ({
 }) => {
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-4">
-        <p className="text-sm text-muted-strong">{loadingMessage}</p>
+      <div className="p-4 text-center">
+        <p className="text-sm text-gray-500">{loadingMessage}</p>
       </div>
     );
   }
@@ -150,9 +93,9 @@ export const AsyncStateRenderer = ({
   if (error) {
     return (
       <div className="p-4 border border-red-200 bg-red-50 rounded-md">
-        <h3 className="text-sm font-medium text-red-800">{errorTitle}</h3>
-        <p className="mt-1 text-sm text-red-600">{error}</p>
-        <p className="mt-2 text-xs text-red-500">Verifica tu conexión o intenta nuevamente.</p>
+        <h3 className="text-sm font-semibold text-red-800">{errorTitle}</h3>
+        <p className="mt-1 text-sm text-red-700">{error}</p>
+        <p className="mt-2 text-xs text-red-600">Verifica tu conexión o intenta nuevamente.</p>
       </div>
     );
   }
@@ -160,18 +103,6 @@ export const AsyncStateRenderer = ({
   return <>{children}</>;
 };
 
-/**
- * Hook especializado para operaciones que se ejecutan automáticamente al montar.
- * Útil para fetch de datos iniciales.
- * 
- * @example
- * ```tsx
- * const { data, loading, error } = useAutoFetch(
- *   () => governanceApi.getOwnerGovernance(organizationId),
- *   [organizationId]
- * );
- * ```
- */
 export function useAutoFetch<T>(
   fetchFn: () => Promise<T>,
   dependencies: React.DependencyList
