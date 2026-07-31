@@ -139,25 +139,21 @@ export const AsyncStateRenderer = ({
   loadingMessage?: string;
   errorTitle?: string;
 }) => {
-  // Importación lazy para evitar circular dependencies
-  const { StateRegion, SectionCard } = require("./../ui") as {
-    StateRegion: React.ComponentType<{ children: React.ReactNode }>;
-    SectionCard: React.ComponentType<{ title: string; description?: string; children: React.ReactNode }>;
-  };
-
   if (loading) {
     return (
-      <StateRegion>
+      <div className="flex items-center justify-center p-4">
         <p className="text-sm text-muted-strong">{loadingMessage}</p>
-      </StateRegion>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <SectionCard title={errorTitle} description={error}>
-        <p className="text-xs text-muted">Verifica tu conexión o intenta nuevamente.</p>
-      </SectionCard>
+      <div className="p-4 border border-red-200 bg-red-50 rounded-md">
+        <h3 className="text-sm font-medium text-red-800">{errorTitle}</h3>
+        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-2 text-xs text-red-500">Verifica tu conexión o intenta nuevamente.</p>
+      </div>
     );
   }
 
