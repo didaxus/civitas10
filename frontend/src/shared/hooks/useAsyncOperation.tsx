@@ -13,9 +13,13 @@ export type AsyncState<T = unknown> = {
  * Resultado del hook useAsyncOperation.
  */
 export type UseAsyncOperationResult<T> = AsyncState<T> & {
+  /** Función para ejecutar la operación */
   execute: (operation: () => Promise<T>) => Promise<T | null>;
+  /** Función para resetear el estado a valores iniciales */
   reset: () => void;
+  /** Función para actualizar datos sin cambiar loading/error */
   setData: (data: T | null) => void;
+  /** Función para establecer error manualmente */
   setError: (error: string | null) => void;
 };
 
@@ -69,20 +73,19 @@ export function useAsyncOperation<T>(initialValue?: T | null): UseAsyncOperation
 }
 
 /**
- * Componente UI simple para estados de carga/error sin dependencias externas.
+ * Componente UI simple para estados de carga/error.
+ * Nota: Este componente requiere que el archivo tenga extensión .tsx
  */
 export const AsyncStateRenderer = ({
   loading,
   error,
   children,
-  emptyMessage = "No hay datos disponibles",
   loadingMessage = "Cargando...",
   errorTitle = "Error al cargar",
 }: {
   loading: boolean;
   error: string | null;
   children: React.ReactNode;
-  emptyMessage?: string;
   loadingMessage?: string;
   errorTitle?: string;
 }) => {
