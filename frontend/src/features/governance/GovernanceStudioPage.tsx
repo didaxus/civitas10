@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useParams, Navigate } from "react-router";
 import { OwnerLayout } from "../../layouts/OwnerLayout";
 import { OrganizationLayout } from "../../layouts/OrganizationLayout";
@@ -21,7 +21,7 @@ import { IdentityProvisioningModule } from "./modules/identity-provisioning/Iden
 import { PeopleSegmentationPlaceholder } from "./modules/people-segmentation/PeopleSegmentationPlaceholder";
 import { governanceDisplayName } from "./adapters/governance-view-model";
 import { flattenGovernanceWorkspaceItems, type GovernanceWorkspaceItemId, GOVERNANCE_WORKSPACE_GROUPS } from "./governance-workspace-contract";
-import { useAsyncOperation, useUrlParam } from "../../shared/hooks";
+import { useAsyncOperation } from "../../shared/hooks";
 
 // ============================================================================
 // SINGLE SOURCE OF TRUTH: Route pattern to workspace item mapping
@@ -246,12 +246,12 @@ export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }
   
   // Usar hook centralizado para estado asíncrono de governance read model
   const { 
-    data: model, 
-    loading, 
+    data: modelData, 
     error, 
     execute: fetchGovernanceModel,
     setData: setModel 
   } = useAsyncOperation<GovernanceReadModel>(emptyGovernanceModel(organizationId, surface));
+  const model = modelData ?? emptyGovernanceModel(organizationId, surface);
   
   // Estado separado para operational model (solo owner surface)
   const [operationalModel, setOperationalModel] = useState<ConsolidatedOperationalResponse | null>(null);
@@ -333,7 +333,11 @@ export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }
           previewTenantAccess={governanceApi.previewTenantAccessReadOnly} 
           updateOwnerCeilings={governanceApi.updateOwnerCeilings} 
           updateTenantActivations={governanceApi.updateTenantActivations} 
-          refetchReadModel={() => fetchGovernanceModel(() => surface === "owner" ? governanceApi.getOwnerGovernance(organizationId) : governanceApi.getTenantGovernance(organizationId)).then(r => r ?? null)} 
+          refetchReadModel={async () => {
+            await fetchGovernanceModel(() => surface === "owner"
+              ? governanceApi.getOwnerGovernance(organizationId)
+              : governanceApi.getTenantGovernance(organizationId));
+          }} 
         />
       </section>
     </Layout>
