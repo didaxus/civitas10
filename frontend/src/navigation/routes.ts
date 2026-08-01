@@ -37,6 +37,11 @@ const ownerOrganizationGovernanceAuditRoute = defineRoute("/owner/organizations/
 const ownerOrganizationGovernancePeopleSegmentationRoute = defineRoute("/owner/organizations/:organizationId/governance/organization-model/segments");
 const ownerOrganizationGovernanceProvisioningRoute = defineRoute("/owner/organizations/:organizationId/governance/identity-provisioning");
 const ownerOrganizationOperationsRoute = defineRoute("/owner/organizations/:organizationId/operations");
+const ownerOrganizationGovernanceLegacyGroupsRoute = defineRoute("/owner/organizations/:organizationId/governance/groups");
+const ownerOrganizationGovernanceLegacyDataScopesRoute = defineRoute("/owner/organizations/:organizationId/governance/data-scopes");
+const ownerOrganizationGovernanceLegacyPreviewRoute = defineRoute("/owner/organizations/:organizationId/governance/preview");
+const ownerOrganizationGovernanceLegacyAuditRoute = defineRoute("/owner/organizations/:organizationId/governance/audit");
+const ownerOrganizationGovernanceLegacyPeopleSegmentationRoute = defineRoute("/owner/organizations/:organizationId/governance/people-segmentation");
 const tenantGovernanceRoute = defineRoute("/o/:organizationId/settings/governance");
 const tenantGovernanceRolesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/roles");
 const tenantGovernanceRoleNamesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/role-names");
@@ -73,6 +78,11 @@ export const appRoutes = {
   ownerOrganizationGovernancePeopleSegmentation: appRoute(ownerOrganizationGovernancePeopleSegmentationRoute, "Segmentación de personas", "governance", "Capacidad planeada.", true),
   ownerOrganizationGovernanceProvisioning: appRoute(ownerOrganizationGovernanceProvisioningRoute, "Identity provisioning", "governance", "SCIM provisioning lifecycle, credentials, mappings and operations for the selected organization."),
   ownerOrganizationOperations: appRoute(ownerOrganizationOperationsRoute, "Operaciones", "operations", "Operational health and capability runtime for the selected organization."),
+  ownerOrganizationGovernanceLegacyGroups: appRoute(ownerOrganizationGovernanceLegacyGroupsRoute, "Legacy groups redirect", "governance", "Compatibility redirect to the canonical groups workspace.", false),
+  ownerOrganizationGovernanceLegacyDataScopes: appRoute(ownerOrganizationGovernanceLegacyDataScopesRoute, "Legacy data scopes redirect", "governance", "Compatibility redirect to the canonical scope assignments workspace.", false),
+  ownerOrganizationGovernanceLegacyPreview: appRoute(ownerOrganizationGovernanceLegacyPreviewRoute, "Legacy access preview redirect", "governance", "Compatibility redirect to the canonical access explorer workspace.", false),
+  ownerOrganizationGovernanceLegacyAudit: appRoute(ownerOrganizationGovernanceLegacyAuditRoute, "Legacy audit redirect", "governance", "Compatibility redirect to the canonical audit workspace.", false),
+  ownerOrganizationGovernanceLegacyPeopleSegmentation: appRoute(ownerOrganizationGovernanceLegacyPeopleSegmentationRoute, "Legacy people segmentation redirect", "governance", "Compatibility redirect to the canonical people segmentation workspace.", false),
   tenantGovernance: appRoute(tenantGovernanceRoute, "Governance", "governance", "Studio tenant para activaciones, asignaciones y navegación restrictiva dentro de la organización."),
   tenantGovernanceRoles: appRoute(tenantGovernanceRolesRoute, "Roles y permisos", "governance", "Tenant activation editor for role permissions within Owner Ceiling."),
   tenantGovernanceRoleNames: appRoute(tenantGovernanceRoleNamesRoute, "Nombres de roles", "governance", "Tenant role alias editor for display-only canonical role labels."),
