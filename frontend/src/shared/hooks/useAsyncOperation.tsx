@@ -92,17 +92,17 @@ export const AsyncStateRenderer = ({
   if (loading) {
     return (
       <div className="p-4 text-center">
-        <p className="text-sm text-gray-500">{loadingMessage}</p>
+        <p className="text-sm text-muted">{loadingMessage}</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 border border-red-200 bg-red-50 rounded-md">
-        <h3 className="text-sm font-semibold text-red-800">{errorTitle}</h3>
-        <p className="mt-1 text-sm text-red-700">{error}</p>
-        <p className="mt-2 text-xs text-red-600">Verifica tu conexión o intenta nuevamente.</p>
+      <div className="rounded-md border border-border bg-surface-subtle p-4">
+        <h3 className="text-sm font-semibold text-danger-strong">{errorTitle}</h3>
+        <p className="mt-1 text-sm text-danger-strong">{error}</p>
+        <p className="mt-2 text-xs text-muted-strong">Verifica tu conexión o intenta nuevamente.</p>
       </div>
     );
   }
