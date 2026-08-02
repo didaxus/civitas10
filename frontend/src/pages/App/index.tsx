@@ -15,11 +15,16 @@ import { ScreenGate } from "../../authorization/components/ScreenGate";
 import { TenantAuthorizationProvider } from "../../authorization/AuthorizationProvider";
 import { civitasLogtoConfig } from "../../auth/logtoConfig";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
-import { organizationScopedRouteTemplate } from "../../navigation/route-builders";
+import { isConcreteRouteParam, organizationScopedRouteTemplate } from "../../navigation/route-builders";
 import { ModuleUiRouteBoundary } from "../../module-ui/loader/ModuleUiRouteBoundary";
 
 const PlanningModuleRoute = lazy(() => import("../../features/planning/PlanningModuleRoute"));
 const planningRoutePattern = `${organizationScopedRouteTemplate("/planning/plans")}/*`;
+const legacyOwnerGovernanceGroupsPath = `${appRoutes.ownerOrganizationState.path}/governance/groups`;
+const legacyOwnerGovernanceDataScopesPath = `${appRoutes.ownerOrganizationState.path}/governance/data-scopes`;
+const legacyOwnerGovernancePreviewPath = `${appRoutes.ownerOrganizationState.path}/governance/preview`;
+const legacyOwnerGovernanceAuditPath = `${appRoutes.ownerOrganizationState.path}/governance/audit`;
+const legacyOwnerGovernancePeopleSegmentationPath = `${appRoutes.ownerOrganizationState.path}/governance/people-segmentation`;
 
 function App() {
   return (
@@ -42,11 +47,9 @@ function OwnerOrganizationContextRoute({ children }: { children: ReactNode }) {
 function OrganizationRedirect({ to }: { to: (organizationId: string) => string }) {
   const { organizationId = "" } = useParams();
   const { search } = useLocation();
-  if (!organizationId || organizationId === ":organizationId") return <Navigate to={appRoutes.ownerOrganizations.path} replace />;
+  if (!isConcreteRouteParam(organizationId)) return <Navigate to={appRoutes.ownerOrganizations.path} replace />;
   return <Navigate to={`${to(organizationId)}${search}`} replace />;
 }
-
-
 
 function TenantGovernanceRoute() {
   const { organizationId = "" } = useParams();
@@ -79,11 +82,11 @@ function AppContent() {
       <Route path={appRoutes.ownerOrganizationGovernanceAudit.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerOrganizationGovernanceProvisioning.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerOrganizationGovernancePeopleSegmentation.path} element={<OwnerRouteGuard><OwnerOrganizationContextRoute><ScreenGate screenId="owner-governance"><GovernanceStudioPage surface="owner" /></ScreenGate></OwnerOrganizationContextRoute></OwnerRouteGuard>} />
-      <Route path="/owner/organizations/:organizationId/governance/groups" element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernanceGroups.build!({ organizationId })} /></OwnerRouteGuard>} />
-      <Route path="/owner/organizations/:organizationId/governance/data-scopes" element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernanceDataScopes.build!({ organizationId })} /></OwnerRouteGuard>} />
-      <Route path="/owner/organizations/:organizationId/governance/preview" element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernancePreview.build!({ organizationId })} /></OwnerRouteGuard>} />
-      <Route path="/owner/organizations/:organizationId/governance/audit" element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernanceAudit.build!({ organizationId })} /></OwnerRouteGuard>} />
-      <Route path="/owner/organizations/:organizationId/governance/people-segmentation" element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernancePeopleSegmentation.build!({ organizationId })} /></OwnerRouteGuard>} />
+      <Route path={legacyOwnerGovernanceGroupsPath} element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernanceGroups.build!({ organizationId })} /></OwnerRouteGuard>} />
+      <Route path={legacyOwnerGovernanceDataScopesPath} element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernanceDataScopes.build!({ organizationId })} /></OwnerRouteGuard>} />
+      <Route path={legacyOwnerGovernancePreviewPath} element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernancePreview.build!({ organizationId })} /></OwnerRouteGuard>} />
+      <Route path={legacyOwnerGovernanceAuditPath} element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernanceAudit.build!({ organizationId })} /></OwnerRouteGuard>} />
+      <Route path={legacyOwnerGovernancePeopleSegmentationPath} element={<OwnerRouteGuard><OrganizationRedirect to={(organizationId) => appRoutes.ownerOrganizationGovernancePeopleSegmentation.build!({ organizationId })} /></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerSystem.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-worker-queues"><OwnerWorkerQueuesPage /></ScreenGate></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerWorkerQueues.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-worker-queues"><OwnerWorkerQueuesPage /></ScreenGate></OwnerRouteGuard>} />
       <Route path={appRoutes.tenantGovernance.path} element={<TenantGovernanceRoute />} />
