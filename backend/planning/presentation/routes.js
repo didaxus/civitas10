@@ -2,53 +2,26 @@
 
 const express = require('express');
 const { randomUUID, createHash } = require('node:crypto');
-const { requireOrganizationAccess } = require('../../middleware/auth');
-const { requireOrg } = require('../../middleware/requireOrg');
 const { requireAuthorization } = require('../../authorization/policies');
 const { NAMED_USE_CASES, PLANNING_MODULE_ID, REMOTE_PROBLEM_CODES, problem } = require('../application/remotePort');
 const { toRfc9457Problem } = require('./problemMapper');
-const { permissionsByName } = require('../../../core/authz');
+const { envelopeDto } = require('../application/dtos');
+const { schemas, validate } = require('./requestSchemas');
 
-const ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
-const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH']);
+const validateParams = (includePlan = false) => validateRequest([['params', includePlan ? schemas.planParams : schemas.organizationParams]]);
+const validateBody = (kind) => validateRequest([['body', schemas[kind]]]);
+const validateHeaders = (...kinds) => validateRequest(kinds.map((kind) => ['headers', schemas[kind]]));
+const validateQuery = () => validateRequest([['query', schemas.listQuery]]);
 
-function activePermission(permission) {
-  return (req, res, next) => {
-    const definition = permissionsByName[permission];
-    if (!definition || definition.status !== 'active') {
-      const decisionId = `authz_${randomUUID()}`;
-      return res.status(403).json({ error: 'Forbidden', code: 'permission_not_active', requiredPermission: permission, decisionId });
-    }
-    const scopes = req.auth?.scopes instanceof Set ? req.auth.scopes : new Set(req.user?.scopes || []);
-    if (!scopes.has(permission)) {
-      const decisionId = `authz_${randomUUID()}`;
-      return res.status(403).json({ error: 'Forbidden', code: 'permission_missing', requiredPermission: permission, decisionId });
-    }
-    return next();
-  };
-}
-
-function validateParams(requiredPlanId = false) {
-  return (req, res, next) => {
-    if (!ID_PATTERN.test(req.params['organization' + 'Id'] || '')) return res.status(400).json(problemBody('organization_id_invalid', 'Invalid organization identifier.'));
-    if (requiredPlanId && !ID_PATTERN.test(req.params.planId || '')) return res.status(400).json(problemBody('plan_id_invalid', 'Invalid plan identifier.'));
-    return next();
-  };
-}
-
-function validateBody(kind) {
-  return (req, res, next) => {
-    const body = req.body || {};
-    if (kind === 'planWrite' && typeof body.title !== 'string') return res.status(422).json(problemBody('title_required', 'title must be a string.'));
-    if (WRITE_METHODS.has(req.method) && !req.headers['idempotency-key']) return res.status(400).json(problemBody('idempotency_key_required', 'Idempotency-Key is required for planning writes.'));
-    return next();
-  };
-}
-
-function problemBody(code, detail, status = 400) { return { type: `https://civitas.local/problems/planning/request/${code}`, title: code, status, detail, code }; }
+function validateRequest(parts) { return (req, res, next) => {
+  const violations = parts.flatMap(([source, schema]) => validate(schema, source === 'body' ? (req.body || {}) : source === 'query' ? coerceQuery(req.query) : source === 'headers' ? req.headers : req.params, source));
+  if (!violations.length) return next();
+  return sendProblem(res, problem(REMOTE_PROBLEM_CODES.VALIDATION, 'request_validation', { detailKey: 'Request does not match the OpenAPI schema.', correlationId: correlationId(req), decisionId: req.authorizationDecision?.decisionId, fieldViolations: violations }));
+}; }
+function coerceQuery(query) { return { ...query, ...(query.limit === undefined ? {} : { limit: Number(query.limit) }) }; }
 function sendProblem(res, remoteProblem) { const body = toRfc9457Problem(remoteProblem); return res.status(body.status).type('application/problem+json').json(body); }
 function fingerprint(req) { return createHash('sha256').update(JSON.stringify({ method:req.method, path:req.originalUrl, body:req.body || {} })).digest('hex'); }
-function correlationId(req) { return req.headers['x-correlation-id'] || req.headers['x-request-id'] || `corr_${randomUUID()}`; }
+function correlationId(req) { return req?.headers?.['x-correlation-id'] || req?.headers?.['x-request-id'] || `corr_${randomUUID()}`; }
 
 function buildContext(req, useCase) {
   const spec = NAMED_USE_CASES[useCase];
@@ -67,28 +40,40 @@ function buildContext(req, useCase) {
   };
 }
 
-function availabilityGuard({ availabilityResolver }) {
-  return async (req, res, next) => {
-    if (!availabilityResolver) return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'availability', { detailKey:'Planning module availability resolver is not configured.', correlationId: correlationId(req) }));
-    const useCase = req.planningUseCase;
-    const spec = NAMED_USE_CASES[useCase];
-    const decision = await availabilityResolver.resolve({ organizationId:req.params['organization' + 'Id'], moduleId:PLANNING_MODULE_ID, capabilityId:spec.capabilityId, operationId:spec.operationId, executionKind:spec.executionKind });
-    req.planningAvailabilityDecision = decision;
-    if (decision.executable) return next();
-    return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'availability', { detailKey: decision.reasonCode, decisionId: decision.decisionId, correlationId: correlationId(req), retryable: decision.state !== 'unavailable' }));
-  };
+function authorizationProblem(res, { status, error, code, decisionId }) {
+  const unavailable = new Set(['runtime_unavailable', 'runtime_incompatible', 'capability_unavailable']);
+  const responseStatus = unavailable.has(code) ? 503 : status;
+  return res.status(responseStatus).type('application/problem+json').json({
+    type: `https://civitas.local/problems/authorization/${code}`,
+    title: error,
+    status: responseStatus,
+    detail: code,
+    code,
+    correlationId: correlationId(res.req),
+    ...(decisionId ? { decisionId } : {}),
+  });
 }
 
 function routeUseCase(useCase) { return (req, _res, next) => { req.planningUseCase = useCase; next(); }; }
 
-function controller(method, payloadBuilder) {
+function controller(method, payloadBuilder, timeoutMs = 30_000) {
   return async (req, res) => {
     const port = req.app.locals.planningRemoteApplicationPort;
     if (!port || typeof port[method] !== 'function') return sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNAVAILABLE, 'remote', { detailKey:'PlanningRemoteApplicationPort is not configured.', correlationId: correlationId(req) }));
-    const result = await port[method](payloadBuilder(req), buildContext(req, req.planningUseCase));
+    const context = buildContext(req, req.planningUseCase);
+    let result;
+    let timer;
+    const requestedDeadline = context.deadline ? Date.parse(context.deadline) - Date.now() : timeoutMs;
+    const effectiveTimeout = Math.max(1, Math.min(Number.isFinite(requestedDeadline) ? requestedDeadline : timeoutMs, timeoutMs));
+    try { result = await Promise.race([port[method](payloadBuilder(req), context), new Promise((_resolve, reject) => { timer = setTimeout(() => reject(Object.assign(new Error('Planning request timed out'), { name:'TimeoutError' })), effectiveTimeout); })]); }
+    catch (error) {
+      const timedOut = error?.name === 'TimeoutError' || error?.code === 'ETIMEDOUT' || error?.code === 'ESOCKETTIMEDOUT';
+      return sendProblem(res, problem(timedOut ? REMOTE_PROBLEM_CODES.TIMEOUT : REMOTE_PROBLEM_CODES.UNAVAILABLE, timedOut ? 'runtime_timeout' : 'runtime_unavailable', { correlationId: context.correlationId, decisionId: context.authorizationDecision?.decisionId, retryable: true }));
+    } finally { clearTimeout(timer); }
     if (!result.ok) return sendProblem(res, result.problem);
     if (result.value?.etag || result.value?.version) res.set('ETag', String(result.value.etag || result.value.version));
-    return res.status(method === 'createPlan' ? 201 : 200).json(result.value);
+    const publicResult = method === 'listPlans' ? result.value : envelopeDto(result.value, { correlationId: result.correlationId || correlationId(req) });
+    return res.status(method === 'createPlan' ? 201 : 200).json(publicResult);
   };
 }
 
@@ -96,28 +81,55 @@ function mount(router, method, path, useCase, validator, controllerMethod, paylo
   const spec = NAMED_USE_CASES[useCase];
   router[method](path,
     routeUseCase(useCase),
-    requireOrganizationAccess({ requiredAllScopes: [spec.permission] }),
-    requireOrg,
-    availabilityGuard(deps),
-    activePermission(spec.permission),
-    requireAuthorization({ permission: spec.permission, actionId: spec.actionId, surface: 'organization', operation: spec.executionKind, policies: ['same-organization', 'membership-required'] }),
+    ...deps.preAuthorizationMiddleware,
+    requireAuthorization({
+      permission: spec.permission,
+      actionId: spec.actionId,
+      surface: 'organization',
+      operation: spec.operationId,
+      policies: ['same-organization', 'membership-required'],
+      providers: {
+        ...deps.authorizationProviders,
+        moduleAvailabilityResolver: deps.availabilityResolver,
+      },
+      registry: deps.authorizationRegistry,
+      targetResolver: () => ({ moduleId: PLANNING_MODULE_ID, capability: spec.capabilityId, executionKind: spec.executionKind }),
+      resourceResolver: deps.authorizationResourceResolver,
+      denialResponder: authorizationProblem,
+      onDecision(req, decision) {
+        const availability = decision.moduleAvailability;
+        if (availability) req.planningAvailabilityDecision = { ...availability, decisionId: availability.availabilityDecisionId };
+      },
+    }),
     validator,
     controller(controllerMethod, payloadBuilder));
 }
 
-function createPlanningRouter({ planningRemoteApplicationPort, availabilityResolver } = {}) {
+function assertRouterDependencies(deps) {
+  const requiredObjects = ['planningRemoteApplicationPort', 'availabilityResolver', 'authorizationProviders', 'authorizationRegistry'];
+  for (const name of requiredObjects) if (!deps[name] || typeof deps[name] !== 'object') throw new TypeError(`Planning router requires ${name}`);
+  if (typeof deps.availabilityResolver.resolve !== 'function') throw new TypeError('Planning router requires availabilityResolver.resolve');
+  if (typeof deps.authorizationResourceResolver !== 'function') throw new TypeError('Planning router requires authorizationResourceResolver');
+  if (!Array.isArray(deps.preAuthorizationMiddleware) || !deps.preAuthorizationMiddleware.length || deps.preAuthorizationMiddleware.some((item) => typeof item !== 'function')) throw new TypeError('Planning router requires preAuthorizationMiddleware');
+  for (const method of Object.keys(NAMED_USE_CASES)) if (typeof deps.planningRemoteApplicationPort[method] !== 'function') throw new TypeError(`Planning router requires planningRemoteApplicationPort.${method}`);
+}
+
+function createPlanningRouter(options = {}) {
+  assertRouterDependencies(options);
+  const { planningRemoteApplicationPort, availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry, preAuthorizationMiddleware } = options;
   const router = express.Router();
   router.use(express.json({ limit: '32kb' }));
-  router.use((req, _res, next) => { if (planningRemoteApplicationPort) req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
-  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('planWrite')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params['organization' + 'Id'] }), { availabilityResolver });
-  mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', validateParams(), 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined }), { availabilityResolver });
-  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'getPlan', validateParams(true), 'getPlan', (req)=>({ planId:req.params.planId }), { availabilityResolver });
-  mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), { availabilityResolver });
-  mount(router, 'put', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('planWrite')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), { availabilityResolver });
-  mount(router, 'get', '/o/:organizationId/planning/profile', 'getProfile', validateParams(), 'getProfile', ()=>({}), { availabilityResolver });
-  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('profileWrite')], 'replaceProfile', (req)=>({ ...req.body }), { availabilityResolver });
+  router.use((req, _res, next) => { req.app.locals.planningRemoteApplicationPort = planningRemoteApplicationPort; next(); });
+  const deps = { availabilityResolver, authorizationProviders, authorizationResourceResolver, authorizationRegistry, preAuthorizationMiddleware };
+  mount(router, 'post', '/o/:organizationId/planning/plans', 'createPlan', [validateParams(), validateBody('createPlan'), validateHeaders('idempotencyHeaders')], 'createPlan', (req)=>({ ...req.body, organizationId:req.params.organizationId }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans', 'listPlans', [validateParams(), validateQuery()], 'listPlans', (req)=>({ cursor:req.query.cursor || null, limit:req.query.limit ? Number(req.query.limit) : undefined, status:req.query.status }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/plans/:planId', 'readPlan', validateParams(true), 'readPlan', (req)=>({ planId:req.params.planId }), deps);
+  mount(router, 'patch', '/o/:organizationId/planning/plans/:planId', 'updatePlan', [validateParams(true), validateBody('updatePlan'), validateHeaders('idempotencyHeaders', 'concurrencyHeaders')], 'updatePlan', (req)=>({ ...req.body, planId:req.params.planId }), deps);
+  mount(router, 'get', '/o/:organizationId/planning/profile', 'readProfile', validateParams(), 'readProfile', ()=>({}), deps);
+  mount(router, 'put', '/o/:organizationId/planning/profile', 'replaceProfile', [validateParams(), validateBody('replaceProfile'), validateHeaders('idempotencyHeaders', 'concurrencyHeaders')], 'replaceProfile', (req)=>({ ...req.body }), deps);
+  router.use((error, req, res, _next) => sendProblem(res, problem(REMOTE_PROBLEM_CODES.UNEXPECTED, 'unexpected', { detailKey:'Planning request failed safely.', correlationId:correlationId(req), decisionId:req.authorizationDecision?.decisionId, retryable:false })));
   return router;
 }
 
 function registerPlanningRoutes(app, options) { app.use('/api/v1', createPlanningRouter(options)); }
-module.exports = { createPlanningRouter, registerPlanningRoutes, activePermission, buildContext };
+module.exports = { createPlanningRouter, registerPlanningRoutes, authorizationProblem, buildContext, assertRouterDependencies };

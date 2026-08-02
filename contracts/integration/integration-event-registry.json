@@ -92,6 +92,378 @@
       "redactionPolicy": {
         "rejectSecrets": true
       }
+    },
+    {
+      "eventType": "documents.generation.requested",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "documents",
+      "owningCapabilityId": "documents.generation",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operationId": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "producerContract": {
+        "component": "canonical-document-worker"
+      },
+      "allowedConsumers": [
+        "documents.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 1024,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "rejectContent": true,
+        "rejectUrls": true
+      }
+    },
+    {
+      "eventType": "documents.generation.succeeded",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "documents",
+      "owningCapabilityId": "documents.generation",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operationId": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "producerContract": {
+        "component": "canonical-document-worker"
+      },
+      "allowedConsumers": [
+        "documents.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 1024,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "rejectContent": true,
+        "rejectUrls": true
+      }
+    },
+    {
+      "eventType": "documents.generation.failed",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "documents",
+      "owningCapabilityId": "documents.generation",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operationId": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "producerContract": {
+        "component": "canonical-document-worker"
+      },
+      "allowedConsumers": [
+        "documents.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 1024,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "rejectContent": true,
+        "rejectUrls": true
+      }
+    },
+    {
+      "eventType": "documents.generation.cancelled",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "documents",
+      "owningCapabilityId": "documents.generation",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operationId": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "producerContract": {
+        "component": "canonical-document-worker"
+      },
+      "allowedConsumers": [
+        "documents.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 1024,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "rejectContent": true,
+        "rejectUrls": true
+      }
+    },
+    {
+      "eventType": "documents.retention.deleted",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "documents",
+      "owningCapabilityId": "documents.retention",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operationId": {
+            "type": "string"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "producerContract": {
+        "component": "canonical-document-worker"
+      },
+      "allowedConsumers": [
+        "documents.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 1024,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "rejectContent": true,
+        "rejectUrls": true
+      }
+    },
+    {
+      "eventType": "production.handoff.requested",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "production-handoff",
+      "owningCapabilityId": "production.delivery",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "production-handoff-service"
+      },
+      "allowedConsumers": [
+        "production-handoff.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 4096,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "production.handoff.received",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "production-handoff",
+      "owningCapabilityId": "production.delivery",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "production-handoff-service"
+      },
+      "allowedConsumers": [
+        "production-handoff.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 4096,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "production.handoff.rejected",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "production-handoff",
+      "owningCapabilityId": "production.delivery",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "production-handoff-service"
+      },
+      "allowedConsumers": [
+        "production-handoff.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 4096,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "production.handoff.timed_out",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "production-handoff",
+      "owningCapabilityId": "production.delivery",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "production-handoff-service"
+      },
+      "allowedConsumers": [
+        "production-handoff.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 4096,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "production.handoff.reconciled",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "production-handoff",
+      "owningCapabilityId": "production.delivery",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object"
+      },
+      "producerContract": {
+        "component": "production-handoff-service"
+      },
+      "allowedConsumers": [
+        "production-handoff.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 4096,
+      "redactionPolicy": {
+        "rejectSecrets": true
+      }
+    },
+    {
+      "eventType": "planning.plan.created.v1",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "planning",
+      "owningCapabilityId": "planning.plans",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "$ref": "../events/planning/schemas/planning-plan-created-v1.schema.json"
+      },
+      "producerContract": {
+        "component": "planning-application-service"
+      },
+      "allowedConsumers": [
+        "planning.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeDiffRequired": true
+      }
+    },
+    {
+      "eventType": "planning.plan.updated.v1",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "planning",
+      "owningCapabilityId": "planning.plans",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "$ref": "../events/planning/schemas/planning-plan-updated-v1.schema.json"
+      },
+      "producerContract": {
+        "component": "planning-application-service"
+      },
+      "allowedConsumers": [
+        "planning.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeDiffRequired": true
+      }
+    },
+    {
+      "eventType": "planning.profile.updated.v1",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "planning",
+      "owningCapabilityId": "planning.profile",
+      "lifecycle": "planned",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "$ref": "../events/planning/schemas/planning-profile-updated-v1.schema.json"
+      },
+      "producerContract": {
+        "component": "planning-application-service"
+      },
+      "allowedConsumers": [
+        "planning.projection"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 8192,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeDiffRequired": true
+      }
     }
   ]
 }

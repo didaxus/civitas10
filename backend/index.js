@@ -47,8 +47,14 @@ const { createLmsGroupLeadershipService } = require("./lms/groupLeadershipServic
 const { registerIdentityFederationRoutes } = require("./routes/identityFederationRoutes");
 const { registerScimReconciliationRoutes } = require("./routes/scimReconciliationRoutes");
 const { registerScimUserRoutes } = require("./scim/users/routes");
-const { registerPlanningRoutes } = require("./planning/presentation/routes");
 const { buildPrincipalForRest } = require("./authorization/principalBuilder");
+const { createPlanningRuntime } = require("./planning/composition/createPlanningRuntime");
+const { getPool } = require("./lib/db");
+const { NAMED_USE_CASES } = require("./planning/application/remotePort");
+const { createModuleAvailabilityResolver, createStaticOperationRegistry, createPostgresAvailabilityStateRepository } = require("./services/moduleAvailabilityResolver");
+const { createEntitlementPolicyProvider, createDataScopePolicyProvider } = require("./authorization/policies/providers");
+const { createProductionModuleControlPlaneService } = require("./services/moduleControlPlane");
+const { createDataScopeEvaluator } = require("./authorization/data-scope");
 
 const app = express();
 const port = 3000;
@@ -60,10 +66,39 @@ const OWNER_AUTHZ = SHARED_AUTH.global.permissions;
 const ORG_AUTHZ = SHARED_AUTH.organization.documentPermissions;
 
 app.use(cors());
-// Planning presentation owns request parsing for its mounted API routes.
-registerPlanningRoutes(app);
+app.use(express.json({ limit: "32kb" }));
+
+// Planning is fail-closed: composition errors leave its routes unmounted and are
+// reported by health/readiness without changing any module lifecycle record.
+const planningStatus = { state: "unavailable", mounted: false, reason: "composition_not_attempted" };
+try {
+  const operationRegistry = createStaticOperationRegistry(Object.values(NAMED_USE_CASES).map((spec) => ({ moduleId: "planning", capabilityId: spec.capabilityId, operationId: spec.operationId, executionKind: spec.executionKind })));
+  const moduleControlPlaneService = createProductionModuleControlPlaneService({ pool: getPool() });
+  const availabilityResolver = createModuleAvailabilityResolver({ moduleControlPlaneService, operationRegistry, stateRepository: createPostgresAvailabilityStateRepository({ pool: getPool() }) });
+  const entitlementProvider = createEntitlementPolicyProvider({ repository: entitlementRepository, authorizationFreshnessService });
+  const dataScopeProvider = createDataScopePolicyProvider({ evaluator:createDataScopeEvaluator({ repository:dataScopeRepository }) });
+  const runtime = createPlanningRuntime({
+    pool: getPool(),
+    authorizationContextPort: { async validateDataScope({ context }) { return { allowed: Boolean(context.authorizationDecision?.allowed), decisionId: context.authorizationDecision?.decisionId }; } },
+    availabilityResolver,
+    authorizationProviders: { entitlementProvider, dataScopeProvider },
+    authorizationResourceResolver: (req) => ({ type: req.params.planId ? "planning.plan" : "planning", id: req.params.planId || req.params.organizationId, organizationId: req.params.organizationId }),
+    authenticationAudienceMiddleware: (req, res, next) => requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [NAMED_USE_CASES[req.planningUseCase].permission] })(req, res, next),
+    organizationContextMiddleware: requireOrg,
+    canonicalPrincipalMiddleware: async (req, res, next) => { try { const spec = NAMED_USE_CASES[req.planningUseCase]; req.principal = await buildPrincipalForRest(req, { permissionId: spec.permission, surface: "rest", organizationId: req.params.organizationId }); return next(); } catch (error) { return res.status(error.status || 403).json({ error: error.name, code: error.code || "principal_build_failed" }); } },
+  });
+  app.use('/api/v1', runtime.router);
+  Object.assign(planningStatus, { state: "mounted_fail_closed", mounted: true, reason: "operation_availability_is_tenant_resolved" });
+} catch (error) {
+  Object.assign(planningStatus, { state: "unavailable", mounted: false, reason: "composition_failed", error: error.message });
+}
 // Orden canónico de middlewares tenant: requireOrganizationAccess → requireOrg → requirePermission → requireSeats (solo si aplica) → handler.
 const secureRoute = createSecurityPolicyRegistry({ app });
+
+secureRoute.get("/readiness", "health", (_req, res) => {
+  const ready = planningStatus.mounted && planningStatus.state === "ready";
+  return res.status(ready ? 200 : 503).json({ status: ready ? "ready" : "not_ready", components: { planning: planningStatus } });
+});
 
 const summarizeStatus = (statuses) => {
   if (statuses.includes("unhealthy")) return "unhealthy";
@@ -194,8 +229,10 @@ secureRoute.get("/health", "health", async (_req, res) => {
       redis: redis.status === "healthy" ? "ok" : "unhealthy",
       logto: logto.status === "healthy" ? "ok" : logto.status,
       worker: worker.status === "healthy" ? "ok" : worker.status,
+      planning: planningStatus.mounted ? "ok" : "unavailable",
     },
     details: { database, redis, logto, worker },
+    planning: planningStatus,
     db: database.status === "healthy" ? "connected" : "disconnected",
     redis: redis.status === "healthy" ? "connected" : "disconnected",
   });

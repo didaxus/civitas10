@@ -3,8 +3,25 @@ const test=require('node:test')
 const assert=require('node:assert/strict')
 const scope=require('../authorization/data-scope')
 const { resourceMatchesConstraint }=scope
+const { DIMENSION_REGISTRY, REGISTRY_ERROR_CODES, validateDimensionRegistry }=require('../taxonomy/taxonomyDimensionRegistry')
 
 const frozen=['academic.stage','academic.period','academic.subject','academic.course','academic.cohort','academic.class','organization.campus','organization.shift','organization.department','administration.function']
+
+test('taxonomy registry rejects contract drift and incomplete envelopes',()=>{
+  assert.equal(DIMENSION_REGISTRY.contract,'civitas.authorization.data-scope-dimensions')
+  assert.equal(DIMENSION_REGISTRY.version,'2026-07-civitas-data-scope-dimensions-v2')
+  for(const patch of [{contract:'changed'}, {version:undefined}]) {
+    assert.throws(()=>validateDimensionRegistry({...DIMENSION_REGISTRY,...patch}),{code:REGISTRY_ERROR_CODES.SCHEMA_INVALID})
+  }
+  assert.throws(()=>validateDimensionRegistry({...DIMENSION_REGISTRY,dimensions:undefined}),{code:REGISTRY_ERROR_CODES.DIMENSIONS_MISSING})
+})
+
+test('taxonomy registry rejects duplicate dimensions and permission semantics',()=>{
+  const dimensions=DIMENSION_REGISTRY.dimensions.map(dimension=>({...dimension}))
+  assert.throws(()=>validateDimensionRegistry({...DIMENSION_REGISTRY,dimensions:[...dimensions,dimensions[0]]}),{code:REGISTRY_ERROR_CODES.DIMENSION_IDS_DUPLICATED})
+  dimensions[0].permission='lms.grades.read'
+  assert.throws(()=>validateDimensionRegistry({...DIMENSION_REGISTRY,dimensions}),{code:REGISTRY_ERROR_CODES.SCHEMA_INVALID})
+})
 
 test('taxonomy dimension registry v2 is the exact single canonical vocabulary',()=>{
   assert.equal(scope.DATA_SCOPE_DIMENSION_REGISTRY_VERSION,'2026-07-civitas-data-scope-dimensions-v2')

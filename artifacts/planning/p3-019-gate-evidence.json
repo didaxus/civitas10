@@ -206,7 +206,7 @@
         "backend/planning/infrastructure/runtimeContractV1.js",
         "backend/planning/application/dtos.js"
       ],
-      "hash": "03eb93c93952235fbce025bbef0a871d5daba523e1797a954846230a301f43a8"
+      "hash": "2ff2b3b4e320968d5e1a5561408fccfce31dbbe8879fe500bd1742db42a202f3"
     },
     "generated_clients": {
       "algorithm": "sha256",
@@ -228,7 +228,7 @@
         "backend/services/moduleAvailabilityResolver.js",
         "backend/services/moduleControlPlane.js"
       ],
-      "hash": "7a7f393e221bb4d48a1ff6c71bc5743eee5a7f7d1ebe14b98d495e9ee9c8a7cb"
+      "hash": "664a8d14e868c27584b949d8e0d2c8ff4750d58a8c4f8d8236d08752fa2989b0"
     },
     "frontend_routes_actions_screens": {
       "algorithm": "sha256",
@@ -242,7 +242,7 @@
         "frontend/src/features/planning/planningApi.ts",
         "frontend/src/features/planning/planningRemoteUiContribution.ts"
       ],
-      "hash": "493cfecb29f1fc9bbb11d400d38df2d9cdd88c9da40dd6325ebc9a6b97d2587e"
+      "hash": "1f632f1219db141f7c62b93fbc43372e6143ed865d35d1d4da8f208bc422eaca"
     },
     "planning_events": {
       "algorithm": "sha256",
@@ -253,7 +253,7 @@
         "contracts/events/planning/schemas/planning-plan-created-v1.schema.json",
         "contracts/events/planning/schemas/planning-profile-updated-v1.schema.json"
       ],
-      "hash": "33175899669f50edb246d1fe8cc00e71db350ca37b0e36e33eabbd7833473f13"
+      "hash": "79a249b57dfcb043e57e7740eaa8ce007153e0351f7b6499028364140c333276"
     }
   },
   "activationEntries": [

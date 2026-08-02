@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { lazy, type ReactNode } from "react";
 import { LogtoProvider, useLogto } from "@logto/react";
 import { Routes, Route, Navigate, useLocation, useParams } from "react-router";
 import Landing from "./Landing";
@@ -15,6 +15,11 @@ import { ScreenGate } from "../../authorization/components/ScreenGate";
 import { TenantAuthorizationProvider } from "../../authorization/AuthorizationProvider";
 import { civitasLogtoConfig } from "../../auth/logtoConfig";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
+import { organizationScopedRouteTemplate } from "../../navigation/route-builders";
+import { ModuleUiRouteBoundary } from "../../module-ui/loader/ModuleUiRouteBoundary";
+
+const PlanningModuleRoute = lazy(() => import("../../features/planning/PlanningModuleRoute"));
+const planningRoutePattern = `${organizationScopedRouteTemplate("/planning/plans")}/*`;
 
 function App() {
   return (
@@ -86,6 +91,7 @@ function AppContent() {
       <Route path={appRoutes.tenantGovernanceRoleNames.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceStructure.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceProvisioning.path} element={<TenantGovernanceRoute />} />
+      <Route path={planningRoutePattern} element={<ModuleUiRouteBoundary moduleId="planning"><PlanningModuleRoute /></ModuleUiRouteBoundary>} />
       <Route path="/:orgId" element={<OrganizationPage />} />
     </Routes>
   );

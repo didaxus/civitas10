@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.dev/contracts/documents/generation-request-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["templateId", "idempotencyKey", "visibility", "parameters"],
+  "properties": {
+    "templateId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,128}$" },
+    "idempotencyKey": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "visibility": { "enum": ["public", "private"] },
+    "parameters": { "type": "object", "maxProperties": 100 }
+  }
+}

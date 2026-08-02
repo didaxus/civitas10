@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "environment": "local-synthetic",
+  "timestamp": "2026-07-30T02:29:17.700Z",
+  "owner": "Platform Reliability",
+  "commit": "366a4eb799e166beddcb3dca3f4dd5a5fe2b86bb",
+  "scope": "synthetic-contract-drill",
+  "rpoSeconds": 0,
+  "rtoMilliseconds": 0.04,
+  "checks": {
+    "circuit_recovery": true,
+    "dlq_reconciliation": true,
+    "backup_restore_tenant_safe": true,
+    "key_rotation": true,
+    "ui_runtime_rollback": true,
+    "decommissioning": true,
+    "secret_pii_log_scan": true
+  },
+  "allPassed": true,
+  "phase3Complete": false,
+  "completionBlocker": "Production/staging drills and residual-risk acceptance remain required; synthetic evidence cannot close Phase 3."
+}

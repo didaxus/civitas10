@@ -14,7 +14,7 @@
     "logtoRoleId": { "type": "string", "minLength": 1 },
     "canonicalRoleId": { "type": "string", "minLength": 1 },
     "roleAssignmentState": { "enum": ["active", "revoked", "expired", "stale", "unknown"] },
-    "permissionId": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z][a-z0-9_-]*)+$" },
+    "permissionId": { "type": "string", "minLength": 1, "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z][a-z0-9_-]*)+$" },
     "surface": { "enum": ["rest", "worker", "mcp"] },
     "fragments": {
       "type": "array", "minItems": 0, "uniqueItems": true,
