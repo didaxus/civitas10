@@ -12,6 +12,10 @@ function normalize(permission) {
     resource: permission.resource || API_RESOURCE,
     surface: permission.surface === 'owner' ? 'global' : permission.surface,
     overlayMode: permission.overlayMode || (permission.surface === 'owner' ? 'global' : 'restrictable'),
+    // New fields for two-level RBAC
+    identityProvisioningStatus: permission.identityProvisioningStatus || (permission.targetStatus === 'active' ? 'provisioned' : 'not_provisioned'),
+    runtimeAvailability: permission.runtimeAvailability || (permission.observedImplementation === 'active' ? 'available' : 'unavailable'),
+    catalogStatus: permission.catalogStatus || permission.targetStatus,
   })
 }
 
