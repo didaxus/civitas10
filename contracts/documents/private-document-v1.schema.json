@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.dev/contracts/documents/private-document-v1.schema.json",
+  "title": "Authorized private document metadata",
+  "allOf": [
+    { "$ref": "./public-document-v1.schema.json" },
+    {
+      "type": "object",
+      "required": ["fileReference", "retentionUntil", "legalHold", "visibility"],
+      "properties": {
+        "fileReference": { "type": "string", "pattern": "^file_[A-Za-z0-9_-]{16,180}$" },
+        "retentionUntil": { "type": ["string", "null"], "format": "date-time" },
+        "legalHold": { "type": "boolean" },
+        "visibility": { "enum": ["public", "private"] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"description":"Reintroducing get semantics is breaking","target":"inventory","operationId":"planningPlansRead","set":{"runtimeOperation":"planning.plans.get"},"expectedError":"runtime operation missing"}

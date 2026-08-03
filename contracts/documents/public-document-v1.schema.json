@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://civitas.dev/contracts/documents/public-document-v1.schema.json",
+  "title": "Public document metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["documentId", "title", "mediaType", "version", "hash", "provenance", "createdAt"],
+  "properties": {
+    "documentId": { "type": "string", "format": "uuid" },
+    "title": { "type": "string", "maxLength": 240 },
+    "mediaType": { "type": "string", "maxLength": 120 },
+    "version": { "type": "integer", "minimum": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "provenance": { "type": "object" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}
