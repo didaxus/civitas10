@@ -20,7 +20,6 @@ node_modules/
 .pnpm-lock.yaml
 
 # Build outputs
-artifacts/
 dist/
 build/
 coverage/
@@ -162,9 +161,6 @@ replay_pid*
 *.gtest
 *.idb
 *.un~
-
-# Generated authorization catalog
-core/authz/catalog/generated/
 
 # Original rules preserved
 *.log
