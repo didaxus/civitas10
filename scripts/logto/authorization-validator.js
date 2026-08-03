@@ -21,7 +21,7 @@ function validateLocalAuthorizationContract(contract = loadCanonicalAuthorizatio
     }
   }
   for (const permission of manifest.permissions) {
-    if (permission.status !== 'active' && Object.values(manifest.rolePermissionAssignments).some((perms)=>perms.includes(permission.name))) errors.push(`non-active permission assigned: ${permission.name}`)
+    if (permission.status !== 'active' && permission.identityProvisioning !== 'provisionable' && Object.values(manifest.rolePermissionAssignments).some((perms)=>perms.includes(permission.name))) errors.push(`non-provisionable permission assigned: ${permission.name}`)
     if (OIDC_SCOPES.has(permission.name)) errors.push(`OIDC login scope present in API permission catalog: ${permission.name}`)
   }
   return { valid: errors.length === 0, errors, contract }

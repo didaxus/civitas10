@@ -135,6 +135,18 @@
   --civitas-state-action-link: var(--civitas-primary);
   --civitas-loading-skeleton-bg: var(--civitas-surface-subtle);
 
+  --civitas-permission-name-min-width: 12rem;
+  --civitas-permission-description-min-width: 18rem;
+  --civitas-permission-control-width: 5rem;
+  --civitas-permission-column-gap: var(--civitas-space-5);
+  --civitas-permission-row-min-height: var(--civitas-control-height-lg);
+  --civitas-permission-row-padding-block: var(--civitas-space-3);
+  --civitas-switch-track-width: 2.75rem;
+  --civitas-switch-track-height: 1.5rem;
+  --civitas-switch-thumb-size: 1.125rem;
+  --civitas-switch-thumb-inset: 0.1875rem;
+  --civitas-pending-changes-gap: var(--civitas-space-3);
+
   --civitas-z-topbar: 20;
   --civitas-z-sticky-action: 30;
   --civitas-z-overlay: 50;

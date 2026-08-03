@@ -47,6 +47,9 @@ test('catalog IDs, lifecycle and activation evidence are enforced in generated m
       assert.ok(permission.policyRequirements.length)
       assert.ok(permission.runtimePath)
       assert.ok(permission.testEvidence.length)
+      assert.ok(permission.presentation)
+      for (const key of ['label','description','groupKey','groupLabel','groupOrder','order']) assert.notEqual(permission.presentation[key], undefined, `${permission.name}:${key}`)
+      assert.doesNotMatch(permission.presentation.description, /endpoint|migration|execute the |calls the |owning operation/i)
     }
   }
   for (const permission of generated.activePermissions) assert.equal(permission.targetStatus, 'active')
@@ -107,5 +110,30 @@ test('organization role assignments never contain owner permissions', () => {
   for (const [role, permissions] of Object.entries(rolePermissionAssignments)) {
     if (!role.startsWith('organization_')) continue
     for (const permission of permissions) assert.equal(permission.startsWith('owner.'), false, `${role}:${permission}`)
+  }
+})
+test('presentation metadata participates in the canonical catalog hash and stable ordering', async () => {
+  const { catalogHash } = await import('../../scripts/authorization/permission-catalog-utils.mjs')
+  const clone = JSON.parse(JSON.stringify(generated.catalog))
+  delete clone.catalogHash
+  if (clone.reconciliation) delete clone.reconciliation.catalogHash
+  const original = catalogHash(clone)
+  clone.permissions.find((permission) => permission.targetStatus === 'active').presentation.label += ' changed'
+  assert.notEqual(catalogHash(clone), original)
+  const operational = generated.activePermissions.map((permission) => permission.presentation)
+  assert.equal(operational.every((presentation) => presentation && Number.isInteger(presentation.groupOrder) && Number.isInteger(presentation.order)), true)
+})
+
+test('every organization-surface permission has governed presentation and provisioning metadata', () => {
+  const organizationPermissions = generated.permissions.filter((permission) => permission.surface === 'organization')
+  assert.ok(organizationPermissions.length > generated.activePermissions.length)
+  for (const permission of organizationPermissions) {
+    assert.equal(permission.identityProvisioning, 'provisionable', permission.name)
+    assert.ok(permission.presentation?.label, permission.name)
+    assert.ok(permission.presentation?.description?.endsWith('.'), permission.name)
+    assert.ok(permission.presentation?.groupKey, permission.name)
+    assert.ok(permission.presentation?.groupLabel, permission.name)
+    assert.equal(Number.isInteger(permission.presentation?.groupOrder), true, permission.name)
+    assert.equal(Number.isInteger(permission.presentation?.order), true, permission.name)
   }
 })

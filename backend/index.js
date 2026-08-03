@@ -37,7 +37,10 @@ const { createIdempotencyKey, getOrganizationProvisioningDraft, saveOrganization
 const { buildBootstrapStatus } = require("./services/ownerBootstrapStatus");
 const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./services/ownerCapabilitySurfaces");
 const { buildGovernanceReadModel, assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
-const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
+const { createGovernanceRolesService, roleMapFromRoles } = require("./services/governanceRolesReadModel");
+const { createPostgresEntitlementRepository } = require("./authorization/entitlements/postgresEntitlementRepository");
+const governanceRolesService = createGovernanceRolesService({ entitlementRepository: createPostgresEntitlementRepository() });
+const entitlementRepository = createPostgresEntitlementRepository();
 const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
 const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
 const { requireGlobalOwner } = require("./authorization/guards");
@@ -397,7 +400,7 @@ secureRoute.get("/owner/organizations/:organizationId/governance", "ownerRead", 
     const roles = await listLogtoOrganizationRoles();
     const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
     const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "owner", roles, members, memberRolesByUserId }));
+    return res.json(await buildGovernanceReadModel({ governanceRolesService, organization: logtoOrganization, organizationId: req.params.organizationId, surface: "owner", roles, members, memberRolesByUserId }));
   } catch (error) {
     return sendPublicError(res, error, "OwnerGovernanceReadModelError", "Failed to build owner governance read model");
   }
@@ -416,7 +419,7 @@ secureRoute.get("/owner/organizations/:organizationId/governance/audit", "ownerR
 secureRoute.put("/owner/organizations/:organizationId/governance/entitlement-ceilings", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerRuntimeOperationsExecute] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
   try {
     const roles = await listLogtoOrganizationRoles();
-    const result = await updateOwnerCeilings({ organizationId: req.params.organizationId, actorLogtoUserId: req.user?.sub || req.user?.id, changes: req.body?.changes || [], expectedPolicyVersion: req.body?.expectedPolicyVersion, roleIdToName: roleMapFromRoles(roles), reason: req.body?.reason || "owner_ceiling_update" });
+    const result = await governanceRolesService.updateOwnerCeilings({ organizationId: req.params.organizationId, actorLogtoUserId: req.user?.sub || req.user?.id, changes: req.body?.changes || [], expectedPolicyVersion: req.body?.expectedPolicyVersion, roleIdToName: roleMapFromRoles(roles), reason: req.body?.reason || "owner_ceiling_update" });
     return res.json({ contractVersion: "2026-07-civitas10-governance-roles-v1", ...result });
   } catch (error) {
     return sendPublicError(res, error, "OwnerGovernanceCeilingError", "Failed to update owner entitlement ceilings");
@@ -527,7 +530,7 @@ secureRoute.get("/o/:organizationId/governance", "organizationMemberRead", requi
     const roles = await listLogtoOrganizationRoles();
     const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
     const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId }));
+    return res.json(await buildGovernanceReadModel({ governanceRolesService, organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId }));
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceReadModelError", "Failed to build tenant governance read model");
   }
@@ -552,7 +555,7 @@ secureRoute.put("/o/:organizationId/governance/role-activations", "organizationA
   try {
     assertTenantRouteMatchesContext(req);
     const roles = await listLogtoOrganizationRoles();
-    const result = await updateTenantActivations({ organizationId: req.params.organizationId, actorLogtoUserId: req.user?.sub || req.user?.id, changes: req.body?.changes || [], expectedPolicyVersion: req.body?.expectedPolicyVersion, roleIdToName: roleMapFromRoles(roles), reason: req.body?.reason || "tenant_activation_update" });
+    const result = await governanceRolesService.updateTenantActivations({ organizationId: req.params.organizationId, actorLogtoUserId: req.user?.sub || req.user?.id, changes: req.body?.changes || [], expectedPolicyVersion: req.body?.expectedPolicyVersion, roleIdToName: roleMapFromRoles(roles), reason: req.body?.reason || "tenant_activation_update" });
     return res.json({ contractVersion: "2026-07-civitas10-governance-roles-v1", ...result });
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceActivationError", "Failed to update tenant role activations");

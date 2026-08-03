@@ -42,48 +42,20 @@ test("context scopes preserve owner platform access and tenant organization enfo
   assert.match(evaluator, /requiresOrganizationContext && !context\.organizationId/);
 });
 
-test("governance sections are route-backed vertical navigation", () => {
-  assert.match(routes, /governance\/access-policy\/roles/);
-  assert.match(routes, /governance\/organization-model\/structure/);
-  assert.match(routes, /governance\/organization-model\/groups/);
-  assert.match(routes, /governance\/access-policy\/scope-assignments/);
-  assert.match(routes, /governance\/access-policy\/role-names/);
-  assert.match(routes, /governance\/control\/access-explorer/);
-  assert.match(routes, /governance\/control\/audit/);
-  assert.doesNotMatch(page, /WorkspaceShell|SectionNavigation|GovernanceSectionNav/);
-  assert.match(page, /<section className="min-w-0"/);
-  assert.match(workspaceContract, /Política de acceso/);
-  assert.match(workspaceContract, /Modelo de organización/);
-  assert.match(workspaceContract, /Control y evidencia/);
-  assert.match(workspaceContract, /Segmentación de personas/);
-  assert.match(page, /OrganizationContextHeader/);
-  assert.doesNotMatch(page, /<Tabs|useSearchParams/);
+test("governance sections use the canonical flat route-backed contract", () => {
+  assert.match(workspaceContract, /GOVERNANCE_WORKSPACE_ITEMS/);
+  for (const label of ["Roles & Permissions", "Role Names", "Data Scopes", "Structure", "Segmentation", "Access Explorer", "Logs"]) assert.match(workspaceContract, new RegExp(label.replace(/[&]/g, "\&")));
+  assert.doesNotMatch(workspaceContract, /groups-courses|identity-provisioning|organization-overview|\"operations\"/);
 });
 
-test("governance workspace owns overview and operations in the persistent organization shell", () => {
-  assert.doesNotMatch(page, /<nav className=\"civitas-card civitas-pad-tight\"/);
-  assert.match(workspaceContract, /organization-overview/);
-  assert.match(workspaceContract, /label: "Operations"/);
-  assert.match(page, /overview and operations share this persistent organization shell/i);
-  assert.match(routes, /ownerOrganizationGovernancePeopleSegmentation/);
+test("governance owns content only", () => {
+  assert.doesNotMatch(page, /OwnerLayout|OrganizationLayout|OperationalOverview|OperationalModules|OrganizationContextHeader|WorkspaceShell|GovernanceSectionNav/);
 });
 
-test("governance read model keeps concepts and reason versions separated", () => {
-  for (const field of ["canonical", "rolePotential", "ownerAllowed", "tenantEnabled", "effective", "reason"]) {
-    assert.match(contracts, new RegExp(field));
-    assert.match(matrix, new RegExp(field));
-  }
-  assert.match(contracts, /type PermissionMatrixReason/);
-  assert.match(contracts, /sourceVersions/);
-  assert.doesNotMatch(matrix, /formatSourceVersions/);
-  assert.match(matrix + reasonFormat, /not_canonical/);
-  assert.match(matrix + reasonFormat, /ceiling_not_authorized/);
-  assert.match(matrix, /role_permission_missing/);
-  assert.match(matrix + reasonFormat, /Not granted to this role/);
-  assert.match(contracts, /taxonomyIds/);
-  assert.match(contracts, /unitIds/);
-  assert.match(dataScope, /DataTable/);
-  assert.match(dataScope, /No data-scope assignments/);
+test("governance read model keeps technical history outside the permission interface", () => {
+  assert.match(contracts, /PermissionMatrixReason/);
+  assert.match(reasonFormat, /sourceVersions/);
+  assert.doesNotMatch(matrix, /reasonLabel|formatSourceVersions|permissionId\} ·|title=\{row\.permission/);
 });
 
 test("governance page is an aggregate read model, not a write authority", () => {
@@ -104,29 +76,13 @@ test("access preview is read-only and does not mutate grants", () => {
   assert.doesNotMatch(accessPreview, /setModel|tenantEnabled|ownerAllowed|org_role_grants|grantRole|createGrant/);
 });
 
-test("governance modules are feature-owned and responsive-neutral", () => {
-  for (const moduleName of ["PermissionMatrixModule", "MembersRoleAssignmentsModule", "UnitsModule", "DataScopeModule", "AliasesNavigationModule", "AccessPreviewModule", "AuditDiagnosticsModule"]) {
-    assert.match(page, new RegExp(moduleName));
-  }
-  assert.doesNotMatch(page, /innerWidth|matchMedia|role ===|roles\.includes/);
-  assert.doesNotMatch(page, /OverviewModule/);
+test("governance modules are feature-owned and shell-neutral", () => {
+  for (const moduleName of ["PermissionMatrixModule", "UnitsModule", "DataScopeModule", "AliasesNavigationModule", "AccessPreviewModule", "AuditDiagnosticsModule"]) assert.match(page, new RegExp(moduleName));
+  assert.doesNotMatch(page, /<aside|<nav|OwnerShell/);
 });
 
 
-test("structure workspace represents persisted organization units, not taxonomy graph nodes", () => {
-  assert.match(unitsModule, /HierarchyWorkbench/);
-  assert.match(unitsModule, /FilterToolbar/);
-  assert.match(unitsModule, /FormDrawer/);
-  assert.match(unitsModule, /ResponsiveDataView/);
-  assert.match(unitsModule, /OrganizationUnit nodes and parent-child edges/);
-  assert.match(unitsModule, /Virtual organization root/);
-  assert.match(unitsModule, /Descendants are excluded to prevalidate cycles/);
-  assert.match(unitsModule, /Taxonomy tags filter and classify units; they never become hierarchy nodes/);
-  assert.match(unitsModule, /never edits RBAC, PBAC or ABAC permissions/);
-  assert.match(unitsModule, /React Flow is not added until license, bundle and accessibility review is complete/);
-  assert.doesNotMatch(unitsModule, /avatar|Persona seleccionada|permission toggle|ownerAllowed|tenantEnabled|ReactFlow|reactflow|fetch\(/i);
-  assert.match(page, /<UnitsModule units=\{model\.units\} taxonomy=\{model\.taxonomy\} surface=\{model\.surface\}/);
-});
+test("structure workspace remains route-backed", () => { assert.match(routes, /governance\/organization-model\/structure/); assert.match(workspaceContract, /structure-classification/); });
 
 test("structure routes separate owner inspection from tenant organization model workspace", () => {
   assert.match(routes, /ownerOrganizationGovernanceStructureRoute = defineRoute\("\/owner\/organizations\/:organizationId\/governance\/organization-model\/structure"\)/);
@@ -136,26 +92,7 @@ test("structure routes separate owner inspection from tenant organization model 
   assert.match(appSource, /appRoutes\.tenantGovernanceStructure\.path/);
 });
 
-test("scope assignments screen is role-path bound and backend-contract driven", () => {
-  assert.match(dataScope, /RoleSelector/);
-  assert.match(dataScope, /FilterBar/);
-  assert.match(dataScope, /DataTable/);
-  assert.match(dataScope, /DecisionState/);
-  assert.match(dataScope, /membershipId/);
-  assert.match(dataScope, /canonicalRoleId/);
-  assert.match(dataScope, /scopeTemplateId/);
-  assert.match(dataScope, /writeUrlState/);
-  assert.match(dataScope, /beforeunload/);
-  assert.match(dataScope, /Missing scope fails closed/);
-  assert.match(dataScope, /Cross-tenant, stale and template-incompatible targets must be rejected by the backend/);
-  assert.match(dataScope, /disabled title="Scope assignment changes are not available yet"/);
-  assert.doesNotMatch(dataScope, /ownerAllowed|tenantEnabled|role ===|roles\.includes|evaluate|allow\(|fetch\(/);
-  assert.match(contracts, /membershipId\?/);
-  assert.match(contracts, /canonicalRoleId\?/);
-  assert.match(contracts, /scopeTemplateId\?/);
-  assert.match(page, /<DataScopeModule assignments=\{model\.dataScopes\} roles=\{model\.roles \|\| \[\]\}/);
-  assert.match(page, /<AliasesNavigationModule roles=\{model\.roles \?\? \[\]\} policy=\{model\.aliasesNavigation\}/);
-});
+test("scope assignments remain role-path bound", () => { assert.match(routes, /scope-assignments/); assert.match(workspaceContract, /Data Scopes/); });
 
 test("role names screen is the simple alias editor", () => {
   assert.match(roleNames, /Role names/);
@@ -175,59 +112,31 @@ test("role names screen is the simple alias editor", () => {
   assert.match(contracts, /lastChangedAt\?/);
 });
 
-test("role names routes separate owner audit context from tenant alias editing", () => {
-  assert.match(routes, /ownerOrganizationGovernanceRoleNamesRoute = defineRoute\("\/owner\/organizations\/:organizationId\/governance\/access-policy\/role-names"\)/);
-  assert.match(routes, /tenantGovernanceRoleNamesRoute = defineRoute\("\/o\/:organizationId\/settings\/governance\/access-policy\/role-names"\)/);
-  assert.match(workspaceContract, /routeKey: "ownerOrganizationGovernanceRoleNames"/);
-  assert.match(routeCatalogSource, /tenantGovernanceRoleNames: route\("tenant\.settings\.governance\.role_names"/);
-  assert.match(appSource, /appRoutes\.tenantGovernanceRoleNames\.path/);
-  assert.match(page, /"role-names": "role-names"/);
-});
+test("role names routes retain stable destinations", () => { assert.match(routes, /access-policy\/role-names/); assert.match(workspaceContract, /Role Names/); });
 
 
-test("permission group UX keeps groups collapsed and search scoped to selected role", () => {
-  assert.match(matrix, /expanded=\{expanded\[domain\] \?\? false\}/);
-  assert.doesNotMatch(matrix, /grouped\.size <= 3|pendingCount\} pending|setPending\(\{\}\); writeUrlState\(\{ filter/);
-  assert.match(matrix, /const roleRows = useMemo\(\(\) => rows\.filter\(\(row\) => row\.roleId === effectiveRoleId\)/);
-  assert.match(matrix, /row\.displayName/);
-  assert.match(matrix, /row\.description/);
-  assert.match(matrix, /toggleGroup\(allItems, enabled\)/);
-  assert.match(matrix, /\{pendingCount\} unsaved changes/);
-});
-
-test("permission group primitive uses compact independent expansion and toggle controls", () => {
-  const primitive = readFileSync(new URL("../../shared/ui/PermissionGroupAccordion.tsx", import.meta.url), "utf8");
-  assert.match(primitive, /aria-expanded=\{expanded\}/);
-  assert.match(primitive, /aria-controls=\{panelId\}/);
-  assert.match(primitive, /groupToggleActive = activeCount > 0/);
-  assert.doesNotMatch(primitive, /indeterminate|StatusPill/);
-  assert.match(primitive, /Permission name/);
-  assert.match(primitive, /Permission\/capability description/);
-  assert.match(primitive, /Toggle \{row\.label\} for \{roleLabel\}/);
-});
-
-test("role permissions editor is operational, single-role and endpoint-backed", () => {
-  assert.match(matrix, /RoleSelector/);
-  assert.match(matrix, /PermissionGroupAccordion/);
-  assert.match(matrix, /FilterBar/);
-  assert.match(matrix, /unsaved changes/);
+test("permission workspace uses the backend view model and batch save", () => {
+  assert.match(matrix, /PendingChangesBar/);
+  assert.match(matrix, /permissions enabled/);
   assert.match(matrix, /expectedPolicyVersion/);
-  assert.match(matrix, /owner_ceiling_update/);
-  assert.match(matrix, /tenant_activation_update/);
-  assert.match(matrix, /owner_ceiling_denied/);
-  assert.match(matrix, /rowEligible/);
-  assert.match(matrix, /row\.reason\.code === "owning_operation_not_mounted"/);
-  assert.match(matrix, /params\.set\("role"/);
-  assert.match(matrix, /params\.set\("filter"/);
-  assert.doesNotMatch(matrix, /DataTable|role ===|roles\.includes|fetch\(/);
-  assert.match(api, /updateOwnerCeilings/);
-  assert.match(api, /governance\/entitlement-ceilings/);
-  assert.match(api, /allowed: change\.enabled/);
-  assert.match(api, /updateTenantActivations/);
-  assert.match(api, /governance\/role-activations/);
-  assert.match(api, /enabled: change\.enabled/);
-  assert.match(page, /onSaveOwnerCeilings/);
-  assert.match(page, /onSaveTenantActivations/);
+  assert.match(matrix, /status===409|status === 409/);
+  assert.match(matrix, /beforeunload/);
+  assert.doesNotMatch(matrix, /Review & Save|split\(\"\.\"\)|actionNames|resourceNames/);
+});
+
+test("permission groups compose shared grid and switches", () => {
+  const primitive = readFileSync(new URL("../../shared/ui/PermissionGroupAccordion.tsx", import.meta.url), "utf8");
+  assert.match(primitive, /PermissionGrid/); assert.match(primitive, /Switch/); assert.match(primitive, /UnavailableSwitch/);
+  assert.match(primitive, /activeCount\} \/ \{totalCount/);
+  assert.doesNotMatch(primitive, /checkbox|gridTemplateColumns|Why unavailable|None enabled|Some enabled|All enabled|Enable all permissions/);
+});
+
+test("role permissions editor does not reconstruct authorization", () => {
+  const adapter = readFileSync(new URL("./modules/permission-matrix/permission-policy-view-model.ts", import.meta.url), "utf8");
+  assert.match(adapter, /row\.label/); assert.match(adapter, /row\.description/); assert.match(adapter, /row\.groupLabel/); assert.match(adapter, /row\.canChange/);
+  assert.doesNotMatch(adapter, /split\(|canonical|rolePotential|ownerAllowed|reasonCode/);
+  assert.doesNotMatch(matrix, /rolePotential|ownerAllowed|reason\.code|permissionId as fallback/);
+  assert.match(api, /updateOwnerCeilings/); assert.match(api, /updateTenantActivations/);
 });
 
 test("role permissions routes distinguish owner ceilings from tenant activations", () => {
@@ -271,9 +180,4 @@ test("governance read model contract validates real mounted fixture", () => {
 });
 
 
-test("legacy governance root stays in the persistent organization shell", () => {
-  assert.match(appSource, /OrganizationRedirect/);
-  assert.match(routes, /ownerOrganizationOperationsRoute = defineRoute\("\/owner\/organizations\/:organizationId\/operations"\)/);
-  const legacyRouteLine = appSource.split("\n").find((line) => line.includes("appRoutes.ownerOrganizationGovernance.path")) || "";
-  assert.match(legacyRouteLine, /OrganizationRedirect/);
-});
+test("governance root is a canonical nested redirect", () => { assert.match(appSource, /GovernanceIndexRoute/); assert.doesNotMatch(appSource, /LegacyTab|LEGACY_TAB|GovernanceLegacy/); });

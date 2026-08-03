@@ -1,71 +1,25 @@
 "use strict";
 const { ENTITLEMENT_REASON_CODES } = require("./entitlementReasonCodes");
 const { assertLogtoId, validateEntitlementChange } = require("./entitlementValidation");
-const { AUTHORIZATION_EVENT_TYPES } = require("../runtime/authorizationEvents");
-
-function entitlementError(code, message = code) { return Object.assign(new Error(message), { code }); }
-function requireRuntimePort(runtimeConsistencyPort) {
-  if (!runtimeConsistencyPort?.incrementPolicyVersion || !runtimeConsistencyPort?.enqueueOutbox || !runtimeConsistencyPort?.audit) throw entitlementError("runtime_consistency_port_required");
-}
-function createEntitlementService({ repository, runtimeConsistencyPort, authorizationFreshnessService, roleIdToName = {} } = {}) {
+function entitlementError(code, message = code) { return Object.assign(new Error(message), { code, status: code === ENTITLEMENT_REASON_CODES.AUTHORIZATION_POLICY_VERSION_CONFLICT ? 409 : 400 }); }
+function createEntitlementService({ repository, roleIdToName = {} } = {}) {
   if (!repository) throw new Error("repository_required");
-  async function mutateVersion(event) {
-    if (authorizationFreshnessService?.invalidate) {
-      const eventType = event.eventType === "authorization.entitlement_limit.changed" ? AUTHORIZATION_EVENT_TYPES.CEILING_CHANGED : event.eventType === "authorization.role_activation.changed" ? AUTHORIZATION_EVENT_TYPES.ACTIVATION_CHANGED : event.eventType;
-      const snapshot = await authorizationFreshnessService.invalidate({ ...event, eventType, actorUserId: event.actorLogtoUserId });
-      if (runtimeConsistencyPort?.audit) await runtimeConsistencyPort.audit({ ...event, policyVersion: snapshot.policyVersion });
-      return snapshot.policyVersion;
-    }
-    requireRuntimePort(runtimeConsistencyPort);
-    const policyVersion = await runtimeConsistencyPort.incrementPolicyVersion(event);
-    if (repository.setPolicyVersion) await repository.setPolicyVersion(event.organizationId, policyVersion);
-    await runtimeConsistencyPort.enqueueOutbox({ ...event, policyVersion });
-    return policyVersion;
+  const validate = (input) => { assertLogtoId(input.organizationId, "logto_organization_id"); assertLogtoId(input.actorLogtoUserId, "updated_by_logto_user_id"); return (input.changes || []).map((change) => validateEntitlementChange(change, { roleIdToName })); };
+  async function begin(input, normalized, eventType, action, apply) {
+    return repository.transaction(async (tx) => {
+      const current = await tx.getPolicyVersion(input.organizationId, { lock: true });
+      if (input.expectedPolicyVersion && Number(input.expectedPolicyVersion) !== current) throw entitlementError(ENTITLEMENT_REASON_CODES.AUTHORIZATION_POLICY_VERSION_CONFLICT);
+      const policyVersion = await tx.incrementPolicyVersion(input.organizationId, input.actorLogtoUserId, input.reason);
+      const saved = [];
+      for (const change of normalized) saved.push(await apply(tx, change, policyVersion));
+      await tx.enqueueOutbox({ eventType, organizationId: input.organizationId, actorLogtoUserId: input.actorLogtoUserId, roleId: normalized[0]?.logtoRoleId, permissions: normalized.map((change) => change.permission), policyVersion, decisionId: input.decisionId || null });
+      for (const evidence of saved) await tx.audit({ action, organizationId: input.organizationId, actorLogtoUserId: input.actorLogtoUserId, roleId: evidence.after.logtoRoleId, permission: evidence.after.permissionKey, before: evidence.before, after: evidence.after, mutationType: eventType, reason: input.reason, policyVersion, decisionId: input.decisionId || null, timestamp: new Date().toISOString() });
+      return { policyVersion, saved: saved.map((entry) => entry.after) };
+    });
   }
   return {
-    async upsertOwnerLimits({ organizationId, expectedPolicyVersion, changes = [], actorLogtoUserId, reason, decisionId } = {}) {
-      assertLogtoId(organizationId, "logto_organization_id");
-      assertLogtoId(actorLogtoUserId, "updated_by_logto_user_id");
-      const current = await repository.getPolicyVersion(organizationId);
-      if (expectedPolicyVersion && Number(expectedPolicyVersion) !== Number(current)) throw entitlementError(ENTITLEMENT_REASON_CODES.AUTHORIZATION_POLICY_VERSION_CONFLICT);
-      const normalized = changes.map((change) => validateEntitlementChange(change, { roleIdToName }));
-      return repository.transaction(async () => {
-        const policyVersion = await mutateVersion({ eventType: "authorization.entitlement_limit.changed", organizationId, actorLogtoUserId });
-        const saved = [];
-        for (const change of normalized) {
-          const before = await repository.getLimit({ organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission });
-          const limit = await repository.upsertLimit({ logtoOrganizationId: organizationId, logtoRoleId: change.logtoRoleId, roleNameCache: roleIdToName[change.logtoRoleId], permissionKey: change.permission, allowed: Boolean(change.allowed), locked: Boolean(change.locked), policyVersion, setByLogtoUserId: actorLogtoUserId, reason: change.reason || reason || null });
-          if (before?.allowed === true && limit.allowed === false) await repository.disableActivation({ organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission, policyVersion });
-          await runtimeConsistencyPort.audit({ action: before ? "authz.entitlement_limit.updated" : "authz.entitlement_limit.created", decisionId, organizationId, roleId: change.logtoRoleId, permission: change.permission, before, after: limit, reason: change.reason || reason || null, policyVersion });
-          saved.push(limit);
-        }
-        return { policyVersion, limits: saved };
-      });
-    },
-    async upsertTenantActivations({ organizationId, expectedPolicyVersion, changes = [], actorLogtoUserId, reason, decisionId } = {}) {
-      assertLogtoId(organizationId, "logto_organization_id");
-      assertLogtoId(actorLogtoUserId, "updated_by_logto_user_id");
-      const current = await repository.getPolicyVersion(organizationId);
-      if (expectedPolicyVersion && Number(expectedPolicyVersion) !== Number(current)) throw entitlementError(ENTITLEMENT_REASON_CODES.AUTHORIZATION_POLICY_VERSION_CONFLICT);
-      const normalized = changes.map((change) => validateEntitlementChange(change, { roleIdToName }));
-      for (const change of normalized) {
-        const ceiling = await repository.getLimit({ organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission });
-        if (!ceiling || ceiling.allowed !== true) throw entitlementError(ENTITLEMENT_REASON_CODES.TENANT_ACTIVATION_EXCEEDS_OWNER_CEILING);
-        if (ceiling.locked === true) throw entitlementError(ENTITLEMENT_REASON_CODES.TENANT_ACTIVATION_LOCKED);
-      }
-      return repository.transaction(async () => {
-        const policyVersion = await mutateVersion({ eventType: "authorization.role_activation.changed", organizationId, actorLogtoUserId });
-        const saved = [];
-        for (const change of normalized) {
-          const before = await repository.getActivation({ organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission });
-          const ceiling = await repository.getLimit({ organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission });
-          const activation = await repository.upsertActivation({ logtoOrganizationId: organizationId, logtoRoleId: change.logtoRoleId, roleNameCache: roleIdToName[change.logtoRoleId], permissionKey: change.permission, entitlementLimitId: ceiling.id, enabled: Boolean(change.enabled), policyVersion, setByLogtoUserId: actorLogtoUserId, reason: change.reason || reason || null });
-          await runtimeConsistencyPort.audit({ action: before ? "authz.role_permission_activation.updated" : "authz.role_permission_activation.created", decisionId, organizationId, roleId: change.logtoRoleId, permission: change.permission, before, after: activation, reason: change.reason || reason || null, policyVersion });
-          saved.push(activation);
-        }
-        return { policyVersion, activations: saved };
-      });
-    },
+    async upsertOwnerLimits(input = {}) { const normalized = validate(input); const result = await begin(input, normalized, "authorization.entitlement_limit.changed", "authz.entitlement_limit.updated", async (tx, change, policyVersion) => { const before = await tx.getLimit({ organizationId: input.organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission }); const after = await tx.upsertLimit({ logtoOrganizationId: input.organizationId, logtoRoleId: change.logtoRoleId, roleNameCache: roleIdToName[change.logtoRoleId], permissionKey: change.permission, allowed: !!change.allowed, locked: !!change.locked, policyVersion, setByLogtoUserId: input.actorLogtoUserId, reason: change.reason || input.reason }); if (before?.allowed && !after.allowed) await tx.disableActivation({ organizationId: input.organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission, policyVersion }); return { before, after }; }); return { policyVersion: result.policyVersion, limits: result.saved }; },
+    async upsertTenantActivations(input = {}) { const normalized = validate(input); const result = await begin(input, normalized, "authorization.role_activation.changed", "authz.role_permission_activation.updated", async (tx, change, policyVersion) => { const ceiling = await tx.getLimit({ organizationId: input.organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission }); if (!ceiling?.allowed) throw entitlementError(ENTITLEMENT_REASON_CODES.TENANT_ACTIVATION_EXCEEDS_OWNER_CEILING); if (ceiling.locked) throw entitlementError(ENTITLEMENT_REASON_CODES.TENANT_ACTIVATION_LOCKED); const before = await tx.getActivation({ organizationId: input.organizationId, logtoRoleId: change.logtoRoleId, permission: change.permission }); const after = await tx.upsertActivation({ logtoOrganizationId: input.organizationId, logtoRoleId: change.logtoRoleId, roleNameCache: roleIdToName[change.logtoRoleId], permissionKey: change.permission, entitlementLimitId: ceiling.id, enabled: !!change.enabled, policyVersion, setByLogtoUserId: input.actorLogtoUserId, reason: change.reason || input.reason }); return { before, after }; }); return { policyVersion: result.policyVersion, activations: result.saved }; },
   };
 }
 module.exports = { createEntitlementService, entitlementError };

@@ -20,7 +20,7 @@ Reusable primitives:
 
 - `OrganizationContextHeader` — compact entity context with breadcrumb, status and action slots; do not pair it with a second page hero for the same organization.
 - `GovernanceSectionNav` — primitive retained for non-workspace consumers. It must not be mounted inside Governance: organization navigation belongs exclusively to the blue `AppShell` sidebar.
-- `RoleSelector` — controlled role selector that shows canonical role IDs, tenant aliases and status without replacing the stable ID.
+- `RoleSelector` — controlled role selector that keeps stable IDs in control values while rendering only resolved role display names.
 - `PermissionGroupAccordion` — accessible domain accordion with group/row toggles, mixed state and counts.
 - `FilterBar` — composable search/filter/reset toolbar suitable for URL-backed state supplied by the screen.
 - `SplitView` — responsive list/detail or canvas/detail layout.
@@ -30,3 +30,12 @@ Reusable primitives:
 Reusable patterns exported from the same barrel: `EntityWorkspace`, `SettingsWorkbench`, `MasterDetail`, `GroupedToggleList`, `HierarchyWorkbench`, `FilterToolbar`, `FormDrawer` and `ResponsiveDataView`.
 
 All CSS for these primitives lives in `styles/primitives.css` and consumes `--civitas-*` tokens from `styles/tokens.css`/`styles/theme.css`. The `validate:governance-visual-contract` script fails shared UI code that introduces raw palette values, arbitrary governed Tailwind utilities, endpoint calls or local authorization logic.
+
+## Permission policy primitives
+
+- `Switch` is the tokenized `role="switch"` control for individual and group permission changes.
+- `Popover` manages accessible transient content, Escape, outside interaction, and focus return.
+- `UnavailableSwitch` combines a locked switch with the standard support explanation.
+- `PermissionGrid` provides the shared responsive Permission, Description, and Control geometry.
+- `PermissionGroupAccordion` composes disclosure, grid, switches, and unavailable controls.
+- `PendingChangesBar` presents batch-save lifecycle states without obscuring permission rows.

@@ -45,8 +45,8 @@ test('planner creates deterministic empty-state plan and no deletes', () => {
 
 test('planner detects synchronized, metadata drift, assignment drift, unmanaged, and conflicts', () => {
   const contract = loadCanonicalAuthorizationContract()
-  const active = contract.manifest.permissions.filter((p) => p.status === 'active')
-  const synced = normalizeRemoteState({ resource: { id: 'res1', indicator: contract.manifest.resource }, permissions: active.map((p) => ({ id: `scope_${p.name}`, name: p.name, description: p.description })), globalRoles: [{ id: 'role_owner', name: 'owner_global', permissions: contract.manifest.rolePermissionAssignments.owner_global }], organizationRoles: contract.manifest.organizationRoles.map((name) => ({ id: `role_${name}`, name, permissions: contract.manifest.rolePermissionAssignments[name] || [] })) })
+  const provisioned = contract.manifest.permissions.filter((p) => p.status === 'active' || p.identityProvisioning === 'provisionable')
+  const synced = normalizeRemoteState({ resource: { id: 'res1', indicator: contract.manifest.resource }, permissions: provisioned.map((p) => ({ id: `scope_${p.name}`, name: p.name, description: p.description })), globalRoles: [{ id: 'role_owner', name: 'owner_global', permissions: contract.manifest.rolePermissionAssignments.owner_global }], organizationRoles: contract.manifest.organizationRoles.map((name) => ({ id: `role_${name}`, name, permissions: contract.manifest.rolePermissionAssignments[name] || [] })) })
   const plan = buildAuthorizationPlan({ contract, remoteState: synced })
   assert.equal(plan.permissions.create.length, 0)
   assert.ok(plan.permissions.noop.length > 0)
@@ -68,8 +68,8 @@ test('applier blocks unapproved/stale plans and is idempotent for noop plans', a
   const tampered = { ...plan, permissions: { ...plan.permissions, create: [] } }
   await assert.rejects(() => applyAuthorizationPlan({ plan: tampered, contract, remoteState, client: fakeClient(), approved: true, preflightOk: true, actor: 'tester', reason: 'contract', expectedPlanHash: 'wrong', idempotencyKey: 'idem-3' }), /expected plan hash/)
   await assert.rejects(() => applyAuthorizationPlan({ plan: tampered, contract, remoteState, client: fakeClient(), approved: true, preflightOk: true, actor: 'tester', reason: 'contract', expectedPlanHash: tampered.planHash, idempotencyKey: 'idem-4' }), /plan hash does not match/)
-  const active = contract.manifest.permissions.filter((permission) => permission.status === 'active')
-  const syncedRemote = normalizeRemoteState({ resource: { id: 'res1', indicator: contract.manifest.resource }, permissions: active.map((permission) => ({ id: `scope_${permission.name}`, name: permission.name, description: permission.description })), globalRoles: contract.manifest.globalRoles.map((name) => ({ id: `role_${name}`, name, permissions: contract.manifest.rolePermissionAssignments[name] || [] })), organizationRoles: contract.manifest.organizationRoles.map((name) => ({ id: `org_role_${name}`, name, permissions: contract.manifest.rolePermissionAssignments[name] || [] })) })
+  const provisioned = contract.manifest.permissions.filter((permission) => permission.status === 'active' || permission.identityProvisioning === 'provisionable')
+  const syncedRemote = normalizeRemoteState({ resource: { id: 'res1', indicator: contract.manifest.resource }, permissions: provisioned.map((permission) => ({ id: `scope_${permission.name}`, name: permission.name, description: permission.description })), globalRoles: contract.manifest.globalRoles.map((name) => ({ id: `role_${name}`, name, permissions: contract.manifest.rolePermissionAssignments[name] || [] })), organizationRoles: contract.manifest.organizationRoles.map((name) => ({ id: `org_role_${name}`, name, permissions: contract.manifest.rolePermissionAssignments[name] || [] })) })
   const noop = buildAuthorizationPlan({ contract, remoteState: syncedRemote })
   const result = await applyAuthorizationPlan({ plan: noop, contract, remoteState: syncedRemote, client: fakeClient(), approved: true, preflightOk: true, actor: 'tester', reason: 'contract', expectedPlanHash: noop.planHash, idempotencyKey: 'idem-5' })
   assert.equal(result.results[0].status, 'noop')
@@ -114,7 +114,7 @@ test('drift report distinguishes legacy, planned leakage, wrong surface, extra, 
     resource: { id: 'res-wrong', indicator: 'https://wrong.example.test/api' },
     permissions: [
       { id: 'legacy', name: 'governance.preview.read', description: 'legacy' },
-      { id: 'planned', name: 'lms.grades.export', description: 'planned leak' },
+      { id: 'planned', name: 'owner.audit.read', description: 'planned leak' },
       { id: 'extra', name: 'crm.unknown.read', description: 'extra' },
     ],
     organizationRoles: [{ id: 'org-admin', name: 'organization_admin', permissions: ['owner.runtime.read'] }],
@@ -122,7 +122,8 @@ test('drift report distinguishes legacy, planned leakage, wrong surface, extra, 
   const plan = buildAuthorizationPlan({ contract, remoteState })
   assert.ok(plan.drift.wrongResourceIndicator.length > 0)
   assert.ok(plan.drift.legacy.some((item) => item.name === 'governance.preview.read'))
-  assert.ok(plan.drift.plannedLeakage.some((item) => item.name === 'lms.grades.export'))
+  assert.ok(plan.drift.plannedLeakage.some((item) => item.name === 'owner.audit.read'))
+  assert.equal(plan.drift.plannedLeakage.some((item) => item.name === 'lms.grades.export'), false)
   assert.ok(plan.drift.extra.some((item) => item.name === 'crm.unknown.read'))
   assert.ok(plan.drift.wrongSurface.some((item) => item.permission === 'owner.runtime.read'))
   assert.ok(plan.drift.missing.some((item) => item.targetType === 'permission'))

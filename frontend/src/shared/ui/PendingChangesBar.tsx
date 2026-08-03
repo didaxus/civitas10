@@ -1,0 +1,5 @@
+export type PendingChangesState = "clean" | "pending" | "saving" | "saved" | "error" | "conflict";
+export const PendingChangesBar = ({ count, state, message, onDiscard, onSave, onReload }: { count: number; state: PendingChangesState; message?: string; onDiscard: () => void; onSave: () => void; onReload?: () => void }) => {
+  if (state === "clean" && count === 0) return null; const busy = state === "saving";
+  return <div className="civitas-card civitas-pad-tight civitas-pending-changes" role="status" aria-live="polite"><p className="font-semibold">{count ? `${count} pending ${count === 1 ? "change" : "changes"}` : message}</p>{message && count ? <p className="text-sm text-muted-strong">{message}</p> : null}<div className="civitas-cluster">{state === "conflict" && onReload ? <button type="button" className="civitas-secondary-button" onClick={onReload}>Reload</button> : null}<button type="button" className="civitas-secondary-button" onClick={onDiscard} disabled={busy}>Discard</button><button type="button" className="civitas-primary-button" onClick={onSave} disabled={busy || count === 0}>{busy ? "Saving…" : "Save changes"}</button></div></div>;
+};

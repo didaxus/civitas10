@@ -1068,3 +1068,16 @@ textarea.owner-field {
   padding-inline-end: var(--civitas-space-1);
   margin-top: var(--civitas-space-3);
 }
+
+
+.civitas-switch { width: var(--civitas-switch-track-width); height: var(--civitas-switch-track-height); padding: var(--civitas-switch-thumb-inset); border: var(--civitas-border-width) solid var(--civitas-border-strong); border-radius: var(--civitas-radius-pill); background: var(--civitas-surface-subtle); display: inline-flex; align-items: center; cursor: pointer; transition: background-color 150ms ease; }
+.civitas-switch[data-state="on"] { background: var(--civitas-primary); border-color: var(--civitas-primary-strong); justify-content: flex-end; }
+.civitas-switch[data-state="mixed"] { background: var(--civitas-primary-soft); justify-content: center; }
+.civitas-switch[data-state="locked"], .civitas-switch[aria-disabled="true"] { background: var(--civitas-disabled); cursor: not-allowed; }
+.civitas-switch:focus-visible { outline: 3px solid var(--civitas-focus); outline-offset: 2px; }
+.civitas-switch-thumb { width: var(--civitas-switch-thumb-size); height: var(--civitas-switch-thumb-size); border-radius: var(--civitas-radius-pill); background: var(--civitas-surface); box-shadow: var(--civitas-shadow-sm); }
+.civitas-popover { position: absolute; inset-inline-end: 0; inset-block-start: calc(100% + var(--civitas-popover-offset)); z-index: var(--civitas-z-popover); width: min(18rem, 80vw); padding: var(--civitas-space-3); color: var(--civitas-popover-text); background: var(--civitas-popover-bg); border: var(--civitas-border-width) solid var(--civitas-popover-border); border-radius: var(--civitas-popover-radius); box-shadow: var(--civitas-popover-shadow); }
+.civitas-permission-grid { display: grid; grid-template-columns: minmax(var(--civitas-permission-name-min-width), 1fr) minmax(var(--civitas-permission-description-min-width), 2fr) var(--civitas-permission-control-width); column-gap: var(--civitas-permission-column-gap); align-items: center; min-height: var(--civitas-permission-row-min-height); padding-block: var(--civitas-permission-row-padding-block); }
+.civitas-permission-control { justify-self: end; position: relative; }
+.civitas-pending-changes { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--civitas-pending-changes-gap); }
+@media (max-width: 768px) { .civitas-permission-grid { grid-template-columns: minmax(0, 1fr) var(--civitas-permission-control-width); gap: var(--civitas-space-2); } .civitas-permission-description { grid-column: 1 / -1; } }

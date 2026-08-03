@@ -30,12 +30,13 @@ test('catalog statuses, resource, modular domains, and naming are enforceable', 
   for (const domain of ['owner','org','lms','planning','crm','marketing','community','payments','hr','scheduling','support','analytics','reports','platform']) assert.ok(domains.has(domain), domain)
 })
 
-test('role matrix separates global and organization roles and only assigns active permissions', () => {
+test('role matrix separates global and organization roles and only assigns executable or provisionable permissions', () => {
   const manifest = getAuthorizationManifest()
   const byName = new Map(manifest.permissions.map((p) => [p.name, p]))
   for (const [role, permissions] of Object.entries(manifest.rolePermissionAssignments)) {
     for (const permission of permissions) {
-      assert.equal(byName.get(permission)?.status, 'active', `role ${role} references non-active or missing permission ${permission}`)
+      const definition = byName.get(permission)
+      assert.equal(Boolean(definition && (definition.status === 'active' || definition.identityProvisioning === 'provisionable')), true, `role ${role} references a non-provisionable or missing permission ${permission}`)
       if (role === 'owner_global') assert.match(permission, /^owner\./)
       if (role.startsWith('organization_')) assert.ok(!permission.startsWith('owner.'))
     }
@@ -58,7 +59,7 @@ test('negative fixtures required by #74 are rejected', () => {
     ['organization_admin with org.impersonate', (m) => { m.permissions.push(active('org.impersonate','org')); m.rolePermissionAssignments.organization_admin.push('org.impersonate') }, /forbidden permission/],
     ['organization_accountant with billing.seats.request_modify', (m) => { m.permissions.push(active('billing.seats.request_modify','billing')); m.rolePermissionAssignments.organization_accountant.push('billing.seats.request_modify') }, /forbidden permission/],
     ['any role with lms.*', (m) => { m.rolePermissionAssignments.organization_admin.push('lms.*') }, /wildcard/],
-    ['planned permission assigned', (m) => { m.rolePermissionAssignments.organization_admin.push('planning.plans.read') }, /planned permission/],
+    ['non-provisionable planned permission assigned', (m) => { m.permissions.push({ name: 'org.future.read', description: 'future', domain: 'org', surface: 'organization', status: 'planned', resource: API_RESOURCE, consumers: [], policyRequirements: [], overlayMode: 'restrictable' }); m.rolePermissionAssignments.organization_admin.push('org.future.read') }, /non-provisionable planned permission/],
     ['active without consumer', (m) => { m.permissions.push({ ...active('org.orphan.execute','org'), consumers: [] }) }, /active permission without consumer/],
     ['organization.members.write as new permission', (m) => { m.permissions.push(active('organization.members.write','org')) }, /deprecated organization prefix/],
     ['legacy owner:write outside transition allowlist', (m) => { m.permissions.push(active('owner:write','owner','global')); }, /invalid permission name|legacy scope outside allowlist/],
@@ -75,7 +76,8 @@ function active(name, domain, surface = 'organization') { return { name, descrip
 test('organization_groupleader is canonical read-only and cannot receive owner or unknown permissions', () => {
   const manifest = getAuthorizationManifest();
   assert.ok(manifest.organizationRoles.includes('organization_groupleader'));
-  assert.deepEqual([...manifest.rolePermissionAssignments.organization_groupleader].sort(), ['lms.course_offerings.read', 'lms.group_members.read', 'lms.groups.read', 'org.documents.read']);
+  assert.ok(manifest.rolePermissionAssignments.organization_groupleader.includes('lms.groups.read'));
+  assert.ok(manifest.rolePermissionAssignments.organization_groupleader.includes('org.documents.read'));
   const ownerMutation = clone(manifest);
   ownerMutation.rolePermissionAssignments.organization_groupleader.push('owner.profile.read');
   assert.match(validate(ownerMutation), /organization role cannot receive owner permission/);

@@ -3,9 +3,9 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
+    "catalogHash": "9b3b1f3c13924982b9355d3554a7fc1f9945a3045ef686ffb232c95346269838"
   },
-  "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799",
+  "catalogHash": "9b3b1f3c13924982b9355d3554a7fc1f9945a3045ef686ffb232c95346269838",
   "activePermissions": [
     {
       "name": "lms.course_offerings.read",
@@ -28,7 +28,16 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View course offerings",
+        "description": "View organization course offerings.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 80
+      },
+      "identityProvisioning": "provisionable"
     },
     {
       "name": "lms.group_members.read",
@@ -51,7 +60,16 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View group members",
+        "description": "View organization group members.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 140
+      },
+      "identityProvisioning": "provisionable"
     },
     {
       "name": "lms.groups.read",
@@ -74,7 +92,16 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View groups",
+        "description": "View organization groups.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 160
+      },
+      "identityProvisioning": "provisionable"
     },
     {
       "name": "org.documents.create",
@@ -97,7 +124,16 @@
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "Create documents",
+        "description": "Create organization documents.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 30
+      },
+      "identityProvisioning": "provisionable"
     },
     {
       "name": "org.documents.read",
@@ -120,7 +156,16 @@
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View documents",
+        "description": "View organization documents.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 50
+      },
+      "identityProvisioning": "provisionable"
     }
   ]
 }

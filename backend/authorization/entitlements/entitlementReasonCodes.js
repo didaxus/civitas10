@@ -13,5 +13,6 @@ const ENTITLEMENT_REASON_CODES = Object.freeze({
   AUTHORIZATION_SNAPSHOT_STALE: "authorization_snapshot_stale",
   AUTHORIZATION_POLICY_UNAVAILABLE: "authorization_policy_unavailable",
   AUTHORIZATION_POLICY_VERSION_CONFLICT: "authorization_policy_version_conflict",
+  RUNTIME_OPERATION_UNAVAILABLE: "runtime_operation_unavailable",
 });
 module.exports = { ENTITLEMENT_REASON_CODES };

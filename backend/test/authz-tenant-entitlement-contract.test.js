@@ -60,8 +60,8 @@ test("tenant activation cannot exceed Owner ceiling and locked ceilings block te
   await assert.rejects(() => service.upsertTenantActivations({ organizationId: "orgA", expectedPolicyVersion: 2, actorLogtoUserId: "admin", changes: [{ logtoRoleId: "organization_admin", permission: "org.documents.create", enabled: true }] }), /tenant_activation_exceeds_owner_ceiling/);
   await service.upsertOwnerLimits({ organizationId: "orgA", expectedPolicyVersion: 2, actorLogtoUserId: "owner", changes: [{ logtoRoleId: "organization_admin", permission: "org.documents.create", allowed: true, locked: true }] });
   await assert.rejects(() => service.upsertTenantActivations({ organizationId: "orgA", expectedPolicyVersion: 3, actorLogtoUserId: "admin", changes: [{ logtoRoleId: "organization_admin", permission: "org.documents.create", enabled: false }] }), /tenant_activation_locked/);
-  assert.ok(events.some((event) => event.type === "outbox"));
-  assert.ok(events.some((event) => event.type === "audit"));
+  assert.ok(repository.outbox.length > 0);
+  assert.ok(repository.audits.length > 0);
 });
 
 test("Owner revocation immediately disables activation without token refresh", async () => {
@@ -124,6 +124,12 @@ test("group leader PBAC requires exact ceiling and activation and never grants u
   const update = await evaluateOrganizationEntitlement({ organizationId: "orgA", subject: "ana", tokenScopes: new Set(["lms.grades.update"]), rolePaths: [{ rolePathId: "group", logtoRoleId: "role_group", tokenScopePresent: true }], permission: "lms.grades.update", repository, roleIdToName: roleMap });
   assert.equal(update.allowed, false);
   assert.equal(update.reasonCode, ENTITLEMENT_REASON_CODES.ROLE_PERMISSION_MISSING);
+});
+
+test("provisioned future permission remains ineffective while its runtime is unavailable", async () => {
+  const decision = await evaluateOrganizationEntitlement({ organizationId: "orgA", subject: "teacher", tokenScopes: new Set(["lms.assignments.create"]), rolePaths: [{ rolePathId: "teacher", logtoRoleId: "role_teacher", tokenScopePresent: true }], permission: "lms.assignments.create", repository: createInMemoryEntitlementRepository(), roleIdToName: { role_teacher: "organization_teacher" } });
+  assert.equal(decision.allowed, false);
+  assert.equal(decision.reasonCode, ENTITLEMENT_REASON_CODES.RUNTIME_OPERATION_UNAVAILABLE);
 });
 
 test("bootstrap profile is transactional and idempotent", async () => {

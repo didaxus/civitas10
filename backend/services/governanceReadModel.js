@@ -1,7 +1,7 @@
 "use strict";
 
 const { GOVERNANCE_READ_MODEL_CONTRACT_VERSION, GOVERNANCE_OPERATION_REGISTRY_VERSION, governanceOperationRegistry, moduleInventory } = require("../../core/governance/operation-registry.cjs");
-const { buildRolesGovernanceSlice } = require("./governanceRolesReadModel");
+
 const { buildStructureGovernanceSlice } = require("./governanceStructureReadModel");
 const { buildAliasesNavigationPolicy, listGovernanceAuditEvents } = require("./governanceOperationsReadModel");
 
@@ -64,44 +64,14 @@ function buildIdentityProvisioningSummary({ status = "not_configured" } = {}) {
   return { status, connectionId: null, protocol: null, providerKind: null, claimsContractVersion: 0, mappingVersion: 0, provisioningPolicyVersion: 0, lastValidatedAt: null, lastSuccessfulLoginAt: null, credentialExpiresAt: null, latestReconciliationRunId: null, latestReconciliationStatus: null, driftItemCount: status === "reconciliation_required" ? 1 : 0, reason: status === "not_configured" ? "identity_federation_connection_missing" : "fixture_status" };
 }
 
-function buildPermissionMatrix(versions) {
-  return [
-    {
-      permission: "governance.owner.read",
-      canonical: true,
-      rolePotential: true,
-      ownerAllowed: true,
-      tenantEnabled: null,
-      effective: true,
-      reason: { code: "allowed", sourceVersions: versions },
-    },
-    {
-      permission: "governance.tenant.read",
-      canonical: true,
-      rolePotential: true,
-      ownerAllowed: true,
-      tenantEnabled: true,
-      effective: true,
-      reason: { code: "allowed", sourceVersions: versions },
-    },
-    {
-      permission: "governance.preview.read",
-      canonical: true,
-      rolePotential: null,
-      ownerAllowed: null,
-      tenantEnabled: null,
-      effective: false,
-      reason: { code: "owning_operation_not_mounted", sourceVersions: versions },
-    },
-  ];
-}
-
-async function buildGovernanceReadModel({ organization, organizationId, surface, stale = false, drift = false, roles = [], members = [], memberRolesByUserId = new Map() } = {}) {
+async function buildGovernanceReadModel({ governanceRolesService, organization, organizationId, surface, stale = false, drift = false, roles = [], members = [], memberRolesByUserId = new Map() } = {}) {
+  if (!governanceRolesService) throw new Error("governance_roles_service_required");
   if (!["owner", "tenant"].includes(surface)) { const error = new Error("Invalid governance surface."); error.status = 500; error.code = "GOVERNANCE_SURFACE_INVALID"; throw error; }
   const versions = buildVersions({ stale, drift });
   const modules = buildModules({ surface, versions });
   const logtoOrganizationId = organizationId || safeString(organization?.id) || safeString(organization?.logtoOrganizationId);
-  const rolesSlice = await buildRolesGovernanceSlice({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId });
+  const rolesSlice = await governanceRolesService.buildRolesGovernanceSlice({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId, surface });
+  versions.policyVersion = rolesSlice.policyVersion;
   const structureSlice = await buildStructureGovernanceSlice(logtoOrganizationId);
   const aliasesNavigation = buildAliasesNavigationPolicy(logtoOrganizationId);
   const diagnostics = roleCatalogDiagnostics({ roles: rolesSlice.roles, aliasesNavigation });
@@ -128,15 +98,15 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
     },
     roles: rolesSlice.roles,
     members: rolesSlice.members,
-    permissionMatrix: rolesSlice.permissionMatrix.length ? rolesSlice.permissionMatrix : buildPermissionMatrix(versions),
+    permissionMatrix: rolesSlice.permissionMatrix,
     taxonomy: structureSlice.taxonomy.items,
     units: structureSlice.units.items,
     dataScopes: structureSlice.dataScopes.items,
     aliasesNavigation,
     accessPreviews: [],
-    auditSummary: { totalEvents: rolesSlice.auditEvents.length + structureSlice.auditEvents.length + listGovernanceAuditEvents({ organizationId: logtoOrganizationId }).length, latestEventAt: rolesSlice.auditEvents.at(-1)?.createdAt || structureSlice.auditEvents.at(-1)?.createdAt || listGovernanceAuditEvents({ organizationId: logtoOrganizationId })[0]?.createdAt || null, redaction: "actor_subjects_before_after_tokens_and_connector_secrets_redacted" },
+    auditSummary: { totalEvents: (rolesSlice.auditEvents || []).length + structureSlice.auditEvents.length + listGovernanceAuditEvents({ organizationId: logtoOrganizationId }).length, latestEventAt: rolesSlice.auditEvents?.at(-1)?.createdAt || structureSlice.auditEvents.at(-1)?.createdAt || listGovernanceAuditEvents({ organizationId: logtoOrganizationId })[0]?.createdAt || null, redaction: "actor_subjects_before_after_tokens_and_connector_secrets_redacted" },
     auditEvents: [
-      ...[...rolesSlice.auditEvents, ...structureSlice.auditEvents].map((event, index) => ({ id: `audit_${index + 1}`, actorId: event.actorLogtoUserId ? "redacted_actor" : "system", organizationId: logtoOrganizationId, target: event.targetType || event.permission || "governance", action: event.action, reason: event.reason || "governance_mutation", contractVersion: GOVERNANCE_READ_MODEL_CONTRACT_VERSION, createdAt: event.createdAt })),
+      ...[...(rolesSlice.auditEvents || []), ...structureSlice.auditEvents].map((event, index) => ({ id: `audit_${index + 1}`, actorId: event.actorLogtoUserId ? "redacted_actor" : "system", organizationId: logtoOrganizationId, target: event.targetType || event.permission || "governance", action: event.action, reason: event.reason || "governance_mutation", contractVersion: GOVERNANCE_READ_MODEL_CONTRACT_VERSION, createdAt: event.createdAt })),
       ...listGovernanceAuditEvents({ organizationId: logtoOrganizationId }),
     ],
     diagnostics: [

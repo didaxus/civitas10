@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
-import { AlertStrip, EmptyState, OrganizationContextHeader, StateRegion, StatusPill } from "../shared/ui";
-import { OwnerShell } from "../components/owner/OwnerUI";
+import { AlertStrip, EmptyState, StateRegion } from "../shared/ui";
 import { OperationalOverview, OperationalModules } from "../features/owner/organization/operationalCards";
 import { ApiRequestError } from "../api/base";
 import { useOwnerApi } from "../api/owner";
@@ -71,29 +70,18 @@ const OwnerOrganizationOperationalPage = ({ initialSection = "overview" }: { ini
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [load]);
 
-  const title = viewState.status === "loaded" ? viewState.organization.organization.name || organizationId : organizationId;
   const retry = viewState.status === "error" && viewState.error.retryable ? () => void load() : undefined;
 
-  const overviewPath = !isInvalidOrganizationId(organizationId) ? appRoutes.ownerOrganizationState.build?.({ organizationId }) ?? appRoutes.ownerOrganizations.path : appRoutes.ownerOrganizations.path;
-  const governancePath = !isInvalidOrganizationId(organizationId) ? appRoutes.ownerOrganizationGovernanceRoles.build?.({ organizationId }) ?? appRoutes.ownerOrganizations.path : appRoutes.ownerOrganizations.path;
-  const operationsPath = !isInvalidOrganizationId(organizationId) ? appRoutes.ownerOrganizationOperations.build?.({ organizationId }) ?? appRoutes.ownerOrganizations.path : appRoutes.ownerOrganizations.path;
+
 
   return (
-    <OwnerShell organizationId={organizationId}>
-      <OrganizationContextHeader eyebrow="Organizations / Governance" organizationName={title || "Organization not found"} breadcrumb={<><Link to={appRoutes.ownerOrganizations.path} className="text-primary-strong">Organizations</Link> / <span>{title || organizationId}</span></>} status={<StatusPill status={viewState.status === "loaded" ? "success" : viewState.status === "error" ? "danger" : "warning"}>{viewState.status}</StatusPill>} description="Selected organization context for Overview, Governance and Operations." />
-      <nav className="civitas-card civitas-pad-tight" aria-label="Organization detail sections" data-owner-organization-detail-tabs="true">
-        <div className="flex flex-wrap gap-2">
-          <Link to={overviewPath} className={initialSection === "overview" ? "civitas-primary-button" : "civitas-secondary-button"} aria-current={initialSection === "overview" ? "page" : undefined}>Overview</Link>
-          <Link to={governancePath} className="civitas-secondary-button">Governance</Link>
-          <Link to={operationsPath} className={initialSection === "operations" ? "civitas-primary-button" : "civitas-secondary-button"} aria-current={initialSection === "operations" ? "page" : undefined}>Operations</Link>
-        </div>
-      </nav>
+    <>
       {viewState.status === "loading" ? <StateRegion><p className="text-sm text-muted-strong">Loading organization detail...</p></StateRegion> : null}
       {viewState.status === "not-found" ? <EmptyState message="Organization not found. The selected organization does not exist or is no longer available."><Link className="civitas-secondary-button" to={appRoutes.ownerOrganizations.path}>Return to Directory</Link></EmptyState> : null}
       {viewState.status === "denied" ? <StateRegion><AlertStrip variant="warning" title="Access denied">{viewState.message}</AlertStrip></StateRegion> : null}
       {viewState.status === "error" ? <StateRegion><AlertStrip variant="danger" title={`Organization detail error · ${viewState.error.code}`}>{viewState.error.humanMessage}{retry ? <button type="button" className="civitas-secondary-button" onClick={retry}>Try again</button> : null}<Link className="civitas-secondary-button" to={appRoutes.ownerOrganizations.path}>Return to Directory</Link></AlertStrip></StateRegion> : null}
       {viewState.status === "loaded" ? (initialSection === "overview" ? <OperationalOverview organization={viewState.organization} /> : <OperationalModules organization={viewState.organization} />) : null}
-    </OwnerShell>
+    </>
   );
 };
 

@@ -28,14 +28,14 @@ test("http states are mapped explicitly", () => {
   assert.match(source, /status: "denied"/);
 });
 
-test("organization detail routes are isolated by a route boundary below the app shell", () => {
-  assert.match(appSource, /OwnerOrganizationRouteBoundary/);
-  assert.match(appSource, /path=\{appRoutes\.ownerOrganizationState\.path\} element=\{<OwnerRouteGuard><OwnerOrganizationContextRoute>/);
-  assert.match(appSource, /path=\{appRoutes\.ownerOrganizationGovernanceRoles\.path\} element=\{<OwnerRouteGuard><OwnerOrganizationContextRoute>/);
+test("organization detail routes share one parent shell boundary", () => {
+  assert.match(appSource, /OwnerOrganizationShellRoute/);
+  assert.match(appSource, /OwnerOrganizationLayout/);
+  assert.doesNotMatch(source, /OwnerShell|OwnerLayout|AppShell/);
 });
 
-test("directory cards and governance links preserve the real organization id", () => {
-  assert.match(directorySource, /appRoutes\.ownerOrganizationState\.build\?\.\(\{ organizationId: summary\.id \}\)/);
-  assert.doesNotMatch(directorySource, /Open detail/);
-  assert.match(governanceSource, /appRoutes\.ownerOrganizationState\.build\?\.\(\{ organizationId \}\)/);
+test("directory cards preserve the real organization id", () => {
+  assert.match(directorySource, /ownerOrganizationState\.build/);
+  assert.match(directorySource, /organizationId: summary\.id/);
+  assert.doesNotMatch(governanceSource, /GovernanceLegacy|LEGACY_TAB/);
 });
