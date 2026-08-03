@@ -227,10 +227,24 @@
               }
             }
           },
-          "identityProvisioning": {
+          "identityProvisioningStatus": {
             "enum": [
-              "provisionable",
-              "runtime-only"
+              "provisioned",
+              "not_provisioned"
+            ]
+          },
+          "runtimeAvailability": {
+            "enum": [
+              "available",
+              "unavailable"
+            ]
+          },
+          "catalogStatus": {
+            "enum": [
+              "defined",
+              "planned",
+              "active",
+              "deprecated"
             ]
           }
         }

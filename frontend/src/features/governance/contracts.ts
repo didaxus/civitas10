@@ -54,10 +54,6 @@ export type GovernancePermissionMatrixRow = {
   label: string;
   description: string;
   order: number;
-  rolePotential: boolean;
-  identityProvisioned: boolean;
-  runtimeAvailable: boolean;
-  organizationAvailable: boolean;
   enabled: boolean;
   canChange: boolean;
   controlState: "editable" | "blocked_by_role" | "blocked_by_ceiling" | "locked" | "operation_unavailable";
@@ -139,7 +135,7 @@ export const validateGovernanceReadModel = (value: unknown): GovernanceContractV
     if (!isRecord(row)) return fail(`$.permissionMatrix[${index}]`, version, "permission matrix row must be an object");
     for (const key of ["permissionId", "roleId", "groupKey", "groupLabel", "label", "description", "controlState", "policyVersion"] as const) if (typeof row[key] !== "string") return fail(`$.permissionMatrix[${index}].${key}`, version, `${key} must be a string`);
     for (const key of ["groupOrder", "order"] as const) if (typeof row[key] !== "number") return fail(`$.permissionMatrix[${index}].${key}`, version, `${key} must be a number`);
-    if (["rolePotential", "identityProvisioned", "runtimeAvailable", "organizationAvailable", "enabled", "canChange"].some((key) => typeof row[key] !== "boolean")) return fail(`$.permissionMatrix[${index}]`, version, "enabled and canChange must be booleans");
+    if (typeof row.enabled !== "boolean" || typeof row.canChange !== "boolean") return fail(`$.permissionMatrix[${index}]`, version, "enabled and canChange must be booleans");
   }
   for (const key of ["taxonomy", "units", "dataScopes", "accessPreviews", "auditEvents", "diagnostics"] as const) if (!Array.isArray(value[key])) return fail(`$.${key}`, version, `${key} must be an array`);
   if (!isRecord(value.aliasesNavigation)) return fail("$.aliasesNavigation", version, "aliasesNavigation must be an object");

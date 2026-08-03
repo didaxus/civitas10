@@ -46,15 +46,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 0,
+        "order": 0
+      }
     },
     {
       "name": "analytics.exports.approve",
@@ -70,15 +72,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 0,
+        "order": 1
+      }
     },
     {
       "name": "analytics.imports.delete",
@@ -94,15 +98,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 0,
+        "order": 2
+      }
     },
     {
       "name": "analytics.records.read",
@@ -118,15 +124,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View records",
-        "description": "View organization records.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read records",
+        "description": "read records for the organization.",
+        "groupKey": "records",
+        "groupLabel": "Records",
+        "groupOrder": 0,
+        "order": 3
+      }
     },
     {
       "name": "analytics.reports.update",
@@ -142,15 +150,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 0,
+        "order": 4
+      }
     },
     {
       "name": "analytics.settings.create",
@@ -166,15 +176,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 0,
+        "order": 5
+      }
     },
     {
       "name": "community.admin.export",
@@ -190,15 +202,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 0,
+        "order": 6
+      }
     },
     {
       "name": "community.exports.approve",
@@ -214,15 +228,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 0,
+        "order": 7
+      }
     },
     {
       "name": "community.imports.delete",
@@ -238,15 +254,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 0,
+        "order": 8
+      }
     },
     {
       "name": "community.posts.read",
@@ -262,15 +280,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View community posts",
-        "description": "View organization community posts.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read posts",
+        "description": "read posts for the organization.",
+        "groupKey": "posts",
+        "groupLabel": "Posts",
+        "groupOrder": 0,
+        "order": 9
+      }
     },
     {
       "name": "community.reports.update",
@@ -286,15 +306,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 10,
+        "order": 0
+      }
     },
     {
       "name": "community.settings.create",
@@ -310,15 +332,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 10,
+        "order": 1
+      }
     },
     {
       "name": "crm.admin.export",
@@ -334,15 +358,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "relationships",
-        "groupLabel": "Relationships",
-        "groupOrder": 60,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 10,
+        "order": 2
+      }
     },
     {
       "name": "crm.contacts.read",
@@ -358,15 +384,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View contacts",
-        "description": "View organization contacts.",
-        "groupKey": "relationships",
-        "groupLabel": "Relationships",
-        "groupOrder": 60,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read contacts",
+        "description": "read contacts for the organization.",
+        "groupKey": "contacts",
+        "groupLabel": "Contacts",
+        "groupOrder": 10,
+        "order": 3
+      }
     },
     {
       "name": "crm.exports.approve",
@@ -382,15 +410,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "relationships",
-        "groupLabel": "Relationships",
-        "groupOrder": 60,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 10,
+        "order": 4
+      }
     },
     {
       "name": "crm.imports.delete",
@@ -406,15 +436,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "relationships",
-        "groupLabel": "Relationships",
-        "groupOrder": 60,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 10,
+        "order": 5
+      }
     },
     {
       "name": "crm.reports.update",
@@ -430,15 +462,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "relationships",
-        "groupLabel": "Relationships",
-        "groupOrder": 60,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 10,
+        "order": 6
+      }
     },
     {
       "name": "crm.settings.create",
@@ -454,15 +488,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "relationships",
-        "groupLabel": "Relationships",
-        "groupOrder": 60,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 10,
+        "order": 7
+      }
     },
     {
       "name": "hr.admin.export",
@@ -478,15 +514,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 10,
+        "order": 8
+      }
     },
     {
       "name": "hr.approvals.archive",
@@ -502,15 +540,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive approvals",
-        "description": "Archive organization approvals.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive approvals for the organization.",
+        "groupKey": "approvals",
+        "groupLabel": "Approvals",
+        "groupOrder": 10,
+        "order": 9
+      }
     },
     {
       "name": "hr.dashboards.read",
@@ -526,15 +566,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View dashboards",
-        "description": "View organization dashboards.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read dashboards",
+        "description": "read dashboards for the organization.",
+        "groupKey": "dashboards",
+        "groupLabel": "Dashboards",
+        "groupOrder": 20,
+        "order": 0
+      }
     },
     {
       "name": "hr.events.create",
@@ -550,15 +592,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create events",
-        "description": "Create organization events.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create events for the organization.",
+        "groupKey": "events",
+        "groupLabel": "Events",
+        "groupOrder": 20,
+        "order": 1
+      }
     },
     {
       "name": "hr.exports.approve",
@@ -574,15 +618,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 20,
+        "order": 2
+      }
     },
     {
       "name": "hr.files.approve",
@@ -598,15 +644,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve files",
-        "description": "Approve organization files.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve files for the organization.",
+        "groupKey": "files",
+        "groupLabel": "Files",
+        "groupOrder": 20,
+        "order": 3
+      }
     },
     {
       "name": "hr.imports.delete",
@@ -622,15 +670,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 20,
+        "order": 4
+      }
     },
     {
       "name": "hr.policies.delete",
@@ -646,15 +696,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete policies",
-        "description": "Delete organization policies.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete policies for the organization.",
+        "groupKey": "policies",
+        "groupLabel": "Policies",
+        "groupOrder": 20,
+        "order": 5
+      }
     },
     {
       "name": "hr.records.read",
@@ -670,15 +722,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View records",
-        "description": "View organization records.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 90
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read records",
+        "description": "read records for the organization.",
+        "groupKey": "records",
+        "groupLabel": "Records",
+        "groupOrder": 20,
+        "order": 6
+      }
     },
     {
       "name": "hr.reports.update",
@@ -694,15 +748,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 100
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 20,
+        "order": 7
+      }
     },
     {
       "name": "hr.requests.manage",
@@ -718,15 +774,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage requests",
-        "description": "Manage organization requests.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 110
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage requests for the organization.",
+        "groupKey": "requests",
+        "groupLabel": "Requests",
+        "groupOrder": 20,
+        "order": 8
+      }
     },
     {
       "name": "hr.settings.create",
@@ -742,15 +800,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 120
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 20,
+        "order": 9
+      }
     },
     {
       "name": "hr.tasks.update",
@@ -766,15 +826,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage tasks",
-        "description": "Manage organization tasks.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 130
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update tasks",
+        "description": "update tasks for the organization.",
+        "groupKey": "tasks",
+        "groupLabel": "Tasks",
+        "groupOrder": 30,
+        "order": 0
+      }
     },
     {
       "name": "lms.assignments.create",
@@ -790,15 +852,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create assignments",
-        "description": "Create organization assignments.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create assignments for the organization.",
+        "groupKey": "assignments",
+        "groupLabel": "Assignments",
+        "groupOrder": 30,
+        "order": 1
+      }
     },
     {
       "name": "lms.assignments.read",
@@ -814,15 +878,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View assignments",
-        "description": "View organization assignments.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read assignments",
+        "description": "read assignments for the organization.",
+        "groupKey": "assignments",
+        "groupLabel": "Assignments",
+        "groupOrder": 30,
+        "order": 2
+      }
     },
     {
       "name": "lms.attendance.approve",
@@ -838,15 +904,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve attendance",
-        "description": "Approve organization attendance.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve attendance for the organization.",
+        "groupKey": "attendance",
+        "groupLabel": "Attendance",
+        "groupOrder": 30,
+        "order": 3
+      }
     },
     {
       "name": "lms.attendance.manage",
@@ -862,15 +930,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage attendance",
-        "description": "Manage organization attendance.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage attendance for the organization.",
+        "groupKey": "attendance",
+        "groupLabel": "Attendance",
+        "groupOrder": 30,
+        "order": 4
+      }
     },
     {
       "name": "lms.certificates.delete",
@@ -886,15 +956,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete certificates",
-        "description": "Delete organization certificates.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete certificates for the organization.",
+        "groupKey": "certificates",
+        "groupLabel": "Certificates",
+        "groupOrder": 30,
+        "order": 5
+      }
     },
     {
       "name": "lms.content.archive",
@@ -910,15 +982,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive content",
-        "description": "Archive organization content.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive content for the organization.",
+        "groupKey": "content",
+        "groupLabel": "Content",
+        "groupOrder": 30,
+        "order": 6
+      }
     },
     {
       "name": "lms.content.export",
@@ -934,15 +1008,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export content",
-        "description": "Export organization content.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export content for the organization.",
+        "groupKey": "content",
+        "groupLabel": "Content",
+        "groupOrder": 30,
+        "order": 7
+      }
     },
     {
       "name": "lms.course_offerings.read",
@@ -968,13 +1044,15 @@
       ],
       "presentation": {
         "label": "View course offerings",
-        "description": "View organization course offerings.",
+        "description": "View available course offerings.",
         "groupKey": "learning",
         "groupLabel": "Learning",
         "groupOrder": 20,
-        "order": 80
+        "order": 30
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.course_offerings.read.extra",
@@ -990,15 +1068,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Extra course offerings read",
-        "description": "Extra organization course offerings read.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 90
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Extra read",
+        "description": "extra read for the organization.",
+        "groupKey": "course_offerings",
+        "groupLabel": "Course offerings",
+        "groupOrder": 30,
+        "order": 9
+      }
     },
     {
       "name": "lms.forums.update",
@@ -1014,15 +1094,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage forums",
-        "description": "Manage organization forums.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 100
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update forums",
+        "description": "update forums for the organization.",
+        "groupKey": "forums",
+        "groupLabel": "Forums",
+        "groupOrder": 40,
+        "order": 0
+      }
     },
     {
       "name": "lms.grades.delete",
@@ -1038,15 +1120,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete grades",
-        "description": "Delete organization grades.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 110
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete grades for the organization.",
+        "groupKey": "grades",
+        "groupLabel": "Grades",
+        "groupOrder": 40,
+        "order": 1
+      }
     },
     {
       "name": "lms.grades.export",
@@ -1062,15 +1146,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export grades",
-        "description": "Export organization grades.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 120
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export grades for the organization.",
+        "groupKey": "grades",
+        "groupLabel": "Grades",
+        "groupOrder": 40,
+        "order": 2
+      }
     },
     {
       "name": "lms.group_members.archive",
@@ -1086,15 +1172,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive group members",
-        "description": "Archive organization group members.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 130
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive group members for the organization.",
+        "groupKey": "group_members",
+        "groupLabel": "Group members",
+        "groupOrder": 40,
+        "order": 3
+      }
     },
     {
       "name": "lms.group_members.read",
@@ -1120,13 +1208,15 @@
       ],
       "presentation": {
         "label": "View group members",
-        "description": "View organization group members.",
+        "description": "View members assigned to learning groups.",
         "groupKey": "learning",
         "groupLabel": "Learning",
         "groupOrder": 20,
-        "order": 140
+        "order": 20
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.groups.manage",
@@ -1142,15 +1232,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage groups",
-        "description": "Manage organization groups.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 150
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage groups for the organization.",
+        "groupKey": "groups",
+        "groupLabel": "Groups",
+        "groupOrder": 40,
+        "order": 5
+      }
     },
     {
       "name": "lms.groups.read",
@@ -1175,14 +1267,16 @@
         "backend/test/permission-catalog-contract.test.js"
       ],
       "presentation": {
-        "label": "View groups",
-        "description": "View organization groups.",
+        "label": "View learning groups",
+        "description": "View learning groups.",
         "groupKey": "learning",
         "groupLabel": "Learning",
         "groupOrder": 20,
-        "order": 160
+        "order": 10
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.outcomes.export",
@@ -1198,15 +1292,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export outcomes",
-        "description": "Export organization outcomes.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 170
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export outcomes for the organization.",
+        "groupKey": "outcomes",
+        "groupLabel": "Outcomes",
+        "groupOrder": 40,
+        "order": 7
+      }
     },
     {
       "name": "lms.progress.approve",
@@ -1222,15 +1318,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve progress",
-        "description": "Approve organization progress.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 180
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve progress for the organization.",
+        "groupKey": "progress",
+        "groupLabel": "Progress",
+        "groupOrder": 40,
+        "order": 8
+      }
     },
     {
       "name": "lms.quizzes.create",
@@ -1246,15 +1344,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create quizzes",
-        "description": "Create organization quizzes.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 190
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create quizzes for the organization.",
+        "groupKey": "quizzes",
+        "groupLabel": "Quizzes",
+        "groupOrder": 40,
+        "order": 9
+      }
     },
     {
       "name": "lms.rubrics.read",
@@ -1270,15 +1370,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View rubrics",
-        "description": "View organization rubrics.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 200
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read rubrics",
+        "description": "read rubrics for the organization.",
+        "groupKey": "rubrics",
+        "groupLabel": "Rubrics",
+        "groupOrder": 50,
+        "order": 0
+      }
     },
     {
       "name": "lms.submissions.approve",
@@ -1294,15 +1396,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve submissions",
-        "description": "Approve organization submissions.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 210
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve submissions for the organization.",
+        "groupKey": "submissions",
+        "groupLabel": "Submissions",
+        "groupOrder": 50,
+        "order": 1
+      }
     },
     {
       "name": "lms.submissions.update",
@@ -1318,15 +1422,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage submissions",
-        "description": "Manage organization submissions.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 220
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update submissions",
+        "description": "update submissions for the organization.",
+        "groupKey": "submissions",
+        "groupLabel": "Submissions",
+        "groupOrder": 50,
+        "order": 2
+      }
     },
     {
       "name": "marketing.admin.export",
@@ -1342,15 +1448,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 130,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 50,
+        "order": 3
+      }
     },
     {
       "name": "marketing.campaigns.read",
@@ -1366,15 +1474,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View campaigns",
-        "description": "View organization campaigns.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 130,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read campaigns",
+        "description": "read campaigns for the organization.",
+        "groupKey": "campaigns",
+        "groupLabel": "Campaigns",
+        "groupOrder": 50,
+        "order": 4
+      }
     },
     {
       "name": "marketing.exports.approve",
@@ -1390,15 +1500,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 130,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 50,
+        "order": 5
+      }
     },
     {
       "name": "marketing.imports.delete",
@@ -1414,15 +1526,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 130,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 50,
+        "order": 6
+      }
     },
     {
       "name": "marketing.reports.update",
@@ -1438,15 +1552,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 130,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 50,
+        "order": 7
+      }
     },
     {
       "name": "marketing.settings.create",
@@ -1462,15 +1578,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 130,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 50,
+        "order": 8
+      }
     },
     {
       "name": "org.analytics.export",
@@ -1486,15 +1604,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export analytics",
-        "description": "Export organization analytics.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export analytics for the organization.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 50,
+        "order": 9
+      }
     },
     {
       "name": "org.announcements.read",
@@ -1510,15 +1630,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View announcements",
-        "description": "View organization announcements.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 45,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read announcements",
+        "description": "read announcements for the organization.",
+        "groupKey": "announcements",
+        "groupLabel": "Announcements",
+        "groupOrder": 60,
+        "order": 0
+      }
     },
     {
       "name": "org.billing.manage",
@@ -1534,15 +1656,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage billing",
-        "description": "Manage organization billing.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage billing for the organization.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 60,
+        "order": 1
+      }
     },
     {
       "name": "org.documents.create",
@@ -1572,9 +1696,11 @@
         "groupKey": "organization",
         "groupLabel": "Organization",
         "groupOrder": 10,
-        "order": 30
+        "order": 20
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "org.documents.manage",
@@ -1590,15 +1716,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage documents",
-        "description": "Manage organization documents.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage documents for the organization.",
+        "groupKey": "documents",
+        "groupLabel": "Documents",
+        "groupOrder": 60,
+        "order": 3
+      }
     },
     {
       "name": "org.documents.read",
@@ -1628,9 +1756,11 @@
         "groupKey": "organization",
         "groupLabel": "Organization",
         "groupOrder": 10,
-        "order": 50
+        "order": 10
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "org.enrollments.delete",
@@ -1646,15 +1776,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete enrollments",
-        "description": "Delete organization enrollments.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete enrollments for the organization.",
+        "groupKey": "enrollments",
+        "groupLabel": "Enrollments",
+        "groupOrder": 60,
+        "order": 5
+      }
     },
     {
       "name": "org.enrollments.export",
@@ -1670,15 +1802,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export enrollments",
-        "description": "Export organization enrollments.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export enrollments for the organization.",
+        "groupKey": "enrollments",
+        "groupLabel": "Enrollments",
+        "groupOrder": 60,
+        "order": 6
+      }
     },
     {
       "name": "org.files.create",
@@ -1694,15 +1828,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create files",
-        "description": "Create organization files.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create files for the organization.",
+        "groupKey": "files",
+        "groupLabel": "Files",
+        "groupOrder": 60,
+        "order": 7
+      }
     },
     {
       "name": "org.forms.update",
@@ -1718,15 +1854,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage forms",
-        "description": "Manage organization forms.",
-        "groupKey": "communications",
-        "groupLabel": "Communications",
-        "groupOrder": 45,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update forms",
+        "description": "update forms for the organization.",
+        "groupKey": "forms",
+        "groupLabel": "Forms",
+        "groupOrder": 60,
+        "order": 8
+      }
     },
     {
       "name": "org.groups.approve",
@@ -1742,15 +1880,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve groups",
-        "description": "Approve organization groups.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 90
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve groups for the organization.",
+        "groupKey": "groups",
+        "groupLabel": "Groups",
+        "groupOrder": 60,
+        "order": 9
+      }
     },
     {
       "name": "org.groups.update",
@@ -1766,15 +1906,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage groups",
-        "description": "Manage organization groups.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 100
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update groups",
+        "description": "update groups for the organization.",
+        "groupKey": "groups",
+        "groupLabel": "Groups",
+        "groupOrder": 70,
+        "order": 0
+      }
     },
     {
       "name": "org.members.archive",
@@ -1790,15 +1932,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive members",
-        "description": "Archive organization members.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 110
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive members for the organization.",
+        "groupKey": "members",
+        "groupLabel": "Members",
+        "groupOrder": 70,
+        "order": 1
+      }
     },
     {
       "name": "org.members.invite",
@@ -1814,15 +1958,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Invite members",
-        "description": "Invite organization members.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 120
-      },
-      "identityProvisioning": "provisionable"
+        "description": "invite members for the organization.",
+        "groupKey": "members",
+        "groupLabel": "Members",
+        "groupOrder": 70,
+        "order": 2
+      }
     },
     {
       "name": "org.members.read",
@@ -1838,15 +1984,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View members",
-        "description": "View organization members.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 130
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read members",
+        "description": "read members for the organization.",
+        "groupKey": "members",
+        "groupLabel": "Members",
+        "groupOrder": 70,
+        "order": 3
+      }
     },
     {
       "name": "org.reports.approve",
@@ -1862,15 +2010,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve reports",
-        "description": "Approve organization reports.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 140
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 70,
+        "order": 4
+      }
     },
     {
       "name": "org.roles.create",
@@ -1886,15 +2036,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create roles",
-        "description": "Create organization roles.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 150
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create roles for the organization.",
+        "groupKey": "roles",
+        "groupLabel": "Roles",
+        "groupOrder": 70,
+        "order": 5
+      }
     },
     {
       "name": "org.settings.read",
@@ -1910,15 +2062,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View settings",
-        "description": "View organization settings.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 160
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read settings",
+        "description": "read settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 70,
+        "order": 6
+      }
     },
     {
       "name": "org.support.archive",
@@ -1934,15 +2088,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive support",
-        "description": "Archive organization support.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 170
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive support for the organization.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 70,
+        "order": 7
+      }
     },
     {
       "name": "org.workflows.delete",
@@ -1958,15 +2114,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete workflows",
-        "description": "Delete organization workflows.",
-        "groupKey": "organization",
-        "groupLabel": "Organization",
-        "groupOrder": 10,
-        "order": 180
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete workflows for the organization.",
+        "groupKey": "workflows",
+        "groupLabel": "Workflows",
+        "groupOrder": 70,
+        "order": 8
+      }
     },
     {
       "name": "owner.audit.read",
@@ -1981,7 +2139,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Read audit",
+        "description": "read audit for the organization.",
+        "groupKey": "audit",
+        "groupLabel": "Audit",
+        "groupOrder": 70,
+        "order": 9
+      }
     },
     {
       "name": "owner.audit.update",
@@ -1996,7 +2165,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Update audit",
+        "description": "update audit for the organization.",
+        "groupKey": "audit",
+        "groupLabel": "Audit",
+        "groupOrder": 80,
+        "order": 0
+      }
     },
     {
       "name": "owner.billing.create",
@@ -2011,7 +2191,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Create billing",
+        "description": "create billing for the organization.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 80,
+        "order": 1
+      }
     },
     {
       "name": "owner.catalog.export",
@@ -2026,7 +2217,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Export catalog",
+        "description": "export catalog for the organization.",
+        "groupKey": "catalog",
+        "groupLabel": "Catalog",
+        "groupOrder": 80,
+        "order": 2
+      }
     },
     {
       "name": "owner.entitlements.approve",
@@ -2041,7 +2243,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Approve entitlements",
+        "description": "approve entitlements for the organization.",
+        "groupKey": "entitlements",
+        "groupLabel": "Entitlements",
+        "groupOrder": 80,
+        "order": 3
+      }
     },
     {
       "name": "owner.impersonation.archive",
@@ -2056,7 +2269,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Archive impersonation",
+        "description": "archive impersonation for the organization.",
+        "groupKey": "impersonation",
+        "groupLabel": "Impersonation",
+        "groupOrder": 80,
+        "order": 4
+      }
     },
     {
       "name": "owner.operations.manage",
@@ -2071,7 +2295,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Manage operations",
+        "description": "manage operations for the organization.",
+        "groupKey": "operations",
+        "groupLabel": "Operations",
+        "groupOrder": 80,
+        "order": 5
+      }
     },
     {
       "name": "owner.platform.approve",
@@ -2086,7 +2321,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Approve platform",
+        "description": "approve platform for the organization.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 80,
+        "order": 6
+      }
     },
     {
       "name": "owner.reports.update",
@@ -2101,7 +2347,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 7
+      }
     },
     {
       "name": "owner.security.read",
@@ -2116,7 +2373,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Read security",
+        "description": "read security for the organization.",
+        "groupKey": "security",
+        "groupLabel": "Security",
+        "groupOrder": 80,
+        "order": 8
+      }
     },
     {
       "name": "owner.settings.delete",
@@ -2131,7 +2399,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Delete settings",
+        "description": "delete settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 80,
+        "order": 9
+      }
     },
     {
       "name": "owner.support.delete",
@@ -2146,7 +2425,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Delete support",
+        "description": "delete support for the organization.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 90,
+        "order": 0
+      }
     },
     {
       "name": "owner.tenants.manage",
@@ -2161,7 +2451,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Manage tenants",
+        "description": "manage tenants for the organization.",
+        "groupKey": "tenants",
+        "groupLabel": "Tenants",
+        "groupOrder": 90,
+        "order": 1
+      }
     },
     {
       "name": "owner.tenants.read",
@@ -2176,7 +2477,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Read tenants",
+        "description": "read tenants for the organization.",
+        "groupKey": "tenants",
+        "groupLabel": "Tenants",
+        "groupOrder": 90,
+        "order": 2
+      }
     },
     {
       "name": "owner.users.archive",
@@ -2191,7 +2503,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Archive users",
+        "description": "archive users for the organization.",
+        "groupKey": "users",
+        "groupLabel": "Users",
+        "groupOrder": 90,
+        "order": 3
+      }
     },
     {
       "name": "owner.users.create",
@@ -2206,7 +2529,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Create users",
+        "description": "create users for the organization.",
+        "groupKey": "users",
+        "groupLabel": "Users",
+        "groupOrder": 90,
+        "order": 4
+      }
     },
     {
       "name": "owner.webhooks.export",
@@ -2221,7 +2555,18 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
+      "presentation": {
+        "label": "Export webhooks",
+        "description": "export webhooks for the organization.",
+        "groupKey": "webhooks",
+        "groupLabel": "Webhooks",
+        "groupOrder": 90,
+        "order": 5
+      }
     },
     {
       "name": "payments.admin.export",
@@ -2237,15 +2582,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 90,
+        "order": 6
+      }
     },
     {
       "name": "payments.approvals.archive",
@@ -2261,15 +2608,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive approvals",
-        "description": "Archive organization approvals.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive approvals for the organization.",
+        "groupKey": "approvals",
+        "groupLabel": "Approvals",
+        "groupOrder": 90,
+        "order": 7
+      }
     },
     {
       "name": "payments.dashboards.read",
@@ -2285,15 +2634,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View dashboards",
-        "description": "View organization dashboards.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read dashboards",
+        "description": "read dashboards for the organization.",
+        "groupKey": "dashboards",
+        "groupLabel": "Dashboards",
+        "groupOrder": 90,
+        "order": 8
+      }
     },
     {
       "name": "payments.events.create",
@@ -2309,15 +2660,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create events",
-        "description": "Create organization events.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create events for the organization.",
+        "groupKey": "events",
+        "groupLabel": "Events",
+        "groupOrder": 90,
+        "order": 9
+      }
     },
     {
       "name": "payments.exports.approve",
@@ -2333,15 +2686,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 100,
+        "order": 0
+      }
     },
     {
       "name": "payments.files.approve",
@@ -2357,15 +2712,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve files",
-        "description": "Approve organization files.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve files for the organization.",
+        "groupKey": "files",
+        "groupLabel": "Files",
+        "groupOrder": 100,
+        "order": 1
+      }
     },
     {
       "name": "payments.imports.delete",
@@ -2381,15 +2738,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 100,
+        "order": 2
+      }
     },
     {
       "name": "payments.metrics.export",
@@ -2405,15 +2764,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export metrics",
-        "description": "Export organization metrics.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export metrics for the organization.",
+        "groupKey": "metrics",
+        "groupLabel": "Metrics",
+        "groupOrder": 100,
+        "order": 3
+      }
     },
     {
       "name": "payments.policies.delete",
@@ -2429,15 +2790,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete policies",
-        "description": "Delete organization policies.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 90
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete policies for the organization.",
+        "groupKey": "policies",
+        "groupLabel": "Policies",
+        "groupOrder": 100,
+        "order": 4
+      }
     },
     {
       "name": "payments.records.read",
@@ -2453,15 +2816,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View records",
-        "description": "View organization records.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 100
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read records",
+        "description": "read records for the organization.",
+        "groupKey": "records",
+        "groupLabel": "Records",
+        "groupOrder": 100,
+        "order": 5
+      }
     },
     {
       "name": "payments.reports.update",
@@ -2477,15 +2842,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 110
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 100,
+        "order": 6
+      }
     },
     {
       "name": "payments.requests.manage",
@@ -2501,15 +2868,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage requests",
-        "description": "Manage organization requests.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 120
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage requests for the organization.",
+        "groupKey": "requests",
+        "groupLabel": "Requests",
+        "groupOrder": 100,
+        "order": 7
+      }
     },
     {
       "name": "payments.settings.create",
@@ -2525,15 +2894,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 130
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 100,
+        "order": 8
+      }
     },
     {
       "name": "payments.tasks.update",
@@ -2549,15 +2920,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage tasks",
-        "description": "Manage organization tasks.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 140
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update tasks",
+        "description": "update tasks for the organization.",
+        "groupKey": "tasks",
+        "groupLabel": "Tasks",
+        "groupOrder": 100,
+        "order": 9
+      }
     },
     {
       "name": "planning.approvals.archive",
@@ -2573,15 +2946,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive approvals",
-        "description": "Archive organization approvals.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive approvals for the organization.",
+        "groupKey": "approvals",
+        "groupLabel": "Approvals",
+        "groupOrder": 110,
+        "order": 0
+      }
     },
     {
       "name": "planning.approvals.export",
@@ -2597,15 +2972,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export approvals",
-        "description": "Export organization approvals.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export approvals for the organization.",
+        "groupKey": "approvals",
+        "groupLabel": "Approvals",
+        "groupOrder": 110,
+        "order": 1
+      }
     },
     {
       "name": "planning.budgets.approve",
@@ -2621,15 +2998,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve budgets",
-        "description": "Approve organization budgets.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve budgets for the organization.",
+        "groupKey": "budgets",
+        "groupLabel": "Budgets",
+        "groupOrder": 110,
+        "order": 2
+      }
     },
     {
       "name": "planning.budgets.update",
@@ -2645,15 +3024,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage budgets",
-        "description": "Manage organization budgets.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update budgets",
+        "description": "update budgets for the organization.",
+        "groupKey": "budgets",
+        "groupLabel": "Budgets",
+        "groupOrder": 110,
+        "order": 3
+      }
     },
     {
       "name": "planning.dependencies.approve",
@@ -2669,15 +3050,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve dependencies",
-        "description": "Approve organization dependencies.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve dependencies for the organization.",
+        "groupKey": "dependencies",
+        "groupLabel": "Dependencies",
+        "groupOrder": 110,
+        "order": 4
+      }
     },
     {
       "name": "planning.dependencies.manage",
@@ -2693,15 +3076,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage dependencies",
-        "description": "Manage organization dependencies.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage dependencies for the organization.",
+        "groupKey": "dependencies",
+        "groupLabel": "Dependencies",
+        "groupOrder": 110,
+        "order": 5
+      }
     },
     {
       "name": "planning.initiatives.archive",
@@ -2717,15 +3102,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive initiatives",
-        "description": "Archive organization initiatives.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive initiatives for the organization.",
+        "groupKey": "initiatives",
+        "groupLabel": "Initiatives",
+        "groupOrder": 110,
+        "order": 6
+      }
     },
     {
       "name": "planning.initiatives.create",
@@ -2741,15 +3128,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create initiatives",
-        "description": "Create organization initiatives.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create initiatives for the organization.",
+        "groupKey": "initiatives",
+        "groupLabel": "Initiatives",
+        "groupOrder": 110,
+        "order": 7
+      }
     },
     {
       "name": "planning.milestones.read",
@@ -2765,15 +3154,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View milestones",
-        "description": "View organization milestones.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 90
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read milestones",
+        "description": "read milestones for the organization.",
+        "groupKey": "milestones",
+        "groupLabel": "Milestones",
+        "groupOrder": 110,
+        "order": 8
+      }
     },
     {
       "name": "planning.milestones.update",
@@ -2789,15 +3180,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage milestones",
-        "description": "Manage organization milestones.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 100
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update milestones",
+        "description": "update milestones for the organization.",
+        "groupKey": "milestones",
+        "groupLabel": "Milestones",
+        "groupOrder": 110,
+        "order": 9
+      }
     },
     {
       "name": "planning.minutes.delete",
@@ -2813,15 +3206,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete minutes",
-        "description": "Delete organization minutes.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 110
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete minutes for the organization.",
+        "groupKey": "minutes",
+        "groupLabel": "Minutes",
+        "groupOrder": 120,
+        "order": 0
+      }
     },
     {
       "name": "planning.plans.manage",
@@ -2837,15 +3232,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage plans",
-        "description": "Manage organization plans.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 120
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage plans for the organization.",
+        "groupKey": "plans",
+        "groupLabel": "Plans",
+        "groupOrder": 120,
+        "order": 1
+      }
     },
     {
       "name": "planning.plans.read",
@@ -2861,15 +3258,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View plans",
-        "description": "View organization plans.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 130
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read plans",
+        "description": "read plans for the organization.",
+        "groupKey": "plans",
+        "groupLabel": "Plans",
+        "groupOrder": 120,
+        "order": 2
+      }
     },
     {
       "name": "planning.profile.manage",
@@ -2885,15 +3284,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage profile",
-        "description": "Manage organization profile.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 140
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage profile for the organization.",
+        "groupKey": "profile",
+        "groupLabel": "Profile",
+        "groupOrder": 120,
+        "order": 3
+      }
     },
     {
       "name": "planning.profile.read",
@@ -2909,15 +3310,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View profile",
-        "description": "View organization profile.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 150
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read profile",
+        "description": "read profile for the organization.",
+        "groupKey": "profile",
+        "groupLabel": "Profile",
+        "groupOrder": 120,
+        "order": 4
+      }
     },
     {
       "name": "planning.proposals.update",
@@ -2933,15 +3336,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage proposals",
-        "description": "Manage organization proposals.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 160
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update proposals",
+        "description": "update proposals for the organization.",
+        "groupKey": "proposals",
+        "groupLabel": "Proposals",
+        "groupOrder": 120,
+        "order": 5
+      }
     },
     {
       "name": "planning.risks.delete",
@@ -2957,15 +3362,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete risks",
-        "description": "Delete organization risks.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 170
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete risks for the organization.",
+        "groupKey": "risks",
+        "groupLabel": "Risks",
+        "groupOrder": 120,
+        "order": 6
+      }
     },
     {
       "name": "planning.risks.export",
@@ -2981,15 +3388,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export risks",
-        "description": "Export organization risks.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 180
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export risks for the organization.",
+        "groupKey": "risks",
+        "groupLabel": "Risks",
+        "groupOrder": 120,
+        "order": 7
+      }
     },
     {
       "name": "planning.roadmaps.export",
@@ -3005,15 +3414,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Export roadmaps",
-        "description": "Export organization roadmaps.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 190
-      },
-      "identityProvisioning": "provisionable"
+        "description": "export roadmaps for the organization.",
+        "groupKey": "roadmaps",
+        "groupLabel": "Roadmaps",
+        "groupOrder": 120,
+        "order": 8
+      }
     },
     {
       "name": "planning.surveys.approve",
@@ -3029,15 +3440,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve surveys",
-        "description": "Approve organization surveys.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 200
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve surveys for the organization.",
+        "groupKey": "surveys",
+        "groupLabel": "Surveys",
+        "groupOrder": 120,
+        "order": 9
+      }
     },
     {
       "name": "planning.tasks.create",
@@ -3053,15 +3466,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create tasks",
-        "description": "Create organization tasks.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 210
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create tasks for the organization.",
+        "groupKey": "tasks",
+        "groupLabel": "Tasks",
+        "groupOrder": 130,
+        "order": 0
+      }
     },
     {
       "name": "planning.tasks.delete",
@@ -3077,15 +3492,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete tasks",
-        "description": "Delete organization tasks.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 220
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete tasks for the organization.",
+        "groupKey": "tasks",
+        "groupLabel": "Tasks",
+        "groupOrder": 130,
+        "order": 1
+      }
     },
     {
       "name": "planning.votes.archive",
@@ -3101,15 +3518,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive votes",
-        "description": "Archive organization votes.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 230
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive votes for the organization.",
+        "groupKey": "votes",
+        "groupLabel": "Votes",
+        "groupOrder": 130,
+        "order": 2
+      }
     },
     {
       "name": "planning.votes.create",
@@ -3125,15 +3544,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create votes",
-        "description": "Create organization votes.",
-        "groupKey": "planning",
-        "groupLabel": "Planning",
-        "groupOrder": 30,
-        "order": 240
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create votes for the organization.",
+        "groupKey": "votes",
+        "groupLabel": "Votes",
+        "groupOrder": 130,
+        "order": 3
+      }
     },
     {
       "name": "platform.admin.export",
@@ -3149,15 +3570,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 130,
+        "order": 4
+      }
     },
     {
       "name": "platform.approvals.archive",
@@ -3173,15 +3596,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Archive approvals",
-        "description": "Archive organization approvals.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "archive approvals for the organization.",
+        "groupKey": "approvals",
+        "groupLabel": "Approvals",
+        "groupOrder": 130,
+        "order": 5
+      }
     },
     {
       "name": "platform.exports.approve",
@@ -3197,15 +3622,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 130,
+        "order": 6
+      }
     },
     {
       "name": "platform.imports.delete",
@@ -3221,15 +3648,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 130,
+        "order": 7
+      }
     },
     {
       "name": "platform.records.read",
@@ -3245,15 +3674,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View records",
-        "description": "View organization records.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read records",
+        "description": "read records for the organization.",
+        "groupKey": "records",
+        "groupLabel": "Records",
+        "groupOrder": 130,
+        "order": 8
+      }
     },
     {
       "name": "platform.reports.update",
@@ -3269,15 +3700,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 130,
+        "order": 9
+      }
     },
     {
       "name": "platform.requests.manage",
@@ -3293,15 +3726,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Manage requests",
-        "description": "Manage organization requests.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "description": "manage requests for the organization.",
+        "groupKey": "requests",
+        "groupLabel": "Requests",
+        "groupOrder": 140,
+        "order": 0
+      }
     },
     {
       "name": "platform.settings.create",
@@ -3317,15 +3752,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "platform",
-        "groupLabel": "Platform",
-        "groupOrder": 100,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 140,
+        "order": 1
+      }
     },
     {
       "name": "reports.admin.export",
@@ -3341,15 +3778,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "reports",
-        "groupLabel": "Reports",
-        "groupOrder": 90,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 140,
+        "order": 2
+      }
     },
     {
       "name": "reports.exports.approve",
@@ -3365,15 +3804,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "reports",
-        "groupLabel": "Reports",
-        "groupOrder": 90,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 140,
+        "order": 3
+      }
     },
     {
       "name": "reports.imports.delete",
@@ -3389,15 +3830,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "reports",
-        "groupLabel": "Reports",
-        "groupOrder": 90,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 140,
+        "order": 4
+      }
     },
     {
       "name": "reports.records.read",
@@ -3413,15 +3856,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View records",
-        "description": "View organization records.",
-        "groupKey": "reports",
-        "groupLabel": "Reports",
-        "groupOrder": 90,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read records",
+        "description": "read records for the organization.",
+        "groupKey": "records",
+        "groupLabel": "Records",
+        "groupOrder": 140,
+        "order": 5
+      }
     },
     {
       "name": "reports.reports.update",
@@ -3437,15 +3882,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
+        "label": "Update reports",
+        "description": "update reports for the organization.",
         "groupKey": "reports",
         "groupLabel": "Reports",
-        "groupOrder": 90,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "groupOrder": 140,
+        "order": 6
+      }
     },
     {
       "name": "reports.settings.create",
@@ -3461,15 +3908,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "reports",
-        "groupLabel": "Reports",
-        "groupOrder": 90,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 140,
+        "order": 7
+      }
     },
     {
       "name": "scheduling.admin.export",
@@ -3485,15 +3934,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 140,
+        "order": 8
+      }
     },
     {
       "name": "scheduling.events.create",
@@ -3509,15 +3960,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create events",
-        "description": "Create organization events.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create events for the organization.",
+        "groupKey": "events",
+        "groupLabel": "Events",
+        "groupOrder": 140,
+        "order": 9
+      }
     },
     {
       "name": "scheduling.events.read",
@@ -3533,15 +3986,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View events",
-        "description": "View organization events.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read events",
+        "description": "read events for the organization.",
+        "groupKey": "events",
+        "groupLabel": "Events",
+        "groupOrder": 150,
+        "order": 0
+      }
     },
     {
       "name": "scheduling.exports.approve",
@@ -3557,15 +4012,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 150,
+        "order": 1
+      }
     },
     {
       "name": "scheduling.imports.delete",
@@ -3581,15 +4038,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 150,
+        "order": 2
+      }
     },
     {
       "name": "scheduling.reports.update",
@@ -3605,15 +4064,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 150,
+        "order": 3
+      }
     },
     {
       "name": "support.admin.export",
@@ -3629,15 +4090,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Export administration",
-        "description": "Export organization administration.",
-        "groupKey": "support",
-        "groupLabel": "Support",
-        "groupOrder": 70,
-        "order": 10
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Export admin",
+        "description": "export admin for the organization.",
+        "groupKey": "admin",
+        "groupLabel": "Admin",
+        "groupOrder": 150,
+        "order": 4
+      }
     },
     {
       "name": "support.exports.approve",
@@ -3653,15 +4116,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Approve exports",
-        "description": "Approve organization exports.",
-        "groupKey": "support",
-        "groupLabel": "Support",
-        "groupOrder": 70,
-        "order": 20
-      },
-      "identityProvisioning": "provisionable"
+        "description": "approve exports for the organization.",
+        "groupKey": "exports",
+        "groupLabel": "Exports",
+        "groupOrder": 150,
+        "order": 5
+      }
     },
     {
       "name": "support.imports.delete",
@@ -3677,15 +4142,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Delete imports",
-        "description": "Delete organization imports.",
-        "groupKey": "support",
-        "groupLabel": "Support",
-        "groupOrder": 70,
-        "order": 30
-      },
-      "identityProvisioning": "provisionable"
+        "description": "delete imports for the organization.",
+        "groupKey": "imports",
+        "groupLabel": "Imports",
+        "groupOrder": 150,
+        "order": 6
+      }
     },
     {
       "name": "support.reports.update",
@@ -3701,15 +4168,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "Manage reports",
-        "description": "Manage organization reports.",
-        "groupKey": "support",
-        "groupLabel": "Support",
-        "groupOrder": 70,
-        "order": 40
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Update reports",
+        "description": "update reports for the organization.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 150,
+        "order": 7
+      }
     },
     {
       "name": "support.settings.create",
@@ -3725,15 +4194,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
         "label": "Create settings",
-        "description": "Create organization settings.",
-        "groupKey": "support",
-        "groupLabel": "Support",
-        "groupOrder": 70,
-        "order": 50
-      },
-      "identityProvisioning": "provisionable"
+        "description": "create settings for the organization.",
+        "groupKey": "settings",
+        "groupLabel": "Settings",
+        "groupOrder": 150,
+        "order": 8
+      }
     },
     {
       "name": "support.tickets.read",
@@ -3749,15 +4220,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View support tickets",
-        "description": "View organization support tickets.",
-        "groupKey": "support",
-        "groupLabel": "Support",
-        "groupOrder": 70,
-        "order": 60
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read tickets",
+        "description": "read tickets for the organization.",
+        "groupKey": "tickets",
+        "groupLabel": "Tickets",
+        "groupOrder": 150,
+        "order": 9
+      }
     },
     {
       "name": "analytics.dashboards.read",
@@ -3773,15 +4246,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View dashboards",
-        "description": "View organization dashboards.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read dashboards",
+        "description": "read dashboards for the organization.",
+        "groupKey": "organization-overview",
+        "groupLabel": "Organization-overview",
+        "groupOrder": 160,
+        "order": 0
+      }
     },
     {
       "name": "community.groups.read",
@@ -3797,15 +4272,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View groups",
-        "description": "View organization groups.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read groups",
+        "description": "read groups for the organization.",
+        "groupKey": "groups",
+        "groupLabel": "Groups",
+        "groupOrder": 160,
+        "order": 1
+      }
     },
     {
       "name": "hr.employees.read",
@@ -3821,15 +4298,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View employees",
-        "description": "View organization employees.",
-        "groupKey": "people-operations",
-        "groupLabel": "People Operations",
-        "groupOrder": 120,
-        "order": 140
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read employees",
+        "description": "read employees for the organization.",
+        "groupKey": "employees",
+        "groupLabel": "Employees",
+        "groupOrder": 160,
+        "order": 2
+      }
     },
     {
       "name": "lms.courses.read",
@@ -3845,15 +4324,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View courses",
-        "description": "View organization courses.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 230
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read courses",
+        "description": "read courses for the organization.",
+        "groupKey": "courses",
+        "groupLabel": "Courses",
+        "groupOrder": 160,
+        "order": 3
+      }
     },
     {
       "name": "payments.invoices.read",
@@ -3869,15 +4350,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View invoices",
-        "description": "View organization invoices.",
-        "groupKey": "finance",
-        "groupLabel": "Finance",
-        "groupOrder": 110,
-        "order": 150
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read invoices",
+        "description": "read invoices for the organization.",
+        "groupKey": "invoices",
+        "groupLabel": "Invoices",
+        "groupOrder": 160,
+        "order": 4
+      }
     },
     {
       "name": "analytics.reports.read",
@@ -3893,15 +4376,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View reports",
-        "description": "View organization reports.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 80,
-        "order": 80
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read reports",
+        "description": "read reports for the organization.",
+        "groupKey": "executive-summary",
+        "groupLabel": "Executive-summary",
+        "groupOrder": 160,
+        "order": 5
+      }
     },
     {
       "name": "scheduling.bookings.read",
@@ -3917,15 +4402,17 @@
       "policyRequirements": [],
       "screenActionIds": [],
       "compatibility": "none",
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "unavailable",
+      "catalogStatus": "planned",
       "presentation": {
-        "label": "View bookings",
-        "description": "View organization bookings.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 50,
-        "order": 70
-      },
-      "identityProvisioning": "provisionable"
+        "label": "Read bookings",
+        "description": "read bookings for the organization.",
+        "groupKey": "bookings",
+        "groupLabel": "Bookings",
+        "groupOrder": 160,
+        "order": 6
+      }
     }
   ],
   "legacyDecisions": [

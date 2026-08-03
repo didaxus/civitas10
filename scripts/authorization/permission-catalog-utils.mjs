@@ -6,7 +6,7 @@ export const SCHEMA_PATH = 'contracts/authorization/schemas/permission-catalog.s
 export const PHASE3_NAMESPACES = Object.freeze(['owner','org','lms','planning','crm','marketing','community','payments','hr','scheduling','support','analytics','reports','platform'])
 export const DATA_SCOPE_STRATEGY_NAMES = Object.freeze(['global_owner','organization','organization_and_units','self','self_or_organization','academic_relationship','teaching_assignments','planning_relationship','planning_editable','planning_owned','assigned_reviews','assigned_approvals','approved_plans','community_membership','community_moderation','hr_relationship','payroll_relationship','scheduling_relationship','support_relationship','communication_relationship'])
 export const ORGANIZATION_ROLES = Object.freeze(['organization_admin','organization_director','organization_headdirector','organization_headteacher','organization_groupleader','organization_teacher','organization_student','organization_parent','organization_secretary','organization_accountant','organization_billing','organization_payroll','organization_member'])
-const ENUMS = { surface: ['owner','organization','account','public','webhook'], targetStatus: ['planned','active','deprecated'], observedImplementation: ['active','declared_planned','absent','verification_required'], risk: ['standard','high','restricted','critical'], compatibility: ['none','alias','blocked','compatibility-only'] }
+const ENUMS = { surface: ['owner','organization','account','public','webhook'], targetStatus: ['planned','active','deprecated'], observedImplementation: ['active','declared_planned','absent','verification_required'], risk: ['standard','high','restricted','critical'], compatibility: ['none','alias','blocked','compatibility-only'], identityProvisioningStatus: ['provisioned','not_provisioned'], runtimeAvailability: ['available','unavailable'], catalogStatus: ['defined','planned','active','deprecated'] }
 const PROVIDERS = /(?:moodle|matomo|mautic)/i
 export function canonicalJson(value) { if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`; if (value && typeof value === 'object') return `{${Object.keys(value).sort().map((k)=>`${JSON.stringify(k)}:${canonicalJson(value[k])}`).join(',')}}`; return JSON.stringify(value) }
 export function catalogHash(catalog) { return crypto.createHash('sha256').update(canonicalJson(catalog)).digest('hex') }
@@ -33,11 +33,10 @@ export function validateCatalog(catalog) {
     for (const key of ['consumers','policyRequirements','screenActionIds']) if (!Array.isArray(permission[key])) errors.push(`${prefix} ${key} must be an array`)
     if (permission.surface === 'owner' && permission.namespace !== 'owner') errors.push(`${prefix} owner surface mismatch`)
     if (permission.namespace === 'owner' && permission.surface !== 'owner') errors.push(`${prefix} owner namespace must use owner surface`)
-    if (permission.targetStatus === 'active' && (permission.observedImplementation !== 'active' || permission.consumers.length === 0 || permission.policyRequirements.length === 0 || !permission.dataScopeStrategy || !permission.runtimePath || !Array.isArray(permission.testEvidence) || permission.testEvidence.length === 0)) errors.push(`${prefix} active entries require active observation, consumers, policies/data scope, runtime path and tests`)
-    if (permission.surface === 'organization') {
-      if (permission.identityProvisioning !== 'provisionable') errors.push(`${prefix} organization permissions must explicitly declare identityProvisioning=provisionable`)
+    if (permission.identityProvisioningStatus === 'provisioned' && !permission.presentation) errors.push(`${prefix} provisioned entries require presentation metadata`)
+    if (permission.catalogStatus === 'active') {
       const presentation = permission.presentation || {}
-      for (const key of ['label','description','groupKey','groupLabel','groupOrder','order']) if (presentation[key] === undefined || presentation[key] === '') errors.push(`${prefix} organization entries require presentation.${key}`)
+      for (const key of ['label','description','groupKey','groupLabel','groupOrder','order']) if (presentation[key] === undefined || presentation[key] === '') errors.push(`${prefix} active entries require presentation.${key}`)
       if (!Number.isInteger(presentation.groupOrder) || !Number.isInteger(presentation.order)) errors.push(`${prefix} presentation order values must be integers`)
       if (/endpoint|migration|execute the |calls the |owning operation/i.test(presentation.description || '')) errors.push(`${prefix} presentation description must describe a user capability`)
     }

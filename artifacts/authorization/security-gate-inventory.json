@@ -19,7 +19,6 @@
     "contracts/authorization/civitas-role-bundles.json": "4a6d1f7babc62308e90a1af5d2531de9ce1ac3ed43ab29acbbfcd9662db05b8c",
     "core/authz/catalog/generated/permission-catalog.js": "c910f251a1d9ae565646e14ad1e26de275a27aecac432e0833078944b167730b",
     "core/authz/roles/generated/role-model.js": "d0091dbe07ebb6b8c84c973913f7241348b040c1e44bfccc1ba401cd9cd242f1",
-    "artifacts/authorization/permission-catalog.json": "056651c5bc3bc17a9b6a40ad81ca6318bc9a470a9bfaa4ab15e6c5f8f46a7501",
     "artifacts/authorization/active-permissions.json": "fbda20b0b05008a5b606e51f5f737c6acd063b481a5b0498f48d887e8f616db2",
     "artifacts/authorization/ci-inventory.json": "13b051bf837704a882527a78737031c9fbc14283f8c56a6ff1f60c47d38e00b9",
     "artifacts/authorization/role-potential.json": "48bdf0fa79e9aa8c035f03b3bd5590d1e5013ec03cffcf2eb0ce0adb90114c7c",
@@ -28,7 +27,7 @@
   },
   "summary": {
     "errors": 0,
-    "requiredArtifacts": 11,
+    "requiredArtifacts": 10,
     "executableScanRoots": [
       "frontend/src/authorization",
       "frontend/src/features/governance/visual",
