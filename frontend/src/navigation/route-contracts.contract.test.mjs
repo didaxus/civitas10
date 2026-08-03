@@ -29,21 +29,13 @@ test("owner topology v2 matches product-validated hierarchy", () => {
 });
 
 test("owner contextual workspace is composed into the single AppShell navigation tree", () => {
-  assert.match(materializeNavigation, /export const buildOwnerNavigationTree/);
-  assert.match(materializeNavigation, /GOVERNANCE_WORKSPACE_GROUPS/);
-  assert.doesNotMatch(materializeNavigation, /flattenGovernanceWorkspaceItems/);
-  assert.doesNotMatch(materializeNavigation, /item\.status === "active"/);
-  assert.match(materializeNavigation, /group\.id !== "operations"/);
-  assert.match(materializeNavigation, /status: item\.status/);
-  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationState/);
-  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationGovernance/);
-  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationOperations/);
-  assert.match(materializeNavigation, /isConcreteRouteParam\(organizationId\)/);
-  assert.doesNotMatch(materializeNavigation, /":organizationId"/);
-  assert.doesNotMatch(ownerLayout, /":organizationId"/);
-  assert.doesNotMatch(materializeNavigation, /localStorage|sessionStorage/);
+  assert.match(materializeNavigation, /GOVERNANCE_WORKSPACE_ITEMS/);
+  assert.match(materializeNavigation, /Back to Directory/);
+  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationMembers/);
+  assert.doesNotMatch(materializeNavigation, /status|Legacy|groups-courses|identity-provisioning/);
+  assert.match(ownerLayout, /OwnerOrganizationLayout/);
+  assert.match(ownerLayout, /<Outlet \/>/);
   assert.match(ownerLayout, /getOrganizations\(\)/);
-  assert.match(ownerLayout, /ActiveOrganizationContext/);
 });
 
 test("settings and profile are not published when inactive", () => {

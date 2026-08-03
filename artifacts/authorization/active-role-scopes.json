@@ -4,11 +4,11 @@
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9",
-    "roleModelHash": "0714e258f33b13b4f2ad7c226e9d71c8a0e21c6c38a21f2e85e64f46f310dca2"
+    "catalogHash": "9b3b1f3c13924982b9355d3554a7fc1f9945a3045ef686ffb232c95346269838",
+    "roleModelHash": "af6812711e7b75ac6935f2c7f315c4a035cdd89b8b56f992746c545adc79c5da"
   },
-  "catalogHash": "710e1623974f6e8289b145405ac183ae7811cf96a4b4ae00fdb7d9181c00f9b9",
-  "roleModelHash": "0714e258f33b13b4f2ad7c226e9d71c8a0e21c6c38a21f2e85e64f46f310dca2",
+  "catalogHash": "9b3b1f3c13924982b9355d3554a7fc1f9945a3045ef686ffb232c95346269838",
+  "roleModelHash": "af6812711e7b75ac6935f2c7f315c4a035cdd89b8b56f992746c545adc79c5da",
   "activeRoleScopes": {
     "organization_admin": [
       "lms.course_offerings.read",

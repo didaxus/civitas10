@@ -9,7 +9,7 @@ function validateRolePermissionReference(role, permission, catalogByName = new M
   if (catalogByName.size) {
     const def = catalogByName.get(permission)
     if (!def) return { valid: false, category: 'violation', kind: 'permission-reference', value: permission, expected: 'permission reference must exist in #74 catalog' }
-    if (def.status !== 'active') return { valid: false, category: 'violation', kind: 'permission-reference', value: permission, expected: 'role references must target active catalog permissions' }
+    if (def.status !== 'active' && def.identityProvisioning !== 'provisionable') return { valid: false, category: 'violation', kind: 'permission-reference', value: permission, expected: 'role references must target active or explicitly provisionable catalog permissions' }
     if (role?.startsWith('organization_') && def.surface !== 'organization' && def.surface !== 'self') return { valid: false, category: 'violation', kind: 'permission-reference', value: permission, expected: 'organization role permissions must be organization/self surface' }
   }
   return { valid: true, category: 'canonical', kind: 'permission-reference', value: permission }

@@ -8,5 +8,5 @@ export type FeatureFlagKey = BrandedString<"FeatureFlagKey">;
 export type PermissionKey = BrandedString<"PermissionKey">;
 export type PolicyKey = BrandedString<"PolicyKey">;
 export type RouteId = BrandedString<"RouteId">;
-export type IconKey = "overview" | "governance" | "operations" | "organizations" | "directory" | "create" | "settings" | "profile" | "grades" | "groups" | "planning";
+export type IconKey = "back" | "overview" | "governance" | "operations" | "organizations" | "directory" | "create" | "settings" | "profile" | "grades" | "groups" | "planning" | "roles" | "roleNames" | "dataScopes" | "structure" | "segmentation" | "accessExplorer" | "logs" | "members";
 export type ResponsiveGroupKey = "owner" | "governance" | "organizations" | "operations" | "settings" | "account" | "academics";

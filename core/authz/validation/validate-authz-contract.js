@@ -34,7 +34,7 @@ function validateAuthorizationContract(manifest, options = {}) {
       if (perm.startsWith('organization.') || perm.includes(':')) errors.push(`legacy scope assigned to ${role}: ${perm}`)
       const def = byName.get(perm)
       if (!def) { errors.push(`role ${role} references missing permission: ${perm}`); continue }
-      if (def.status !== 'active') errors.push(`role ${role} references ${def.status} permission: ${perm}`)
+      if (def.status !== 'active' && def.identityProvisioning !== 'provisionable') errors.push(`role ${role} references non-provisionable ${def.status} permission: ${perm}`)
       if (role === 'owner_global' && !perm.startsWith('owner.')) errors.push(`owner_global cannot receive non-owner permission: ${perm}`)
       if (ORGANIZATION_ROLES.includes(role) && perm.startsWith('owner.')) errors.push(`organization role cannot receive owner permission: ${role} -> ${perm}`)
     }

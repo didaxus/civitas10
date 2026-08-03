@@ -16,7 +16,8 @@ function assertLogtoId(value, fieldName) {
 function validateOrganizationPermission(permission) {
   const key = String(permission || "").trim();
   const definition = permissionsByName[key];
-  if (!definition || definition.status !== "active") throw Object.assign(new Error("permission_inactive"), { code: "permission_inactive" });
+  if (!definition) throw Object.assign(new Error("permission_unknown"), { code: "permission_unknown" });
+  if (definition.status !== "active" && definition.identityProvisioning !== "provisionable") throw Object.assign(new Error("permission_inactive"), { code: "permission_inactive" });
   if (key.startsWith("owner.") || key.startsWith("organization.") || FORBIDDEN_ORGANIZATION_PERMISSION_KEYS.has(key)) throw Object.assign(new Error("permission_not_allowed_for_tenant_entitlement"), { code: "permission_not_allowed_for_tenant_entitlement" });
   if (!definition.surface || definition.surface !== "organization") throw Object.assign(new Error("permission_surface_mismatch"), { code: "permission_surface_mismatch" });
   return key;

@@ -9,7 +9,8 @@ const roleModel = require('../../core/authz/roles/generated/role-model')
 const catalog = require('../../core/authz/catalog/generated/permission-catalog')
 const { rolePermissionAssignments } = require('../../core/authz')
 
-const expectedCounts = Object.freeze({ organization_admin: 81, organization_director: 57, organization_headdirector: 53, organization_headteacher: 68, organization_groupleader: 36, organization_teacher: 45, organization_student: 17, organization_parent: 17, organization_secretary: 28, organization_accountant: 17, organization_billing: 12, organization_payroll: 11, organization_member: 15 })
+const authoredRoleModel = require('../../contracts/authorization/civitas-role-bundles.json')
+const expectedCounts = Object.freeze(Object.fromEntries(Object.entries(authoredRoleModel.roles).map(([roleKey, role]) => [roleKey, role.expectedPotentialCount])))
 const activeOrganizationPermissions = new Set(catalog.activePermissions.filter((permission) => permission.surface === 'organization').map((permission) => permission.name))
 const allCatalogPermissions = new Set(catalog.permissions.map((permission) => permission.name))
 
@@ -46,13 +47,15 @@ test('bundles are composition metadata only and never executable scopes', () => 
   }
 })
 
-test('active executable role scopes are exact active organization permission subsets', () => {
+test('executable and identity-provisioned scopes remain distinct', () => {
   for (const role of roleModel.roles) {
     for (const scope of role.activeExecutableScopeIds) {
       assert.equal(activeOrganizationPermissions.has(scope), true, `${role.roleKey}:${scope}`)
       assert.equal(role.potentialPermissionIds.includes(scope), true, `${role.roleKey}:${scope}`)
     }
-    assert.deepEqual(rolePermissionAssignments[role.roleKey], role.activeExecutableScopeIds)
+    assert.deepEqual(rolePermissionAssignments[role.roleKey], role.provisionableScopeIds)
+    assert.deepEqual(role.provisionableScopeIds, role.potentialPermissionIds)
+    assert.ok(role.activeExecutableScopeIds.every((scope) => role.provisionableScopeIds.includes(scope)))
   }
 })
 
@@ -65,7 +68,7 @@ test('planned and verification-required permissions remain target potential only
 })
 
 test('role model artifacts carry generated metadata and matching hashes', () => {
-  for (const artifact of ['core/authz/roles/generated/role-model.js','artifacts/authorization/role-potential.json','artifacts/authorization/active-role-scopes.json']) {
+  for (const artifact of ['core/authz/roles/generated/role-model.js','artifacts/authorization/role-potential.json','artifacts/authorization/active-role-scopes.json','artifacts/authorization/provisionable-role-scopes.json']) {
     assert.equal(fs.existsSync(artifact), true)
     const body = fs.readFileSync(artifact, 'utf8')
     assert.match(body, /GENERATED — DO NOT EDIT/)
@@ -73,9 +76,12 @@ test('role model artifacts carry generated metadata and matching hashes', () => 
   }
   const potential = JSON.parse(fs.readFileSync('artifacts/authorization/role-potential.json', 'utf8'))
   const active = JSON.parse(fs.readFileSync('artifacts/authorization/active-role-scopes.json', 'utf8'))
+  const provisionable = JSON.parse(fs.readFileSync('artifacts/authorization/provisionable-role-scopes.json', 'utf8'))
   assert.equal(potential.roleModel.roleModelHash, roleModel.roleModelHash)
   assert.equal(active.roleModelHash, roleModel.roleModelHash)
   assert.equal(active.catalogHash, catalog.catalogHash)
+  assert.equal(provisionable.roleModelHash, roleModel.roleModelHash)
+  assert.equal(provisionable.catalogHash, catalog.catalogHash)
 })
 
 test('role model generation is deterministic and check fails closed', () => {
@@ -85,7 +91,7 @@ test('role model generation is deterministic and check fails closed', () => {
   assert.notEqual(missing.status, 0)
   assert.match(missing.stderr, /missing generated artifact/)
   execFileSync(process.execPath, ['scripts/authorization/generate-role-model.mjs'], { env, stdio: 'pipe' })
-  const files = ['core/authz/roles/generated/role-model.js','artifacts/authorization/role-potential.json','artifacts/authorization/active-role-scopes.json']
+  const files = ['core/authz/roles/generated/role-model.js','artifacts/authorization/role-potential.json','artifacts/authorization/active-role-scopes.json','artifacts/authorization/provisionable-role-scopes.json']
   const snapshot = new Map(files.map((file) => [file, fs.readFileSync(path.join(temp, file), 'utf8')]))
   execFileSync(process.execPath, ['scripts/authorization/generate-role-model.mjs'], { env, stdio: 'pipe' })
   for (const [file, body] of snapshot) assert.equal(fs.readFileSync(path.join(temp, file), 'utf8'), body)

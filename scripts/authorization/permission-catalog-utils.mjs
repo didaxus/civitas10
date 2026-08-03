@@ -34,6 +34,13 @@ export function validateCatalog(catalog) {
     if (permission.surface === 'owner' && permission.namespace !== 'owner') errors.push(`${prefix} owner surface mismatch`)
     if (permission.namespace === 'owner' && permission.surface !== 'owner') errors.push(`${prefix} owner namespace must use owner surface`)
     if (permission.targetStatus === 'active' && (permission.observedImplementation !== 'active' || permission.consumers.length === 0 || permission.policyRequirements.length === 0 || !permission.dataScopeStrategy || !permission.runtimePath || !Array.isArray(permission.testEvidence) || permission.testEvidence.length === 0)) errors.push(`${prefix} active entries require active observation, consumers, policies/data scope, runtime path and tests`)
+    if (permission.surface === 'organization') {
+      if (permission.identityProvisioning !== 'provisionable') errors.push(`${prefix} organization permissions must explicitly declare identityProvisioning=provisionable`)
+      const presentation = permission.presentation || {}
+      for (const key of ['label','description','groupKey','groupLabel','groupOrder','order']) if (presentation[key] === undefined || presentation[key] === '') errors.push(`${prefix} organization entries require presentation.${key}`)
+      if (!Number.isInteger(presentation.groupOrder) || !Number.isInteger(presentation.order)) errors.push(`${prefix} presentation order values must be integers`)
+      if (/endpoint|migration|execute the |calls the |owning operation/i.test(presentation.description || '')) errors.push(`${prefix} presentation description must describe a user capability`)
+    }
     if (!DATA_SCOPE_STRATEGY_NAMES.includes(permission.dataScopeStrategy)) errors.push(`${prefix} unknown dataScopeStrategy`)
     if (permission.namespace === 'planning' && permission.targetStatus !== 'planned') errors.push(`${prefix} planning permissions must remain planned`)
     if (permission.targetStatus === 'deprecated' && (!permission.replacement || !permission.compatibility || permission.compatibility === 'none' || !permission.migrationWindow || !permission.rollbackId)) errors.push(`${prefix} deprecated entries require replacement, compatibility window, migration window and rollback`)
