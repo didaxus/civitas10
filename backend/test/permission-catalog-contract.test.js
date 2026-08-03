@@ -72,35 +72,43 @@ test('legacy decisions are explicit and ambiguous observed IDs remain blocked or
   assert.equal(observed.get('governance.preview.read').classification, 'blocked')
 })
 
-test('generated artifacts are versioned with generated metadata and matching hashes', () => {
-  const artifactPaths = ['artifacts/authorization/permission-catalog.json','artifacts/authorization/active-permissions.json','artifacts/authorization/ci-inventory.json','core/authz/catalog/generated/permission-catalog.js']
-  for (const artifactPath of artifactPaths) {
+test('the authored contract is the only complete permission catalog', () => {
+  const canonicalPath = 'contracts/authorization/civitas-permission-catalog.yaml'
+  const duplicateArtifactPath = 'artifacts/authorization/permission-catalog.json'
+  const generatedPaths = ['artifacts/authorization/active-permissions.json','artifacts/authorization/ci-inventory.json','core/authz/catalog/generated/permission-catalog.js']
+  assert.equal(fs.existsSync(canonicalPath), true)
+  assert.equal(fs.existsSync(duplicateArtifactPath), false, `${duplicateArtifactPath} must not duplicate the canonical catalog`)
+  const canonical = JSON.parse(fs.readFileSync(canonicalPath, 'utf8'))
+  assert.equal(canonical.permissions.length, generated.permissions.length)
+  assert.equal(new Set(canonical.permissions.map((permission) => permission.name)).size, canonical.permissions.length)
+  for (const artifactPath of generatedPaths) {
     assert.equal(fs.existsSync(artifactPath), true, `${artifactPath} must be committed and present for --check drift detection`)
     const body = fs.readFileSync(artifactPath, 'utf8')
     assert.match(body, /GENERATED — DO NOT EDIT/)
     assert.match(body, new RegExp(generated.catalogHash))
   }
-  const authored = JSON.parse(fs.readFileSync('artifacts/authorization/permission-catalog.json', 'utf8'))
   const active = JSON.parse(fs.readFileSync('artifacts/authorization/active-permissions.json', 'utf8'))
   const ci = JSON.parse(fs.readFileSync('artifacts/authorization/ci-inventory.json', 'utf8'))
-  assert.equal(authored._generated.catalogHash, generated.catalogHash)
-  assert.equal(authored.catalog.catalogHash, generated.catalogHash)
+  assert.equal(generated.catalog.catalogHash, generated.catalogHash)
   assert.equal(active.catalogHash, generated.catalogHash)
   assert.equal(ci.catalogHash, generated.catalogHash)
 })
 
-test('generation is deterministic and --check fails closed without writing missing or drifted outputs', () => {
+test('generation is deterministic and --check fails closed without creating a duplicate catalog', () => {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'civitas-authz-catalog-'))
   const env = { ...process.env, CIVITAS_AUTHZ_OUTPUT_ROOT: temp }
+  const duplicateArtifactPath = path.join(temp, 'artifacts/authorization/permission-catalog.json')
   const missing = spawnSync(process.execPath, ['scripts/authorization/generate-permission-catalog.mjs', '--check'], { encoding: 'utf8', env })
   assert.notEqual(missing.status, 0)
   assert.match(missing.stderr, /missing generated artifact/)
-  assert.equal(fs.existsSync(path.join(temp, 'artifacts/authorization/permission-catalog.json')), false)
+  assert.equal(fs.existsSync(duplicateArtifactPath), false)
   execFileSync(process.execPath, ['scripts/authorization/generate-permission-catalog.mjs'], { env, stdio: 'pipe' })
-  const snapshot = new Map(['core/authz/catalog/generated/permission-catalog.js','artifacts/authorization/permission-catalog.json','artifacts/authorization/active-permissions.json','artifacts/authorization/ci-inventory.json'].map((file) => [file, fs.readFileSync(path.join(temp, file), 'utf8')]))
+  assert.equal(fs.existsSync(duplicateArtifactPath), false)
+  const files = ['core/authz/catalog/generated/permission-catalog.js','artifacts/authorization/active-permissions.json','artifacts/authorization/ci-inventory.json']
+  const snapshot = new Map(files.map((file) => [file, fs.readFileSync(path.join(temp, file), 'utf8')]))
   execFileSync(process.execPath, ['scripts/authorization/generate-permission-catalog.mjs'], { env, stdio: 'pipe' })
   for (const [file, body] of snapshot) assert.equal(fs.readFileSync(path.join(temp, file), 'utf8'), body, `${file} deterministic bytes`)
-  fs.appendFileSync(path.join(temp, 'artifacts/authorization/permission-catalog.json'), ' ')
+  fs.appendFileSync(path.join(temp, 'artifacts/authorization/active-permissions.json'), ' ')
   const drifted = spawnSync(process.execPath, ['scripts/authorization/generate-permission-catalog.mjs', '--check'], { encoding: 'utf8', env })
   assert.notEqual(drifted.status, 0)
   assert.match(drifted.stderr, /generated artifact differs/)
