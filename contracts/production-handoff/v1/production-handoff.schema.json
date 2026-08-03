@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.civitas.example/production-handoff/v1/production-handoff.schema.json",
+  "title": "Provider-neutral production handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "handoffId", "organizationId", "plan", "contentHash", "provenance", "correlationId", "operationId"],
+  "properties": {
+    "contractVersion": { "const": "civitas-production-handoff/v1" },
+    "handoffId": { "type": "string", "minLength": 1 },
+    "organizationId": { "type": "string", "minLength": 1 },
+    "plan": {
+      "type": "object", "additionalProperties": false, "required": ["id", "version"],
+      "properties": { "id": { "type": "string", "minLength": 1 }, "version": { "type": ["string", "integer"] } }
+    },
+    "contentHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "provenance": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "approvedAt", "approvedBy"],
+      "properties": {
+        "kind": { "enum": ["civitas-approved-plan", "civitas-approved-release"] },
+        "approvedAt": { "type": "string", "format": "date-time" },
+        "approvedBy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "correlationId": { "type": "string", "minLength": 1 },
+    "operationId": { "type": "string", "minLength": 1 }
+  }
+}

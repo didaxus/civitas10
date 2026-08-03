@@ -1,0 +1,30 @@
+groups:
+  - name: civitas-phase3
+    rules:
+      - alert: CivitasAvailabilityFastBurn
+        expr: (1 - sum(rate(civitas_requests_total{outcome="success"}[5m])) / sum(rate(civitas_requests_total[5m]))) > (1 - 0.999) * 14.4
+        for: 1h
+        labels: { severity: page, owner: platform }
+      - alert: CivitasLatencyP95
+        expr: histogram_quantile(0.95, sum by (le) (rate(civitas_request_duration_seconds_bucket[5m]))) > 0.5
+        for: 10m
+        labels: { severity: page, owner: platform }
+      - alert: CivitasContractMismatch
+        expr: sum(increase(civitas_contract_mismatch_total[15m])) > 0
+        labels: { severity: page, owner: integration }
+      - alert: CivitasCircuitOpen
+        expr: max(civitas_circuit_open) > 0
+        for: 5m
+        labels: { severity: page, owner: integration }
+      - alert: CivitasQueueOrOperationStalled
+        expr: max(civitas_queue_lag_seconds) > 60 or max(civitas_operation_age_seconds) > 900
+        for: 10m
+        labels: { severity: page, owner: integration }
+      - alert: CivitasDlqNotEmpty
+        expr: sum(civitas_dlq_items) > 0
+        for: 5m
+        labels: { severity: page, owner: integration }
+      - alert: CivitasRemoteUiIntegrityFailure
+        expr: sum(rate(civitas_remote_ui_load_total{integrity="verified"}[5m])) / sum(rate(civitas_remote_ui_load_total[5m])) < 1
+        for: 5m
+        labels: { severity: page, owner: ui }

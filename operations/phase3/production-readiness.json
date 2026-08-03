@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "phase": "3",
+  "releaseStatus": "NO_GO_UNTIL_ALL_DRILLS_PASS",
+  "canonicalIds": ["correlationId", "traceId", "spanId", "operationId", "tenantId", "moduleId", "contractId", "contractVersion"],
+  "owners": {
+    "platform": { "team": "Platform Reliability", "onCall": "pagerduty:platform-primary", "escalation": "incident-commander" },
+    "integration": { "team": "Integration Runtime", "onCall": "pagerduty:integration-primary", "escalation": "platform" },
+    "ui": { "team": "Web Platform", "onCall": "pagerduty:web-primary", "escalation": "platform" },
+    "security": { "team": "Security Engineering", "onCall": "pagerduty:security-primary", "escalation": "incident-commander" }
+  },
+  "slis": [
+    { "id": "availability", "objective": ">=99.9%/30d", "query": "sum(rate(civitas_requests_total{outcome='success'}[5m])) / sum(rate(civitas_requests_total[5m]))", "alert": "burn 14.4x/1h or 6x/6h", "owner": "platform" },
+    { "id": "latency", "objective": "p95<=500ms,p99<=1500ms/30d", "query": "histogram_quantile(0.95,sum by(le)(rate(civitas_request_duration_seconds_bucket[5m])))", "alert": "p95>500ms for 10m", "owner": "platform" },
+    { "id": "contract_mismatch", "objective": "0 incompatible/15m", "query": "sum(increase(civitas_contract_mismatch_total[15m]))", "alert": ">0", "owner": "integration" },
+    { "id": "circuits", "objective": "<1% open minutes/30d", "query": "avg_over_time(civitas_circuit_open[30d])", "alert": "open for 5m", "owner": "integration" },
+    { "id": "queue_lag", "objective": "p95<=60s", "query": "histogram_quantile(0.95,sum by(le)(rate(civitas_queue_lag_seconds_bucket[5m])))", "alert": ">60s for 10m", "owner": "integration" },
+    { "id": "dlq", "objective": "0 unowned items", "query": "sum(civitas_dlq_items)", "alert": ">0 for 5m", "owner": "integration" },
+    { "id": "operation_age", "objective": "p99<=15m", "query": "max(civitas_operation_age_seconds)", "alert": ">900s for 10m", "owner": "integration" },
+    { "id": "remote_ui_integrity", "objective": "100% verified loads", "query": "sum(rate(civitas_remote_ui_load_total{integrity='verified'}[5m]))/sum(rate(civitas_remote_ui_load_total[5m]))", "alert": "<1 for 5m", "owner": "ui" }
+  ],
+  "dashboards": [
+    { "id": "phase3-golden-signals", "panels": ["availability", "latency", "contract_mismatch", "circuits"] },
+    { "id": "phase3-async-health", "panels": ["queue_lag", "dlq", "operation_age"] },
+    { "id": "phase3-remote-ui", "panels": ["remote_ui_integrity"] }
+  ],
+  "drills": ["circuit_recovery", "dlq_reconciliation", "backup_restore_tenant_safe", "key_rotation", "ui_runtime_rollback", "decommissioning", "secret_pii_log_scan"],
+  "residualRisks": [
+    { "id": "RR-01", "risk": "Synthetic drills do not establish production provider behavior", "owner": "platform", "mitigation": "Run the same manifest in staging and attach immutable evidence", "acceptance": "pending" },
+    { "id": "RR-02", "risk": "Low traffic can hide remote UI integrity regressions", "owner": "ui", "mitigation": "Continuous synthetic verified-load probe", "acceptance": "pending" },
+    { "id": "RR-03", "risk": "PII classifiers can miss novel fields", "owner": "security", "mitigation": "Quarterly classifier review plus entropy and canary-secret scans", "acceptance": "pending" }
+  ]
+}
