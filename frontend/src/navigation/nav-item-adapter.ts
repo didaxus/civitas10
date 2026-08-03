@@ -11,9 +11,9 @@ export type NavigationAdapterItem = {
   path?: string;
   iconKey: IconKey;
   children?: readonly NavigationAdapterItem[];
-  status?: string;
+  contextual?: boolean;
 };
-export type ShellNavItem = { label: string; path?: string; icon: Icon; match?: (pathname: string) => boolean; level?: number; children?: ShellNavItem[]; status?: string };
+export type ShellNavItem = { label: string; path?: string; icon: Icon; match?: (pathname: string) => boolean; level?: number; children?: ShellNavItem[]; contextual?: boolean };
 const itemPath = (item: NavigationAdapterItem) => typeof item.route === "string" ? item.route : item.path;
 const resolveIcon = (item: NavigationAdapterItem) => {
   if (!assertKnownIconKey(item.iconKey)) {
@@ -29,8 +29,8 @@ export const toShellNavItems = (items: readonly NavigationAdapterItem[]): ShellN
     label: item.label,
     path,
     icon: resolveIcon(item),
-    match: (pathname) => Boolean(path) && (pathname === path || (path?.includes(":") ? false : pathname.startsWith(`${path}/`))),
+    match: item.contextual ? () => false : (pathname) => Boolean(path) && pathname === path,
     children: item.children?.length ? toShellNavItems(item.children) : undefined,
-    status: item.status,
+    contextual: item.contextual,
   };
 });

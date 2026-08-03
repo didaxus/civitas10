@@ -16,11 +16,9 @@ test("owner visual layer defines a stable shell and reusable primitives", () => 
   }
 });
 
-test("owner pages share OwnerShell instead of rendering a second topbar", () => {
-  for (const source of [overview, create, runtime, operational]) {
-    assert.match(source, /<OwnerShell/);
-    assert.doesNotMatch(source, /<Topbar/);
-  }
+test("organization child pages do not render a second shell", () => {
+  assert.doesNotMatch(operational, /<OwnerShell|<OwnerLayout|<AppShell|<nav/);
+  for (const source of [overview, create, runtime]) assert.doesNotMatch(source, /<Topbar/);
 });
 
 test("critical owner styles live in component CSS and are validated after build", () => {

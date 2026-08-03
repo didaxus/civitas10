@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 const routes = readFileSync(new URL("./routes.ts", import.meta.url), "utf8");
 const builders = readFileSync(new URL("./route-builders.ts", import.meta.url), "utf8");
 const appShell = readFileSync(new URL("../layouts/AppShell.tsx", import.meta.url), "utf8");
+const appIndex = readFileSync(new URL("../pages/App/index.tsx", import.meta.url), "utf8");
 const navAdapter = readFileSync(new URL("./nav-item-adapter.ts", import.meta.url), "utf8");
 const iconRegistry = readFileSync(new URL("./icon-registry.ts", import.meta.url), "utf8");
 const ownerLayout = readFileSync(new URL("../layouts/OwnerLayout.tsx", import.meta.url), "utf8");
@@ -29,21 +30,28 @@ test("owner topology v2 matches product-validated hierarchy", () => {
 });
 
 test("owner contextual workspace is composed into the single AppShell navigation tree", () => {
-  assert.match(materializeNavigation, /export const buildOwnerNavigationTree/);
-  assert.match(materializeNavigation, /GOVERNANCE_WORKSPACE_GROUPS/);
-  assert.doesNotMatch(materializeNavigation, /flattenGovernanceWorkspaceItems/);
-  assert.doesNotMatch(materializeNavigation, /item\.status === "active"/);
-  assert.match(materializeNavigation, /group\.id !== "operations"/);
-  assert.match(materializeNavigation, /status: item\.status/);
-  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationState/);
-  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationGovernance/);
-  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationOperations/);
-  assert.match(materializeNavigation, /isConcreteRouteParam\(organizationId\)/);
-  assert.doesNotMatch(materializeNavigation, /":organizationId"/);
-  assert.doesNotMatch(ownerLayout, /":organizationId"/);
-  assert.doesNotMatch(materializeNavigation, /localStorage|sessionStorage/);
+  assert.match(materializeNavigation, /GOVERNANCE_WORKSPACE_ITEMS/);
+  assert.match(materializeNavigation, /Back to Directory/);
+  assert.match(materializeNavigation, /appRoutes\.ownerOrganizationMembers/);
+  assert.doesNotMatch(materializeNavigation, /status|Legacy|groups-courses|identity-provisioning/);
+  assert.match(ownerLayout, /OwnerOrganizationLayout/);
+  assert.match(ownerLayout, /<Outlet \/>/);
   assert.match(ownerLayout, /getOrganizations\(\)/);
-  assert.match(ownerLayout, /ActiveOrganizationContext/);
+});
+
+test("legacy owner governance URLs redirect through canonical navigation contracts", () => {
+  assert.match(appIndex, /isConcreteRouteParam/);
+  assert.ok(appIndex.includes('const legacyOwnerGovernanceGroupsPath = `${appRoutes.ownerOrganizationState.path}/governance/groups`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernanceDataScopesPath = `${appRoutes.ownerOrganizationState.path}/governance/data-scopes`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernancePreviewPath = `${appRoutes.ownerOrganizationState.path}/governance/preview`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernanceAuditPath = `${appRoutes.ownerOrganizationState.path}/governance/audit`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernancePeopleSegmentationPath = `${appRoutes.ownerOrganizationState.path}/governance/people-segmentation`;'));
+  assert.match(appIndex, /legacyOwnerGovernanceGroupsPath[\s\S]*appRoutes\.ownerOrganizationGovernanceStructure\.build/);
+  assert.match(appIndex, /legacyOwnerGovernanceDataScopesPath[\s\S]*appRoutes\.ownerOrganizationGovernanceDataScopes\.build/);
+  assert.match(appIndex, /legacyOwnerGovernancePreviewPath[\s\S]*appRoutes\.ownerOrganizationGovernancePreview\.build/);
+  assert.match(appIndex, /legacyOwnerGovernanceAuditPath[\s\S]*appRoutes\.ownerOrganizationGovernanceAudit\.build/);
+  assert.match(appIndex, /legacyOwnerGovernancePeopleSegmentationPath[\s\S]*appRoutes\.ownerOrganizationGovernancePeopleSegmentation\.build/);
+  assert.doesNotMatch(appIndex, /path="\/owner\/organizations\/:organizationId\/governance\/(groups|data-scopes|preview|audit|people-segmentation)"/);
 });
 
 test("settings and profile are not published when inactive", () => {

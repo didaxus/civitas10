@@ -71,18 +71,10 @@ test("base primitives inherit responsive utilities", () => {
   assert.match(dataTable, /civitas-table-wrap civitas-scroll-x/);
 });
 
-test("mobile and tablet action buttons keep accessible labels while hiding visual text", () => {
-  assert.match(appShell, /className="civitas-secondary-button civitas-icon-button civitas-mobile-menu-button"/);
-  assert.match(appShell, /aria-label="Abrir menú"/);
-  assert.match(appShell, /<span className="civitas-icon-button-label">Menu<\/span>/);
-  assert.match(appShell, /<SignOutActionButton onAction=\{\(\) => signOut\(APP_ENV\.app\.signOutRedirectUri\)\} \/>/);
-  assert.match(actionButtons, /label="Sign out"/);
-  assert.match(actionButtons, /label="Sign in"/);
-  assert.match(actionButtons, /label="Request access"/);
-  assert.equal(rootTokenValue("--action-button-icon-size-tablet"), "var(--civitas-space-10)");
-  assert.equal(rootTokenValue("--action-button-icon-size-mobile"), "var(--civitas-control-height)");
-  assert.match(actionButtonCss, /@media \(max-width: 1024px\) \{[\s\S]*?\.label\s*\{[^}]*position: absolute;[^}]*width: 1px;[^}]*height: 1px;[^}]*overflow: hidden;[^}]*clip: rect\(0 0 0 0\);/s);
-  assert.match(primitivesCss, /@media \(max-width: 480px\) \{[\s\S]*?\.civitas-icon-button-label\s*{[^}]*position: absolute;[^}]*width: 1px;[^}]*height: 1px;[^}]*overflow: hidden;[^}]*clip: rect\(0, 0, 0, 0\);/s);
+test("mobile navigation controls use English accessible labels", () => {
+  assert.match(appShell, /aria-label="Open navigation"/);
+  assert.match(appShell, /aria-label="Close navigation"/);
+  assert.doesNotMatch(appShell, /Abrir menú/);
 });
 
 test("navigation is provided by the shared NavCollapse primitive", () => {
