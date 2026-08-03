@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 const routes = readFileSync(new URL("./routes.ts", import.meta.url), "utf8");
 const builders = readFileSync(new URL("./route-builders.ts", import.meta.url), "utf8");
 const appShell = readFileSync(new URL("../layouts/AppShell.tsx", import.meta.url), "utf8");
+const appIndex = readFileSync(new URL("../pages/App/index.tsx", import.meta.url), "utf8");
 const navAdapter = readFileSync(new URL("./nav-item-adapter.ts", import.meta.url), "utf8");
 const iconRegistry = readFileSync(new URL("./icon-registry.ts", import.meta.url), "utf8");
 const ownerLayout = readFileSync(new URL("../layouts/OwnerLayout.tsx", import.meta.url), "utf8");
@@ -36,6 +37,21 @@ test("owner contextual workspace is composed into the single AppShell navigation
   assert.match(ownerLayout, /OwnerOrganizationLayout/);
   assert.match(ownerLayout, /<Outlet \/>/);
   assert.match(ownerLayout, /getOrganizations\(\)/);
+});
+
+test("legacy owner governance URLs redirect through canonical navigation contracts", () => {
+  assert.match(appIndex, /isConcreteRouteParam/);
+  assert.ok(appIndex.includes('const legacyOwnerGovernanceGroupsPath = `${appRoutes.ownerOrganizationState.path}/governance/groups`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernanceDataScopesPath = `${appRoutes.ownerOrganizationState.path}/governance/data-scopes`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernancePreviewPath = `${appRoutes.ownerOrganizationState.path}/governance/preview`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernanceAuditPath = `${appRoutes.ownerOrganizationState.path}/governance/audit`;'));
+  assert.ok(appIndex.includes('const legacyOwnerGovernancePeopleSegmentationPath = `${appRoutes.ownerOrganizationState.path}/governance/people-segmentation`;'));
+  assert.match(appIndex, /legacyOwnerGovernanceGroupsPath[\s\S]*appRoutes\.ownerOrganizationGovernanceStructure\.build/);
+  assert.match(appIndex, /legacyOwnerGovernanceDataScopesPath[\s\S]*appRoutes\.ownerOrganizationGovernanceDataScopes\.build/);
+  assert.match(appIndex, /legacyOwnerGovernancePreviewPath[\s\S]*appRoutes\.ownerOrganizationGovernancePreview\.build/);
+  assert.match(appIndex, /legacyOwnerGovernanceAuditPath[\s\S]*appRoutes\.ownerOrganizationGovernanceAudit\.build/);
+  assert.match(appIndex, /legacyOwnerGovernancePeopleSegmentationPath[\s\S]*appRoutes\.ownerOrganizationGovernancePeopleSegmentation\.build/);
+  assert.doesNotMatch(appIndex, /path="\/owner\/organizations\/:organizationId\/governance\/(groups|data-scopes|preview|audit|people-segmentation)"/);
 });
 
 test("settings and profile are not published when inactive", () => {
