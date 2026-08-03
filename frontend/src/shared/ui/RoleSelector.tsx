@@ -1,7 +1,6 @@
 export type RoleSelectorOption = {
   canonicalRoleId: string;
   alias?: string;
-  status?: string;
   disabled?: boolean;
 };
 
@@ -24,9 +23,8 @@ export const RoleSelector = ({
     <span className="civitas-form-field-label">{label}</span>
     <select id={id} className="civitas-field" value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)}>
       {roles.map((role) => {
-        const label = role.alias || role.status || role.canonicalRoleId;
-        const technicalDetails = [role.canonicalRoleId, role.status].filter(Boolean).join(" · ");
-        return <option key={role.canonicalRoleId} value={role.canonicalRoleId} disabled={role.disabled} title={technicalDetails}>{label}</option>;
+        const label = role.alias || "Organization role";
+        return <option key={role.canonicalRoleId} value={role.canonicalRoleId} disabled={role.disabled}>{label}</option>;
       })}
     </select>
   </label>

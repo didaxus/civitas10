@@ -19,9 +19,17 @@ export { WorkspaceShell, type WorkspaceNavigationGroup, type WorkspaceNavigation
 export { OrganizationContextHeader } from "./OrganizationContextHeader";
 export { GovernanceSectionNav, type GovernanceSectionNavGroup } from "./GovernanceSectionNav";
 export { RoleSelector, type RoleSelectorOption } from "./RoleSelector";
+export { Switch, type SwitchProps } from "./Switch";
+export { Popover } from "./Popover";
+export { UnavailableSwitch } from "./UnavailableSwitch";
+export { PermissionGrid } from "./PermissionGrid";
+export { PendingChangesBar, type PendingChangesState } from "./PendingChangesBar";
 export { PermissionGroupAccordion, type PermissionToggleRow } from "./PermissionGroupAccordion";
 export { FilterBar } from "./FilterBar";
 export { SplitView } from "./SplitView";
 export { MetricStrip, type MetricStripItem } from "./MetricStrip";
 export { DecisionState, type DecisionStateKind } from "./DecisionState";
 export { EntityWorkspace, SettingsWorkbench, MasterDetail, GroupedToggleList, HierarchyWorkbench, FilterToolbar, FormDrawer, ResponsiveDataView } from "./patterns";
+
+// Componentes especializados
+export { DisabledActionHint, useDisabledActionHint, type DisabledActionHintProps } from "./components/DisabledActionHint";
