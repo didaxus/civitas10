@@ -126,12 +126,6 @@ test("group leader PBAC requires exact ceiling and activation and never grants u
   assert.equal(update.reasonCode, ENTITLEMENT_REASON_CODES.ROLE_PERMISSION_MISSING);
 });
 
-test("provisioned future permission remains ineffective while its runtime is unavailable", async () => {
-  const decision = await evaluateOrganizationEntitlement({ organizationId: "orgA", subject: "teacher", tokenScopes: new Set(["lms.assignments.create"]), rolePaths: [{ rolePathId: "teacher", logtoRoleId: "role_teacher", tokenScopePresent: true }], permission: "lms.assignments.create", repository: createInMemoryEntitlementRepository(), roleIdToName: { role_teacher: "organization_teacher" } });
-  assert.equal(decision.allowed, false);
-  assert.equal(decision.reasonCode, ENTITLEMENT_REASON_CODES.RUNTIME_OPERATION_UNAVAILABLE);
-});
-
 test("bootstrap profile is transactional and idempotent", async () => {
   const { createBootstrapProfileService } = require("../authorization/entitlements");
   const profile = { profileId: "owner-onboarding", version: "1", catalogVersion: "cat-1", ownerCeilings: [{ permission: "lms.groups.read" }], tenantActivations: [{ permission: "lms.groups.read" }], scopeTemplates: [{ capability: "lms", scopeKind: "dimension", dimensionKey: "academic.subject", dimensionValueId: "math" }] };

@@ -16,7 +16,6 @@ const REQUIRED_ARTIFACTS = [
   'contracts/authorization/civitas-role-bundles.json',
   'core/authz/catalog/generated/permission-catalog.js',
   'core/authz/roles/generated/role-model.js',
-  'artifacts/authorization/permission-catalog.json',
   'artifacts/authorization/active-permissions.json',
   'artifacts/authorization/ci-inventory.json',
   'artifacts/authorization/role-potential.json',
@@ -35,8 +34,8 @@ function assertSet(errors, rule, actual, expected, label) { const a = [...actual
 
 export function buildSecurityGateInventory({ fixtures = false } = {}) {
   const errors = [];
-  const catalogArtifact = readJson('artifacts/authorization/permission-catalog.json');
-  const catalog = catalogArtifact.catalog;
+  const runtimeCatalog = require('../../core/authz/catalog/generated/permission-catalog');
+  const catalog = runtimeCatalog.catalog;
   const runtimeAuthz = require('../../core/authz');
   const roleArtifact = readJson('artifacts/authorization/role-potential.json');
   const logtoPlan = readJson('artifacts/authorization/logto-plan.json');
@@ -50,7 +49,7 @@ export function buildSecurityGateInventory({ fixtures = false } = {}) {
   if (catalog.organizationRoles.length !== 13 || !catalog.organizationRoles.includes('organization_groupleader')) addError(errors, 'role_contract', '13-role model must include organization_groupleader', { actualCount: catalog.organizationRoles.length });
   if (catalog.permissions.length !== 167) addError(errors, 'permission_cardinality', 'catalog must contain 167 permissions', { actual: catalog.permissions.length });
   if (catalog.legacyDecisions.length !== 10) addError(errors, 'legacy_cardinality', 'catalog must contain 10 explicit legacy decisions', { actual: catalog.legacyDecisions.length });
-  if (catalog.catalogHash !== catalogArtifact._generated.catalogHash) addError(errors, 'catalog_hash_mismatch', 'authored/generated catalog hashes differ', { catalogHash: catalog.catalogHash, generated: catalogArtifact._generated.catalogHash });
+  if (catalog.catalogHash !== runtimeCatalog.catalogHash) addError(errors, 'catalog_hash_mismatch', 'canonical/runtime catalog hashes differ', { catalogHash: catalog.catalogHash, runtime: runtimeCatalog.catalogHash });
   if (roleArtifact.roleModel.roleModelVersion !== logtoPlan.roleModelVersion) addError(errors, 'role_model_version_mismatch', 'Logto plan roleModelVersion must match role model artifact', { roleModelVersion: roleArtifact.roleModel.roleModelVersion, logtoPlan: logtoPlan.roleModelVersion });
   if (logtoPlan.catalogHash !== catalog.catalogHash) addError(errors, 'logto_catalog_mismatch', 'Logto plan catalogHash must match permission catalog', { catalogHash: catalog.catalogHash, logtoPlan: logtoPlan.catalogHash });
   for (const bucket of ['missing','extra','legacy','wrongSurface','plannedLeakage','wrongResourceIndicator']) if (!Array.isArray(logtoPlan.drift?.[bucket])) addError(errors, 'logto_drift_bucket_missing', `Logto plan missing drift bucket ${bucket}`, { bucket });

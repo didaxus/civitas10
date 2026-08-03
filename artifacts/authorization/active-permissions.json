@@ -3,9 +3,9 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "9b3b1f3c13924982b9355d3554a7fc1f9945a3045ef686ffb232c95346269838"
+    "catalogHash": "9be0364251d1f889c735b6aea5a96a04cd61d95c6dbde45bd37d76f33eb306a2"
   },
-  "catalogHash": "9b3b1f3c13924982b9355d3554a7fc1f9945a3045ef686ffb232c95346269838",
+  "catalogHash": "9be0364251d1f889c735b6aea5a96a04cd61d95c6dbde45bd37d76f33eb306a2",
   "activePermissions": [
     {
       "name": "lms.course_offerings.read",
@@ -31,13 +31,15 @@
       ],
       "presentation": {
         "label": "View course offerings",
-        "description": "View organization course offerings.",
+        "description": "View available course offerings.",
         "groupKey": "learning",
         "groupLabel": "Learning",
         "groupOrder": 20,
-        "order": 80
+        "order": 30
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.group_members.read",
@@ -63,13 +65,15 @@
       ],
       "presentation": {
         "label": "View group members",
-        "description": "View organization group members.",
+        "description": "View members assigned to learning groups.",
         "groupKey": "learning",
         "groupLabel": "Learning",
         "groupOrder": 20,
-        "order": 140
+        "order": 20
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.groups.read",
@@ -94,14 +98,16 @@
         "backend/test/permission-catalog-contract.test.js"
       ],
       "presentation": {
-        "label": "View groups",
-        "description": "View organization groups.",
+        "label": "View learning groups",
+        "description": "View learning groups.",
         "groupKey": "learning",
         "groupLabel": "Learning",
         "groupOrder": 20,
-        "order": 160
+        "order": 10
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "org.documents.create",
@@ -131,9 +137,11 @@
         "groupKey": "organization",
         "groupLabel": "Organization",
         "groupOrder": 10,
-        "order": 30
+        "order": 20
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "org.documents.read",
@@ -163,9 +171,11 @@
         "groupKey": "organization",
         "groupLabel": "Organization",
         "groupOrder": 10,
-        "order": 50
+        "order": 10
       },
-      "identityProvisioning": "provisionable"
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     }
   ]
 }

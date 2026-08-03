@@ -23,7 +23,6 @@ const runtime = `${jsHeader}'use strict'\n\nconst generated = Object.freeze(${JS
 const json = (body) => JSON.stringify({ _generated: metadata, ...body }, null, 2) + '\n'
 const outputs = {
   'core/authz/catalog/generated/permission-catalog.js': runtime,
-  'artifacts/authorization/permission-catalog.json': json({ catalog: normalized }),
   'artifacts/authorization/active-permissions.json': json({ catalogHash: hash, activePermissions }),
   'artifacts/authorization/ci-inventory.json': json({ catalogHash: hash, contractVersion: normalized.contractVersion, roleModelVersion: normalized.reconciliation.roleModelVersion, contractVersionRecorded: normalized.reconciliation.contractVersion, counts: { permissions: normalized.permissions.length, namespaces: normalized.phase3Namespaces.length, organizationRoles: normalized.organizationRoles.length, legacyDecisions: normalized.legacyDecisions.length, legacyBaselineObserved: normalized.legacyBaselineObserved.length, activePermissions: activePermissions.length }, baseRef: normalized.reconciliation.baseRef, baseSha: normalized.reconciliation.baseSha, catalogSourceSha: normalized.reconciliation.catalogSourceSha, mergeBase: normalized.reconciliation.mergeBase })
 }
