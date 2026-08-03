@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useLogto } from "@logto/react";
 import type { Icon } from "@tabler/icons-react";
 import {
-  IconArrowLeft,
   IconMenu2,
 } from "@tabler/icons-react";
 import civitasLogoFullDark from "../assets/brand/civitas-logo-full-dark.svg";
@@ -23,13 +22,13 @@ type AppShellProps = {
   children: ReactNode;
   navItems?: NavItem[];
   organizationId?: string;
-  showBackButton?: boolean;
+  organizationName?: string | null;
   actions?: ReactNode;
 };
 
 const areaLabel: Record<ShellArea, string> = {
   public: "Public visitor",
-  owner: "Owner global",
+  owner: "Core Manager",
   "organization-admin": "Organization admin",
   "organization-member": "Organization member",
 };
@@ -42,12 +41,11 @@ const resolveNavItems = (area: ShellArea, organizationId?: string, navItems?: Na
     path: undefined,
     icon: IconMenu2,
     match: () => false,
-    children: organizationId ? [{ label: `Context: ${organizationId}`, icon: IconMenu2 }] : undefined,
+    children: organizationId ? [{ label: "Organization context", icon: IconMenu2 }] : undefined,
   }];
 };
 
-export const AppShell = ({ area, children, navItems, organizationId, showBackButton = false, actions }: AppShellProps) => {
-  const navigate = useNavigate();
+export const AppShell = ({ area, children, navItems, organizationId, organizationName, actions }: AppShellProps) => {
   const { signOut } = useLogto();
   const isMobile = useBreakpoint("md");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -76,12 +74,13 @@ export const AppShell = ({ area, children, navItems, organizationId, showBackBut
       data-civitas-sidebar-mobile-open={mobileOpen}
       data-civitas-sidebar-mobile-state={mobileState}
     >
-      {isMobile && mobileOpen ? <button type="button" className="civitas-sidebar-backdrop" aria-label="Close Civitas navigation" onClick={() => setMobileOpen(false)} /> : null}
+      {isMobile && mobileOpen ? <button type="button" className="civitas-sidebar-backdrop" aria-label="Close navigation" onClick={() => setMobileOpen(false)} /> : null}
       <aside className="civitas-sidebar" aria-label={`${areaLabel[area]} sidebar`} data-mobile-open={mobileOpen}>
         <div className="civitas-sidebar-header civitas-sidebar-brand-row">
           <Link to={homePath} className="civitas-sidebar-brand" aria-label="Civitas home">
             <img src={civitasLogoFullDark} alt="Civitas" className="civitas-brand-logo" />
           </Link>
+          {area === "owner" && organizationId ? <span className="text-xs font-semibold uppercase tracking-wide">Core Manager</span> : null}
         </div>
         {resolvedNavItems[0]?.label === "Resolved navigation is required" ? <div className="civitas-nav-link" data-navigation-contract="navigation-required-but-empty">Resolved navigation is required for this shell area.</div> : <NavCollapse items={resolvedNavItems} label={areaLabel[area]} onNavigate={() => setMobileOpen(false)} />}
       </aside>
@@ -89,10 +88,9 @@ export const AppShell = ({ area, children, navItems, organizationId, showBackBut
         <header className="civitas-topbar">
           <div className="civitas-topbar-inner">
             <div className="civitas-topbar-left civitas-cluster">
-              {isMobile ? <button type="button" className="civitas-secondary-button civitas-icon-button civitas-mobile-menu-button" aria-label="Abrir menú" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><IconMenu2 size={18} /><span className="civitas-icon-button-label">Menu</span></button> : null}
-              {showBackButton ? <button type="button" onClick={() => navigate(-1)} className="civitas-secondary-button"><IconArrowLeft size={18} />Back</button> : null}
+              {isMobile ? <button type="button" className="civitas-secondary-button civitas-icon-button civitas-mobile-menu-button" aria-label="Open navigation" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><IconMenu2 size={18} /><span className="civitas-icon-button-label">Menu</span></button> : null}
               <span className="civitas-role-badge">{areaLabel[area]}</span>
-              {organizationId ? <span className="civitas-context-badge">{organizationId}</span> : null}
+              {organizationId ? <span className="civitas-context-badge">{organizationName || "Organization"}</span> : null}
             </div>
             <div className="civitas-topbar-right">{actions ?? (area === "public" ? null : <SignOutActionButton onAction={() => signOut(APP_ENV.app.signOutRedirectUri)} />)}</div>
           </div>

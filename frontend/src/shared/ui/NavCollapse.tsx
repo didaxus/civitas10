@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router";
 import type { Icon } from "@tabler/icons-react";
 import { IconChevronRight } from "@tabler/icons-react";
-import { StatusPill, type StatusPillStatus } from "./StatusPill";
 
 const NAV_TREE_STORAGE_KEY = "civitas:nav-tree-expanded";
 
@@ -13,8 +12,6 @@ export type NavCollapseItem = {
   match?: (pathname: string) => boolean;
   level?: number;
   children?: NavCollapseItem[];
-  status?: string;
-  statusTone?: StatusPillStatus;
 };
 
 const itemKey = (item: NavCollapseItem) => `${item.label}-${item.path || "group"}`;
@@ -63,12 +60,10 @@ export const NavCollapse = ({ items, label, onNavigate }: { items: NavCollapseIt
   const renderLink = (item: NavCollapseItem, depth = 0) => {
     const active = itemCanBeSelfActive(item, location.pathname);
     const Icon = item.icon;
-    const informativeStatus = item.status && ["planned", "not_configured", "stopped"].includes(item.status.toLowerCase());
     return (
       <Link key={itemKey(item)} to={item.path || "#"} onClick={onNavigate} aria-current={active ? "page" : undefined} className={`civitas-nav-link ${active ? "civitas-nav-link-active" : ""}`} data-depth={depth} data-active={active} data-has-children="false">
         {Icon ? <Icon className="civitas-nav-link-icon" aria-hidden="true" /> : null}
         <span className="civitas-nav-link-label">{item.label}</span>
-        {item.status ? informativeStatus ? <StatusPill status={item.statusTone || "neutral"} noDot>{item.status}</StatusPill> : <><span className="civitas-status-dot" data-status={item.statusTone || "neutral"} aria-hidden="true" /><span className="sr-only">{item.status}</span></> : null}
       </Link>
     );
   };
