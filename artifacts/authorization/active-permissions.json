@@ -3,9 +3,9 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "77b16b310a63dd13f4d688d4ba77bae724e27bbb7637edbc8ce6ff0ce98c36a1"
+    "catalogHash": "9be0364251d1f889c735b6aea5a96a04cd61d95c6dbde45bd37d76f33eb306a2"
   },
-  "catalogHash": "77b16b310a63dd13f4d688d4ba77bae724e27bbb7637edbc8ce6ff0ce98c36a1",
+  "catalogHash": "9be0364251d1f889c735b6aea5a96a04cd61d95c6dbde45bd37d76f33eb306a2",
   "activePermissions": [
     {
       "name": "lms.course_offerings.read",
@@ -36,7 +36,10 @@
         "groupLabel": "Learning",
         "groupOrder": 20,
         "order": 30
-      }
+      },
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.group_members.read",
@@ -67,7 +70,10 @@
         "groupLabel": "Learning",
         "groupOrder": 20,
         "order": 20
-      }
+      },
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "lms.groups.read",
@@ -98,7 +104,10 @@
         "groupLabel": "Learning",
         "groupOrder": 20,
         "order": 10
-      }
+      },
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "org.documents.create",
@@ -129,7 +138,10 @@
         "groupLabel": "Organization",
         "groupOrder": 10,
         "order": 20
-      }
+      },
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     },
     {
       "name": "org.documents.read",
@@ -160,7 +172,10 @@
         "groupLabel": "Organization",
         "groupOrder": 10,
         "order": 10
-      }
+      },
+      "identityProvisioningStatus": "provisioned",
+      "runtimeAvailability": "available",
+      "catalogStatus": "active"
     }
   ]
 }
