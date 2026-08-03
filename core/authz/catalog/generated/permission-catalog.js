@@ -9,7 +9,7 @@ const generated = Object.freeze({
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
+    "catalogHash": "77b16b310a63dd13f4d688d4ba77bae724e27bbb7637edbc8ce6ff0ce98c36a1"
   },
   "catalog": {
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
@@ -696,7 +696,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/lmsGroupLeadership.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View course offerings",
+          "description": "View available course offerings.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 30
+        }
       },
       {
         "name": "lms.course_offerings.read.extra",
@@ -809,7 +817,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/lmsGroupLeadership.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View group members",
+          "description": "View members assigned to learning groups.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 20
+        }
       },
       {
         "name": "lms.groups.manage",
@@ -847,7 +863,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/lmsGroupLeadership.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View learning groups",
+          "description": "View learning groups.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 10
+        }
       },
       {
         "name": "lms.outcomes.export",
@@ -1095,7 +1119,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/guards.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "Create documents",
+          "description": "Create organization documents.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 20
+        }
       },
       {
         "name": "org.documents.manage",
@@ -1133,7 +1165,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/guards.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View documents",
+          "description": "View organization documents.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 10
+        }
       },
       {
         "name": "org.enrollments.delete",
@@ -2804,7 +2844,7 @@ const generated = Object.freeze({
       "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
       "contractVersion": "2026-07-civitas-permission-catalog-v1",
       "baselineAudit": "#167 observed legacy baseline; target is canonical Phase 3 contract",
-      "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
+      "catalogHash": "77b16b310a63dd13f4d688d4ba77bae724e27bbb7637edbc8ce6ff0ce98c36a1"
     },
     "legacyBaselineObserved": [
       {
@@ -3055,7 +3095,7 @@ const generated = Object.freeze({
         "reason": "Governance IDs are blocked pending explicit namespace decision; consumers must not infer target permissions."
       }
     ],
-    "catalogHash": "46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799"
+    "catalogHash": "77b16b310a63dd13f4d688d4ba77bae724e27bbb7637edbc8ce6ff0ce98c36a1"
   },
   "activePermissions": [
     {
@@ -3079,7 +3119,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View course offerings",
+        "description": "View available course offerings.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 30
+      }
     },
     {
       "name": "lms.group_members.read",
@@ -3102,7 +3150,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View group members",
+        "description": "View members assigned to learning groups.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 20
+      }
     },
     {
       "name": "lms.groups.read",
@@ -3125,7 +3181,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View learning groups",
+        "description": "View learning groups.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 10
+      }
     },
     {
       "name": "org.documents.create",
@@ -3148,7 +3212,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "Create documents",
+        "description": "Create organization documents.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 20
+      }
     },
     {
       "name": "org.documents.read",
@@ -3171,7 +3243,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View documents",
+        "description": "View organization documents.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 10
+      }
     }
   ]
 })
@@ -3179,4 +3259,4 @@ const catalog = Object.freeze(generated.catalog)
 const permissions = Object.freeze(catalog.permissions.map(Object.freeze))
 const activePermissions = Object.freeze(generated.activePermissions.map(Object.freeze))
 const permissionsByName = Object.freeze(Object.fromEntries(permissions.map((permission) => [permission.name, permission])))
-module.exports = { generated, catalog, catalogHash: '46e38d0b670fc442014fa010ba8f85df64b9c863f47b00b9117fbbfb6a190799', permissions, activePermissions, permissionsByName }
+module.exports = { generated, catalog, catalogHash: '77b16b310a63dd13f4d688d4ba77bae724e27bbb7637edbc8ce6ff0ce98c36a1', permissions, activePermissions, permissionsByName }

@@ -60,8 +60,8 @@ test("tenant activation cannot exceed Owner ceiling and locked ceilings block te
   await assert.rejects(() => service.upsertTenantActivations({ organizationId: "orgA", expectedPolicyVersion: 2, actorLogtoUserId: "admin", changes: [{ logtoRoleId: "organization_admin", permission: "org.documents.create", enabled: true }] }), /tenant_activation_exceeds_owner_ceiling/);
   await service.upsertOwnerLimits({ organizationId: "orgA", expectedPolicyVersion: 2, actorLogtoUserId: "owner", changes: [{ logtoRoleId: "organization_admin", permission: "org.documents.create", allowed: true, locked: true }] });
   await assert.rejects(() => service.upsertTenantActivations({ organizationId: "orgA", expectedPolicyVersion: 3, actorLogtoUserId: "admin", changes: [{ logtoRoleId: "organization_admin", permission: "org.documents.create", enabled: false }] }), /tenant_activation_locked/);
-  assert.ok(events.some((event) => event.type === "outbox"));
-  assert.ok(events.some((event) => event.type === "audit"));
+  assert.ok(repository.outbox.length > 0);
+  assert.ok(repository.audits.length > 0);
 });
 
 test("Owner revocation immediately disables activation without token refresh", async () => {

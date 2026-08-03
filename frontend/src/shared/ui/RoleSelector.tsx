@@ -1,7 +1,6 @@
 export type RoleSelectorOption = {
   canonicalRoleId: string;
   alias?: string;
-  status?: string;
   disabled?: boolean;
 };
 

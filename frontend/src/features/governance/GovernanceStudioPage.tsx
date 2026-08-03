@@ -52,7 +52,7 @@ export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }
   };
   const moduleKey = item.moduleKey as GovernanceModuleKey | "unavailable";
   let content;
-  if (moduleKey === "permissions") content = <PermissionMatrixModule organizationId={organizationId} rows={model.permissionMatrix} roles={model.roles || []} surface={surface} versions={model.versions} onSaveOwnerCeilings={async (input) => { await api.updateOwnerCeilings(organizationId, input); await refresh(); }} onSaveTenantActivations={async (input) => { await api.updateTenantActivations(organizationId, input); await refresh(); }} />;
+  if (moduleKey === "permissions") content = <PermissionMatrixModule organizationId={organizationId} rows={model.permissionMatrix} roles={model.roles || []} surface={surface} versions={model.versions} onSaveOwnerCeilings={async (input) => { await api.updateOwnerCeilings(organizationId, input); await refresh(); }} onSaveTenantActivations={async (input) => { await api.updateTenantActivations(organizationId, input); await refresh(); }} onReload={refresh} />;
   else if (moduleKey === "aliases-navigation") content = <AliasesNavigationModule roles={model.roles || []} policy={model.aliasesNavigation} surface={surface} />;
   else if (moduleKey === "data-scope") content = <DataScopeModule assignments={model.dataScopes} roles={model.roles || []} />;
   else if (moduleKey === "taxonomy") content = <UnitsModule units={model.units} taxonomy={model.taxonomy} surface={surface} />;

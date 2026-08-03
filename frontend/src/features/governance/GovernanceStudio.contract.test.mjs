@@ -115,36 +115,28 @@ test("role names screen is the simple alias editor", () => {
 test("role names routes retain stable destinations", () => { assert.match(routes, /access-policy\/role-names/); assert.match(workspaceContract, /Role Names/); });
 
 
-test("permission workspace uses human-readable counters and pending review", () => {
+test("permission workspace uses the backend view model and batch save", () => {
+  assert.match(matrix, /PendingChangesBar/);
   assert.match(matrix, /permissions enabled/);
-  assert.match(matrix, /pending \{pendingList\.length === 1/);
-  assert.match(matrix, /Review & Save/);
-  assert.match(matrix, /Review changes/);
-  assert.match(matrix, /Discard/);
-  assert.match(matrix, /toggleGroup\(allGrouped\.get\(domain\)/);
-  assert.doesNotMatch(matrix, /unsaved changes|Owner Ceiling policy|Tenant Activation policy/);
-});
-
-test("permission group primitive uses three columns and contextual availability", () => {
-  const primitive = readFileSync(new URL("../../shared/ui/PermissionGroupAccordion.tsx", import.meta.url), "utf8");
-  assert.match(primitive, /aria-expanded=\{expanded\}/);
-  assert.match(primitive, /<span>Permission<\/span><span>Description<\/span><span>Control<\/span>/);
-  assert.match(primitive, /Why unavailable\?/);
-  assert.match(primitive, /Enable all permissions in this group/);
-  assert.match(primitive, /of \{totalCount\} enabled/);
-  assert.doesNotMatch(primitive, /Availability<|permissionId\} ·|title=\{row\.permissionId/);
-});
-
-test("role permissions editor preserves authorization contracts without exposing them", () => {
-  assert.match(matrix, /RoleSelector/);
-  assert.match(matrix, /PermissionGroupAccordion/);
   assert.match(matrix, /expectedPolicyVersion/);
-  assert.match(matrix, /onSaveOwnerCeilings/);
-  assert.match(matrix, /onSaveTenantActivations/);
-  assert.match(matrix, /Contact support to make this capability available for your organization/);
-  assert.match(api, /updateOwnerCeilings/);
-  assert.match(api, /updateTenantActivations/);
-  assert.doesNotMatch(matrix, /permission IDs|action IDs|namespace|backend code|canonical role|Owner Ceiling policy|Tenant Activation policy/);
+  assert.match(matrix, /status===409|status === 409/);
+  assert.match(matrix, /beforeunload/);
+  assert.doesNotMatch(matrix, /Review & Save|split\(\"\.\"\)|actionNames|resourceNames/);
+});
+
+test("permission groups compose shared grid and switches", () => {
+  const primitive = readFileSync(new URL("../../shared/ui/PermissionGroupAccordion.tsx", import.meta.url), "utf8");
+  assert.match(primitive, /PermissionGrid/); assert.match(primitive, /Switch/); assert.match(primitive, /UnavailableSwitch/);
+  assert.match(primitive, /activeCount\} \/ \{totalCount/);
+  assert.doesNotMatch(primitive, /checkbox|gridTemplateColumns|Why unavailable|None enabled|Some enabled|All enabled|Enable all permissions/);
+});
+
+test("role permissions editor does not reconstruct authorization", () => {
+  const adapter = readFileSync(new URL("./modules/permission-matrix/permission-policy-view-model.ts", import.meta.url), "utf8");
+  assert.match(adapter, /row\.label/); assert.match(adapter, /row\.description/); assert.match(adapter, /row\.groupLabel/); assert.match(adapter, /row\.canChange/);
+  assert.doesNotMatch(adapter, /split\(|canonical|rolePotential|ownerAllowed|reasonCode/);
+  assert.doesNotMatch(matrix, /rolePotential|ownerAllowed|reason\.code|permissionId as fallback/);
+  assert.match(api, /updateOwnerCeilings/); assert.match(api, /updateTenantActivations/);
 });
 
 test("role permissions routes distinguish owner ceilings from tenant activations", () => {

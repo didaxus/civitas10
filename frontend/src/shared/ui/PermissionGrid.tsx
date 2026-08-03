@@ -1,0 +1,2 @@
+import type { ReactNode } from "react";
+export const PermissionGrid = ({ permission, description, control, header = false }: { permission: ReactNode; description: ReactNode; control: ReactNode; header?: boolean }) => <div className={`civitas-permission-grid ${header ? "text-xs font-semibold uppercase tracking-wide text-muted" : "civitas-list-row"}`}><span>{permission}</span><span className="civitas-permission-description">{description}</span><span className="civitas-permission-control">{control}</span></div>;

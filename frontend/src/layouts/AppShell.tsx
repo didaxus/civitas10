@@ -89,7 +89,7 @@ export const AppShell = ({ area, children, navItems, organizationId, organizatio
           <div className="civitas-topbar-inner">
             <div className="civitas-topbar-left civitas-cluster">
               {isMobile ? <button type="button" className="civitas-secondary-button civitas-icon-button civitas-mobile-menu-button" aria-label="Open navigation" aria-expanded={mobileOpen} onClick={() => setMobileOpen(true)}><IconMenu2 size={18} /><span className="civitas-icon-button-label">Menu</span></button> : null}
-              <span className="civitas-role-badge">{areaLabel[area]}</span>
+              <span className="civitas-role-badge">{area === "owner" ? "OWNER GLOBAL" : areaLabel[area]}</span>
               {organizationId ? <span className="civitas-context-badge">{organizationName || "Organization"}</span> : null}
             </div>
             <div className="civitas-topbar-right">{actions ?? (area === "public" ? null : <SignOutActionButton onAction={() => signOut(APP_ENV.app.signOutRedirectUri)} />)}</div>
