@@ -1081,3 +1081,11 @@ textarea.owner-field {
 .civitas-permission-control { justify-self: end; position: relative; }
 .civitas-pending-changes { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--civitas-pending-changes-gap); }
 @media (max-width: 768px) { .civitas-permission-grid { grid-template-columns: minmax(0, 1fr) var(--civitas-permission-control-width); gap: var(--civitas-space-2); } .civitas-permission-description { grid-column: 1 / -1; } }
+
+.civitas-permission-group.civitas-card-flush {
+  overflow: visible;
+}
+
+.civitas-permission-group .civitas-list-stack {
+  overflow: visible;
+}

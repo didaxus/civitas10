@@ -9,8 +9,8 @@ export const governancePatternFixture = {
     { canonicalRoleId: "organization_groupleader", alias: "Group Director" },
   ] satisfies RoleSelectorOption[],
   permissions: [
-    { permissionId: "lms.groups.read", label: "Read groups", description: "View organization members.", checked: true, canChange: true },
-    { permissionId: "lms.group_members.read", label: "View group members", description: "View members assigned to learning groups.", checked: false, canChange: false },
+    { permissionId: "lms.groups.read", label: "Read groups", description: "View organization members.", checked: true, canChange: true, controlState: "editable", unavailableMessage: "" },
+    { permissionId: "lms.group_members.read", label: "View group members", description: "View members assigned to learning groups.", checked: false, canChange: false, controlState: "blocked_by_owner", unavailableMessage: "Contact support to make this capability available for your organization." },
   ] satisfies PermissionToggleRow[],
   metrics: [
     { label: "Active permissions", value: "2 of 3", detail: "One tenant activation missing" },

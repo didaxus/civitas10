@@ -117,7 +117,7 @@ test("role names routes retain stable destinations", () => { assert.match(routes
 
 test("permission workspace uses the backend view model and batch save", () => {
   assert.match(matrix, /PendingChangesBar/);
-  assert.match(matrix, /permissions enabled/);
+  assert.match(matrix, /permissions \{countNoun\}/); assert.match(matrix, /authorized/); assert.match(matrix, /enabled/);
   assert.match(matrix, /expectedPolicyVersion/);
   assert.match(matrix, /status===409|status === 409/);
   assert.match(matrix, /beforeunload/);

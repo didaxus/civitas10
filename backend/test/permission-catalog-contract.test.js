@@ -52,6 +52,24 @@ test('catalog IDs, lifecycle and activation evidence are enforced in generated m
   for (const permission of generated.activePermissions) assert.equal(permission.targetStatus, 'active')
 })
 
+
+test('organization permissions expose complete canonical presentation metadata', () => {
+  const byGroup = new Map();
+  for (const permission of generated.permissions.filter((item) => item.surface === 'organization')) {
+    const presentation = permission.presentation;
+    assert.ok(presentation, `${permission.name} presentation`);
+    for (const key of ['label', 'description', 'groupKey', 'groupLabel']) assert.equal(typeof presentation[key], 'string', `${permission.name}:${key}`);
+    for (const key of ['groupOrder', 'order']) assert.equal(typeof presentation[key], 'number', `${permission.name}:${key}`);
+    assert.equal(presentation.label.includes(permission.name), false, `${permission.name} label must not expose technical ID`);
+    assert.equal(presentation.groupLabel.includes('.'), false, `${permission.name} group label must be product copy`);
+    const key = presentation.groupKey;
+    const previous = byGroup.get(key) || [];
+    previous.push(presentation.order);
+    byGroup.set(key, previous);
+  }
+  for (const [groupKey, orders] of byGroup.entries()) assert.deepEqual([...orders].sort((a, b) => a - b), orders, `${groupKey} ordering is deterministic`);
+});
+
 test('legacy decisions are explicit and ambiguous observed IDs remain blocked or not incorporated', () => {
   for (const decision of generated.catalog.legacyDecisions) {
     for (const key of ['legacyId','decision','owner','surface','targetStatus','compatibilityWindow','rollbackId','consumerEvidence','reason']) assert.ok(key in decision, `${decision.legacyId}:${key}`)
@@ -109,3 +127,10 @@ test('organization role assignments never contain owner permissions', () => {
     for (const permission of permissions) assert.equal(permission.startsWith('owner.'), false, `${role}:${permission}`)
   }
 })
+
+test('governance read model does not derive presentation from permission IDs', () => {
+  const source = fs.readFileSync('backend/services/governanceRolesReadModel.js', 'utf8');
+  assert.doesNotMatch(source, /function presentationFor|split\("\."\)|Allows .* access for|replace\(\/\[-_\]\/g/);
+  assert.match(source, /requirePresentation/);
+  assert.match(source, /permission\?\.presentation/);
+});

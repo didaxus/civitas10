@@ -188,6 +188,42 @@
           },
           "rollbackId": {
             "type": "string"
+          },
+          "presentation": {
+            "type": "object",
+            "required": [
+              "label",
+              "description",
+              "groupKey",
+              "groupLabel",
+              "groupOrder",
+              "order"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "groupKey": {
+                "type": "string",
+                "minLength": 1
+              },
+              "groupLabel": {
+                "type": "string",
+                "minLength": 1
+              },
+              "groupOrder": {
+                "type": "number"
+              },
+              "order": {
+                "type": "number"
+              }
+            }
           }
         }
       }
