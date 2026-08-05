@@ -1,0 +1,5 @@
+{
+  "contract": "civitas.organization-mapping.lifecycle-actions",
+  "version": "2026-08-civitas-organization-mapping-actions-v1",
+  "source": "core/organization-mapping/lifecycle-action-registry.cjs"
+}

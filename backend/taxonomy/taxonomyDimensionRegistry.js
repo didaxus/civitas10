@@ -8,10 +8,13 @@ const REGISTRY_PATH = path.resolve(__dirname, "../../contracts/authorization/dat
 const REGISTRY_SCHEMA_PATH = path.resolve(__dirname, "../../contracts/authorization/schemas/data-scope-dimensions.schema.json");
 const DIMENSION_REGISTRY_CONTRACT = "civitas.authorization.data-scope-dimensions";
 const DIMENSION_REGISTRY_SCHEMA_VERSION = "civitas-data-scope-dimensions-schema/v1";
-const DIMENSION_REGISTRY_CONTRACT_VERSION = "civitas-data-scope-dimensions/v2";
+const DIMENSION_REGISTRY_CONTRACT_VERSION = "civitas-data-scope-dimensions/v3";
 const CANONICAL_DIMENSION_IDS = Object.freeze([
-  "academic.stage", "academic.period", "academic.subject", "academic.course", "academic.cohort", "academic.class",
-  "organization.campus", "organization.shift", "organization.department", "administration.function",
+  "academic.school_year", "academic.term", "academic.term_type", "academic.stage", "academic.grade_level", "academic.year_level",
+  "academic.faculty", "academic.department", "academic.program", "academic.program_level", "academic.credential_level", "academic.program_version",
+  "academic.modality", "academic.cohort", "academic.subject", "academic.course", "academic.class",
+  "organization.region", "organization.campus", "organization.shift", "organization.department", "organization.coordination",
+  "administration.function", "geography.administrative_area", "geography.municipality",
 ]);
 const REGISTRY_ERROR_CODES = Object.freeze({
   FILE_MISSING: "taxonomy_dimension_registry_file_missing",
@@ -61,7 +64,7 @@ function loadDimensionRegistry(file = REGISTRY_PATH) {
     fail(REGISTRY_ERROR_CODES.MALFORMED, error);
   }
   validateDimensionRegistry(registry);
-  return Object.freeze({ ...registry, dimensions: Object.freeze(registry.dimensions) });
+  return Object.freeze({ ...registry, dimensions: Object.freeze(registry.dimensions), deprecatedDimensions: Object.freeze(registry.deprecatedDimensions || []) });
 }
 
 const DIMENSION_REGISTRY = loadDimensionRegistry();

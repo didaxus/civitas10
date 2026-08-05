@@ -10,14 +10,14 @@ const generated = Object.freeze({
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
-    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b"
+    "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924",
+    "roleModelHash": "5db06f772a84bc159631eccc5535b0a065c60b022790de9a826b0245f245f30b"
   },
   "roleModel": {
     "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
-    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
-    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b",
+    "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924",
+    "roleModelHash": "5db06f772a84bc159631eccc5535b0a065c60b022790de9a826b0245f245f30b",
     "bundles": [
       {
         "key": "org_documents_reader",

@@ -1,0 +1,5 @@
+{
+  "contract": "civitas.organization-mapping.selector-registry",
+  "version": "2026-08-civitas-organization-mapping-selectors-v1",
+  "source": "core/organization-mapping/selector-registry.cjs"
+}

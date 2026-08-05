@@ -1,9 +1,9 @@
 {
   "$schema": "./schemas/data-scope-dimensions.schema.json",
   "contract": "civitas.authorization.data-scope-dimensions",
-  "version": "2026-07-civitas-data-scope-dimensions-v2",
+  "version": "2026-08-civitas-data-scope-dimensions-v3",
   "schemaVersion": "civitas-data-scope-dimensions-schema/v1",
-  "contractVersion": "civitas-data-scope-dimensions/v2",
+  "contractVersion": "civitas-data-scope-dimensions/v3",
   "status": "planned",
   "lifecycle": {
     "implementation": "planned",
@@ -16,16 +16,71 @@
     "runtimeOwner": "civitas-authorization-runtime"
   },
   "provenance": {
-    "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-    "issue": "#218",
-    "decision": "PR-A canonical contract materialization"
+    "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+    "issue": "#318",
+    "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
   },
   "dimensions": [
+    {
+      "id": "academic.school_year",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Named academic year container; not a concrete term.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.term",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Concrete dated term instance in a school year; not a term type.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.term_type",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Reusable type such as semester, trimester, quarter, summer, or intersession.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
     {
       "id": "academic.stage",
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Broad progression band, not a grade, cohort, or class.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -33,16 +88,17 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
-      "id": "academic.period",
+      "id": "academic.grade_level",
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "K-12/basic education ordinal grade level; not an assessment score.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -50,16 +106,17 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
-      "id": "academic.subject",
+      "id": "academic.year_level",
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Tertiary/post-secondary progression year; not K-12 grade level.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -67,16 +124,17 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
-      "id": "academic.course",
+      "id": "academic.faculty",
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Higher-education faculty/school/college academic unit.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -84,9 +142,117 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.department",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Academic department; distinct from organization.department.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.program",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Academic program of study.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.program_level",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Organization-defined grouping for programs such as undergraduate or graduate.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.credential_level",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Credential awarded level such as certificate, diploma, bachelor, master, doctorate.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.program_version",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Curricular/versioned instance of a program.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.modality",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Delivery modality such as in-person, online, hybrid.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
@@ -94,6 +260,7 @@
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Entry/intake group of learners; not a class section.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -101,9 +268,45 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.subject",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Subject domain such as mathematics.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "academic.course",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Catalog course offering; distinct from subject and class.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
@@ -111,6 +314,7 @@
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Scheduled/rostered class section instance.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -118,9 +322,27 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "organization.region",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Institution-defined region; not government geography.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
@@ -128,6 +350,7 @@
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Organization campus/site.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -135,9 +358,9 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
@@ -145,6 +368,7 @@
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Organization scheduling shift.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -152,9 +376,9 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
@@ -162,6 +386,7 @@
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Administrative/operational department; not academic.department.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -169,9 +394,27 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "organization.coordination",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Organization-defined coordination area.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
     },
     {
@@ -179,6 +422,7 @@
       "version": 1,
       "status": "planned",
       "tenantOwnership": "organization",
+      "semanticDefinition": "Administrative function independent of department.",
       "valueLifecycle": [
         "draft",
         "active",
@@ -186,10 +430,54 @@
         "archived"
       ],
       "provenance": {
-        "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
-        "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
       }
+    },
+    {
+      "id": "geography.administrative_area",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Government geography subdivision such as state/province.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    },
+    {
+      "id": "geography.municipality",
+      "version": 1,
+      "status": "planned",
+      "tenantOwnership": "organization",
+      "semanticDefinition": "Government municipality/locality.",
+      "valueLifecycle": [
+        "draft",
+        "active",
+        "deprecating",
+        "archived"
+      ],
+      "provenance": {
+        "authorityDocument": "docs/architecture/organization-mapping/canonical-vocabulary.md",
+        "issue": "#318",
+        "decision": "Turn 1 canonical vocabulary revision; #218 ambiguous academic.period superseded"
+      }
+    }
+  ],
+  "deprecatedDimensions": [
+    {
+      "id": "academic.period",
+      "status": "deprecated",
+      "replacement": "reconciliation_required",
+      "reason": "#218 used academic.period ambiguously for year, semester/term type, and concrete term; migration must not guess."
     }
   ]
 }

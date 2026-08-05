@@ -3,9 +3,9 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea"
+    "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924"
   },
-  "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+  "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924",
   "activePermissions": [
     {
       "name": "lms.course_offerings.read",
