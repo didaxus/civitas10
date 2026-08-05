@@ -1,0 +1,519 @@
+{
+  "schemaVersion": "2026-07-logto-authz-plan-v1",
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "contractVersion": "2026-07-civitas-authz-contract-v1",
+  "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+  "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
+  "contractHash": "3b3c350c4aa40eda71758dd0f81e5874be74b4b8ee82c99b392b6c027e49e31b",
+  "targetEnvironment": "https://auth.didaxus.com",
+  "targetIdentifier": "https://civitas.didaxus.com/api",
+  "remoteStateStatus": "verification_required",
+  "remoteFingerprint": "dbbe381a84ec360c1491857381f64859ca1b46c6c66ca6b74d583ba7a0802d03",
+  "resource": {
+    "desiredIdentifier": "https://civitas.didaxus.com/api",
+    "remoteId": null,
+    "operations": [
+      {
+        "operationId": "create-resource:https://civitas.didaxus.com/api",
+        "type": "create-resource",
+        "targetType": "resource",
+        "targetId": "https://civitas.didaxus.com/api",
+        "payload": {
+          "indicator": "https://civitas.didaxus.com/api"
+        }
+      }
+    ]
+  },
+  "permissions": {
+    "create": [
+      {
+        "operationId": "create-permission:lms.course_offerings.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "lms.course_offerings.read",
+        "payload": {
+          "name": "lms.course_offerings.read",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:lms.group_members.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "lms.group_members.read",
+        "payload": {
+          "name": "lms.group_members.read",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:lms.groups.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "lms.groups.read",
+        "payload": {
+          "name": "lms.groups.read",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:org.documents.create",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "org.documents.create",
+        "payload": {
+          "name": "org.documents.create",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:org.documents.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "org.documents.read",
+        "payload": {
+          "name": "org.documents.read",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:org.role_aliases.manage",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "org.role_aliases.manage",
+        "payload": {
+          "name": "org.role_aliases.manage",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.organizations.create",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.organizations.create",
+        "payload": {
+          "name": "owner.organizations.create",
+          "description": "Create a tenant organization from the owner console.",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.organizations.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.organizations.read",
+        "payload": {
+          "name": "owner.organizations.read",
+          "description": "Read owner organization inventory and organization template data.",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.profile.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.profile.read",
+        "payload": {
+          "name": "owner.profile.read",
+          "description": "Read current owner identity and authorization context.",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.role_labels.manage",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.role_labels.manage",
+        "payload": {
+          "name": "owner.role_labels.manage",
+          "description": "",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.runtime.operations.execute",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.runtime.operations.execute",
+        "payload": {
+          "name": "owner.runtime.operations.execute",
+          "description": "Execute owner runtime operations.",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.runtime.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.runtime.read",
+        "payload": {
+          "name": "owner.runtime.read",
+          "description": "Read owner operational runtime and registry diagnostics.",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      },
+      {
+        "operationId": "create-permission:owner.worker_queues.read",
+        "type": "create-permission",
+        "targetType": "permission",
+        "targetId": "owner.worker_queues.read",
+        "payload": {
+          "name": "owner.worker_queues.read",
+          "description": "Read worker queue observability.",
+          "resource": "https://civitas.didaxus.com/api"
+        }
+      }
+    ],
+    "update": [],
+    "noop": [],
+    "conflicts": [],
+    "unmanaged": []
+  },
+  "globalRoles": {
+    "create": [
+      {
+        "operationId": "create-global-role:owner_global",
+        "type": "create-global-role",
+        "targetType": "global-role",
+        "targetId": "owner_global",
+        "payload": {
+          "name": "owner_global",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      }
+    ],
+    "updateAssignments": [],
+    "noop": [],
+    "conflicts": []
+  },
+  "organizationRoles": {
+    "create": [
+      {
+        "operationId": "create-organization-role:organization_accountant",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_accountant",
+        "payload": {
+          "name": "organization_accountant",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_admin",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_admin",
+        "payload": {
+          "name": "organization_admin",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_billing",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_billing",
+        "payload": {
+          "name": "organization_billing",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_director",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_director",
+        "payload": {
+          "name": "organization_director",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_groupleader",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_groupleader",
+        "payload": {
+          "name": "organization_groupleader",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_headdirector",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_headdirector",
+        "payload": {
+          "name": "organization_headdirector",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_headteacher",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_headteacher",
+        "payload": {
+          "name": "organization_headteacher",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_member",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_member",
+        "payload": {
+          "name": "organization_member",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_parent",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_parent",
+        "payload": {
+          "name": "organization_parent",
+          "permissions": [
+            "[MaxDepth]",
+            "[MaxDepth]",
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_payroll",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_payroll",
+        "payload": {
+          "name": "organization_payroll",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_secretary",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_secretary",
+        "payload": {
+          "name": "organization_secretary",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_student",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_student",
+        "payload": {
+          "name": "organization_student",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      },
+      {
+        "operationId": "create-organization-role:organization_teacher",
+        "type": "create-organization-role",
+        "targetType": "organization-role",
+        "targetId": "organization_teacher",
+        "payload": {
+          "name": "organization_teacher",
+          "permissions": [
+            "[MaxDepth]"
+          ]
+        }
+      }
+    ],
+    "updateAssignments": [],
+    "noop": [],
+    "conflicts": []
+  },
+  "drift": {
+    "missing": [
+      {
+        "targetType": "resource",
+        "targetId": "https://civitas.didaxus.com/api"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "lms.course_offerings.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "lms.group_members.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "lms.groups.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "org.documents.create"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "org.documents.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "org.role_aliases.manage"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.organizations.create"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.organizations.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.profile.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.role_labels.manage"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.runtime.operations.execute"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.runtime.read"
+      },
+      {
+        "targetType": "permission",
+        "targetId": "owner.worker_queues.read"
+      },
+      {
+        "targetType": "global-role",
+        "targetId": "owner_global"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_accountant"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_admin"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_billing"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_director"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_groupleader"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_headdirector"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_headteacher"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_member"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_parent"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_payroll"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_secretary"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_student"
+      },
+      {
+        "targetType": "organization-role",
+        "targetId": "organization_teacher"
+      }
+    ],
+    "extra": [],
+    "legacy": [],
+    "wrongSurface": [],
+    "plannedLeakage": [],
+    "wrongResourceIndicator": []
+  },
+  "legacyScopes": [],
+  "customClaims": {
+    "operations": []
+  },
+  "destructiveOperations": [],
+  "warnings": [],
+  "provenance": {
+    "source": "scripts/logto/authorization-planner.js",
+    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+    "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
+    "contractVersion": "2026-07-civitas-authz-contract-v1"
+  },
+  "planHash": "a114ba2c94c3a00672db173b6e1b9a8496dd98262142d73b65c4a1ec5b176483"
+}

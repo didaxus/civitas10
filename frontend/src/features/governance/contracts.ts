@@ -2,7 +2,7 @@ import type { ActionId, PermissionKey, ScreenId } from "../../authorization/cont
 import type { VisualDecisionReason } from "../../authorization/contracts/visual-decision";
 
 export type GovernanceSurface = "owner" | "tenant";
-export type GovernanceModuleKey = "overview" | "permissions" | "members" | "taxonomy" | "units" | "lms-groups" | "data-scope" | "aliases-navigation" | "access-preview" | "audit" | "identity-provisioning";
+export type GovernanceModuleKey = "overview" | "permissions" | "members" | "taxonomy" | "units" | "lms-groups" | "data-scope" | "aliases-navigation" | "access-preview" | "audit" | "identity-provisioning" | "people-segmentation";
 
 export const GOVERNANCE_READ_MODEL_CONTRACT_VERSION = "2026-07-civitas10-governance-read-model-v1" as const;
 export const GOVERNANCE_OPERATION_REGISTRY_VERSION = "2026-07-civitas10-governance-operations-v1" as const;
@@ -49,7 +49,11 @@ export type PermissionMatrixReason = {
   };
 };
 
-export type GovernanceRoleSummary = { id: string; canonicalKey: string; displayName: string; assignedMemberCount: number; potentialPermissionCount: number; executablePermissionCount: number; ownerAuthorizedPermissionCount: number; tenantEnabledPermissionCount: number };
+
+export type GovernanceRoleNameRow = { logtoRoleId: string; logtoRoleName: string; canonicalRoleKey: string; canonicalBaselineLabel: string; civitasDefaultLabel: string; organizationAlias: string | null; effectiveLabel: string; source: "organization_alias" | "civitas_default" | "canonical_baseline"; assignedMemberCount: number; directRoleUserCount: number; canEditGlobalDefault: boolean; canEditOrganizationAlias: boolean; globalVersion: string; organizationVersion: string; updatedAt: string | null; updatedBy: string | null };
+export type GovernanceRoleNamesReadModel = { globalVersion: string; organizationVersion: string; organizationId: string; rows: GovernanceRoleNameRow[]; diagnostics: Array<{ code: string; severity: "info" | "warning" | "error"; message: string }> };
+
+export type GovernanceRoleSummary = { id: string; canonicalKey: string; displayName: string; canonicalBaselineLabel?: string; assignedMemberCount: number; directRoleUserCount?: number; potentialPermissionCount: number; executablePermissionCount: number; ownerAuthorizedPermissionCount: number; tenantEnabledPermissionCount: number };
 export type GovernanceMemberSummary = { id: string; display: string; roleIds: string[]; roleAliases: string[]; dataScopeSummary: string; allowedAssignmentActions: string[] };
 
 export type GovernancePermissionMatrixRow = {
@@ -80,6 +84,10 @@ export type GovernanceManagementLevel = "organization" | "strategic" | "tactical
 export type GovernanceUnitItem = { id: string; label: string; stableKey?: string; unitType?: string; managementLevel?: GovernanceManagementLevel; levelOrder?: number; hierarchyKey?: string; validation?: { state: "valid" | "invalid" | "reconciliation_required"; reasons: string[] }; parentId?: string; status: "draft" | "active" | "archived"; memberCount?: number; relationshipCount?: number; capabilityGroupCount?: number; reconciliationStatus?: string; sourceVersion?: string };
 export type GovernanceDataScopeAssignment = { id?: string; principalId: string; membershipId?: string | null; roleId?: string | null; canonicalRoleId?: string | null; scopeTemplateId?: string; scopeTemplateVersion?: string; strategy?: string; targetKind?: "dimension" | "unit" | "resource" | "relationship"; dimensionValueId?: string | null; unitId?: string | null; relationshipKey?: string | null; capability: string; action?: string; scopeType?: string; taxonomyIds: string[]; unitIds: string[]; resourceSummary: string; effective: boolean; source?: string; reason: string; unresolvedReason?: string | null; sourceVersion?: string; changedBy?: string; changedAt?: string };
 export type GovernanceAliasNavigationPolicy = { aliasesTenantEditable: boolean; navigationTenantEditable: boolean; aliases?: Array<{ roleId: string; canonicalKey: string; displayName: string; editableBy?: "owner" | "tenant"; defaultLabel?: string; description?: string; status?: "active" | "deprecated" | "planned"; updatedAt?: string; lastChangedAt?: string }>; visualPreferences: Array<{ screenId: ScreenId; canonicalLabel?: string; routeId?: string; hidden?: boolean; order?: number; locked: boolean; hideable?: boolean; authorizationEffect?: "presentation_only" }> ; version?: string; updatedAt?: string };
+
+export type GovernanceAutomaticRoleSegment = { segmentId: string; organizationId: string; canonicalRoleKey: string; effectiveDisplayName: string; segmentKind: "canonical_role"; directRoleUserCount: number; directMembers: Array<{ user: string; email: string | null; assignment: "Direct role assignment"; status: string }>; sourceSummary: { rbac: { status: "available" | "unavailable"; directUserCount: number }; pbac: { status: "available" | "not_configured" | "unavailable"; ownerAllowedPermissionCount: number; tenantEnabledPermissionCount: number }; abac: { status: "available" | "not_configured" | "unavailable"; scopedUserCount: number; scopeAssignmentCount: number } }; updatedAt: string | null };
+export type GovernanceSegmentationReadModel = { organizationId: string; generatedAt?: string; segments: GovernanceAutomaticRoleSegment[]; cohortRule: string };
+
 export type GovernanceAccessPreview = { contractVersion?: string; generatedAt?: string; organizationId?: string; surface?: GovernanceSurface; subjectId: string; actionId?: ActionId; screenId?: ScreenId; decision: { allowed: boolean; reason: VisualDecisionReason | PermissionMatrixReasonCode | string; sourceVersions: PermissionMatrixReason["sourceVersions"] & { visualVersion?: string; readModelVersion?: string } }; provenance?: unknown; diagnostics?: unknown; mutated?: false };
 export type IdentityFederationReadStatus = "not_configured" | "active" | "degraded" | "suspended" | "credentials_expiring" | "reconciliation_required";
 export type GovernanceIdentityProvisioningSummary = { status: IdentityFederationReadStatus; connectionId?: string | null; protocol?: "oidc" | "saml" | null; providerKind?: string | null; claimsContractVersion?: number; mappingVersion?: number; provisioningPolicyVersion?: number; lastValidatedAt?: string | null; lastSuccessfulLoginAt?: string | null; credentialExpiresAt?: string | null; latestReconciliationRunId?: string | null; latestReconciliationStatus?: string | null; driftItemCount?: number; reason?: string };
@@ -105,7 +113,9 @@ export type GovernanceReadModel = {
   taxonomy: GovernanceTaxonomyItem[];
   units: GovernanceUnitItem[];
   dataScopes: GovernanceDataScopeAssignment[];
+  segmentation?: GovernanceSegmentationReadModel;
   aliasesNavigation: GovernanceAliasNavigationPolicy;
+  roleNames?: GovernanceRoleNamesReadModel;
   accessPreviews: GovernanceAccessPreview[];
   identityProvisioning?: GovernanceIdentityProvisioningSummary;
   auditSummary?: Record<string, unknown>;
@@ -152,6 +162,10 @@ export const validateGovernanceReadModel = (value: unknown): GovernanceContractV
     if (row.reasonCode !== null && !["permission_not_executable", "owning_operation_not_mounted", "owner_ceiling_not_authorized", "owner_ceiling_locked", "tenant_activation_disabled"].includes(String(row.reasonCode))) return fail(`$.permissionMatrix[${index}].reasonCode`, version, "reasonCode is invalid");
   }
   for (const key of ["taxonomy", "units", "dataScopes", "accessPreviews", "auditEvents", "diagnostics"] as const) if (!Array.isArray(value[key])) return fail(`$.${key}`, version, `${key} must be an array`);
+  if (value.segmentation !== undefined && !isRecord(value.segmentation)) return fail("$.segmentation", version, "segmentation must be an object");
+  if (isRecord(value.segmentation) && !Array.isArray(value.segmentation.segments)) return fail("$.segmentation.segments", version, "segmentation.segments must be an array");
   if (!isRecord(value.aliasesNavigation)) return fail("$.aliasesNavigation", version, "aliasesNavigation must be an object");
+  if (value.roleNames !== undefined && !isRecord(value.roleNames)) return fail("$.roleNames", version, "roleNames must be an object");
+  if (isRecord(value.roleNames) && !Array.isArray(value.roleNames.rows)) return fail("$.roleNames.rows", version, "roleNames.rows must be an array");
   return { ok: true, value: value as GovernanceReadModel };
 };

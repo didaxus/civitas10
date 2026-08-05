@@ -21,6 +21,7 @@ const OWNER_PERMISSION_NAMES = Object.freeze({
   runtimeRead: 'owner.runtime.read',
   runtimeOperationsExecute: 'owner.runtime.operations.execute',
   workerQueuesRead: 'owner.worker_queues.read',
+  roleLabelsManage: 'owner.role_labels.manage',
 })
 
 const ORGANIZATION_PERMISSION_NAMES = Object.freeze({

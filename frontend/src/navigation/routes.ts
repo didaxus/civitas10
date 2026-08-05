@@ -41,6 +41,7 @@ const tenantGovernanceRoute = defineRoute("/o/:organizationId/settings/governanc
 const tenantGovernanceRolesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/roles");
 const tenantGovernanceRoleNamesRoute = defineRoute("/o/:organizationId/settings/governance/access-policy/role-names");
 const tenantGovernanceStructureRoute = defineRoute("/o/:organizationId/settings/governance/organization-model/structure");
+const tenantGovernancePeopleSegmentationRoute = defineRoute("/o/:organizationId/settings/governance/organization-model/segments");
 const tenantGovernanceProvisioningRoute = defineRoute("/o/:organizationId/settings/governance/identity-provisioning");
 const tenantLmsGradesRoute = defineRoute("/o/:organizationId/lms/grades");
 const tenantLmsGroupsRoute = defineRoute("/o/:organizationId/lms/groups");
@@ -76,6 +77,7 @@ export const appRoutes = {
   tenantGovernanceRoles: appRoute(tenantGovernanceRolesRoute, "Roles & Permissions", "governance", "Tenant activation editor for role permissions within Owner Ceiling."),
   tenantGovernanceRoleNames: appRoute(tenantGovernanceRoleNamesRoute, "Role Names", "governance", "Tenant role alias editor for display-only canonical role labels."),
   tenantGovernanceStructure: appRoute(tenantGovernanceStructureRoute, "Structure", "governance", "Tenant organization-unit structure and classification workspace."),
+  tenantGovernancePeopleSegmentation: appRoute(tenantGovernancePeopleSegmentationRoute, "Segmentation", "governance", "Tenant role segmentation workspace."),
   tenantGovernanceProvisioning: appRoute(tenantGovernanceProvisioningRoute, "Identity provisioning", "governance", "SCIM provisioning lifecycle, credentials, mappings and operations."),
   tenantLmsGrades: appRoute(tenantLmsGradesRoute, "Grades", "grades", "Tenant LMS grades within organization context."),
   tenantLmsGroups: appRoute(tenantLmsGroupsRoute, "Groups", "groups", "LMS groups visible through server-side group leadership authorization."),
@@ -138,6 +140,7 @@ export const routeMetadata: Record<string, RouteMetadata> = {
   [appRoutes.tenantGovernanceRoles.path]: { label: appRoutes.tenantGovernanceRoles.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantGovernanceRoleNames.path]: { label: appRoutes.tenantGovernanceRoleNames.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantGovernanceStructure.path]: { label: appRoutes.tenantGovernanceStructure.label, parentPath: appRoutes.tenantGovernance.path },
+  [appRoutes.tenantGovernancePeopleSegmentation.path]: { label: appRoutes.tenantGovernancePeopleSegmentation.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantGovernanceProvisioning.path]: { label: appRoutes.tenantGovernanceProvisioning.label, parentPath: appRoutes.tenantGovernance.path },
   [appRoutes.tenantLmsGroups.path]: { label: appRoutes.tenantLmsGroups.label },
   [appRoutes.tenantLmsGrades.path]: { label: appRoutes.tenantLmsGrades.label },

@@ -36,7 +36,8 @@ const { createOrganizationProvisioningRecorder } = require("./services/organizat
 const { createIdempotencyKey, getOrganizationProvisioningDraft, saveOrganizationProvisioningDraft } = require("./services/organizationProvisioningDrafts");
 const { buildBootstrapStatus } = require("./services/ownerBootstrapStatus");
 const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./services/ownerCapabilitySurfaces");
-const { buildGovernanceReadModel, assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
+const { buildGovernanceReadModel, assertTenantRouteMatchesContext, roleLabelActorAuthorizationContext } = require("./services/governanceReadModel");
+const { RoleLabelService, canonicalRoleKey, roleId, roleName } = require("./governance/role-labels");
 const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
 const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
 const { updateNavigationPreferences, previewAccess, listGovernanceAuditEvents, actorId } = require("./services/governanceOperationsReadModel");
@@ -434,7 +435,7 @@ secureRoute.get("/owner/organizations/:organizationId/governance", "ownerRead", 
     const roles = await listLogtoOrganizationRoles();
     const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
     const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "owner", roles, members, memberRolesByUserId }));
+    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "owner", roles, members, memberRolesByUserId, actorAuthorizationContext: roleLabelActorAuthorizationContext({ reqAuth: req.auth, organizationId: req.params.organizationId }) }));
   } catch (error) {
     return sendPublicError(res, error, "OwnerGovernanceReadModelError", "Failed to build owner governance read model");
   }
@@ -448,6 +449,15 @@ secureRoute.post("/owner/organizations/:organizationId/access-preview", "ownerRe
 secureRoute.get("/owner/organizations/:organizationId/governance/audit", "ownerRead", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerProfileRead] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
   try { return res.json({ contractVersion: "2026-07-civitas10-governance-operations-v1", events: listGovernanceAuditEvents({ organizationId: req.params.organizationId, limit: req.query?.limit }) }); }
   catch (error) { return sendPublicError(res, error, "OwnerGovernanceAuditError", "Failed to load governance audit events"); }
+});
+
+secureRoute.put("/owner/governance/role-labels/:canonicalRoleKey", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerRoleLabelsManage] }), requireGlobalOwner, async (req, res) => {
+  try {
+    const result = await new RoleLabelService().updateGlobalLabel({ canonicalRoleKey: req.params.canonicalRoleKey, displayName: req.body?.displayName ?? null, expectedVersion: req.body?.expectedVersion, actorLogtoUserId: actorId(req), reason: req.body?.reason || "owner_role_label_update" });
+    return res.json({ contractVersion: "2026-08-civitas10-role-labels-v1", ...result });
+  } catch (error) {
+    return sendPublicError(res, error, "OwnerRoleLabelError", "Failed to update Civitas role label");
+  }
 });
 
 secureRoute.put("/owner/organizations/:organizationId/governance/entitlement-ceilings", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerRuntimeOperationsExecute] }), requireGlobalOwner, requireSafeOrganizationIdParam, async (req, res) => {
@@ -564,7 +574,7 @@ secureRoute.get("/o/:organizationId/governance", "organizationMemberRead", requi
     const roles = await listLogtoOrganizationRoles();
     const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
     const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId }));
+    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId, actorAuthorizationContext: roleLabelActorAuthorizationContext({ reqAuth: req.auth, organizationId: req.params.organizationId }) }));
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceReadModelError", "Failed to build tenant governance read model");
   }
@@ -573,6 +583,18 @@ secureRoute.get("/o/:organizationId/governance", "organizationMemberRead", requi
 secureRoute.post("/o/:organizationId/access-preview", "organizationMemberRead", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), async (req, res) => {
   try { assertTenantRouteMatchesContext(req); const result = await previewAccess({ organizationId: req.params.organizationId, surface: "tenant", body: { ...(req.body || {}), previewOnly: req.body?.previewOnly === true || req.get("X-Civitas-Preview-Only") === "true" }, actorLogtoUserId: actorId(req), principal: req.user || {} }); return res.json(result); }
   catch (error) { return sendPublicError(res, error, "TenantGovernanceAccessPreviewError", "Failed to preview tenant access"); }
+});
+
+secureRoute.put("/o/:organizationId/governance/role-aliases/:canonicalRoleKey", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: ["org.role_aliases.manage"] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission("org.role_aliases.manage"), async (req, res) => {
+  try {
+    assertTenantRouteMatchesContext(req);
+    const roles = await listLogtoOrganizationRoles();
+    const logto = roles.find((role) => canonicalRoleKey(roleName(role)) === req.params.canonicalRoleKey);
+    const result = await new RoleLabelService().updateOrganizationAlias({ organizationId: req.params.organizationId, canonicalRoleKey: req.params.canonicalRoleKey, logtoRoleIdSnapshot: logto ? roleId(logto) : null, displayName: req.body?.displayName ?? null, expectedVersion: req.body?.expectedVersion, actorLogtoUserId: actorId(req), reason: req.body?.reason || "organization_role_alias_update" });
+    return res.json({ contractVersion: "2026-08-civitas10-role-labels-v1", ...result });
+  } catch (error) {
+    return sendPublicError(res, error, "TenantRoleAliasError", "Failed to update organization role alias");
+  }
 });
 
 secureRoute.put("/o/:organizationId/governance/navigation-preferences", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsCreate] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.admin), requirePermission(ORG_AUTHZ.documentsCreate), async (req, res) => {

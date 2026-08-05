@@ -99,6 +99,7 @@ function AppContent() {
       <Route path={appRoutes.tenantGovernanceRoles.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceRoleNames.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceStructure.path} element={<TenantGovernanceRoute />} />
+      <Route path={appRoutes.tenantGovernancePeopleSegmentation.path} element={<TenantGovernanceRoute />} />
       <Route path={appRoutes.tenantGovernanceProvisioning.path} element={<TenantGovernanceRoute />} />
       <Route path="/:orgId" element={<OrganizationPage />} />
     </Routes>

@@ -9,7 +9,7 @@ const generated = Object.freeze({
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
+    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea"
   },
   "catalog": {
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
@@ -1926,6 +1926,42 @@ const generated = Object.freeze({
         }
       },
       {
+        "name": "org.role_aliases.manage",
+        "namespace": "org",
+        "moduleId": null,
+        "capabilityId": "governance.role-aliases",
+        "surface": "organization",
+        "targetStatus": "active",
+        "observedImplementation": "active",
+        "runtimePath": "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+        "dataScopeStrategy": "organization",
+        "risk": "standard",
+        "consumers": [
+          "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+          "frontend/src/features/governance/api.ts:updateOrganizationRoleAlias"
+        ],
+        "policyRequirements": [
+          "same-organization",
+          "organization_admin",
+          "presentation_only"
+        ],
+        "screenActionIds": [
+          "governance.organizationRoleAliases"
+        ],
+        "compatibility": "none",
+        "testEvidence": [
+          "backend/test/governance-role-label-service.test.js"
+        ],
+        "presentation": {
+          "label": "Manage organization role aliases",
+          "description": "Update organization-scoped presentation aliases for canonical roles.",
+          "groupKey": "governance",
+          "groupLabel": "Governance",
+          "groupOrder": 20,
+          "order": 100
+        }
+      },
+      {
         "name": "org.roles.create",
         "namespace": "org",
         "moduleId": null,
@@ -2221,6 +2257,40 @@ const generated = Object.freeze({
           "groupKey": "owner",
           "groupLabel": "Owner Administration",
           "groupOrder": 5,
+          "order": 90
+        }
+      },
+      {
+        "name": "owner.role_labels.manage",
+        "namespace": "owner",
+        "moduleId": null,
+        "capabilityId": "governance.role-labels",
+        "surface": "owner",
+        "targetStatus": "active",
+        "observedImplementation": "active",
+        "runtimePath": "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+        "dataScopeStrategy": "global_owner",
+        "risk": "standard",
+        "consumers": [
+          "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+          "frontend/src/features/governance/api.ts:updateOwnerRoleLabel"
+        ],
+        "policyRequirements": [
+          "owner_global"
+        ],
+        "screenActionIds": [
+          "governance.ownerRoleLabels"
+        ],
+        "compatibility": "none",
+        "testEvidence": [
+          "backend/test/governance-role-label-service.test.js"
+        ],
+        "presentation": {
+          "label": "Manage Civitas role labels",
+          "description": "Update global Civitas presentation labels for canonical organization roles.",
+          "groupKey": "governance",
+          "groupLabel": "Governance",
+          "groupOrder": 20,
           "order": 90
         }
       },
@@ -4163,7 +4233,7 @@ const generated = Object.freeze({
       "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
       "contractVersion": "2026-07-civitas-permission-catalog-v1",
       "baselineAudit": "#167 observed legacy baseline; target is canonical Phase 3 contract",
-      "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
+      "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea"
     },
     "legacyBaselineObserved": [
       {
@@ -4414,7 +4484,7 @@ const generated = Object.freeze({
         "reason": "Governance IDs are blocked pending explicit namespace decision; consumers must not infer target permissions."
       }
     ],
-    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
+    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea"
   },
   "activePermissions": [
     {
@@ -4571,6 +4641,76 @@ const generated = Object.freeze({
         "groupOrder": 10,
         "order": 60
       }
+    },
+    {
+      "name": "org.role_aliases.manage",
+      "namespace": "org",
+      "moduleId": null,
+      "capabilityId": "governance.role-aliases",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "runtimePath": "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+        "frontend/src/features/governance/api.ts:updateOrganizationRoleAlias"
+      ],
+      "policyRequirements": [
+        "same-organization",
+        "organization_admin",
+        "presentation_only"
+      ],
+      "screenActionIds": [
+        "governance.organizationRoleAliases"
+      ],
+      "compatibility": "none",
+      "testEvidence": [
+        "backend/test/governance-role-label-service.test.js"
+      ],
+      "presentation": {
+        "label": "Manage organization role aliases",
+        "description": "Update organization-scoped presentation aliases for canonical roles.",
+        "groupKey": "governance",
+        "groupLabel": "Governance",
+        "groupOrder": 20,
+        "order": 100
+      }
+    },
+    {
+      "name": "owner.role_labels.manage",
+      "namespace": "owner",
+      "moduleId": null,
+      "capabilityId": "governance.role-labels",
+      "surface": "owner",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "runtimePath": "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+      "dataScopeStrategy": "global_owner",
+      "risk": "standard",
+      "consumers": [
+        "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+        "frontend/src/features/governance/api.ts:updateOwnerRoleLabel"
+      ],
+      "policyRequirements": [
+        "owner_global"
+      ],
+      "screenActionIds": [
+        "governance.ownerRoleLabels"
+      ],
+      "compatibility": "none",
+      "testEvidence": [
+        "backend/test/governance-role-label-service.test.js"
+      ],
+      "presentation": {
+        "label": "Manage Civitas role labels",
+        "description": "Update global Civitas presentation labels for canonical organization roles.",
+        "groupKey": "governance",
+        "groupLabel": "Governance",
+        "groupOrder": 20,
+        "order": 90
+      }
     }
   ]
 })
@@ -4578,4 +4718,4 @@ const catalog = Object.freeze(generated.catalog)
 const permissions = Object.freeze(catalog.permissions.map(Object.freeze))
 const activePermissions = Object.freeze(generated.activePermissions.map(Object.freeze))
 const permissionsByName = Object.freeze(Object.fromEntries(permissions.map((permission) => [permission.name, permission])))
-module.exports = { generated, catalog, catalogHash: '573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca', permissions, activePermissions, permissionsByName }
+module.exports = { generated, catalog, catalogHash: '4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea', permissions, activePermissions, permissionsByName }
