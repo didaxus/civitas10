@@ -1,13 +1,14 @@
 create table if not exists civitas_role_label_versions (
+  id bigserial primary key,
   scope text not null check (scope in ('global','organization')),
   logto_organization_id text,
   version integer not null default 0 check (version >= 0),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  primary key (scope, logto_organization_id),
   check ((scope = 'global' and logto_organization_id is null) or (scope = 'organization' and logto_organization_id is not null))
 );
-create unique index if not exists civitas_role_label_versions_global_once on civitas_role_label_versions ((scope)) where scope = 'global';
+create unique index if not exists civitas_role_label_versions_global_once on civitas_role_label_versions (scope) where scope = 'global' and logto_organization_id is null;
+create unique index if not exists civitas_role_label_versions_organization_once on civitas_role_label_versions (logto_organization_id) where scope = 'organization' and logto_organization_id is not null;
 insert into civitas_role_label_versions(scope, logto_organization_id, version) values ('global', null, 0) on conflict do nothing;
 create table if not exists civitas_role_label_overrides (
   canonical_role_key text primary key,
