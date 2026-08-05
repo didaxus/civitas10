@@ -9,6 +9,7 @@ const routes = readFileSync(new URL("../../navigation/routes.ts", import.meta.ur
 const registry = readFileSync(new URL("./visual/governance.screen.ts", import.meta.url), "utf8");
 const matrix = readFileSync(new URL("./modules/permission-matrix/PermissionMatrixModule.tsx", import.meta.url), "utf8");
 const roleNames = readFileSync(new URL("./modules/aliases-navigation/AliasesNavigationModule.tsx", import.meta.url), "utf8");
+const segmentation = readFileSync(new URL("./modules/people-segmentation/PeopleSegmentationModule.tsx", import.meta.url), "utf8");
 const reasonFormat = readFileSync(new URL("./modules/permission-matrix/reason-format.ts", import.meta.url), "utf8");
 const dataScope = readFileSync(new URL("./modules/data-scope/DataScopeModule.tsx", import.meta.url), "utf8");
 const unitsModule = readFileSync(new URL("./modules/units/UnitsModule.tsx", import.meta.url), "utf8");
@@ -94,22 +95,38 @@ test("structure routes separate owner inspection from tenant organization model 
 
 test("scope assignments remain role-path bound", () => { assert.match(routes, /scope-assignments/); assert.match(workspaceContract, /Data Scopes/); });
 
-test("role names screen is the compact persistent role-label editor", () => {
-  assert.match(roleNames, /Role names/);
-  assert.match(roleNames, /roleNames\?: GovernanceRoleNamesReadModel/);
-  assert.match(roleNames, /Edit default/);
-  assert.match(roleNames, /Reset to canonical baseline/);
-  assert.match(roleNames, /Reset to Civitas default/);
-  assert.match(roleNames, /Search role labels/);
-  assert.match(roleNames, /Role mapping needs attention/);
-  assert.match(roleNames, /canonicalRoleKey/);
-  assert.match(roleNames, /displayName: reset \? null/);
-  assert.doesNotMatch(roleNames, /aliasesByRoleId|organizationRoles\.map|alias\?\.displayName \?\? role\.displayName|readOnly|Save aliases|Alias editing is read-only/);
-  assert.doesNotMatch(roleNames, /visualPreferences|navigationTenantEditable|routeId|authorizationEffect|Todavía no conectado|fetch\(/);
-  assert.match(contracts, /GovernanceRoleNamesReadModel/);
-  assert.match(contracts, /effectiveLabel: string/);
+test("role names screen matches the product table and user-count navigation contract", () => {
+  assert.match(roleNames, /Manage the display names used across Civitas/);
+  assert.match(roleNames, /Manage the display names used in this organization/);
+  for (const header of ["Role name", "Display name", "Users", "Status", "Actions"]) assert.match(roleNames, new RegExp(`>${header}<`));
+  assert.match(roleNames, /Search roles/);
+  assert.match(roleNames, /Search by role name or display name/);
+  assert.match(roleNames, /directRoleUserCount/);
+  assert.match(roleNames, /View .* assigned to .* in Segmentation/);
+  assert.match(roleNames, /appRoutes\.ownerOrganizationGovernancePeopleSegmentation\.build/);
+  assert.match(roleNames, /appRoutes\.tenantGovernancePeopleSegmentation\.build/);
+  assert.match(roleNames, /new URLSearchParams\(\{ role: canonicalRoleKey \}\)/);
+  assert.doesNotMatch(roleNames, /Canonical role|Logto role|Civitas default|Uses Civitas default|Inherited|Organization alias|<code|Role mapping needs attention|diagnostics/i);
+  assert.doesNotMatch(roleNames, /assignedMemberCount\)|filter\(.*members|roleAliases\.length|permissions\.length/);
+  assert.match(contracts, /directRoleUserCount: number/);
 });
 
+
+test("tenant segmentation route and read-only segmentation projection are mounted", () => {
+  assert.match(routes, /tenantGovernancePeopleSegmentationRoute = defineRoute\("\/o\/:organizationId\/settings\/governance\/organization-model\/segments"\)/);
+  assert.match(routeCatalogSource, /tenantGovernancePeopleSegmentation: route\("tenant\.settings\.governance\.organization_model\.segments"/);
+  assert.match(appSource, /appRoutes\.tenantGovernancePeopleSegmentation\.path/);
+  assert.match(workspaceContract, /tenantRouteKey: "tenantGovernancePeopleSegmentation"/);
+  assert.match(segmentation, /Review the users and authorization cohorts associated with organization roles/);
+  assert.match(segmentation, /Direct role users/);
+  assert.match(segmentation, /Owner-authorized capabilities/);
+  assert.match(segmentation, /Organization-enabled capabilities/);
+  assert.match(segmentation, /Scoped users/);
+  assert.match(contracts, /Direct role assignment/);
+  assert.match(segmentation, /PBAC reduces capability availability; it does not add users to the role/);
+  assert.match(segmentation, /ABAC partitions direct role members by registered scopes; it does not add users to the role/);
+  assert.doesNotMatch(segmentation, /logtoRoleId|logtoRoleName|permission arrays|policy JSON|canonicalRoleKey}<|<code/);
+});
 test("role names routes retain stable destinations", () => { assert.match(routes, /access-policy\/role-names/); assert.match(workspaceContract, /Role Names/); });
 
 

@@ -10,13 +10,13 @@ import { DataScopeModule } from "./modules/data-scope/DataScopeModule";
 import { AliasesNavigationModule } from "./modules/aliases-navigation/AliasesNavigationModule";
 import { AccessPreviewModule, AccessPreviewUnavailable } from "./modules/access-preview/AccessPreviewModule";
 import { AuditDiagnosticsModule } from "./modules/audit/AuditDiagnosticsModule";
-import { PeopleSegmentationPlaceholder } from "./modules/people-segmentation/PeopleSegmentationPlaceholder";
+import { PeopleSegmentationModule } from "./modules/people-segmentation/PeopleSegmentationModule";
 import { GOVERNANCE_WORKSPACE_ITEMS, type GovernanceWorkspaceItemId } from "./governance-workspace-contract";
 
 const emptyGovernanceModel = (organizationId: string, surface: GovernanceSurface): GovernanceReadModel => ({
   organizationId, surface, organizationName: null,
   versions: { catalogVersion: "unavailable", runtimeStatus: "pending" }, modules: {}, permissionMatrix: [], taxonomy: [], units: [], dataScopes: [],
-  aliasesNavigation: { aliasesTenantEditable: false, navigationTenantEditable: false, visualPreferences: [] }, roleNames: { globalVersion: "0", organizationVersion: "0", organizationId, rows: [], diagnostics: [] }, accessPreviews: [], auditEvents: [], diagnostics: [],
+  aliasesNavigation: { aliasesTenantEditable: false, navigationTenantEditable: false, visualPreferences: [] }, segmentation: { organizationId, segments: [], cohortRule: "" }, roleNames: { globalVersion: "0", organizationVersion: "0", organizationId, rows: [], diagnostics: [] }, accessPreviews: [], auditEvents: [], diagnostics: [],
 });
 
 const itemFromPath = (pathname: string): GovernanceWorkspaceItemId => {
@@ -53,12 +53,13 @@ export const GovernanceStudioPage = ({ surface }: { surface: GovernanceSurface }
   const moduleKey = item.moduleKey as GovernanceModuleKey | "unavailable";
   let content;
   if (moduleKey === "permissions") content = <PermissionMatrixModule organizationId={organizationId} rows={model.permissionMatrix} roles={model.roles || []} surface={surface} versions={model.versions} onSaveOwnerCeilings={async (input) => { await api.updateOwnerCeilings(organizationId, input); await refresh(); }} onSaveTenantActivations={async (input) => { await api.updateTenantActivations(organizationId, input); await refresh(); }} onReload={refresh} />;
-  else if (moduleKey === "aliases-navigation") content = <AliasesNavigationModule roleNames={model.roleNames} surface={surface} organizationName={model.organizationName} onUpdateOwnerRoleLabel={api.updateOwnerRoleLabel} onUpdateOrganizationRoleAlias={async (input) => api.updateOrganizationRoleAlias(organizationId, input)} onReload={refresh} />;
+  else if (moduleKey === "aliases-navigation") content = <AliasesNavigationModule roleNames={model.roleNames} surface={surface} organizationId={organizationId} onUpdateOwnerRoleLabel={api.updateOwnerRoleLabel} onUpdateOrganizationRoleAlias={async (input) => api.updateOrganizationRoleAlias(organizationId, input)} onReload={refresh} />;
   else if (moduleKey === "data-scope") content = <DataScopeModule assignments={model.dataScopes} roles={model.roles || []} />;
   else if (moduleKey === "taxonomy") content = <UnitsModule units={model.units} taxonomy={model.taxonomy} surface={surface} />;
   else if (moduleKey === "access-preview") content = isGovernanceOperationActive(surface, "governance.accessPreview") ? <AccessPreviewModule organizationId={organizationId} surface={surface} previews={model.accessPreviews} onPreview={surface === "owner" ? api.previewOwnerAccessReadOnly : api.previewTenantAccessReadOnly} /> : <AccessPreviewUnavailable />;
   else if (moduleKey === "audit") content = <AuditDiagnosticsModule events={model.auditEvents} />;
-  else content = <PeopleSegmentationPlaceholder />;
+  else if (moduleKey === "people-segmentation") content = <PeopleSegmentationModule segmentation={model.segmentation} />;
+  else content = <PeopleSegmentationModule segmentation={model.segmentation} />;
 
   return <section className="min-w-0" aria-labelledby="governance-screen-title"><h1 id="governance-screen-title" className="sr-only">{item.label}</h1>{error ? <SectionCard title="Unable to load governance" description={error}><p>Please try again.</p></SectionCard> : content}</section>;
 };

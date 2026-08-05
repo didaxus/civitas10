@@ -77,13 +77,25 @@ async function listRoleView({ roles = [], members = [], memberRolesByUserId = ne
     if (!canonicalKey.startsWith("organization_")) continue;
     const potentialPermissions = targetPotentialPermissions(canonicalKey);
     const executable = executablePermissions(canonicalKey);
-    byRole.set(id, { id, canonicalKey, displayName: displayName(roleName(role)), assignedMemberCount: 0, potentialPermissionCount: potentialPermissions.length, executablePermissionCount: executable.size, ownerAuthorizedPermissionCount: limitsByRole.get(id) || 0, tenantEnabledPermissionCount: activationsByRole.get(id) || 0 });
+    byRole.set(id, { id, canonicalKey, displayName: displayName(roleName(role)), assignedMemberCount: 0, directRoleUserCount: 0, potentialPermissionCount: potentialPermissions.length, executablePermissionCount: executable.size, ownerAuthorizedPermissionCount: limitsByRole.get(id) || 0, tenantEnabledPermissionCount: activationsByRole.get(id) || 0 });
   }
+  const usersByRole = new Map();
   for (const user of members) {
     const userId = user.id || user.userId || user.logtoUserId;
+    if (!userId) continue;
     for (const role of memberRolesByUserId.get(userId) || []) {
-      const current = byRole.get(roleId(role));
-      if (current) current.assignedMemberCount += 1;
+      const id = roleId(role);
+      const current = byRole.get(id);
+      if (!current) continue;
+      if (!usersByRole.has(id)) usersByRole.set(id, new Set());
+      usersByRole.get(id).add(userId);
+    }
+  }
+  for (const [id, users] of usersByRole.entries()) {
+    const current = byRole.get(id);
+    if (current) {
+      current.directRoleUserCount = users.size;
+      current.assignedMemberCount = users.size;
     }
   }
   return [...byRole.values()];

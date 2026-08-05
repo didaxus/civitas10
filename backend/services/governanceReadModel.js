@@ -5,7 +5,7 @@ const { buildRolesGovernanceSlice } = require("./governanceRolesReadModel");
 const { catalogHash } = require("../../core/authz");
 const { buildStructureGovernanceSlice } = require("./governanceStructureReadModel");
 const { buildAliasesNavigationPolicy, listGovernanceAuditEvents } = require("./governanceOperationsReadModel");
-const { RoleLabelService } = require("../governance/role-labels");
+const { RoleLabelService, canonicalRoleKey: canonicalRoleKeyForName, roleName: governanceRoleName, roleId: governanceRoleId } = require("../governance/role-labels");
 
 const MODULE_KEYS = Object.freeze(["overview", "identity-provisioning", "permissions", "members", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]);
 const TENANT_MODULES = Object.freeze(new Set(["identity-provisioning", "permissions", "members", "data-scope", "taxonomy", "units", "aliases-navigation", "access-preview"]));
@@ -62,6 +62,53 @@ function roleCatalogDiagnostics({ roles = [], aliasesNavigation }) {
   return diagnostics;
 }
 
+function safeUserEmail(user = {}) { return safeString(user.email) || safeString(user.primaryEmail) || safeString(user.emailAddress) || null; }
+function safeUserLabel(user = {}) { return safeString(user.name) || safeString(user.displayName) || safeString(user.username) || safeUserEmail(user) || safeMemberDisplay(user); }
+function buildRoleSegmentation({ organizationId, roleNames, roles = [], members = [], memberRolesByUserId = new Map(), permissionMatrix = [], dataScopes = [] }) {
+  const roleIdToCanonicalKey = new Map();
+  for (const role of roles) {
+    const id = governanceRoleId(role);
+    if (id) roleIdToCanonicalKey.set(id, canonicalRoleKeyForName(governanceRoleName(role)));
+  }
+  const directUsersByRole = new Map(roleNames.rows.map((row) => [row.canonicalRoleKey, new Map()]));
+  for (const user of members) {
+    const userId = user.id || user.userId || user.logtoUserId;
+    if (!userId) continue;
+    for (const role of memberRolesByUserId.get(userId) || []) {
+      const canonicalKey = roleIdToCanonicalKey.get(governanceRoleId(role)) || canonicalRoleKeyForName(governanceRoleName(role));
+      if (!directUsersByRole.has(canonicalKey)) continue;
+      directUsersByRole.get(canonicalKey).set(userId, { user: safeUserLabel(user), email: safeUserEmail(user), assignment: "Direct role assignment", status: "Active" });
+    }
+  }
+  return {
+    organizationId,
+    generatedAt: isoNow(),
+    segments: roleNames.rows.map((row) => {
+      const directMembers = [...(directUsersByRole.get(row.canonicalRoleKey)?.values() || [])];
+      const rolePermissionRows = permissionMatrix.filter((permission) => permission.roleId === row.logtoRoleId);
+      const ownerAllowedPermissionCount = rolePermissionRows.filter((permission) => permission.ownerAllowed).length;
+      const tenantEnabledPermissionCount = rolePermissionRows.filter((permission) => permission.tenantEnabled).length;
+      const scopedAssignments = dataScopes.filter((scope) => scope.canonicalRoleId === row.canonicalRoleKey || scope.roleId === row.logtoRoleId);
+      return {
+        segmentId: `${organizationId}:${row.canonicalRoleKey}`,
+        organizationId,
+        canonicalRoleKey: row.canonicalRoleKey,
+        effectiveDisplayName: row.effectiveLabel,
+        segmentKind: "canonical_role",
+        directRoleUserCount: directMembers.length,
+        directMembers,
+        sourceSummary: {
+          rbac: { status: "available", directUserCount: directMembers.length },
+          pbac: { status: rolePermissionRows.length ? "available" : "not_configured", ownerAllowedPermissionCount, tenantEnabledPermissionCount },
+          abac: { status: scopedAssignments.length ? "available" : "not_configured", scopedUserCount: 0, scopeAssignmentCount: scopedAssignments.length },
+        },
+        updatedAt: null,
+      };
+    }),
+    cohortRule: "direct RBAC role members INTERSECT PBAC-enabled capability INTERSECT ABAC-valid scope or relationship = effective capability cohort",
+  };
+}
+
 function buildIdentityProvisioningSummary({ status = "not_configured" } = {}) {
   return { status, connectionId: null, protocol: null, providerKind: null, claimsContractVersion: 0, mappingVersion: 0, provisioningPolicyVersion: 0, lastValidatedAt: null, lastSuccessfulLoginAt: null, credentialExpiresAt: null, latestReconciliationRunId: null, latestReconciliationStatus: null, driftItemCount: status === "reconciliation_required" ? 1 : 0, reason: status === "not_configured" ? "identity_federation_connection_missing" : "fixture_status" };
 }
@@ -81,6 +128,7 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
   versions.activationVersion = String(rolesSlice.policyVersion);
   versions.catalogVersion = catalogHash;
   const structureSlice = await buildStructureGovernanceSlice(logtoOrganizationId);
+  const segmentation = buildRoleSegmentation({ organizationId: logtoOrganizationId, roleNames, roles, members, memberRolesByUserId, permissionMatrix: rolesSlice.permissionMatrix, dataScopes: structureSlice.dataScopes.items });
   const aliasesNavigation = buildAliasesNavigationPolicy(logtoOrganizationId);
   const diagnostics = roleCatalogDiagnostics({ roles: rolesSlice.roles, aliasesNavigation });
   return {
@@ -110,6 +158,7 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
     taxonomy: structureSlice.taxonomy.items,
     units: structureSlice.units.items,
     dataScopes: structureSlice.dataScopes.items,
+    segmentation,
     aliasesNavigation,
     roleNames,
     accessPreviews: [],

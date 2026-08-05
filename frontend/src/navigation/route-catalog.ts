@@ -18,6 +18,7 @@ export const routeCatalog = {
   tenantGovernanceRoles: route("tenant.settings.governance.roles", appRoutes.tenantGovernanceRoles.path, "tenant", "tenant"),
   tenantGovernanceRoleNames: route("tenant.settings.governance.role_names", appRoutes.tenantGovernanceRoleNames.path, "tenant", "tenant"),
   tenantGovernanceStructure: route("tenant.settings.governance.organization_model.structure", appRoutes.tenantGovernanceStructure.path, "tenant", "tenant"),
+  tenantGovernancePeopleSegmentation: route("tenant.settings.governance.organization_model.segments", appRoutes.tenantGovernancePeopleSegmentation.path, "tenant", "tenant"),
   tenantGovernanceProvisioning: route("tenant.settings.governance.identity_provisioning", appRoutes.tenantGovernanceProvisioning.path, "tenant", "tenant"),
   lmsGrades: route("tenant.lms.grades", appRoutes.tenantLmsGrades.path, "tenant", "tenant"),
   lmsGroups: route("tenant.lms.groups", appRoutes.tenantLmsGroups.path, "tenant", "tenant"),
