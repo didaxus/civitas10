@@ -464,6 +464,39 @@
         "rejectSecrets": true,
         "safeDiffRequired": true
       }
+    },
+    {
+      "eventType": "organization_mapping.lifecycle.changed",
+      "schemaVersion": "civitas-integration-event/v1",
+      "owningModuleId": "organization-mapping",
+      "owningCapabilityId": "organization-model.lifecycle",
+      "lifecycle": "active",
+      "sensitivity": "internal",
+      "payloadSchema": {
+        "type": "object",
+        "required": [
+          "actionId",
+          "result",
+          "reasonHash",
+          "targetType",
+          "targetId"
+        ],
+        "additionalProperties": false
+      },
+      "producerContract": {
+        "component": "organization-mapping-service"
+      },
+      "allowedConsumers": [
+        "organization-model.projection",
+        "authorization.reconciliation"
+      ],
+      "compatibilityStatus": "compatible",
+      "retentionClass": "operational",
+      "maxPayloadBytes": 4096,
+      "redactionPolicy": {
+        "rejectSecrets": true,
+        "safeReferencesOnly": true
+      }
     }
   ]
 }

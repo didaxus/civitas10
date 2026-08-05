@@ -143,7 +143,9 @@
       ],
       "allowedDimensionIds": [
         "academic.stage",
-        "academic.period",
+        "academic.school_year",
+        "academic.term",
+        "academic.term_type",
         "academic.course",
         "academic.cohort",
         "academic.class"
@@ -167,7 +169,7 @@
       "provenance": {
         "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
         "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "decision": "Issue #318 replaces ambiguous academic.period with explicit school-year, term, and term-type dimensions; no legacy value is inferred."
       }
     },
     {
@@ -184,7 +186,9 @@
         "authorization.assignments"
       ],
       "allowedDimensionIds": [
-        "academic.period",
+        "academic.school_year",
+        "academic.term",
+        "academic.term_type",
         "academic.subject",
         "academic.course",
         "academic.class"
@@ -208,7 +212,7 @@
       "provenance": {
         "authorityDocument": "docs/architecture/phase-3/12-CIVITAS-DATA-SCOPE-TAXONOMY-V2.md",
         "issue": "#218",
-        "decision": "PR-A canonical contract materialization"
+        "decision": "Issue #318 replaces ambiguous academic.period with explicit school-year, term, and term-type dimensions; no legacy value is inferred."
       }
     },
     {

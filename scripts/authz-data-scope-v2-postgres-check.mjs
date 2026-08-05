@@ -13,5 +13,7 @@ try{
   if(!outcome.rows[0]?.definition.includes('UNRESOLVED'))throw new Error('formal tri-state persistence constraint missing');
   const fk=await pool.query("select 1 from pg_constraint where conname='organization_mapping_evaluations_tenant_snapshot_fk'");
   if(!fk.rowCount)throw new Error('tenant-bound evaluation snapshot FK missing');
+  const reviewed=await pool.query("select to_regclass('organization_mapping_selector_set_versions') selector_sets,to_regclass('integration_outbox_events') shared_outbox,to_regclass('organization_mapping_outbox_events') parallel_outbox");
+  if(!reviewed.rows[0].selector_sets||!reviewed.rows[0].shared_outbox||reviewed.rows[0].parallel_outbox)throw new Error('reviewed-state persistence or shared-outbox convergence missing');
   console.log('PostgreSQL organization-mapping migration check passed.');
 }finally{await closeDatabase();}

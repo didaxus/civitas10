@@ -79,16 +79,7 @@ CREATE TABLE IF NOT EXISTS organization_mapping_audit_events (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS organization_mapping_outbox_events (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  organization_id TEXT NOT NULL,
-  event_type TEXT NOT NULL,
-  payload_json JSONB NOT NULL,
-  idempotency_key TEXT,
-  status TEXT NOT NULL DEFAULT 'pending',
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-CREATE UNIQUE INDEX IF NOT EXISTS organization_mapping_outbox_idempotency_uidx ON organization_mapping_outbox_events(organization_id,idempotency_key) WHERE idempotency_key IS NOT NULL;
+-- Events use the shared integration_outbox_events foundation.
 
 CREATE TABLE IF NOT EXISTS organization_mapping_idempotency_keys (
   organization_id TEXT NOT NULL,

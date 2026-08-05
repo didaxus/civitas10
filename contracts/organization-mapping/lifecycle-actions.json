@@ -1,6 +1,6 @@
 {
   "version": "2026-08-civitas-organization-mapping-actions-v1",
-  "hash": "c051cf8475696b4e067cb87c8e156a73329ddd37272c7b991340f0869da666d0",
+  "hash": "d9b8525770e1adf3f62229528e52f22746daf4c69557faf37f16c26745a201fa",
   "entries": [
     {
       "actionId": "organizationModel.readPublished",
@@ -23,12 +23,9 @@
     {
       "actionId": "organizationModel.readDraft",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "draft read endpoint"
-      },
+      "method": "GET",
+      "endpoint": "/o/{organizationId}/organization-model/drafts/active",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_draft.read",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -80,12 +77,9 @@
     {
       "actionId": "organizationModel.readSensitiveMappingEvidence",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "sensitive evidence endpoint"
-      },
+      "method": "GET",
+      "endpoint": "/o/{organizationId}/organization-model/evaluations/{evaluationId}/evidence",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_evidence.read",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -137,12 +131,9 @@
     {
       "actionId": "organizationModel.reconcileUpstream",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "upstream reconciliation endpoint"
-      },
+      "method": "GET",
+      "endpoint": "/o/{organizationId}/organization-model/reconciliation",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel.reconcile",
       "ownerCeiling": "required",
       "tenantActivation": "required",

@@ -1,19 +1,24 @@
 # Issue #318 completion matrix
 
-This local remediation could not inspect remote PR #321 comments or workflow logs. Rows marked `blocked` require PostgreSQL or remote CI evidence not available in this container.
+This local remediation could not authenticate to GitHub or execute live PostgreSQL. `complete-local` means executable unit/contract evidence exists; it does not substitute for PostgreSQL, deployed authorization, concurrency, or remote CI evidence.
 
-| Requirement | Status | Implementation | Tests / command | Result | Remaining risk |
-|---|---|---|---|---|---|
-| Restore released migration 0025 | complete-local | `backend/db/migrations/0025_data_scope_taxonomy_v2.sql`; v3 moved to `0039_data_scope_taxonomy_v3.sql` | `git diff acdb236 -- backend/db/migrations/0025_data_scope_taxonomy_v2.sql` | no local diff expected after commit | Base branch must confirm `acdb236` is PR base |
-| Machine-readable registries contain definitions | complete-local | `core/organization-mapping/*registry*.cjs`, `contracts/organization-mapping/*.json` | `node --test backend/test/organization-mapping-registry-integrity.test.js` | pass | Human review of classifications |
-| Formal MATCH/NO_MATCH/UNRESOLVED truth tables | complete-local | `core/organization-mapping/mapping-engine.cjs` | `node --test backend/test/organization-mapping-tristate-truth-table.test.js` | pass | Needs expanded PostgreSQL-backed policy tests |
-| No mapping grants access | complete-local | outcome registry, engine validation, publication work-items | org mapping tests | pass | Human security review |
-| PostgreSQL migration execution | blocked | SQL migrations | not run | unavailable | No live PostgreSQL service verified |
-| PostgreSQL tri-state, tenant-bound FKs and row mappers | complete-local / execution-blocked | `0040_organization_mapping_security_hardening.sql`; `backend/organization-mapping/repository.js` | `node --test backend/test/organization-mapping-hardening.test.js` | pass (contract); PostgreSQL unavailable | Requires clean-install, upgrade and cross-tenant FK execution against PostgreSQL |
-| Production route mounting and full auth pipeline | complete-local | `backend/index.js`; `backend/organization-mapping/routes.js` | `node --test backend/test/organization-mapping-hardening.test.js` | pass (composition contract) | Requires deployed integration test with real principals and authorization providers |
-| Request-bound idempotency | complete-local / execution-blocked | `backend/organization-mapping/service.js`; repository; migration `0040` | organization-mapping service tests | pass in memory | Requires PostgreSQL replay/conflict/rollback execution |
-| Atomic concurrent publication | complete-local / execution-blocked | PostgreSQL transaction + organization advisory lock + exact base/draft/impact checks | organization-mapping publication tests | pass in memory | Requires two-session PostgreSQL concurrency and failure-injection evidence |
-| Evidence audience filtering | partial | evidence registry + redaction | unit tests | pass | Needs API/audit/outbox leak tests |
-| Validated graph and primary tree | complete-local | `backend/organization-mapping/projections.js` | `node --test backend/test/organization-mapping-hardening.test.js` | pass | Human approval of root and hierarchy semantics |
-| Reconciliation real impact diff | partial | previous/new node and relationship removals create non-grant items | unit tests | pass | Changed bindings, source provenance and assignment-reference lookup remain unimplemented |
-| Complete governed API surface | blocked | draft/evaluate/review/preview/publish/rollback/audit routes | route tests | partial | Policy/selector-set CRUD, evidence, histories, reconciliation and exact projection reads remain absent |
+| Requirement | Status | Implementation | Exact command/result | Remaining risk / approval |
+|---|---|---|---|---|
+| Released migration 0025 unchanged; v3 forward migration | complete-local | `0025`, `0039` | `git diff acdb236 --exit-code -- backend/db/migrations/0025_data_scope_taxonomy_v2.sql` — pass | Confirm remote PR base |
+| Formal tri-state and truth tables | complete-local | mapping engine | `node --test backend/test/organization-mapping-*.test.js` — pass | Human truth-table review |
+| Higher-authority Exclude and exact refinement | complete-local | engine + policy schema | gap-closure tests — pass | Human authority-order review |
+| Immutable exact selector sets | complete-local | migration `0041`, repository/service/API | gap-closure tests — pass | PostgreSQL FK/immutability execution |
+| Complete reviewed-state preview binding | complete-local | service + preview schema | drift test — pass | PostgreSQL race execution |
+| Tenant-bound schema and row mappers | complete-local / execution-blocked | migrations `0040`–`0041`, repository | hardening tests — pass | Clean/upgrade/cross-tenant PostgreSQL tests unavailable |
+| Production PostgreSQL composition and authorization pipeline | complete-local | `backend/index.js`, routes | composition contract — pass | Deployed actor/provider scenarios required |
+| Governed API reads, versions, policies, selector sets, trace, evidence, reviews, reconciliation, graph/tree | complete-local | routes/service | API surface contract — pass | HTTP integration scenarios required |
+| Evidence classification and audience omission | complete-local | adapter, filter, evidence endpoint | evidence leak test — pass | Search/export/pagination integration review |
+| Review versioning and request-bound idempotency | complete-local | service/repository/schema | review replay/conflict test — pass | Concurrent PostgreSQL review test |
+| Transactional publication and organization lock | complete-local / execution-blocked | service/repository | in-memory atomic contracts — pass | Two-session PostgreSQL and failure injection unavailable |
+| Shared integration outbox only | complete-local | repository + migration `0041` | organization mapping shared-outbox test — pass | Repository-wide gate has unrelated existing findings |
+| Rollback source publication provenance | complete-local | service/publication FK | rollback republish test — pass | Current-source incompatibility PostgreSQL scenario |
+| Cross-cutting graph and hierarchy-only Scope Tree | complete-local | projections | overlay/cycle/orphan tests — pass | Human graph semantics review |
+| Reconciliation actual differences and assignment references | complete-local / execution-blocked | projection diff + read-only assignment reference query | reconciliation tests — pass | PostgreSQL reference-query execution required; assignments are never mutated |
+| No access grant / exactly-one-target preserved | complete-local | outcomes, service, migrations | organization mapping + Data Scope contracts — pass | Human security review |
+| Live PostgreSQL clean install/upgrade/FK/concurrency | blocked | postgres gate exists | `npm run authz:data-scope-v2:postgres-check` — unavailable without `DATABASE_URL` | Mandatory before acceptance |
+| Remote workflows and reviews | blocked | GitHub | `gh auth status` — unauthenticated | Required checks and human review must be green |

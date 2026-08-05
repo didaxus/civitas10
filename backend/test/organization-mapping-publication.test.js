@@ -24,8 +24,8 @@ test("publication binds exact preview to draft version and creates non-grant rec
   const service = createOrganizationMappingService({ repository });
   const draft = (await service.createDraft({ organizationId: "org_a", model, actorLogtoUserId: "user_a" })).draft;
   const preview = await service.preview({ organizationId: "org_a", draftId: draft.id, actorLogtoUserId: "user_a" });
-  await assert.rejects(() => service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version + 1, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "test", actorLogtoUserId: "user_a" }), /organization_mapping_publish_precondition_failed/);
-  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "approved", actorLogtoUserId: "user_a" });
+  await assert.rejects(() => service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version + 1, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "test", actorLogtoUserId: "user_a" , idempotencyKey:"publish-1"}), /organization_mapping_publish_precondition_failed/);
+  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "approved", actorLogtoUserId: "user_a" , idempotencyKey:"publish-2"});
   assert.equal(publication.immutable, true);
   assert.equal(publication.mutatedAuthorization, false);
   assert.equal(publication.reconciliationWorkItems.length,0);
@@ -36,8 +36,8 @@ test("rollback creates a new draft without mutating historical publication", asy
   const service = createOrganizationMappingService({ repository: createInMemoryOrganizationMappingRepository() });
   const draft = (await service.createDraft({ organizationId: "org_a", model, actorLogtoUserId: "user_a" })).draft;
   const preview = await service.preview({ organizationId: "org_a", draftId: draft.id, actorLogtoUserId: "user_a" });
-  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "approved", actorLogtoUserId: "user_a" });
-  const rollback = await service.createRollbackDraft({ organizationId: "org_a", publicationId: publication.publicationId, reason: "rollback requested", actorLogtoUserId: "user_a" });
+  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "approved", actorLogtoUserId: "user_a" , idempotencyKey:"publish-3"});
+  const rollback = await service.createRollbackDraft({ organizationId: "org_a", publicationId: publication.publicationId, reason: "rollback requested", actorLogtoUserId: "user_a" , idempotencyKey:"rollback-4"});
   assert.notEqual(rollback.draft.id, draft.id);
   assert.equal(rollback.sourcePublicationId, publication.publicationId);
   assert.equal(rollback.rollbackMutatesHistory, false);

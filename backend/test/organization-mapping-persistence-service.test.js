@@ -14,7 +14,7 @@ test("service persists draft, immutable policy version, source snapshot, evaluat
   assert.equal(evalResponse.mutatedAuthorization, false);
   assert.equal(Object.hasOwn(evalResponse.evidence, "email"), false);
   assert.ok(repository.audits.length >= 2);
-  assert.ok(repository.outbox.length >= 2);
+  assert.ok(repository.integrationEvents.length >= 2);
 });
 
 test("service rejects cross-tenant source facts and requires optimistic concurrency", async () => {

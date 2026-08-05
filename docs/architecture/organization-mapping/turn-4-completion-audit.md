@@ -1,31 +1,19 @@
-# Turn 4 completion audit and evidence matrix
+# Turn 4 completion audit
 
-Approved Turn 1 base: `3928de1618c280392fbb438cc336899088ed62e0`.
-Approved Turn 2 head: `2b46f8b38f428de527bcfd1a9f1f9306f65406e0`.
-Approved Turn 3 head: `c07e1c3c5daecad13b4cc79904770e6ee030608b`.
+No locally verifiable evidence establishes the previously documented Turn 1–3 SHAs as human-approved heads, so this document does not label them approved. The current remediation is based on the repository history recorded in the PR and must still be reviewed against GitHub issue and review history.
 
-## Code audit
+## Implemented behavior
 
-- Draft lifecycle exists through Turn 3 services and now supports deterministic preview and exact-version publication.
-- Published-model lifecycle is append-only: migration trigger rejects updates/deletes of published versions.
-- Transaction boundaries are repository-provided; publication writes publication, reconciliation work items, audit, outbox, and idempotency through service sequencing. Production deployments should wrap service calls in repository transactions.
-- Organization-scoped locking is represented by exact `(organization_id, draft_id, draft_version, preview_digest)` binding; no last-write-wins publication path is introduced.
-- Canonical serialization uses sorted-object canonicalization before digesting preview, impact, and model hashes.
-- Audit/outbox/idempotency remain tenant scoped and are emitted for preview, publish, and rollback draft creation.
-- Structure/unit projection is deterministic graph and primary scope-tree output; it is not an authorization allow decision.
-- Downstream Data Scope reconciliation is represented as non-grant work items only; no automatic assignments are created.
-- Raw source evidence remains server-filtered by Turn 3 redaction.
-- No new route uses role-name comparison or implicit organization context.
+- Production composition mounts the PostgreSQL repository and requires authentication/audience, organization context, canonical permission, Owner Ceiling, Tenant Activation, ABAC, and current runtime authorization.
+- Exact reviewed state binds policies, selector sets, snapshots, evaluations, conflicts, unresolved conditions, reviews, dimension configuration, registry hashes, projections, and published base.
+- Publication is a PostgreSQL transaction protected by an organization advisory lock and uses the shared `integration_outbox_events` foundation.
+- Published models are immutable and retain full model/reviewed-state provenance. Rollback creates and publishes a new version through the normal path.
+- The primary Scope Tree contains hierarchy-axis nodes only; reusable facets and cross-cutting overlays remain graph nodes outside the tree. Invalid, cross-tenant, inactive, cyclic, unknown, and orphan relationships fail closed.
+- Reconciliation compares versions and emits non-grant work for removed nodes/edges, changed canonical bindings/provenance/status, and changed dimension configuration. It never mutates `authorization_scope_assignments`.
+- No organization preset, `organizationType`, automatic assignment, wildcard access, or organization-wide fallback exists.
 
-## Completion evidence
+## Evidence boundary
 
-- Exact preview: implemented with `previewDigest` over draft id/version, graph, tree, facets, and impact digest.
-- Impact digest: implemented with canonical graph/tree/facets plus `authorizationMutation: false`.
-- Preview-to-publish TOCTOU protection: publish requires matching draft version, preview id, and preview digest.
-- Immutable published versions: database trigger rejects update/delete.
-- Rollback: creates a new draft from a publication and records that history is not mutated.
-- Projections: deterministic organization graph, primary scope tree, reusable facets, and reconciliation work items are generated.
+Local unit and contract evidence is recorded in `issue-318-completion-matrix.md`. Live PostgreSQL clean-install, upgrade, concurrency, transaction-failure, and tenant-FK tests remain mandatory before technical acceptance; absent execution is not reported as a pass.
 
-## Deferred outside #318
-
-Issue #319 production UI and automatic user/group access assignment remain out of scope.
+Issue #319 production UI remains out of scope.

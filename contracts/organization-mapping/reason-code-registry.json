@@ -1,6 +1,6 @@
 {
-  "version": "2026-08-org-mapping-reason-codes-v2",
-  "hash": "e7728f3698c526532d1d944a5223aed81d3d3d7cfccf8b72fda4a6b8a57fb132",
+  "version": "2026-08-org-mapping-reason-codes-v3",
+  "hash": "fbdb2fb205d2905ba842ea6f8c2190ebcfd5a66663bf14a59d15eb089db43dff",
   "entries": [
     {
       "key": "mapping_matched",
@@ -109,6 +109,11 @@
     },
     {
       "key": "mapping_structure_cycle",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_cross_connection_ambiguous",
       "status": "active",
       "domain": "organization_mapping"
     }
