@@ -9,8 +9,8 @@ test("service persists draft, immutable policy version, source snapshot, evaluat
   const service = createOrganizationMappingService({ repository });
   const draftResponse = await service.createDraft({ organizationId: "org_a", model: { dimensions: [] }, actorLogtoUserId: "user_a", idempotencyKey: "draft-1" });
   assert.equal((await service.createDraft({ organizationId: "org_a", model: { dimensions: ["changed"] }, actorLogtoUserId: "user_a", idempotencyKey: "draft-1" })).draft.id, draftResponse.draft.id);
-  const evalResponse = await service.evaluate({ organizationId: "org_a", draftId: draftResponse.draft.id, actorLogtoUserId: "user_a", idempotencyKey: "eval-1", sourceFacts: { provider: "oidc", subject: "subj", tenantId: "org_a", profile: { groups: ["g1"], email: "a@example.test" } }, policy: { rules: [{ ruleId: "r1", conditions: [{ selectorId: "external.group", operator: "equals", value: "g1" }], target: { dimensionId: "academic.stage", valueStableKey: "secondary" } }] } });
-  assert.equal(evalResponse.outcome, "matched");
+  const evalResponse = await service.evaluate({ organizationId: "org_a", draftId: draftResponse.draft.id, actorLogtoUserId: "user_a", idempotencyKey: "eval-1", sourceFacts: { provider: "oidc", subject: "subj", tenantId: "org_a", profile: { groups: ["g1"], email: "a@example.test" } }, policy: { rules: [{ ruleId: "r1", conditions: [{ selectorId: "scim.group", operator: "equals", value: "g1" }], target: { dimensionId: "academic.stage", valueStableKey: "secondary" } }] } });
+  assert.equal(evalResponse.outcome, "MATCH");
   assert.equal(evalResponse.mutatedAuthorization, false);
   assert.equal(evalResponse.evidence.email, "[redacted]");
   assert.ok(repository.audits.length >= 2);

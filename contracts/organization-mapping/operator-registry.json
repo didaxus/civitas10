@@ -1,0 +1,66 @@
+{
+  "version": "2026-08-org-mapping-operators-v1",
+  "hash": "734be3212ade95e05ea1cade51721e953960035ea729364a60fd67c495a76396",
+  "entries": [
+    {
+      "key": "equals",
+      "status": "active"
+    },
+    {
+      "key": "not_equals",
+      "status": "active"
+    },
+    {
+      "key": "in",
+      "status": "active"
+    },
+    {
+      "key": "not_in",
+      "status": "active"
+    },
+    {
+      "key": "contains",
+      "status": "active"
+    },
+    {
+      "key": "contains_any",
+      "status": "active"
+    },
+    {
+      "key": "contains_all",
+      "status": "active"
+    },
+    {
+      "key": "starts_with",
+      "status": "active"
+    },
+    {
+      "key": "ends_with",
+      "status": "active"
+    },
+    {
+      "key": "exists",
+      "status": "active"
+    },
+    {
+      "key": "not_exists",
+      "status": "active"
+    },
+    {
+      "key": "before",
+      "status": "active"
+    },
+    {
+      "key": "after",
+      "status": "active"
+    },
+    {
+      "key": "between",
+      "status": "active"
+    },
+    {
+      "key": "is_descendant_of",
+      "status": "active"
+    }
+  ]
+}

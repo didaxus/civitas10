@@ -1,0 +1,56 @@
+{
+  "version": "2026-08-org-mapping-outcomes-v1",
+  "hash": "80273d522aafb7f7918e44a18fe36c60a0fb212f68435e02698bf37d0d50f13f",
+  "entries": [
+    {
+      "key": "map_to_existing_canonical_value",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "propose_organization_owned_value",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "propose_hierarchy_relationship",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "propose_applicability_relationship",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "attach_reusable_facet",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "attach_temporal_context",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "attach_cross_cutting_overlay",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "ignore_source_fact_with_reason",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "mark_unresolved",
+      "status": "active",
+      "grantsAccess": false
+    },
+    {
+      "key": "require_manual_review",
+      "status": "active",
+      "grantsAccess": false
+    }
+  ]
+}

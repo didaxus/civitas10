@@ -1,0 +1,34 @@
+{
+  "version": "2026-08-org-mapping-reconciliation-impact-v1",
+  "hash": "850dafc97a3c5d1621ea6e4a3fb265d632a9570303988cf3f0d56c7c8eac92a3",
+  "entries": [
+    {
+      "key": "no_effect",
+      "status": "active"
+    },
+    {
+      "key": "revalidation_required",
+      "status": "active"
+    },
+    {
+      "key": "narrowing_possible",
+      "status": "active"
+    },
+    {
+      "key": "broadening_possible",
+      "status": "active"
+    },
+    {
+      "key": "assignment_invalid",
+      "status": "active"
+    },
+    {
+      "key": "source_relationship_stale",
+      "status": "active"
+    },
+    {
+      "key": "manual_review_required",
+      "status": "active"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "version": "2026-08-org-mapping-authority-v1",
+  "hash": "83bd0f849c72994d46df2583958353468d49fb908d31279ff999e58b4da3771d",
+  "entries": [
+    {
+      "key": "platform_connector_contract",
+      "status": "active",
+      "rank": 0
+    },
+    {
+      "key": "connection_mapping_policy",
+      "status": "active",
+      "rank": 1
+    },
+    {
+      "key": "organization_mapping_policy",
+      "status": "active",
+      "rank": 2
+    },
+    {
+      "key": "explicit_reviewed_mapping",
+      "status": "active",
+      "rank": 3
+    }
+  ]
+}

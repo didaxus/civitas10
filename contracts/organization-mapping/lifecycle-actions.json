@@ -1,5 +1,213 @@
 {
-  "contract": "civitas.organization-mapping.lifecycle-actions",
   "version": "2026-08-civitas-organization-mapping-actions-v1",
-  "source": "core/organization-mapping/lifecycle-action-registry.cjs"
+  "hash": "a63a05d417f6fd8e2daa43708584802dce611e29838b8c382acf3ce009067bc8",
+  "entries": [
+    {
+      "actionId": "organizationModel.readPublished",
+      "surface": "organization-mapping",
+      "method": "GET",
+      "endpoint": "/o/{organizationId}/organization-model/published",
+      "futureContract": null,
+      "requiredPermission": "org.orgmodel.read",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "metadata",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "standard",
+      "auditRequirement": "decision-and-result",
+      "reasonRequirement": "optional",
+      "idempotencyRequirement": "not-required"
+    },
+    {
+      "actionId": "organizationModel.readDraft",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "draft read endpoint"
+      },
+      "requiredPermission": "org.orgmodel_draft.read",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "metadata",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "standard",
+      "auditRequirement": "decision-and-result",
+      "reasonRequirement": "optional",
+      "idempotencyRequirement": "not-required"
+    },
+    {
+      "actionId": "organizationModel.editDraft",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "create or edit draft endpoint"
+      },
+      "requiredPermission": "org.orgmodel_draft.manage",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "metadata",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "elevated",
+      "auditRequirement": "full-diff",
+      "reasonRequirement": "required",
+      "idempotencyRequirement": "required-for-create"
+    },
+    {
+      "actionId": "organizationModel.evaluateMappingPolicies",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "dry-run evaluation endpoint"
+      },
+      "requiredPermission": "org.orgmodel_mapping.evaluate",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "derived-evidence",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "standard",
+      "auditRequirement": "request-and-redacted-result",
+      "reasonRequirement": "optional",
+      "idempotencyRequirement": "not-required"
+    },
+    {
+      "actionId": "organizationModel.readSensitiveMappingEvidence",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "sensitive evidence endpoint"
+      },
+      "requiredPermission": "org.orgmodel_evidence.read",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "sensitive-external-facts",
+      "allowedUiTreatment": "redacted-by-default",
+      "riskClassification": "high",
+      "auditRequirement": "who-what-when-why",
+      "reasonRequirement": "required",
+      "idempotencyRequirement": "not-required"
+    },
+    {
+      "actionId": "organizationModel.approveMapping",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "approve or reject endpoint"
+      },
+      "requiredPermission": "org.orgmodel_mapping.approve",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "metadata",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "high",
+      "auditRequirement": "immutable-approval-event",
+      "reasonRequirement": "required",
+      "idempotencyRequirement": "required"
+    },
+    {
+      "actionId": "organizationModel.publishVersion",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "exact version publication endpoint"
+      },
+      "requiredPermission": "org.orgmodel.publish",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "metadata",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "critical",
+      "auditRequirement": "immutable-publication-event",
+      "reasonRequirement": "required",
+      "idempotencyRequirement": "required"
+    },
+    {
+      "actionId": "organizationModel.reconcileUpstream",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "upstream reconciliation endpoint"
+      },
+      "requiredPermission": "org.orgmodel.reconcile",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "external-facts",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "elevated",
+      "auditRequirement": "reconciliation-summary",
+      "reasonRequirement": "optional",
+      "idempotencyRequirement": "required"
+    },
+    {
+      "actionId": "organizationModel.inspectAuditHistory",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "audit history endpoint"
+      },
+      "requiredPermission": "org.orgmodel_audit.read",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "audit",
+      "allowedUiTreatment": "redacted-audit-view",
+      "riskClassification": "standard",
+      "auditRequirement": "decision-and-result",
+      "reasonRequirement": "optional",
+      "idempotencyRequirement": "not-required"
+    },
+    {
+      "actionId": "organizationModel.createRollbackDraft",
+      "surface": "organization-mapping",
+      "method": null,
+      "endpoint": null,
+      "futureContract": {
+        "placeholder": true,
+        "label": "rollback draft from immutable version endpoint"
+      },
+      "requiredPermission": "org.orgmodel_rollback.create",
+      "ownerCeiling": "required",
+      "tenantActivation": "required",
+      "abacBehavior": "tenant-boundary-and-draft-version-match-fail-closed",
+      "runtimeDependency": "backend-authorization-runtime-current-snapshot",
+      "evidenceClassification": "metadata",
+      "allowedUiTreatment": "backend-decision-only-no-frontend-registry",
+      "riskClassification": "critical",
+      "auditRequirement": "rollback-source-version-and-diff",
+      "reasonRequirement": "required",
+      "idempotencyRequirement": "required"
+    }
+  ]
 }

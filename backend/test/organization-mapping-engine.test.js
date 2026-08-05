@@ -12,24 +12,24 @@ test("selector registry is immutable, hashed, and reusable", () => {
 });
 
 test("engine produces organization-model candidates without grants", () => {
-  const result = evaluateMappingPolicy({ rules: [{ ruleId: "r1", tenantId: "org_a", conditions: [{ selectorId: "external.group", operator: "equals", value: "g-teachers" }], target: { dimensionId: "academic.department", valueStableKey: "math" } }] }, { organizationId: "org_a", facts });
+  const result = evaluateMappingPolicy({ rules: [{ ruleId: "r1", tenantId: "org_a", conditions: [{ selectorId: "scim.group", operator: "equals", value: "g-teachers" }], target: { dimensionId: "academic.department", valueStableKey: "math" } }] }, { organizationId: "org_a", facts });
   assert.equal(result.outcome, OUTCOMES.MATCHED);
-  assert.deepEqual(result.candidate.target, { dimensionId: "academic.department", valueStableKey: "math" });
+  assert.deepEqual(result.candidate.outcome, { type: "map_to_existing_canonical_value", dimensionId: "academic.department", valueStableKey: "math" });
 });
 
 test("incomplete, cross-tenant, and grant-shaped states fail closed", () => {
   assert.equal(evaluateMappingPolicy({ rules: [] }, { organizationId: "org_a", facts: { ...facts, claimsComplete: false } }).outcome, OUTCOMES.AMBIGUOUS);
   assert.equal(evaluateMappingPolicy({ rules: [] }, { organizationId: "org_b", facts }).reasonCode, MAPPING_REASON_CODES.TENANT_MISMATCH);
-  const unsafe = evaluateMappingPolicy({ rules: [{ ruleId: "unsafe", conditions: [], target: { dimensionId: "academic.stage", canonicalRoleName: "organization_admin" } }] }, { organizationId: "org_a", facts });
-  assert.equal(unsafe.outcome, OUTCOMES.INCOMPATIBLE);
+  const unsafe = evaluateMappingPolicy({ rules: [{ ruleId: "unsafe", conditions: [{ selectorId: "scim.group", operator: "equals", value: "g-teachers" }], target: { dimensionId: "academic.stage", canonicalRoleName: "organization_admin" } }] }, { organizationId: "org_a", facts });
+  assert.equal(unsafe.outcome, OUTCOMES.AMBIGUOUS);
   assert.equal(unsafe.reasonCode, MAPPING_REASON_CODES.UNSAFE_GRANT_FIELD);
 });
 
 test("authority, precedence, specificity, and conflicts are deterministic", () => {
-  const baseRule = { conditions: [{ selectorId: "external.group", operator: "equals", value: "g-teachers" }], target: { dimensionId: "academic.stage", valueStableKey: "secondary" } };
-  const selected = evaluateMappingPolicy({ rules: [{ ...baseRule, ruleId: "global", authority: "global", precedence: 100 }, { ...baseRule, ruleId: "tenant", authority: "tenant", precedence: 1, target: { dimensionId: "academic.stage", valueStableKey: "tenant-secondary" } }] }, { organizationId: "org_a", facts });
+  const baseRule = { conditions: [{ selectorId: "scim.group", operator: "equals", value: "g-teachers" }], target: { dimensionId: "academic.stage", valueStableKey: "secondary" } };
+  const selected = evaluateMappingPolicy({ rules: [{ ...baseRule, ruleId: "global", authority: "connection_mapping_policy", precedence: 100 }, { ...baseRule, ruleId: "tenant", authority: "explicit_reviewed_mapping", precedence: 1, target: { dimensionId: "academic.stage", valueStableKey: "tenant-secondary" } }] }, { organizationId: "org_a", facts });
   assert.equal(selected.candidate.ruleId, "tenant");
-  const conflict = evaluateMappingPolicy({ rules: [{ ...baseRule, ruleId: "a", authority: "tenant" }, { ...baseRule, ruleId: "b", authority: "tenant", target: { dimensionId: "academic.stage", valueStableKey: "other" } }] }, { organizationId: "org_a", facts });
+  const conflict = evaluateMappingPolicy({ rules: [{ ...baseRule, ruleId: "a", authority: "explicit_reviewed_mapping" }, { ...baseRule, ruleId: "b", authority: "explicit_reviewed_mapping", target: { dimensionId: "academic.stage", valueStableKey: "other" } }] }, { organizationId: "org_a", facts });
   assert.equal(conflict.outcome, OUTCOMES.AMBIGUOUS);
-  assert.equal(conflict.reasonCode, MAPPING_REASON_CODES.CONFLICT);
+  assert.equal(conflict.reasonCode, "mapping_outcome_conflict");
 });
