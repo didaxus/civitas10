@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const { createInMemoryOrganizationMappingRepository, createOrganizationMappingService } = require("../organization-mapping");
 const { buildOrganizationGraph, buildPrimaryScopeTree, buildReusableFacets } = require("../organization-mapping/projections");
 
-const model = { nodes: [{ id: "class_b", kind: "class", label: "B" }, { id: "campus_a", kind: "campus", label: "A" }], edges: [{ from: "campus_a", to: "class_b", relationship: "contains" }], facets: [{ key: "modality", value: "hybrid" }] };
+const model = { nodes: [{ id: "class_b", kind: "class", label: "B" }, { id: "campus_a", kind: "campus", label: "A" }], edges: [{ from: "campus_a", to: "class_b", relationship: "parent_of" }], facets: [{ key: "modality", value: "hybrid" }] };
 
 test("preview is deterministic and projections are canonical", async () => {
   const service = createOrganizationMappingService({ repository: createInMemoryOrganizationMappingRepository() });
@@ -24,11 +24,11 @@ test("publication binds exact preview to draft version and creates non-grant rec
   const service = createOrganizationMappingService({ repository });
   const draft = (await service.createDraft({ organizationId: "org_a", model, actorLogtoUserId: "user_a" })).draft;
   const preview = await service.preview({ organizationId: "org_a", draftId: draft.id, actorLogtoUserId: "user_a" });
-  await assert.rejects(() => service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version + 1, previewId: preview.previewId, expectedPreviewDigest: preview.previewDigest, reason: "test", actorLogtoUserId: "user_a" }), /organization_mapping_preview_stale/);
-  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, previewId: preview.previewId, expectedPreviewDigest: preview.previewDigest, reason: "approved", actorLogtoUserId: "user_a" });
+  await assert.rejects(() => service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version + 1, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "test", actorLogtoUserId: "user_a" }), /organization_mapping_publish_precondition_failed/);
+  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "approved", actorLogtoUserId: "user_a" });
   assert.equal(publication.immutable, true);
   assert.equal(publication.mutatedAuthorization, false);
-  assert.ok(publication.reconciliationWorkItems.length);
+  assert.equal(publication.reconciliationWorkItems.length,0);
   assert.equal(publication.reconciliationWorkItems.every((item) => item.grantsAccess === false), true);
 });
 
@@ -36,7 +36,7 @@ test("rollback creates a new draft without mutating historical publication", asy
   const service = createOrganizationMappingService({ repository: createInMemoryOrganizationMappingRepository() });
   const draft = (await service.createDraft({ organizationId: "org_a", model, actorLogtoUserId: "user_a" })).draft;
   const preview = await service.preview({ organizationId: "org_a", draftId: draft.id, actorLogtoUserId: "user_a" });
-  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, previewId: preview.previewId, expectedPreviewDigest: preview.previewDigest, reason: "approved", actorLogtoUserId: "user_a" });
+  const publication = await service.publish({ organizationId: "org_a", draftId: draft.id, expectedDraftVersion: draft.version, expectedPublishedVersion:0, previewId: preview.previewId, expectedImpactDigest: preview.impactDigest, reason: "approved", actorLogtoUserId: "user_a" });
   const rollback = await service.createRollbackDraft({ organizationId: "org_a", publicationId: publication.publicationId, reason: "rollback requested", actorLogtoUserId: "user_a" });
   assert.notEqual(rollback.draft.id, draft.id);
   assert.equal(rollback.sourcePublicationId, publication.publicationId);

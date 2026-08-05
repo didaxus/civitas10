@@ -1895,8 +1895,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_audit",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "standard",
       "consumers": [
@@ -1916,7 +1916,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 10
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel_draft.manage",
@@ -1924,8 +1928,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_draft",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "standard",
       "consumers": [
@@ -1945,7 +1949,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 20
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel_draft.read",
@@ -1953,8 +1961,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_draft",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "standard",
       "consumers": [
@@ -1974,7 +1982,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 30
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel_mapping.approve",
@@ -1982,8 +1994,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_mapping",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "high",
       "consumers": [
@@ -2003,7 +2015,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 50
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel_mapping.evaluate",
@@ -2011,8 +2027,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_mapping",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "standard",
       "consumers": [
@@ -2032,7 +2048,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 60
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel_evidence.read",
@@ -2040,8 +2060,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_evidence",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "high",
       "consumers": [
@@ -2061,7 +2081,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 40
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel.publish",
@@ -2069,8 +2093,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "high",
       "consumers": [
@@ -2090,7 +2114,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 80
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel.read",
@@ -2098,8 +2126,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "standard",
       "consumers": [
@@ -2119,7 +2147,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 90
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel.reconcile",
@@ -2127,8 +2159,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "standard",
       "consumers": [
@@ -2148,7 +2180,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 100
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.orgmodel_rollback.create",
@@ -2156,8 +2192,8 @@
       "moduleId": "organization-mapping",
       "capabilityId": "org.orgmodel_rollback",
       "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
+      "targetStatus": "active",
+      "observedImplementation": "active",
       "dataScopeStrategy": "organization",
       "risk": "high",
       "consumers": [
@@ -2177,7 +2213,11 @@
         "groupLabel": "Organization mapping",
         "groupOrder": 15,
         "order": 70
-      }
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
     },
     {
       "name": "org.reports.approve",

@@ -9,7 +9,7 @@ const generated = Object.freeze({
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924"
+    "catalogHash": "eda09e0840a3b6f2286d27f26e3e3ec96b5eee828e64b6f97a7b0205739373d3"
   },
   "catalog": {
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
@@ -1908,8 +1908,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_audit",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "standard",
         "consumers": [
@@ -1929,7 +1929,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 10
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel_draft.manage",
@@ -1937,8 +1941,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_draft",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "standard",
         "consumers": [
@@ -1958,7 +1962,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 20
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel_draft.read",
@@ -1966,8 +1974,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_draft",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "standard",
         "consumers": [
@@ -1987,7 +1995,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 30
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel_evidence.read",
@@ -1995,8 +2007,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_evidence",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "high",
         "consumers": [
@@ -2016,7 +2028,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 40
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel_mapping.approve",
@@ -2024,8 +2040,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_mapping",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "high",
         "consumers": [
@@ -2045,7 +2061,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 50
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel_mapping.evaluate",
@@ -2053,8 +2073,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_mapping",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "standard",
         "consumers": [
@@ -2074,7 +2094,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 60
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel_rollback.create",
@@ -2082,8 +2106,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel_rollback",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "high",
         "consumers": [
@@ -2103,7 +2127,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 70
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel.publish",
@@ -2111,8 +2139,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "high",
         "consumers": [
@@ -2132,7 +2160,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 80
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel.read",
@@ -2140,8 +2172,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "standard",
         "consumers": [
@@ -2161,7 +2193,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 90
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.orgmodel.reconcile",
@@ -2169,8 +2205,8 @@ const generated = Object.freeze({
         "moduleId": "organization-mapping",
         "capabilityId": "org.orgmodel",
         "surface": "organization",
-        "targetStatus": "planned",
-        "observedImplementation": "absent",
+        "targetStatus": "active",
+        "observedImplementation": "active",
         "dataScopeStrategy": "organization",
         "risk": "standard",
         "consumers": [
@@ -2190,7 +2226,11 @@ const generated = Object.freeze({
           "groupLabel": "Organization mapping",
           "groupOrder": 15,
           "order": 100
-        }
+        },
+        "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+        "testEvidence": [
+          "backend/test/organization-mapping-route-authorization.test.js"
+        ]
       },
       {
         "name": "org.reports.approve",
@@ -4523,7 +4563,7 @@ const generated = Object.freeze({
       "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
       "contractVersion": "2026-07-civitas-permission-catalog-v1",
       "baselineAudit": "#167 observed legacy baseline; target is canonical Phase 3 contract",
-      "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924"
+      "catalogHash": "eda09e0840a3b6f2286d27f26e3e3ec96b5eee828e64b6f97a7b0205739373d3"
     },
     "legacyBaselineObserved": [
       {
@@ -4774,7 +4814,7 @@ const generated = Object.freeze({
         "reason": "Governance IDs are blocked pending explicit namespace decision; consumers must not infer target permissions."
       }
     ],
-    "catalogHash": "85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924"
+    "catalogHash": "eda09e0840a3b6f2286d27f26e3e3ec96b5eee828e64b6f97a7b0205739373d3"
   },
   "activePermissions": [
     {
@@ -4933,6 +4973,336 @@ const generated = Object.freeze({
       }
     },
     {
+      "name": "org.orgmodel_audit.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_audit",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Inspect organization mapping audit history",
+        "description": "Inspect organization mapping audit history.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 10
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_draft.manage",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_draft",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create or edit organization model drafts",
+        "description": "Create or edit organization model drafts.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 20
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_draft.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_draft",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Read organization model drafts",
+        "description": "Read organization model drafts.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 30
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_evidence.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_evidence",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Read sensitive external mapping evidence",
+        "description": "Read sensitive external mapping evidence.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 40
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_mapping.approve",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_mapping",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve or reject mapping outcomes",
+        "description": "Approve or reject mapping outcomes.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 50
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_mapping.evaluate",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_mapping",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Evaluate organization mapping policies without granting access",
+        "description": "Evaluate organization mapping policies without granting access.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 60
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_rollback.create",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_rollback",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create rollback draft from immutable historical version",
+        "description": "Create rollback draft from immutable historical version.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 70
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel.publish",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Publish an exact organization model version",
+        "description": "Publish an exact organization model version.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 80
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Read published organization model",
+        "description": "Read published organization model.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 90
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel.reconcile",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Reconcile upstream external facts",
+        "description": "Reconcile upstream external facts.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 100
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
       "name": "org.role_aliases.manage",
       "namespace": "org",
       "moduleId": null,
@@ -5008,4 +5378,4 @@ const catalog = Object.freeze(generated.catalog)
 const permissions = Object.freeze(catalog.permissions.map(Object.freeze))
 const activePermissions = Object.freeze(generated.activePermissions.map(Object.freeze))
 const permissionsByName = Object.freeze(Object.fromEntries(permissions.map((permission) => [permission.name, permission])))
-module.exports = { generated, catalog, catalogHash: '85d6ab4f628d0f04d5f51a3510bb64d2659a4e8804d91a5855ab6222882de924', permissions, activePermissions, permissionsByName }
+module.exports = { generated, catalog, catalogHash: 'eda09e0840a3b6f2286d27f26e3e3ec96b5eee828e64b6f97a7b0205739373d3', permissions, activePermissions, permissionsByName }

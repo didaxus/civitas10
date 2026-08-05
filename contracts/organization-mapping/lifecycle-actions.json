@@ -1,6 +1,6 @@
 {
   "version": "2026-08-civitas-organization-mapping-actions-v1",
-  "hash": "a63a05d417f6fd8e2daa43708584802dce611e29838b8c382acf3ce009067bc8",
+  "hash": "c051cf8475696b4e067cb87c8e156a73329ddd37272c7b991340f0869da666d0",
   "entries": [
     {
       "actionId": "organizationModel.readPublished",
@@ -44,12 +44,9 @@
     {
       "actionId": "organizationModel.editDraft",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "create or edit draft endpoint"
-      },
+      "method": "POST|PUT",
+      "endpoint": "/o/{organizationId}/organization-model/drafts[/{draftId}]",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_draft.manage",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -65,12 +62,9 @@
     {
       "actionId": "organizationModel.evaluateMappingPolicies",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "dry-run evaluation endpoint"
-      },
+      "method": "POST",
+      "endpoint": "/o/{organizationId}/organization-model/evaluations",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_mapping.evaluate",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -107,12 +101,9 @@
     {
       "actionId": "organizationModel.approveMapping",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "approve or reject endpoint"
-      },
+      "method": "POST",
+      "endpoint": "/o/{organizationId}/organization-model/evaluations/{evaluationId}/reviews",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_mapping.approve",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -128,12 +119,9 @@
     {
       "actionId": "organizationModel.publishVersion",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "exact version publication endpoint"
-      },
+      "method": "POST",
+      "endpoint": "/o/{organizationId}/organization-model/drafts/{draftId}/publish",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel.publish",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -170,12 +158,9 @@
     {
       "actionId": "organizationModel.inspectAuditHistory",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "audit history endpoint"
-      },
+      "method": "GET",
+      "endpoint": "/o/{organizationId}/organization-model/audit",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_audit.read",
       "ownerCeiling": "required",
       "tenantActivation": "required",
@@ -191,12 +176,9 @@
     {
       "actionId": "organizationModel.createRollbackDraft",
       "surface": "organization-mapping",
-      "method": null,
-      "endpoint": null,
-      "futureContract": {
-        "placeholder": true,
-        "label": "rollback draft from immutable version endpoint"
-      },
+      "method": "POST",
+      "endpoint": "/o/{organizationId}/organization-model/publications/{publicationId}/rollback-draft",
+      "futureContract": null,
       "requiredPermission": "org.orgmodel_rollback.create",
       "ownerCeiling": "required",
       "tenantActivation": "required",

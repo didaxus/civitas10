@@ -9,7 +9,7 @@ const roleModel = require('../../core/authz/roles/generated/role-model')
 const catalog = require('../../core/authz/catalog/generated/permission-catalog')
 const { rolePermissionAssignments } = require('../../core/authz')
 
-const expectedCounts = Object.freeze({ organization_admin: 81, organization_director: 57, organization_headdirector: 53, organization_headteacher: 68, organization_groupleader: 36, organization_teacher: 45, organization_student: 17, organization_parent: 17, organization_secretary: 28, organization_accountant: 17, organization_billing: 12, organization_payroll: 11, organization_member: 15 })
+const expectedCounts = Object.freeze({ organization_admin: 91, organization_director: 57, organization_headdirector: 53, organization_headteacher: 68, organization_groupleader: 36, organization_teacher: 45, organization_student: 17, organization_parent: 17, organization_secretary: 28, organization_accountant: 17, organization_billing: 12, organization_payroll: 11, organization_member: 15 })
 const activeOrganizationPermissions = new Set(catalog.activePermissions.filter((permission) => permission.surface === 'organization').map((permission) => permission.name))
 const allCatalogPermissions = new Set(catalog.permissions.map((permission) => permission.name))
 

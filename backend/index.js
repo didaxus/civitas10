@@ -56,6 +56,7 @@ const { createModuleAvailabilityResolver, createStaticOperationRegistry, createP
 const { createEntitlementPolicyProvider, createDataScopePolicyProvider } = require("./authorization/policies/providers");
 const { createProductionModuleControlPlaneService } = require("./services/moduleControlPlane");
 const { createDataScopeEvaluator } = require("./authorization/data-scope");
+const { createPostgresOrganizationMappingRepository, createOrganizationMappingService, createOrganizationMappingRouter } = require("./organization-mapping");
 
 const app = express();
 const port = 3000;
@@ -691,6 +692,20 @@ registerScimReconciliationRoutes({
   sharedAuth: SHARED_AUTH,
   apiResource: API_RESOURCE,
 });
+
+const organizationMappingRepository = createPostgresOrganizationMappingRepository({ pool: getPool() });
+const organizationMappingService = createOrganizationMappingService({ repository: organizationMappingRepository });
+const organizationMappingRouter = createOrganizationMappingRouter({
+  service: organizationMappingService,
+  authorizeAction: (actionId, permission) => [
+    requireSafeOrganizationIdParam,
+    requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [permission] }),
+    requireOrg,
+    requirePermission(permission),
+    requireAuthorization({ permission, actionId, surface: "organization", operation: actionId }),
+  ],
+});
+app.use("/api/v1", organizationMappingRouter);
 
 secureRoute.get("/documents", "organizationMemberReadLegacyRedirect", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), (req, res) => {
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");

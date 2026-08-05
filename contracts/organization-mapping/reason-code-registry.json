@@ -1,0 +1,116 @@
+{
+  "version": "2026-08-org-mapping-reason-codes-v2",
+  "hash": "e7728f3698c526532d1d944a5223aed81d3d3d7cfccf8b72fda4a6b8a57fb132",
+  "entries": [
+    {
+      "key": "mapping_matched",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_not_matched",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_condition_unresolved",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_external_facts_incomplete",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_external_facts_stale",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_tenant_mismatch",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_selector_unknown",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_dimension_unknown",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_outcome_conflict",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_operator_unsupported",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_operand_malformed",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_unsafe_grant_field",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_outcome_invalid",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_excluded",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_include_empty",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_impact_digest_stale",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_source_snapshot_changed",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_publish_precondition_failed",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_refinement_invalid",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_higher_authority_exclusion",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_review_version_stale",
+      "status": "active",
+      "domain": "organization_mapping"
+    },
+    {
+      "key": "mapping_structure_cycle",
+      "status": "active",
+      "domain": "organization_mapping"
+    }
+  ]
+}

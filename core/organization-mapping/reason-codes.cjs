@@ -1,15 +1,6 @@
 "use strict";
-const MAPPING_REASON_CODES = Object.freeze({
-  MATCHED: "mapping_matched",
-  NOT_MATCHED: "mapping_not_matched",
-  AMBIGUOUS: "mapping_ambiguous",
-  INCOMPLETE_FACTS: "mapping_external_facts_incomplete",
-  STALE_FACTS: "mapping_external_facts_stale",
-  TENANT_MISMATCH: "mapping_tenant_mismatch",
-  SELECTOR_UNKNOWN: "mapping_selector_unknown",
-  DIMENSION_UNKNOWN: "mapping_dimension_unknown",
-  CONFLICT: "mapping_conflict",
-  UNSUPPORTED_OPERATOR: "mapping_operator_unsupported",
-  UNSAFE_GRANT_FIELD: "mapping_unsafe_grant_field",
-});
-module.exports = { MAPPING_REASON_CODES };
+const {defineRegistry}=require("./registry-utils.cjs");
+const definitions={MATCHED:"mapping_matched",NOT_MATCHED:"mapping_not_matched",CONDITION_UNRESOLVED:"mapping_condition_unresolved",INCOMPLETE_FACTS:"mapping_external_facts_incomplete",STALE_FACTS:"mapping_external_facts_stale",TENANT_MISMATCH:"mapping_tenant_mismatch",SELECTOR_UNKNOWN:"mapping_selector_unknown",DIMENSION_UNKNOWN:"mapping_dimension_unknown",CONFLICT:"mapping_outcome_conflict",UNSUPPORTED_OPERATOR:"mapping_operator_unsupported",OPERAND_MALFORMED:"mapping_operand_malformed",UNSAFE_GRANT_FIELD:"mapping_unsafe_grant_field",OUTCOME_INVALID:"mapping_outcome_invalid",EXCLUDED:"mapping_excluded",INCLUDE_EMPTY:"mapping_include_empty",IMPACT_DIGEST_STALE:"mapping_impact_digest_stale",SOURCE_SNAPSHOT_CHANGED:"mapping_source_snapshot_changed",PUBLISH_PRECONDITION_FAILED:"mapping_publish_precondition_failed",REFINEMENT_INVALID:"mapping_refinement_invalid",HIGHER_AUTHORITY_EXCLUSION:"mapping_higher_authority_exclusion",REVIEW_VERSION_STALE:"mapping_review_version_stale",STRUCTURE_CYCLE:"mapping_structure_cycle"};
+const mappingReasonCodeRegistry=defineRegistry({version:"2026-08-org-mapping-reason-codes-v2",entries:Object.values(definitions).map((key)=>({key,status:"active",domain:"organization_mapping"}))});
+const MAPPING_REASON_CODES=Object.freeze(definitions);
+module.exports={MAPPING_REASON_CODES,mappingReasonCodeRegistry};

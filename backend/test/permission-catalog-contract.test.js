@@ -17,7 +17,7 @@ test('canonical permission catalog freezes Phase 3 cardinality and active-only s
   assert.equal(generated.catalog.legacyDecisions.length, 10)
   assert.deepEqual(generated.catalog.phase3Namespaces, namespaces)
   assert.deepEqual(generated.catalog.organizationRoles, roles)
-  assert.deepEqual(generated.activePermissions.map((permission) => permission.name).sort(), ['lms.course_offerings.read','lms.group_members.read','lms.groups.read','org.documents.create','org.documents.read','org.role_aliases.manage','owner.role_labels.manage'])
+  assert.deepEqual(generated.activePermissions.map((permission) => permission.name).sort(), ['lms.course_offerings.read','lms.group_members.read','lms.groups.read','org.documents.create','org.documents.read','org.orgmodel.publish','org.orgmodel.read','org.orgmodel.reconcile','org.orgmodel_audit.read','org.orgmodel_draft.manage','org.orgmodel_draft.read','org.orgmodel_evidence.read','org.orgmodel_mapping.approve','org.orgmodel_mapping.evaluate','org.orgmodel_rollback.create','org.role_aliases.manage','owner.role_labels.manage'])
   assert.equal(generated.activePermissions.some((permission) => permission.namespace === 'planning'), false)
 })
 

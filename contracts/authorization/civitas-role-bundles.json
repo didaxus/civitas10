@@ -93,7 +93,7 @@
         "communications_operator",
         "notification_preferences_self"
       ],
-      "expectedPotentialCount": 81,
+      "expectedPotentialCount": 91,
       "presentation": {
         "defaultLabel": "Organization Admin"
       }
