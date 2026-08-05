@@ -21,7 +21,8 @@
         "ownerOrganizationsCreate": "owner.organizations.create",
         "ownerRuntimeRead": "owner.runtime.read",
         "ownerRuntimeOperationsExecute": "owner.runtime.operations.execute",
-        "ownerWorkerQueuesRead": "owner.worker_queues.read"
+        "ownerWorkerQueuesRead": "owner.worker_queues.read",
+        "ownerRoleLabelsManage": "owner.role_labels.manage"
       }
     },
     "organization": {

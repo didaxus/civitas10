@@ -24,6 +24,7 @@ const CivitasSharedContract = Object.freeze({
         ownerRuntimeRead: OWNER_PERMISSIONS.runtimeRead,
         ownerRuntimeOperationsExecute: OWNER_PERMISSIONS.runtimeOperationsExecute,
         ownerWorkerQueuesRead: OWNER_PERMISSIONS.workerQueuesRead,
+        ownerRoleLabelsManage: OWNER_PERMISSIONS.roleLabelsManage,
       }),
     }),
     organization: Object.freeze({

@@ -9,6 +9,7 @@ export const OWNER_SCOPES = {
   runtimeWrite: civitasConfig.auth.global.permissions.ownerRuntimeOperationsExecute,
   workerQueuesRead: civitasConfig.auth.global.permissions.ownerWorkerQueuesRead,
   workerQueuesWrite: civitasConfig.auth.global.permissions.ownerRuntimeOperationsExecute,
+  roleLabelsManage: civitasConfig.auth.global.permissions.ownerRoleLabelsManage,
   organizationsCreate: civitasConfig.auth.global.permissions.ownerOrganizationsCreate,
   organizationsRead: civitasConfig.auth.global.permissions.ownerOrganizationsRead,
   organizationsWrite: civitasConfig.auth.global.permissions.ownerOrganizationsCreate,
@@ -21,6 +22,7 @@ export const OWNER_SHELL_REQUIRED_SCOPES = Object.freeze([
   OWNER_SCOPES.organizationsCreate,
   OWNER_SCOPES.runtimeRead,
   OWNER_SCOPES.workerQueuesRead,
+  OWNER_SCOPES.roleLabelsManage,
 ]);
 
 export const OIDC_LOGIN_SCOPES = Object.freeze(["openid", "profile", "email"]);

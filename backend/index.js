@@ -451,7 +451,7 @@ secureRoute.get("/owner/organizations/:organizationId/governance/audit", "ownerR
   catch (error) { return sendPublicError(res, error, "OwnerGovernanceAuditError", "Failed to load governance audit events"); }
 });
 
-secureRoute.put("/owner/governance/role-labels/:canonicalRoleKey", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: ["owner.role_labels.manage"] }), requireGlobalOwner, async (req, res) => {
+secureRoute.put("/owner/governance/role-labels/:canonicalRoleKey", "ownerSensitiveWrite", requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [OWNER_AUTHZ.ownerRoleLabelsManage] }), requireGlobalOwner, async (req, res) => {
   try {
     const result = await new RoleLabelService().updateGlobalLabel({ canonicalRoleKey: req.params.canonicalRoleKey, displayName: req.body?.displayName ?? null, expectedVersion: req.body?.expectedVersion, actorLogtoUserId: actorId(req), reason: req.body?.reason || "owner_role_label_update" });
     return res.json({ contractVersion: "2026-08-civitas10-role-labels-v1", ...result });
