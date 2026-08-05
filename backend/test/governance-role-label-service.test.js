@@ -14,3 +14,31 @@ test("directRoleUserCount counts unique direct RBAC users only", async () => { c
 test("stale versions and duplicate labels are rejected",async()=>{const repo=new Repo();const svc=new RoleLabelService({repository:repo});await svc.updateGlobalLabel({canonicalRoleKey:"organization_teacher",displayName:"Instructor",expectedVersion:"0"});await assert.rejects(()=>svc.updateGlobalLabel({canonicalRoleKey:"organization_student",displayName:"Learner",expectedVersion:"0"}),/changed by another administrator/);await svc.updateGlobalLabel({canonicalRoleKey:"organization_student",displayName:"Learner",expectedVersion:"1"});await assert.rejects(()=>svc.updateGlobalLabel({canonicalRoleKey:"organization_parent",displayName:"learner",expectedVersion:"2"}),/already uses/);});
 test("control and bidi characters are rejected",()=>{assert.throws(()=>normalizeRoleLabel("Bad\u202ename"),/control/);assert.throws(()=>normalizeRoleLabel("!!!"),/letters or numbers/);});
 test("role label service does not call Logto role rename/update APIs",()=>{const files=["roleLabelService.js","postgresRoleLabelRepository.js","effectiveRoleLabelResolver.js"].map(f=>fs.readFileSync(path.join(__dirname,"../governance/role-labels",f),"utf8")).join("\n");assert.doesNotMatch(files,/updateOrganizationRole|updateRole|rename|patchOrganizationRole|Logto Management API/i);});
+
+test("role-name edit capabilities come from verified actor authorization context", async () => {
+  const svc = new RoleLabelService({ repository: new Repo() });
+  const ownerAllowed = await svc.buildReadModel({ organizationId: "org-a", roles, surface: "owner", actorAuthorizationContext: { globalRoles: ["owner_global"], permissions: ["owner.role_labels.manage"] } });
+  assert.equal(ownerAllowed.rows[0].canEditGlobalDefault, true);
+  assert.equal(ownerAllowed.rows[0].canEditOrganizationAlias, false);
+  const ownerDenied = await svc.buildReadModel({ organizationId: "org-a", roles, surface: "owner", actorAuthorizationContext: { globalRoles: ["owner_global"], permissions: [] } });
+  assert.equal(ownerDenied.rows[0].canEditGlobalDefault, false);
+  const tenantAllowed = await svc.buildReadModel({ organizationId: "org-a", roles, surface: "tenant", actorAuthorizationContext: { verifiedOrganizationId: "org-a", organizationRoles: ["organization_admin"], permissions: ["org.role_aliases.manage"] } });
+  assert.equal(tenantAllowed.rows[0].canEditOrganizationAlias, true);
+  assert.equal(tenantAllowed.rows[0].canEditGlobalDefault, false);
+  const tenantDenied = await svc.buildReadModel({ organizationId: "org-a", roles, surface: "tenant", actorAuthorizationContext: { verifiedOrganizationId: "org-a", organizationRoles: ["organization_admin"], permissions: [] } });
+  assert.equal(tenantDenied.rows[0].canEditOrganizationAlias, false);
+});
+
+test("Logto read-only plan maps role-label permissions to the intended roles", () => {
+  const plan = fs.readFileSync(path.join(__dirname, "../../artifacts/logto-authz-plan.json"), "utf8");
+  const bundles = fs.readFileSync(path.join(__dirname, "../../contracts/authorization/civitas-role-bundles.json"), "utf8");
+  const globalRoles = fs.readFileSync(path.join(__dirname, "../../core/authz/roles/global-role-permissions.js"), "utf8");
+  const activeScopes = fs.readFileSync(path.join(__dirname, "../../artifacts/authorization/active-role-scopes.json"), "utf8");
+  assert.match(plan, /owner\.role_labels\.manage/);
+  assert.match(plan, /org\.role_aliases\.manage/);
+  assert.match(plan, /owner_global/);
+  assert.match(plan, /organization_admin/);
+  assert.match(globalRoles, /owner_global[\s\S]*owner\.role_labels\.manage/);
+  assert.match(bundles, /"organization_admin"[\s\S]*"org_governance_admin"/);
+  assert.match(activeScopes, /"organization_admin"[\s\S]*"org\.role_aliases\.manage"/);
+});

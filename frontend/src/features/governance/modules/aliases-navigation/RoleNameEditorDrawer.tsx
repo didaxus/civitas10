@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { AlertStrip, FormDrawer, FormField } from "../../../../shared/ui";
+import { FormDrawer, FormField } from "../../../../shared/ui";
 import type { GovernanceRoleNameRow, GovernanceSurface } from "../../contracts";
 import { displayNameForSurface, modifiedAt, modifiedBy, roleNameForSurface } from "./roleNamesViewModel";
 
@@ -9,9 +9,9 @@ export const RoleNameEditorDrawer = ({ row, surface, organizationName, value, me
   const owner = surface === "owner";
   const roleName = roleNameForSurface(row, surface);
   const currentDisplayName = displayNameForSurface(row, surface);
-  return <FormDrawer open={Boolean(row)} eyebrow="ROLE NAME" title="Edit display name" description="Display names change presentation only. Permissions and access remain unchanged." onClose={onCancel} closeLabel="Close display name editor" initialFocusRef={inputRef} preventClose={saving} actions={<><button className="civitas-secondary-button" type="button" onClick={onReset} disabled={saving}>{resetConfirmation ? "Confirm reset" : "Reset"}</button><button className="civitas-secondary-button" type="button" onClick={onCancel} disabled={saving}>Cancel</button><button className="civitas-primary-button" type="button" onClick={onSave} disabled={saving || resetConfirmation}>{saving ? "Saving..." : "Save"}</button></>}>
+  return <FormDrawer open={Boolean(row)} eyebrow="ROLE NAME" title="Edit display name" onClose={onCancel} closeLabel="Close display name editor" initialFocusRef={inputRef} preventClose={saving} actions={<><button className="civitas-secondary-button" type="button" onClick={onReset} disabled={saving}>{resetConfirmation ? "Confirm reset" : "Reset"}</button><button className="civitas-secondary-button" type="button" onClick={onCancel} disabled={saving}>Cancel</button><button className="civitas-primary-button" type="button" onClick={onSave} disabled={saving || resetConfirmation}>{saving ? "Saving..." : "Save"}</button></>}>
     <div className="civitas-workspace-stack">
-      {resetConfirmation ? <AlertStrip variant="warning" title="Reset display name">Reset removes the custom display name for this scope. The inherited display name will be shown after saving.</AlertStrip> : <AlertStrip variant="info">Display names change presentation only. Permissions and access remain unchanged.</AlertStrip>}
+      {resetConfirmation ? <p className="text-sm font-semibold text-muted-strong" role="status">Confirm reset to remove the custom display name for this scope.</p> : null}
       <dl className="grid gap-3 sm:grid-cols-2">
         <div><dt className="text-sm font-semibold text-muted-strong">Role name</dt><dd>{roleName}</dd></div>
         <div><dt className="text-sm font-semibold text-muted-strong">Scope</dt><dd>{owner ? "Across Civitas" : organizationName || "This organization"}</dd></div>

@@ -36,3 +36,14 @@ test('identity federation governance surfaces are mounted as planned and protect
   assert.match(source, /secureRoute\.get\("\/o\/:organizationId\/settings\/governance\/identity", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess\(\{ requiredAllScopes: \[ORG_AUTHZ\.documentsRead\] \}\), requireOrg, requireOrganizationRole\(SHARED_AUTH\.organization\.roles\.admin\), requirePermission\(ORG_AUTHZ\.documentsRead\)/);
   assert.match(source, /identity_federation_handlers_policies_and_tests_pending/);
 });
+
+test('role label mutation endpoints preserve separate owner and organization authorization', () => {
+  assert.match(source, /secureRoute\.put\("\/owner\/governance\/role-labels\/:canonicalRoleKey", "ownerSensitiveWrite", requireGlobalAccess\(\{ resource: API_RESOURCE, requiredScopes: \["owner\.role_labels\.manage"\] \}\), requireGlobalOwner/);
+  assert.match(source, /secureRoute\.put\("\/o\/:organizationId\/governance\/role-aliases\/:canonicalRoleKey", "organizationAdminWrite", requireSafeOrganizationIdParam, requireOrganizationAccess\(\{ requiredAllScopes: \["org\.role_aliases\.manage"\] \}\), requireOrg, requireOrganizationRole\(SHARED_AUTH\.organization\.roles\.admin\), requirePermission\("org\.role_aliases\.manage"\)/);
+  const ownerEndpoint = source.slice(source.indexOf('/owner/governance/role-labels/:canonicalRoleKey'), source.indexOf('/owner/organizations/:organizationId/governance/entitlement-ceilings'));
+  const organizationEndpoint = source.slice(source.indexOf('/o/:organizationId/governance/role-aliases/:canonicalRoleKey'), source.indexOf('/o/:organizationId/governance/navigation-preferences'));
+  assert.match(ownerEndpoint, /updateGlobalLabel/);
+  assert.doesNotMatch(ownerEndpoint, /updateOrganizationAlias/);
+  assert.match(organizationEndpoint, /updateOrganizationAlias/);
+  assert.doesNotMatch(organizationEndpoint, /updateGlobalLabel/);
+});

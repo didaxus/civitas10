@@ -7,6 +7,8 @@ import { canResetRoleName, displayCount, displayNameForSurface, roleNameForSurfa
 export const RoleNamesTable = ({ rows, surface, organizationId, onEdit, onReset }: { rows: GovernanceRoleNameRow[]; surface: GovernanceSurface; organizationId: string; onEdit: (row: GovernanceRoleNameRow, opener: HTMLButtonElement) => void; onReset: (row: GovernanceRoleNameRow, opener: HTMLButtonElement) => void }) => {
   if (!rows.length) return <EmptyState message="No roles match your search." />;
   const renderActions = (row: GovernanceRoleNameRow, displayName: string) => {
+    const canEdit = surface === "owner" ? row.canEditGlobalDefault : row.canEditOrganizationAlias;
+    if (!canEdit) return null;
     const canReset = canResetRoleName(row, surface);
     return <div className="flex gap-2"><button className="civitas-icon-button" type="button" aria-label={`Edit display name for ${displayName}`} title="Edit display name" onClick={(event) => onEdit(row, event.currentTarget)}><IconPencil aria-hidden="true" size={18} stroke={1.8} /></button><button className="civitas-icon-button" type="button" aria-label={canReset ? `Reset display name for ${displayName}` : "No custom display name to reset."} title={canReset ? "Reset display name" : "No custom display name to reset"} disabled={!canReset} onClick={(event) => onReset(row, event.currentTarget)}><IconRestore aria-hidden="true" size={18} stroke={1.8} /></button></div>;
   };

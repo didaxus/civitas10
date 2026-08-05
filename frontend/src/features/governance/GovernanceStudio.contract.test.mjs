@@ -118,7 +118,7 @@ test("role names screen matches the product table and user-count navigation cont
 });
 
 test("role names editor composes the shared right-side FormDrawer visual system", () => {
-  assert.ok(roleNameDrawer.includes('import { AlertStrip, FormDrawer, FormField } from "../../../../shared/ui"'));
+  assert.ok(roleNameDrawer.includes('import { FormDrawer, FormField } from "../../../../shared/ui"'));
   assert.doesNotMatch(roleNames + roleNameDrawer + roleNamesTable, /fixed inset-0|role=\"dialog\"|aria-modal=\"true\"|place-items-center|sm:rounded-lg|bg-backdrop/);
   assert.match(formDrawer, /IconX/);
   assert.match(formDrawer, /aria-modal=\"true\"/);
@@ -144,7 +144,8 @@ test("role names actions use Tabler icons and confirmed reset without emoji glyp
 });
 
 test("role names drawer exposes metadata and separates mutation from reload failures", () => {
-  for (const copy of ["ROLE NAME", "Edit display name", "Display names change presentation only. Permissions and access remain unchanged.", "Role name", "Scope", "Current display name", "Last modified", "Modified by", "Across Civitas", "Used across Civitas unless an organization has its own display name.", "Shown only in this organization."]) assert.match(roleNameDrawer, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  for (const copy of ["ROLE NAME", "Edit display name", "Role name", "Scope", "Current display name", "Last modified", "Modified by", "Across Civitas", "Used across Civitas unless an organization has its own display name.", "Shown only in this organization."]) assert.match(roleNameDrawer, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  assert.doesNotMatch(roleNameDrawer, /Display names change presentation only\. Permissions and access remain unchanged/);
   assert.doesNotMatch(roleNameDrawer, /canonicalRoleKey|logtoRoleId|logtoRoleName|policyVersion|auditEvent|source/);
   assert.match(roleNamesErrors, /You do not have permission to change role display names/);
   assert.match(roleNamesErrors, /Another role already uses this display name/);
@@ -153,6 +154,17 @@ test("role names drawer exposes metadata and separates mutation from reload fail
   assert.match(roleNames, /Display name was saved, but the latest data could not be refreshed/);
   assert.match(roleNames, /applyReturnedRow/);
   assert.match(roleNames, /catch \{ setPageMessage/);
+});
+
+test("role names UI honors server-resolved edit capabilities and separated write surfaces", () => {
+  assert.match(roleNamesTable, /row\.canEditGlobalDefault/);
+  assert.match(roleNamesTable, /row\.canEditOrganizationAlias/);
+  assert.match(roleNamesTable, /if \(!canEdit\) return null/);
+  assert.match(roleNames, /surface === "owner" \? onUpdateOwnerRoleLabel : onUpdateOrganizationRoleAlias/);
+  assert.match(page, /onUpdateOwnerRoleLabel=\{api\.updateOwnerRoleLabel\}/);
+  assert.match(page, /onUpdateOrganizationRoleAlias=\{async \(input\) => api\.updateOrganizationRoleAlias\(organizationId, input\)\}/);
+  assert.doesNotMatch(roleNames, /updateOrganizationRoleAlias\(organizationId/);
+  assert.doesNotMatch(roleNames, /updateOwnerRoleLabel\(organizationId/);
 });
 
 

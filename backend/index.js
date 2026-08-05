@@ -36,7 +36,7 @@ const { createOrganizationProvisioningRecorder } = require("./services/organizat
 const { createIdempotencyKey, getOrganizationProvisioningDraft, saveOrganizationProvisioningDraft } = require("./services/organizationProvisioningDrafts");
 const { buildBootstrapStatus } = require("./services/ownerBootstrapStatus");
 const { OWNER_CAPABILITIES, buildOwnerOperationalStateResponse } = require("./services/ownerCapabilitySurfaces");
-const { buildGovernanceReadModel, assertTenantRouteMatchesContext } = require("./services/governanceReadModel");
+const { buildGovernanceReadModel, assertTenantRouteMatchesContext, roleLabelActorAuthorizationContext } = require("./services/governanceReadModel");
 const { RoleLabelService, canonicalRoleKey, roleId, roleName } = require("./governance/role-labels");
 const { updateOwnerCeilings, updateTenantActivations, roleMapFromRoles, entitlementRepository } = require("./services/governanceRolesReadModel");
 const { createTaxonomyValue, publishTaxonomy, createUnit: createGovernanceUnit, activateUnit: activateGovernanceUnit, createDataScope, safeActor, dataScopeRepository } = require("./services/governanceStructureReadModel");
@@ -435,7 +435,7 @@ secureRoute.get("/owner/organizations/:organizationId/governance", "ownerRead", 
     const roles = await listLogtoOrganizationRoles();
     const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
     const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "owner", roles, members, memberRolesByUserId }));
+    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "owner", roles, members, memberRolesByUserId, actorAuthorizationContext: roleLabelActorAuthorizationContext({ reqAuth: req.auth, organizationId: req.params.organizationId }) }));
   } catch (error) {
     return sendPublicError(res, error, "OwnerGovernanceReadModelError", "Failed to build owner governance read model");
   }
@@ -574,7 +574,7 @@ secureRoute.get("/o/:organizationId/governance", "organizationMemberRead", requi
     const roles = await listLogtoOrganizationRoles();
     const members = await listLogtoOrganizationUsers({ organizationId: req.params.organizationId }).catch(() => []);
     const memberRolesByUserId = new Map(await Promise.all(members.map(async (user) => [user.id || user.userId || user.logtoUserId, await listLogtoOrganizationUserRoles({ organizationId: req.params.organizationId, userId: user.id || user.userId || user.logtoUserId }).catch(() => [])])));
-    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId }));
+    return res.json(await buildGovernanceReadModel({ organization: logtoOrganization, organizationId: req.params.organizationId, surface: "tenant", roles, members, memberRolesByUserId, actorAuthorizationContext: roleLabelActorAuthorizationContext({ reqAuth: req.auth, organizationId: req.params.organizationId }) }));
   } catch (error) {
     return sendPublicError(res, error, "TenantGovernanceReadModelError", "Failed to build tenant governance read model");
   }

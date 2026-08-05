@@ -64,6 +64,18 @@ function roleCatalogDiagnostics({ roles = [], aliasesNavigation }) {
 
 function safeUserEmail(user = {}) { return safeString(user.email) || safeString(user.primaryEmail) || safeString(user.emailAddress) || null; }
 function safeUserLabel(user = {}) { return safeString(user.name) || safeString(user.displayName) || safeString(user.username) || safeUserEmail(user) || safeMemberDisplay(user); }
+
+function roleLabelActorAuthorizationContext({ reqAuth = {}, organizationId = null } = {}) {
+  const scopes = reqAuth.scopes instanceof Set ? [...reqAuth.scopes] : Array.isArray(reqAuth.scopes) ? reqAuth.scopes : [];
+  return {
+    permissions: scopes,
+    globalRoles: Array.isArray(reqAuth.globalRoles) ? reqAuth.globalRoles : [],
+    organizationRoles: Array.isArray(reqAuth.organizationRoles) ? reqAuth.organizationRoles : [],
+    organizationId: reqAuth.organizationId || organizationId || null,
+    verifiedOrganizationId: reqAuth.organizationId || null,
+  };
+}
+
 function buildRoleSegmentation({ organizationId, roleNames, roles = [], members = [], memberRolesByUserId = new Map(), permissionMatrix = [], dataScopes = [] }) {
   const roleIdToCanonicalKey = new Map();
   for (const role of roles) {
@@ -113,13 +125,13 @@ function buildIdentityProvisioningSummary({ status = "not_configured" } = {}) {
   return { status, connectionId: null, protocol: null, providerKind: null, claimsContractVersion: 0, mappingVersion: 0, provisioningPolicyVersion: 0, lastValidatedAt: null, lastSuccessfulLoginAt: null, credentialExpiresAt: null, latestReconciliationRunId: null, latestReconciliationStatus: null, driftItemCount: status === "reconciliation_required" ? 1 : 0, reason: status === "not_configured" ? "identity_federation_connection_missing" : "fixture_status" };
 }
 
-async function buildGovernanceReadModel({ organization, organizationId, surface, stale = false, drift = false, roles = [], members = [], memberRolesByUserId = new Map() } = {}) {
+async function buildGovernanceReadModel({ organization, organizationId, surface, stale = false, drift = false, roles = [], members = [], memberRolesByUserId = new Map(), actorAuthorizationContext = {} } = {}) {
   if (!["owner", "tenant"].includes(surface)) { const error = new Error("Invalid governance surface."); error.status = 500; error.code = "GOVERNANCE_SURFACE_INVALID"; throw error; }
   const versions = buildVersions({ stale, drift });
   const modules = buildModules({ surface, versions });
   const logtoOrganizationId = organizationId || safeString(organization?.id) || safeString(organization?.logtoOrganizationId);
   const rolesSlice = await buildRolesGovernanceSlice({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId, surface });
-  const roleNames = await new RoleLabelService().buildReadModel({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId, surface });
+  const roleNames = await new RoleLabelService().buildReadModel({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId, surface, actorAuthorizationContext });
   const effectiveByRoleId = new Map(roleNames.rows.map((row) => [row.logtoRoleId, row.effectiveLabel]));
   rolesSlice.roles = rolesSlice.roles.map((role) => ({ ...role, displayName: effectiveByRoleId.get(role.id) || role.displayName, canonicalBaselineLabel: roleNames.rows.find((row) => row.logtoRoleId === role.id)?.canonicalBaselineLabel || role.displayName }));
   rolesSlice.members = rolesSlice.members.map((member) => ({ ...member, roleAliases: member.roleIds.map((roleId) => effectiveByRoleId.get(roleId) || roleId) }));
@@ -187,4 +199,4 @@ function assertTenantRouteMatchesContext(req) {
   }
 }
 
-module.exports = { GOVERNANCE_READ_MODEL_CONTRACT_VERSION, GOVERNANCE_OPERATION_REGISTRY_VERSION, governanceOperationRegistry, moduleInventory, buildGovernanceReadModel, assertTenantRouteMatchesContext };
+module.exports = { GOVERNANCE_READ_MODEL_CONTRACT_VERSION, GOVERNANCE_OPERATION_REGISTRY_VERSION, governanceOperationRegistry, moduleInventory, buildGovernanceReadModel, assertTenantRouteMatchesContext, roleLabelActorAuthorizationContext };
