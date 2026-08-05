@@ -51,7 +51,7 @@ export function validateCatalog(catalog) {
     if (!Array.isArray(decision.consumerEvidence) || decision.consumerEvidence.length === 0) errors.push(`legacy ${decision.legacyId} consumerEvidence required`)
     if (decision.decision === 'blocked' && !decision.blocker) errors.push(`legacy ${decision.legacyId} blocked decisions require blocker`)
   }
-  if ((catalog.permissions || []).length !== 168) errors.push('catalog must contain exactly 168 target permissions')
+  if ((catalog.permissions || []).length !== 170) errors.push('catalog must contain exactly 170 target permissions')
   if ((catalog.legacyDecisions || []).length !== 10) errors.push('catalog must contain exactly 10 legacy decisions')
   const reconciliation = catalog.reconciliation || {}
   for (const key of ['baseRef','baseSha','catalogSourceSha','mergeBase','catalogHashAlgorithm','roleModelVersion','contractVersion']) if (!reconciliation[key]) errors.push(`reconciliation missing ${key}`)

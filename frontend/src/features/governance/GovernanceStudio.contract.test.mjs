@@ -94,22 +94,20 @@ test("structure routes separate owner inspection from tenant organization model 
 
 test("scope assignments remain role-path bound", () => { assert.match(routes, /scope-assignments/); assert.match(workspaceContract, /Data Scopes/); });
 
-test("role names screen is the simple alias editor", () => {
+test("role names screen is the compact persistent role-label editor", () => {
   assert.match(roleNames, /Role names/);
-  assert.match(roleNames, /roles= \[\]|roles\?: readonly GovernanceRoleSummary\[\]/);
-  assert.match(roleNames, /aliasesByRoleId/);
-  assert.match(roleNames, /organizationRoles\.map/);
-  assert.match(roleNames, /alias\?\.displayName \?\? role\.displayName/);
-  assert.match(roleNames, /Canonical role \(Logto\)/);
-  assert.match(roleNames, /Visual alias/);
-  assert.match(roleNames, /readOnly/);
-  assert.match(roleNames, /Save aliases/);
-  assert.match(roleNames, /Alias editing is read-only until the audited alias write API is mounted/);
-  assert.doesNotMatch(roleNames, /FilterBar|DataTable|StatusPill|Alias edit preview|Canonical role labels|Search role labels|Role family|Audit only|#125|endpoint/);
-  assert.doesNotMatch(roleNames, /visualPreferences|navigationTenantEditable|hidden|\border\b|routeId|authorizationEffect|Todavía no conectado|setMessage/);
-  assert.doesNotMatch(roleNames, /role ===|roles\.includes|ownerAllowed|tenantEnabled|fetch\(/);
-  assert.match(contracts, /defaultLabel\?/);
-  assert.match(contracts, /lastChangedAt\?/);
+  assert.match(roleNames, /roleNames\?: GovernanceRoleNamesReadModel/);
+  assert.match(roleNames, /Edit default/);
+  assert.match(roleNames, /Reset to canonical baseline/);
+  assert.match(roleNames, /Reset to Civitas default/);
+  assert.match(roleNames, /Search role labels/);
+  assert.match(roleNames, /Role mapping needs attention/);
+  assert.match(roleNames, /canonicalRoleKey/);
+  assert.match(roleNames, /displayName: reset \? null/);
+  assert.doesNotMatch(roleNames, /aliasesByRoleId|organizationRoles\.map|alias\?\.displayName \?\? role\.displayName|readOnly|Save aliases|Alias editing is read-only/);
+  assert.doesNotMatch(roleNames, /visualPreferences|navigationTenantEditable|routeId|authorizationEffect|Todavía no conectado|fetch\(/);
+  assert.match(contracts, /GovernanceRoleNamesReadModel/);
+  assert.match(contracts, /effectiveLabel: string/);
 });
 
 test("role names routes retain stable destinations", () => { assert.match(routes, /access-policy\/role-names/); assert.match(workspaceContract, /Role Names/); });

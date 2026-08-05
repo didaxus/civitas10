@@ -1,92 +1,19 @@
-import { useMemo } from "react";
-import { EmptyState, SectionCard } from "../../../../shared/ui";
-import type { GovernanceAliasNavigationPolicy, GovernanceRoleSummary, GovernanceSurface } from "../../contracts";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ApiRequestError } from "../../../../api/base";
+import { EmptyState, FilterBar, SectionCard, StatusPill } from "../../../../shared/ui";
+import type { GovernanceRoleNamesReadModel, GovernanceRoleNameRow, GovernanceSurface } from "../../contracts";
 
-type AliasRow = NonNullable<GovernanceAliasNavigationPolicy["aliases"]>[number];
-
-type RoleNameRow = {
-  roleId: string;
-  canonicalKey: string;
-  defaultLabel: string;
-  alias: string;
-  assignedMemberCount: number;
-  orphaned?: false;
-};
-
-const aliasValue = (row: RoleNameRow) => row.alias || row.defaultLabel || row.canonicalKey;
-const isOrganizationRole = (role: GovernanceRoleSummary) => role.canonicalKey !== "owner_global" && role.canonicalKey.startsWith("organization_");
-
-export const AliasesNavigationModule = ({ roles = [], policy, surface }: { roles?: readonly GovernanceRoleSummary[]; policy: GovernanceAliasNavigationPolicy; surface?: GovernanceSurface }) => {
-  const aliasesByRoleId = useMemo(() => new Map<string, AliasRow>((policy.aliases ?? []).map((alias) => [alias.roleId, alias])), [policy.aliases]);
-  const organizationRoles = useMemo(() => roles.filter(isOrganizationRole), [roles]);
-  const rows = useMemo<RoleNameRow[]>(() => organizationRoles.map((role) => {
-    const alias = aliasesByRoleId.get(role.id);
-    return {
-      roleId: role.id,
-      canonicalKey: role.canonicalKey,
-      defaultLabel: role.displayName,
-      alias: alias?.displayName ?? role.displayName,
-      assignedMemberCount: role.assignedMemberCount,
-    };
-  }), [aliasesByRoleId, organizationRoles]);
-  const orphanAliases = useMemo(() => (policy.aliases ?? []).filter((alias) => !organizationRoles.some((role) => role.id === alias.roleId)), [organizationRoles, policy.aliases]);
-  const duplicateCanonicalKeys = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const role of organizationRoles) counts.set(role.canonicalKey, (counts.get(role.canonicalKey) ?? 0) + 1);
-    return [...counts.entries()].filter(([, count]) => count > 1).map(([key]) => key);
-  }, [organizationRoles]);
-  const stale = surface && policy.version && policy.version !== "current";
-
-  if (!rows.length) {
-    return (
-      <SectionCard title="Role names" description="Alias visuales para roles organizacionales canónicos de Logto (ID inmutable).">
-        <EmptyState message="No organization roles returned by the governance read model">
-          <p className="text-sm text-muted-strong">The backend did not return organization-scoped Logto roles for this organization. This is distinct from an empty alias override list.</p>
-        </EmptyState>
-      </SectionCard>
-    );
-  }
-
-  return (
-    <SectionCard title="Role names" description="Alias visuales para roles organizacionales canónicos de Logto (ID inmutable).">
-      <div className="civitas-workspace-stack">
-        {orphanAliases.length || duplicateCanonicalKeys.length || stale ? <div className="civitas-card civitas-pad-tight" role="status" aria-live="polite">
-          <p className="text-sm font-semibold text-text">Role catalog diagnostics</p>
-          <ul className="mt-2 grid gap-1 text-sm text-muted-strong">
-            {orphanAliases.map((alias) => <li key={alias.roleId}>Alias references missing Logto role: <code>{alias.roleId}</code>.</li>)}
-            {duplicateCanonicalKeys.map((key) => <li key={key}>Duplicate canonical role key returned by Logto: <code>{key}</code>.</li>)}
-            {stale ? <li>Alias policy version is stale; refresh the governance read model before changing role labels.</li> : null}
-          </ul>
-        </div> : null}
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-                <th scope="col" className="px-3 py-2">Canonical role (Logto)</th>
-                <th scope="col" className="px-3 py-2">Default label</th>
-                <th scope="col" className="px-3 py-2">Visual alias</th>
-                <th scope="col" className="px-3 py-2">Members</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.roleId} className="border-b border-border last:border-b-0">
-                  <td className="px-3 py-3 align-middle font-mono text-xs text-muted-strong" title={row.roleId}>{row.canonicalKey}</td>
-                  <td className="px-3 py-3 align-middle text-muted-strong">{row.defaultLabel}</td>
-                  <td className="px-3 py-3 align-middle">
-                    <input className="civitas-field" value={aliasValue(row)} maxLength={80} readOnly aria-readonly="true" aria-label={`Visual alias for ${row.canonicalKey}`} />
-                  </td>
-                  <td className="px-3 py-3 align-middle text-muted-strong">{row.assignedMemberCount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="civitas-action-bar">
-          <p className="text-sm text-muted-strong">Alias editing is read-only until the audited alias write API is mounted. No frontend Logto Management API calls are made.</p>
-          <button type="button" className="civitas-primary-button" disabled title="Alias write API is not mounted yet.">Save aliases</button>
-        </div>
-      </div>
-    </SectionCard>
-  );
+type MutationInput = { canonicalRoleKey: string; displayName: string | null; expectedVersion: string; reason: string };
+const hasForbiddenCharacter = (value: string) => Array.from(value).some((char) => { const code = char.codePointAt(0) || 0; return code <= 0x1f || (code >= 0x7f && code <= 0x9f) || code === 0x061c || code === 0x200e || code === 0x200f || (code >= 0x202a && code <= 0x202e) || (code >= 0x2066 && code <= 0x2069); });
+const validate = (value: string) => { const normalized = value.normalize("NFKC").trim().replace(/\s+/gu, " "); if (!normalized) return "Use Reset when you want to remove an override."; if (normalized.length < 2 || normalized.length > 80) return "Use 2–80 characters."; if (hasForbiddenCharacter(normalized)) return "Control and bidi override characters are not allowed."; if (/^[\p{P}\p{S}\s]+$/u.test(normalized)) return "Use letters or numbers, not only punctuation."; return ""; };
+export const AliasesNavigationModule = ({ roleNames, surface, organizationName, onUpdateOwnerRoleLabel, onUpdateOrganizationRoleAlias, onReload }: { roleNames?: GovernanceRoleNamesReadModel; surface: GovernanceSurface; organizationName?: string | null; onUpdateOwnerRoleLabel?: (input: MutationInput) => Promise<unknown>; onUpdateOrganizationRoleAlias?: (input: MutationInput) => Promise<unknown>; onReload?: () => Promise<void> }) => {
+  const [query, setQuery] = useState(""); const [editing, setEditing] = useState<GovernanceRoleNameRow | null>(null); const [value, setValue] = useState(""); const [message, setMessage] = useState(""); const [saving, setSaving] = useState(false); const opener = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => { setEditing(null); setValue(""); setMessage(""); }, [roleNames?.organizationId, surface]);
+  const rows = useMemo(() => (roleNames?.rows || []).filter((row) => [row.effectiveLabel, row.civitasDefaultLabel, row.canonicalBaselineLabel, row.canonicalRoleKey].join(" ").toLocaleLowerCase().includes(query.toLocaleLowerCase())), [query, roleNames?.rows]);
+  const diagnostics = roleNames?.diagnostics?.filter((d) => d.severity !== "info") || [];
+  const open = (row: GovernanceRoleNameRow, event: React.MouseEvent<HTMLButtonElement>) => { opener.current = event.currentTarget; setEditing(row); setValue(surface === "owner" ? (row.civitasDefaultLabel === row.canonicalBaselineLabel ? "" : row.civitasDefaultLabel) : (row.organizationAlias || "")); setMessage(""); };
+  const close = () => { setEditing(null); setMessage(""); opener.current?.focus(); };
+  const save = async (reset = false) => { if (!editing) return; const err = reset ? "" : validate(value); if (err) { setMessage(err); return; } const fn = surface === "owner" ? onUpdateOwnerRoleLabel : onUpdateOrganizationRoleAlias; if (!fn) return; setSaving(true); try { await fn({ canonicalRoleKey: editing.canonicalRoleKey, displayName: reset ? null : value.normalize("NFKC").trim().replace(/\s+/gu, " "), expectedVersion: surface === "owner" ? roleNames?.globalVersion || editing.globalVersion : roleNames?.organizationVersion || editing.organizationVersion, reason: reset ? "Reset role presentation label" : "Update role presentation label" }); await onReload?.(); setMessage(reset ? "Role name reset." : "Role name saved."); close(); } catch (error) { if (error instanceof ApiRequestError && error.status === 409) setMessage("This role name was changed by another administrator."); else setMessage("Role name could not be saved."); } finally { setSaving(false); } };
+  const owner = surface === "owner";
+  return <SectionCard title="Role names" description={owner ? "Manage the default names Civitas uses for canonical organization roles. Logto role IDs, permissions, and assignments do not change." : "Customize how roles are shown in this organization. Permissions and technical role identities do not change."}><div className="civitas-workspace-stack"><div className="civitas-card civitas-pad-tight" role="note">{owner ? "Default names apply across Civitas. Organization-specific names take precedence and are not overwritten." : "Changing a name affects presentation only. Members, permissions, and access rules remain unchanged."}</div><FilterBar searchLabel="Search role labels" searchValue={query} onSearchChange={setQuery} onReset={() => setQuery("")} />{diagnostics.length ? <details className="civitas-card civitas-pad-tight"><summary className="cursor-pointer font-semibold">Role mapping needs attention — View technical details</summary><ul className="mt-2 text-sm text-muted-strong">{diagnostics.map((d) => <li key={`${d.code}:${d.message}`}>{d.message}</li>)}</ul></details> : null}{!rows.length ? <EmptyState message="No roles match your search." /> : <div className="grid gap-3 md:block"><table className="hidden min-w-full text-sm md:table"><thead><tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-[0.16em] text-muted"><th className="px-3 py-2">Role</th><th className="px-3 py-2">Civitas default</th><th className="px-3 py-2">{owner ? `Name in ${organizationName || "selected organization"}` : "Name in this organization"}</th><th className="px-3 py-2">Members</th><th className="px-3 py-2">Action</th></tr></thead><tbody>{rows.map((row) => <tr key={row.canonicalRoleKey} className="border-b border-border"><td className="px-3 py-3"><div className="font-semibold">{row.canonicalBaselineLabel}</div><code className="text-xs text-muted-strong">{row.canonicalRoleKey}</code></td><td className="px-3 py-3"><div>{row.civitasDefaultLabel}</div><div className="text-xs text-muted-strong">Civitas default</div></td><td className="px-3 py-3"><div>{row.effectiveLabel}</div><div className="text-xs text-muted-strong">{row.source === "organization_alias" ? (owner ? "Customized by organization" : "Customized") : "Uses Civitas default"}</div></td><td className="px-3 py-3">{row.assignedMemberCount}</td><td className="px-3 py-3"><button ref={undefined} className="civitas-secondary-button" type="button" onClick={(event) => open(row, event)}>{owner ? "Edit default" : "Edit"}</button></td></tr>)}</tbody></table>{rows.map((row) => <article key={`card-${row.canonicalRoleKey}`} className="civitas-card civitas-pad-tight md:hidden"><div className="font-semibold">{row.effectiveLabel}</div><code className="text-xs text-muted-strong">{row.canonicalRoleKey}</code><div className="mt-2 flex items-center justify-between gap-3"><StatusPill status={row.source === "organization_alias" ? "success" : "neutral"}>{row.source === "organization_alias" ? "Customized" : "Inherited"}</StatusPill><span>{row.assignedMemberCount} members</span><button className="civitas-secondary-button" type="button" onClick={(event) => open(row, event)}>Edit</button></div></article>)}</div>}{editing ? <div className="fixed inset-0 z-50 grid place-items-end bg-backdrop sm:place-items-center" role="dialog" aria-modal="true" aria-labelledby="role-name-editor-title"><div className="h-full w-full overflow-auto bg-surface p-6 shadow-lg sm:h-auto sm:max-w-xl sm:rounded-lg"><h2 id="role-name-editor-title" className="text-lg font-semibold">{owner ? "Edit Civitas default role name" : "Edit organization role name"}</h2><div className="mt-4 grid gap-2 text-sm"><p><strong>Canonical role ID:</strong> <code>{editing.canonicalRoleKey}</code></p><p><strong>Immutable Logto name:</strong> <code>{editing.logtoRoleName}</code></p><p><strong>Canonical baseline label:</strong> {editing.canonicalBaselineLabel}</p><p><strong>Civitas default:</strong> {editing.civitasDefaultLabel}</p>{owner ? <p><strong>Selected organization preview:</strong> {editing.effectiveLabel}. Organization overrides are not overwritten.</p> : <p><strong>Organization:</strong> {organizationName || roleNames?.organizationId}. Authorization is unchanged.</p>}</div><label className="mt-4 block text-sm font-semibold" htmlFor="role-label-input">{owner ? "Display name" : "Organization alias"}</label><input id="role-label-input" className="civitas-field mt-1" value={value} maxLength={80} onChange={(event) => { setValue(event.target.value); setMessage(""); }} autoFocus /><div className="mt-1 text-xs text-muted-strong">{value.normalize("NFKC").trim().length}/80 characters</div>{message ? <p className="mt-3 text-sm font-semibold text-danger" role="alert">{message}</p> : null}<div className="mt-5 flex flex-wrap justify-end gap-2"><button className="civitas-secondary-button" type="button" onClick={() => void save(true)} disabled={saving}>{owner ? "Reset to canonical baseline" : "Reset to Civitas default"}</button><button className="civitas-secondary-button" type="button" onClick={close}>Cancel</button><button className="civitas-primary-button" type="button" onClick={() => void save(false)} disabled={saving}>{saving ? "Saving…" : "Save"}</button></div></div></div> : null}</div></SectionCard>;
 };

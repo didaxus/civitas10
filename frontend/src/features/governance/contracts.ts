@@ -49,7 +49,11 @@ export type PermissionMatrixReason = {
   };
 };
 
-export type GovernanceRoleSummary = { id: string; canonicalKey: string; displayName: string; assignedMemberCount: number; potentialPermissionCount: number; executablePermissionCount: number; ownerAuthorizedPermissionCount: number; tenantEnabledPermissionCount: number };
+
+export type GovernanceRoleNameRow = { logtoRoleId: string; logtoRoleName: string; canonicalRoleKey: string; canonicalBaselineLabel: string; civitasDefaultLabel: string; organizationAlias: string | null; effectiveLabel: string; source: "organization_alias" | "civitas_default" | "canonical_baseline"; assignedMemberCount: number; canEditGlobalDefault: boolean; canEditOrganizationAlias: boolean; globalVersion: string; organizationVersion: string; updatedAt: string | null; updatedBy: string | null };
+export type GovernanceRoleNamesReadModel = { globalVersion: string; organizationVersion: string; organizationId: string; rows: GovernanceRoleNameRow[]; diagnostics: Array<{ code: string; severity: "info" | "warning" | "error"; message: string }> };
+
+export type GovernanceRoleSummary = { id: string; canonicalKey: string; displayName: string; canonicalBaselineLabel?: string; assignedMemberCount: number; potentialPermissionCount: number; executablePermissionCount: number; ownerAuthorizedPermissionCount: number; tenantEnabledPermissionCount: number };
 export type GovernanceMemberSummary = { id: string; display: string; roleIds: string[]; roleAliases: string[]; dataScopeSummary: string; allowedAssignmentActions: string[] };
 
 export type GovernancePermissionMatrixRow = {
@@ -106,6 +110,7 @@ export type GovernanceReadModel = {
   units: GovernanceUnitItem[];
   dataScopes: GovernanceDataScopeAssignment[];
   aliasesNavigation: GovernanceAliasNavigationPolicy;
+  roleNames?: GovernanceRoleNamesReadModel;
   accessPreviews: GovernanceAccessPreview[];
   identityProvisioning?: GovernanceIdentityProvisioningSummary;
   auditSummary?: Record<string, unknown>;
@@ -153,5 +158,7 @@ export const validateGovernanceReadModel = (value: unknown): GovernanceContractV
   }
   for (const key of ["taxonomy", "units", "dataScopes", "accessPreviews", "auditEvents", "diagnostics"] as const) if (!Array.isArray(value[key])) return fail(`$.${key}`, version, `${key} must be an array`);
   if (!isRecord(value.aliasesNavigation)) return fail("$.aliasesNavigation", version, "aliasesNavigation must be an object");
+  if (value.roleNames !== undefined && !isRecord(value.roleNames)) return fail("$.roleNames", version, "roleNames must be an object");
+  if (isRecord(value.roleNames) && !Array.isArray(value.roleNames.rows)) return fail("$.roleNames.rows", version, "roleNames.rows must be an array");
   return { ok: true, value: value as GovernanceReadModel };
 };

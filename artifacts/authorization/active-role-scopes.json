@@ -4,18 +4,19 @@
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca",
-    "roleModelHash": "8ed786f9c2a2fd0fbead4eaeab9c6c944d5407ecbab04ad7621a4a8f53f78ff6"
+    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b"
   },
-  "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca",
-  "roleModelHash": "8ed786f9c2a2fd0fbead4eaeab9c6c944d5407ecbab04ad7621a4a8f53f78ff6",
+  "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+  "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b",
   "activeRoleScopes": {
     "organization_admin": [
       "lms.course_offerings.read",
       "lms.group_members.read",
       "lms.groups.read",
       "org.documents.create",
-      "org.documents.read"
+      "org.documents.read",
+      "org.role_aliases.manage"
     ],
     "organization_director": [
       "lms.course_offerings.read",

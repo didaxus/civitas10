@@ -13,11 +13,11 @@ const roles = ['organization_admin','organization_director','organization_headdi
 const providerPattern = /(?:moodle|matomo|mautic)/i
 
 test('canonical permission catalog freezes Phase 3 cardinality and active-only selector', () => {
-  assert.equal(generated.permissions.length, 168)
+  assert.equal(generated.permissions.length, 170)
   assert.equal(generated.catalog.legacyDecisions.length, 10)
   assert.deepEqual(generated.catalog.phase3Namespaces, namespaces)
   assert.deepEqual(generated.catalog.organizationRoles, roles)
-  assert.deepEqual(generated.activePermissions.map((permission) => permission.name).sort(), ['lms.course_offerings.read','lms.group_members.read','lms.groups.read','org.documents.create','org.documents.read'])
+  assert.deepEqual(generated.activePermissions.map((permission) => permission.name).sort(), ['lms.course_offerings.read','lms.group_members.read','lms.groups.read','org.documents.create','org.documents.read','org.role_aliases.manage','owner.role_labels.manage'])
   assert.equal(generated.activePermissions.some((permission) => permission.namespace === 'planning'), false)
 })
 

@@ -10,14 +10,14 @@ const generated = Object.freeze({
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca",
-    "roleModelHash": "8ed786f9c2a2fd0fbead4eaeab9c6c944d5407ecbab04ad7621a4a8f53f78ff6"
+    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b"
   },
   "roleModel": {
     "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
-    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca",
-    "roleModelHash": "8ed786f9c2a2fd0fbead4eaeab9c6c944d5407ecbab04ad7621a4a8f53f78ff6",
+    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
+    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b",
     "bundles": [
       {
         "key": "org_documents_reader",
@@ -142,6 +142,7 @@ const generated = Object.freeze({
         "description": "org_governance_admin canonical Phase 3 role-potential bundle",
         "permissionIds": [
           "org.groups.approve",
+          "org.role_aliases.manage",
           "org.workflows.delete"
         ],
         "allowedRoleKeys": [
@@ -786,6 +787,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_admin",
         "displayName": "Organization Admin",
+        "presentation": {
+          "defaultLabel": "Organization Admin"
+        },
         "description": "Full tenant administration potential without owner capabilities.",
         "surface": "organization",
         "bundleKeys": [
@@ -846,7 +850,6 @@ const generated = Object.freeze({
           "hr.dashboards.read",
           "hr.employees.read",
           "hr.events.create",
-          "hr.exports.approve",
           "lms.assignments.read",
           "lms.course_offerings.read",
           "lms.group_members.read",
@@ -863,6 +866,7 @@ const generated = Object.freeze({
           "org.members.invite",
           "org.members.read",
           "org.reports.approve",
+          "org.role_aliases.manage",
           "org.roles.create",
           "org.settings.read",
           "org.workflows.delete",
@@ -907,7 +911,8 @@ const generated = Object.freeze({
           "lms.group_members.read",
           "lms.groups.read",
           "org.documents.create",
-          "org.documents.read"
+          "org.documents.read",
+          "org.role_aliases.manage"
         ],
         "expectedPotentialCount": 81,
         "version": "2026-07-civitas-phase3-role-bundles-v1"
@@ -915,6 +920,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_director",
         "displayName": "Organization Director",
+        "presentation": {
+          "defaultLabel": "Organization Director"
+        },
         "description": "Director potential across governance, planning review and reporting.",
         "surface": "organization",
         "bundleKeys": [
@@ -1007,6 +1015,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_headdirector",
         "displayName": "Organization Head Director",
+        "presentation": {
+          "defaultLabel": "Organization Head Director"
+        },
         "description": "Head director potential across academic and planning review surfaces.",
         "surface": "organization",
         "bundleKeys": [
@@ -1093,6 +1104,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_headteacher",
         "displayName": "Organization Head Teacher",
+        "presentation": {
+          "defaultLabel": "Organization Head Teacher"
+        },
         "description": "Head teacher potential for academic management and planning production.",
         "surface": "organization",
         "bundleKeys": [
@@ -1196,6 +1210,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_groupleader",
         "displayName": "Organization Group Leader",
+        "presentation": {
+          "defaultLabel": "Organization Group Leader"
+        },
         "description": "Group leader potential for assigned LMS groups and planning review.",
         "surface": "organization",
         "bundleKeys": [
@@ -1259,6 +1276,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_teacher",
         "displayName": "Organization Teacher",
+        "presentation": {
+          "defaultLabel": "Organization Teacher"
+        },
         "description": "Teacher potential for LMS instructional workflows and planning authoring.",
         "surface": "organization",
         "bundleKeys": [
@@ -1327,6 +1347,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_student",
         "displayName": "Organization Student",
+        "presentation": {
+          "defaultLabel": "Organization Student"
+        },
         "description": "Student self-service potential.",
         "surface": "organization",
         "bundleKeys": [
@@ -1364,6 +1387,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_parent",
         "displayName": "Organization Parent",
+        "presentation": {
+          "defaultLabel": "Organization Parent"
+        },
         "description": "Parent linked-student potential.",
         "surface": "organization",
         "bundleKeys": [
@@ -1404,6 +1430,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_secretary",
         "displayName": "Organization Secretary",
+        "presentation": {
+          "defaultLabel": "Organization Secretary"
+        },
         "description": "Secretary potential for members, CRM, scheduling and support operations.",
         "surface": "organization",
         "bundleKeys": [
@@ -1460,6 +1489,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_accountant",
         "displayName": "Organization Accountant",
+        "presentation": {
+          "defaultLabel": "Organization Accountant"
+        },
         "description": "Accounting and reporting potential.",
         "surface": "organization",
         "bundleKeys": [
@@ -1499,6 +1531,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_billing",
         "displayName": "Organization Billing",
+        "presentation": {
+          "defaultLabel": "Organization Billing"
+        },
         "description": "Subscription billing potential.",
         "surface": "organization",
         "bundleKeys": [
@@ -1530,6 +1565,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_payroll",
         "displayName": "Organization Payroll",
+        "presentation": {
+          "defaultLabel": "Organization Payroll"
+        },
         "description": "Payroll potential.",
         "surface": "organization",
         "bundleKeys": [
@@ -1562,6 +1600,9 @@ const generated = Object.freeze({
       {
         "roleKey": "organization_member",
         "displayName": "Organization Member",
+        "presentation": {
+          "defaultLabel": "Organization Member"
+        },
         "description": "Default member collaboration potential.",
         "surface": "organization",
         "bundleKeys": [

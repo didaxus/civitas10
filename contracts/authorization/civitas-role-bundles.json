@@ -2,23 +2,334 @@
   "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
   "contractVersion": "2026-07-civitas-permission-catalog-v1",
   "sourceIssue": 162,
-  "bundleLifecycle": ["active", "planned", "deprecated"],
+  "bundleLifecycle": [
+    "active",
+    "planned",
+    "deprecated"
+  ],
   "bundles": [
-    "org_documents_reader","org_documents_editor","org_documents_admin","org_members_reader","org_members_operator","org_members_admin","org_roles_operator","org_governance_reader","org_governance_admin","org_audit_reader","org_authorization_reader","org_authorization_admin","org_units_reader","org_units_admin","academic_reader","academic_manager","group_leader","teacher","student_self","parent_linked","planning_reader","planning_reviewer","planning_approver","planning_author","planning_admin","planning_production","crm_reader","crm_operator","community_member","community_moderator","scheduling_user","scheduling_operator","support_user","support_operator","analytics_reader","reports_reader","reports_generator","platform_adapter_reader","platform_adapter_admin","communications_user","communications_operator","notification_preferences_self","accounting_reader","accounting_operator","subscription_billing_reader","subscription_billing_operator","payroll_reader","payroll_operator","payroll_approver"
+    "org_documents_reader",
+    "org_documents_editor",
+    "org_documents_admin",
+    "org_members_reader",
+    "org_members_operator",
+    "org_members_admin",
+    "org_roles_operator",
+    "org_governance_reader",
+    "org_governance_admin",
+    "org_audit_reader",
+    "org_authorization_reader",
+    "org_authorization_admin",
+    "org_units_reader",
+    "org_units_admin",
+    "academic_reader",
+    "academic_manager",
+    "group_leader",
+    "teacher",
+    "student_self",
+    "parent_linked",
+    "planning_reader",
+    "planning_reviewer",
+    "planning_approver",
+    "planning_author",
+    "planning_admin",
+    "planning_production",
+    "crm_reader",
+    "crm_operator",
+    "community_member",
+    "community_moderator",
+    "scheduling_user",
+    "scheduling_operator",
+    "support_user",
+    "support_operator",
+    "analytics_reader",
+    "reports_reader",
+    "reports_generator",
+    "platform_adapter_reader",
+    "platform_adapter_admin",
+    "communications_user",
+    "communications_operator",
+    "notification_preferences_self",
+    "accounting_reader",
+    "accounting_operator",
+    "subscription_billing_reader",
+    "subscription_billing_operator",
+    "payroll_reader",
+    "payroll_operator",
+    "payroll_approver"
   ],
   "roles": {
-    "organization_admin": { "displayName": "Organization Admin", "description": "Full tenant administration potential without owner capabilities.", "bundles": ["org_documents_reader","org_documents_editor","org_documents_admin","org_members_reader","org_members_operator","org_members_admin","org_roles_operator","org_governance_reader","org_governance_admin","org_audit_reader","org_authorization_reader","org_authorization_admin","org_units_reader","org_units_admin","academic_reader","planning_reader","planning_admin","crm_reader","crm_operator","community_moderator","scheduling_operator","support_operator","analytics_reader","reports_reader","reports_generator","platform_adapter_reader","platform_adapter_admin","communications_operator","notification_preferences_self"], "expectedPotentialCount": 81 },
-    "organization_director": { "displayName": "Organization Director", "description": "Director potential across governance, planning review and reporting.", "bundles": ["org_documents_reader","org_members_reader","org_governance_reader","org_audit_reader","org_units_reader","academic_reader","planning_reader","planning_reviewer","planning_approver","crm_reader","community_moderator","scheduling_user","analytics_reader","reports_reader","reports_generator","communications_user","notification_preferences_self"], "expectedPotentialCount": 57 },
-    "organization_headdirector": { "displayName": "Organization Head Director", "description": "Head director potential across academic and planning review surfaces.", "bundles": ["org_documents_reader","org_members_reader","org_governance_reader","org_units_reader","academic_reader","planning_reader","planning_reviewer","planning_approver","community_moderator","scheduling_user","analytics_reader","reports_reader","reports_generator","communications_user","notification_preferences_self"], "expectedPotentialCount": 53 },
-    "organization_headteacher": { "displayName": "Organization Head Teacher", "description": "Head teacher potential for academic management and planning production.", "bundles": ["org_documents_reader","org_members_reader","org_units_reader","academic_reader","academic_manager","planning_reader","planning_reviewer","planning_approver","planning_admin","planning_production","community_moderator","scheduling_operator","analytics_reader","reports_reader","reports_generator","communications_user","notification_preferences_self"], "expectedPotentialCount": 68 },
-    "organization_groupleader": { "displayName": "Organization Group Leader", "description": "Group leader potential for assigned LMS groups and planning review.", "bundles": ["org_documents_reader","group_leader","planning_reader","planning_reviewer","community_member","scheduling_user","analytics_reader","communications_user","notification_preferences_self"], "expectedPotentialCount": 36 },
-    "organization_teacher": { "displayName": "Organization Teacher", "description": "Teacher potential for LMS instructional workflows and planning authoring.", "bundles": ["org_documents_reader","teacher","planning_reader","planning_author","community_member","scheduling_user","communications_user","notification_preferences_self"], "expectedPotentialCount": 45 },
-    "organization_student": { "displayName": "Organization Student", "description": "Student self-service potential.", "bundles": ["org_documents_reader","student_self","community_member","scheduling_user","notification_preferences_self"], "expectedPotentialCount": 17 },
-    "organization_parent": { "displayName": "Organization Parent", "description": "Parent linked-student potential.", "bundles": ["org_documents_reader","parent_linked","community_member","scheduling_user","communications_user","notification_preferences_self"], "expectedPotentialCount": 17 },
-    "organization_secretary": { "displayName": "Organization Secretary", "description": "Secretary potential for members, CRM, scheduling and support operations.", "bundles": ["org_documents_reader","org_members_reader","org_members_operator","org_roles_operator","org_units_reader","crm_reader","crm_operator","scheduling_user","scheduling_operator","support_user","support_operator","communications_user","notification_preferences_self"], "expectedPotentialCount": 28 },
-    "organization_accountant": { "displayName": "Organization Accountant", "description": "Accounting and reporting potential.", "bundles": ["org_documents_reader","accounting_reader","accounting_operator","reports_reader","reports_generator","analytics_reader","notification_preferences_self"], "expectedPotentialCount": 17 },
-    "organization_billing": { "displayName": "Organization Billing", "description": "Subscription billing potential.", "bundles": ["org_documents_reader","subscription_billing_reader","subscription_billing_operator","notification_preferences_self"], "expectedPotentialCount": 12 },
-    "organization_payroll": { "displayName": "Organization Payroll", "description": "Payroll potential.", "bundles": ["org_documents_reader","payroll_reader","payroll_operator","payroll_approver","reports_reader","notification_preferences_self"], "expectedPotentialCount": 11 },
-    "organization_member": { "displayName": "Organization Member", "description": "Default member collaboration potential.", "bundles": ["org_documents_reader","community_member","scheduling_user","communications_user","support_user","notification_preferences_self"], "expectedPotentialCount": 15 }
+    "organization_admin": {
+      "displayName": "Organization Admin",
+      "description": "Full tenant administration potential without owner capabilities.",
+      "bundles": [
+        "org_documents_reader",
+        "org_documents_editor",
+        "org_documents_admin",
+        "org_members_reader",
+        "org_members_operator",
+        "org_members_admin",
+        "org_roles_operator",
+        "org_governance_reader",
+        "org_governance_admin",
+        "org_audit_reader",
+        "org_authorization_reader",
+        "org_authorization_admin",
+        "org_units_reader",
+        "org_units_admin",
+        "academic_reader",
+        "planning_reader",
+        "planning_admin",
+        "crm_reader",
+        "crm_operator",
+        "community_moderator",
+        "scheduling_operator",
+        "support_operator",
+        "analytics_reader",
+        "reports_reader",
+        "reports_generator",
+        "platform_adapter_reader",
+        "platform_adapter_admin",
+        "communications_operator",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 81,
+      "presentation": {
+        "defaultLabel": "Organization Admin"
+      }
+    },
+    "organization_director": {
+      "displayName": "Organization Director",
+      "description": "Director potential across governance, planning review and reporting.",
+      "bundles": [
+        "org_documents_reader",
+        "org_members_reader",
+        "org_governance_reader",
+        "org_audit_reader",
+        "org_units_reader",
+        "academic_reader",
+        "planning_reader",
+        "planning_reviewer",
+        "planning_approver",
+        "crm_reader",
+        "community_moderator",
+        "scheduling_user",
+        "analytics_reader",
+        "reports_reader",
+        "reports_generator",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 57,
+      "presentation": {
+        "defaultLabel": "Organization Director"
+      }
+    },
+    "organization_headdirector": {
+      "displayName": "Organization Head Director",
+      "description": "Head director potential across academic and planning review surfaces.",
+      "bundles": [
+        "org_documents_reader",
+        "org_members_reader",
+        "org_governance_reader",
+        "org_units_reader",
+        "academic_reader",
+        "planning_reader",
+        "planning_reviewer",
+        "planning_approver",
+        "community_moderator",
+        "scheduling_user",
+        "analytics_reader",
+        "reports_reader",
+        "reports_generator",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 53,
+      "presentation": {
+        "defaultLabel": "Organization Head Director"
+      }
+    },
+    "organization_headteacher": {
+      "displayName": "Organization Head Teacher",
+      "description": "Head teacher potential for academic management and planning production.",
+      "bundles": [
+        "org_documents_reader",
+        "org_members_reader",
+        "org_units_reader",
+        "academic_reader",
+        "academic_manager",
+        "planning_reader",
+        "planning_reviewer",
+        "planning_approver",
+        "planning_admin",
+        "planning_production",
+        "community_moderator",
+        "scheduling_operator",
+        "analytics_reader",
+        "reports_reader",
+        "reports_generator",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 68,
+      "presentation": {
+        "defaultLabel": "Organization Head Teacher"
+      }
+    },
+    "organization_groupleader": {
+      "displayName": "Organization Group Leader",
+      "description": "Group leader potential for assigned LMS groups and planning review.",
+      "bundles": [
+        "org_documents_reader",
+        "group_leader",
+        "planning_reader",
+        "planning_reviewer",
+        "community_member",
+        "scheduling_user",
+        "analytics_reader",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 36,
+      "presentation": {
+        "defaultLabel": "Organization Group Leader"
+      }
+    },
+    "organization_teacher": {
+      "displayName": "Organization Teacher",
+      "description": "Teacher potential for LMS instructional workflows and planning authoring.",
+      "bundles": [
+        "org_documents_reader",
+        "teacher",
+        "planning_reader",
+        "planning_author",
+        "community_member",
+        "scheduling_user",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 45,
+      "presentation": {
+        "defaultLabel": "Organization Teacher"
+      }
+    },
+    "organization_student": {
+      "displayName": "Organization Student",
+      "description": "Student self-service potential.",
+      "bundles": [
+        "org_documents_reader",
+        "student_self",
+        "community_member",
+        "scheduling_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 17,
+      "presentation": {
+        "defaultLabel": "Organization Student"
+      }
+    },
+    "organization_parent": {
+      "displayName": "Organization Parent",
+      "description": "Parent linked-student potential.",
+      "bundles": [
+        "org_documents_reader",
+        "parent_linked",
+        "community_member",
+        "scheduling_user",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 17,
+      "presentation": {
+        "defaultLabel": "Organization Parent"
+      }
+    },
+    "organization_secretary": {
+      "displayName": "Organization Secretary",
+      "description": "Secretary potential for members, CRM, scheduling and support operations.",
+      "bundles": [
+        "org_documents_reader",
+        "org_members_reader",
+        "org_members_operator",
+        "org_roles_operator",
+        "org_units_reader",
+        "crm_reader",
+        "crm_operator",
+        "scheduling_user",
+        "scheduling_operator",
+        "support_user",
+        "support_operator",
+        "communications_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 28,
+      "presentation": {
+        "defaultLabel": "Organization Secretary"
+      }
+    },
+    "organization_accountant": {
+      "displayName": "Organization Accountant",
+      "description": "Accounting and reporting potential.",
+      "bundles": [
+        "org_documents_reader",
+        "accounting_reader",
+        "accounting_operator",
+        "reports_reader",
+        "reports_generator",
+        "analytics_reader",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 17,
+      "presentation": {
+        "defaultLabel": "Organization Accountant"
+      }
+    },
+    "organization_billing": {
+      "displayName": "Organization Billing",
+      "description": "Subscription billing potential.",
+      "bundles": [
+        "org_documents_reader",
+        "subscription_billing_reader",
+        "subscription_billing_operator",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 12,
+      "presentation": {
+        "defaultLabel": "Organization Billing"
+      }
+    },
+    "organization_payroll": {
+      "displayName": "Organization Payroll",
+      "description": "Payroll potential.",
+      "bundles": [
+        "org_documents_reader",
+        "payroll_reader",
+        "payroll_operator",
+        "payroll_approver",
+        "reports_reader",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 11,
+      "presentation": {
+        "defaultLabel": "Organization Payroll"
+      }
+    },
+    "organization_member": {
+      "displayName": "Organization Member",
+      "description": "Default member collaboration potential.",
+      "bundles": [
+        "org_documents_reader",
+        "community_member",
+        "scheduling_user",
+        "communications_user",
+        "support_user",
+        "notification_preferences_self"
+      ],
+      "expectedPotentialCount": 15,
+      "presentation": {
+        "defaultLabel": "Organization Member"
+      }
+    }
   }
 }

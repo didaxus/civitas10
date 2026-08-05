@@ -5,6 +5,7 @@ const { buildRolesGovernanceSlice } = require("./governanceRolesReadModel");
 const { catalogHash } = require("../../core/authz");
 const { buildStructureGovernanceSlice } = require("./governanceStructureReadModel");
 const { buildAliasesNavigationPolicy, listGovernanceAuditEvents } = require("./governanceOperationsReadModel");
+const { RoleLabelService } = require("../governance/role-labels");
 
 const MODULE_KEYS = Object.freeze(["overview", "identity-provisioning", "permissions", "members", "taxonomy", "units", "data-scope", "aliases-navigation", "access-preview", "audit"]);
 const TENANT_MODULES = Object.freeze(new Set(["identity-provisioning", "permissions", "members", "data-scope", "taxonomy", "units", "aliases-navigation", "access-preview"]));
@@ -71,6 +72,10 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
   const modules = buildModules({ surface, versions });
   const logtoOrganizationId = organizationId || safeString(organization?.id) || safeString(organization?.logtoOrganizationId);
   const rolesSlice = await buildRolesGovernanceSlice({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId, surface });
+  const roleNames = await new RoleLabelService().buildReadModel({ organizationId: logtoOrganizationId, roles, members, memberRolesByUserId, surface });
+  const effectiveByRoleId = new Map(roleNames.rows.map((row) => [row.logtoRoleId, row.effectiveLabel]));
+  rolesSlice.roles = rolesSlice.roles.map((role) => ({ ...role, displayName: effectiveByRoleId.get(role.id) || role.displayName, canonicalBaselineLabel: roleNames.rows.find((row) => row.logtoRoleId === role.id)?.canonicalBaselineLabel || role.displayName }));
+  rolesSlice.members = rolesSlice.members.map((member) => ({ ...member, roleAliases: member.roleIds.map((roleId) => effectiveByRoleId.get(roleId) || roleId) }));
   versions.policyVersion = String(rolesSlice.policyVersion);
   versions.ceilingVersion = String(rolesSlice.policyVersion);
   versions.activationVersion = String(rolesSlice.policyVersion);
@@ -106,6 +111,7 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
     units: structureSlice.units.items,
     dataScopes: structureSlice.dataScopes.items,
     aliasesNavigation,
+    roleNames,
     accessPreviews: [],
     auditSummary: { totalEvents: rolesSlice.auditEvents.length + structureSlice.auditEvents.length + listGovernanceAuditEvents({ organizationId: logtoOrganizationId }).length, latestEventAt: rolesSlice.auditEvents.at(-1)?.createdAt || structureSlice.auditEvents.at(-1)?.createdAt || listGovernanceAuditEvents({ organizationId: logtoOrganizationId })[0]?.createdAt || null, redaction: "actor_subjects_before_after_tokens_and_connector_secrets_redacted" },
     auditEvents: [
@@ -116,6 +122,7 @@ async function buildGovernanceReadModel({ organization, organizationId, surface,
       { code: "governance_read_model_projection", severity: "info", message: "Aggregate read model is mounted; feature writes remain in owning APIs." },
       ...(versions.runtimeStatus === "current" ? [] : [{ code: versions.runtimeStatus === "drift" ? "authorization_version_drift" : "authorization_snapshot_stale", severity: "warning", message: "Authorization runtime is not current." }]),
       ...diagnostics,
+      ...roleNames.diagnostics,
     ],
   };
 }

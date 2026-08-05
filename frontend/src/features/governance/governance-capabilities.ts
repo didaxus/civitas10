@@ -1,7 +1,7 @@
 import type { GovernanceModuleKey, GovernanceSurface } from "./contracts";
 import registryArtifact from "./operation-registry.generated.json";
 
-export type GovernanceOperationKey = "governance.readModel" | "governance.accessPreview" | "governance.entitlementCeilings" | "governance.roleActivations" | "governance.memberRoleAssignments" | "governance.taxonomyValues" | "governance.taxonomyPublish" | "governance.units" | "governance.dataScopes" | "governance.navigationPreferences" | "governance.audit" | "governance.identityProvisioning";
+export type GovernanceOperationKey = "governance.readModel" | "governance.accessPreview" | "governance.ownerRoleLabels" | "governance.organizationRoleAliases" | "governance.entitlementCeilings" | "governance.roleActivations" | "governance.memberRoleAssignments" | "governance.taxonomyValues" | "governance.taxonomyPublish" | "governance.units" | "governance.dataScopes" | "governance.navigationPreferences" | "governance.audit" | "governance.identityProvisioning";
 export type GovernanceEffectiveStatus = "active" | "planned" | "disabled" | "unavailable";
 
 export type GovernanceOperationContract = {

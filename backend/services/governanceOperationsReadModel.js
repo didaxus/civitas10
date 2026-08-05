@@ -30,10 +30,7 @@ function defaultPolicy(organizationId) {
     organizationId,
     aliasesTenantEditable: false,
     navigationTenantEditable: true,
-    aliases: [
-      { roleId: "organization_admin", canonicalKey: "organization_admin", displayName: "Organization admin", editableBy: "owner" },
-      { roleId: "organization_member", canonicalKey: "organization_member", displayName: "Organization member", editableBy: "owner" },
-    ],
+    aliases: [],
     visualPreferences: [...REGISTERED_SCREENS.values()].map((screen, index) => ({ screenId: screen.screenId, canonicalLabel: screen.canonicalLabel, routeId: screen.routeId, hidden: false, order: (index + 1) * 10, locked: screen.locked, hideable: screen.hideable, authorizationEffect: "presentation_only" })),
     version: "1",
     updatedAt: nowIso(),

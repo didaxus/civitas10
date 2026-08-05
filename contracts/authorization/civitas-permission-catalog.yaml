@@ -3935,6 +3935,76 @@
         "groupOrder": 55,
         "order": 20
       }
+    },
+    {
+      "name": "owner.role_labels.manage",
+      "namespace": "owner",
+      "moduleId": null,
+      "capabilityId": "governance.role-labels",
+      "surface": "owner",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "runtimePath": "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+      "dataScopeStrategy": "global_owner",
+      "risk": "standard",
+      "consumers": [
+        "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+        "frontend/src/features/governance/api.ts:updateOwnerRoleLabel"
+      ],
+      "policyRequirements": [
+        "owner_global"
+      ],
+      "screenActionIds": [
+        "governance.ownerRoleLabels"
+      ],
+      "compatibility": "none",
+      "testEvidence": [
+        "backend/test/governance-role-label-service.test.js"
+      ],
+      "presentation": {
+        "label": "Manage Civitas role labels",
+        "description": "Update global Civitas presentation labels for canonical organization roles.",
+        "groupKey": "governance",
+        "groupLabel": "Governance",
+        "groupOrder": 20,
+        "order": 90
+      }
+    },
+    {
+      "name": "org.role_aliases.manage",
+      "namespace": "org",
+      "moduleId": null,
+      "capabilityId": "governance.role-aliases",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "runtimePath": "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+        "frontend/src/features/governance/api.ts:updateOrganizationRoleAlias"
+      ],
+      "policyRequirements": [
+        "same-organization",
+        "organization_admin",
+        "presentation_only"
+      ],
+      "screenActionIds": [
+        "governance.organizationRoleAliases"
+      ],
+      "compatibility": "none",
+      "testEvidence": [
+        "backend/test/governance-role-label-service.test.js"
+      ],
+      "presentation": {
+        "label": "Manage organization role aliases",
+        "description": "Update organization-scoped presentation aliases for canonical roles.",
+        "groupKey": "governance",
+        "groupLabel": "Governance",
+        "groupOrder": 20,
+        "order": 100
+      }
     }
   ],
   "legacyDecisions": [
