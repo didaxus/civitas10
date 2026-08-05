@@ -25,6 +25,27 @@ test('governance read model exposes versioned aggregate without PII graphs', asy
   assert.equal(Object.hasOwn(response, 'rawToken'), false);
 });
 
+
+test('owner governance matrix exposes canonical target role potential separately from executable scopes', async () => {
+  const roles = [
+    { id: 'role-teacher-id', name: 'organization_teacher' },
+    { id: 'role-accountant-id', name: 'organization_accountant' },
+  ];
+  const response = await buildGovernanceReadModel({ organizationId: 'org-role-potential', organization: { id: 'org-role-potential', name: 'Colegio Potential' }, surface: 'owner', roles, members: [], memberRolesByUserId: new Map() });
+  const teacherRows = response.permissionMatrix.filter((row) => row.roleId === 'role-teacher-id');
+  const accountantRows = response.permissionMatrix.filter((row) => row.roleId === 'role-accountant-id');
+
+  assert.equal(teacherRows.length, 45);
+  assert.equal(accountantRows.length, 17);
+  assert.ok(teacherRows.some((row) => row.permissionId.startsWith('lms.')));
+  assert.ok(teacherRows.some((row) => row.permissionId.startsWith('planning.')));
+  assert.ok(accountantRows.some((row) => row.permissionId.startsWith('reports.')));
+  assert.equal(teacherRows.some((row) => row.permissionId.startsWith('owner.')), false);
+  assert.equal(teacherRows.every((row) => row.rolePotential === true), true);
+  assert.ok(teacherRows.some((row) => row.catalogLifecycle === 'planned' && row.executable === false && row.controlState === 'not_executable'));
+  assert.ok(teacherRows.some((row) => row.catalogLifecycle === 'active' && row.executable === true && row.controlState === 'editable'));
+});
+
 test('tenant governance route must match verified organization context', () => {
   assert.doesNotThrow(() => assertTenantRouteMatchesContext({ params: { ['organization' + 'Id']: 'org-1' }, user: { organization_id: 'org-1' } }));
   assert.throws(() => assertTenantRouteMatchesContext({ params: { ['organization' + 'Id']: 'org-1' }, user: { organization_id: 'org-2' } }), /Tenant governance route organization/);

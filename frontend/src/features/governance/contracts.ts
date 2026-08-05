@@ -30,7 +30,10 @@ export type PermissionMatrixReasonCode =
   | "delegation_denied"
   | "data_scope_unavailable"
   | "authorization_context_stale"
-  | "owning_operation_not_mounted";
+  | "owning_operation_not_mounted"
+  | "not_executable"
+  | "runtime_unavailable"
+  | "globally_locked";
 
 export type PermissionMatrixReason = {
   code: PermissionMatrixReasonCode;
@@ -56,10 +59,14 @@ export type GovernancePermissionMatrixRow = {
   order: number;
   enabled: boolean;
   canChange: boolean;
-  controlState: "editable" | "blocked_by_role" | "blocked_by_ceiling" | "locked" | "operation_unavailable";
+  rolePotential: true;
+  catalogLifecycle: "active" | "planned";
+  executable: boolean;
+  runtimeAvailable: boolean;
+  controlState: "editable" | "not_executable" | "runtime_unavailable" | "globally_locked";
   reasonCode: string | null;
-  ownerAllowed: boolean | null;
-  tenantEnabled: boolean | null;
+  ownerAllowed: boolean;
+  tenantEnabled: boolean;
   effective: boolean;
   policyVersion: string;
 };
@@ -135,7 +142,9 @@ export const validateGovernanceReadModel = (value: unknown): GovernanceContractV
     if (!isRecord(row)) return fail(`$.permissionMatrix[${index}]`, version, "permission matrix row must be an object");
     for (const key of ["permissionId", "roleId", "groupKey", "groupLabel", "label", "description", "controlState", "policyVersion"] as const) if (typeof row[key] !== "string") return fail(`$.permissionMatrix[${index}].${key}`, version, `${key} must be a string`);
     for (const key of ["groupOrder", "order"] as const) if (typeof row[key] !== "number") return fail(`$.permissionMatrix[${index}].${key}`, version, `${key} must be a number`);
-    if (typeof row.enabled !== "boolean" || typeof row.canChange !== "boolean") return fail(`$.permissionMatrix[${index}]`, version, "enabled and canChange must be booleans");
+    for (const key of ["enabled", "canChange", "rolePotential", "executable", "runtimeAvailable", "ownerAllowed", "tenantEnabled", "effective"] as const) if (typeof row[key] !== "boolean") return fail(`$.permissionMatrix[${index}].${key}`, version, `${key} must be a boolean`);
+    if (!["active", "planned"].includes(String(row.catalogLifecycle))) return fail(`$.permissionMatrix[${index}].catalogLifecycle`, version, "catalogLifecycle must be active or planned");
+    if (!["editable", "not_executable", "runtime_unavailable", "globally_locked"].includes(String(row.controlState))) return fail(`$.permissionMatrix[${index}].controlState`, version, "controlState is invalid");
   }
   for (const key of ["taxonomy", "units", "dataScopes", "accessPreviews", "auditEvents", "diagnostics"] as const) if (!Array.isArray(value[key])) return fail(`$.${key}`, version, `${key} must be an array`);
   if (!isRecord(value.aliasesNavigation)) return fail("$.aliasesNavigation", version, "aliasesNavigation must be an object");

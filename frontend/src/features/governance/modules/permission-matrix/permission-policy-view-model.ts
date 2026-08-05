@@ -36,7 +36,8 @@ export const buildPermissionPolicyView = (
   rows: readonly GovernancePermissionMatrixRow[], 
   roleId: string, 
   pending: Record<string, boolean>, 
-  search: string
+  search: string,
+  surface: "owner" | "tenant" = "owner"
 ): PermissionPolicyViewGroup[] => {
   const query = search.trim().toLowerCase(); 
   const groups = new Map<string, PermissionPolicyViewGroup>();
@@ -60,17 +61,14 @@ export const buildPermissionPolicyView = (
       permissionId: row.permissionId,
       label: row.label,
       description: row.description,
-      checked: pending[row.permissionId] ?? row.enabled,
+      checked: pending[row.permissionId] ?? (surface === "owner" ? row.ownerAllowed : row.tenantEnabled),
       canChange: row.canChange,
       controlState: row.controlState,
-      // Pass through two-level RBAC state fields
-      rolePotential: (row as any).rolePotential,
-      ownerAllowed: (row as any).ownerAllowed,
-      tenantEnabled: (row as any).tenantEnabled,
-      identityProvisioned: (row as any).identityProvisioned,
-      runtimeAvailable: (row as any).runtimeAvailable,
-      organizationAvailable: (row as any).organizationAvailable,
-      effective: (row as any).effective
+      rolePotential: row.rolePotential,
+      ownerAllowed: row.ownerAllowed,
+      tenantEnabled: row.tenantEnabled,
+      runtimeAvailable: row.runtimeAvailable,
+      effective: row.effective
     };
     
     group.rows.push(viewRow);

@@ -1,10 +1,9 @@
 "use strict";
 
 const crypto = require("node:crypto");
-const { permissionsByName, rolePermissionAssignments } = require("../../core/authz");
+const { permissionsByName, rolePermissionAssignments, organizationRolePotentials } = require("../../core/authz");
 const { createInMemoryEntitlementRepository } = require("../authorization/entitlements/entitlementRepository");
 const { createEntitlementService } = require("../authorization/entitlements/entitlementService");
-const { evaluateOrganizationEntitlement } = require("../authorization/entitlements/entitlementEvaluator");
 const { createAuthorizationFreshnessService } = require("../authorization/runtime/authorizationFreshnessService");
 
 const entitlementRepository = createInMemoryEntitlementRepository();
@@ -33,7 +32,28 @@ function canonicalRoleKey(name = "") {
 }
 function displayName(name = "") { return String(name || "").replace(/-org$/i, "").replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()); }
 function safeMemberDisplay(user = {}) { return user.id || user.userId || user.logtoUserId ? hashSubject(user.id || user.userId || user.logtoUserId) : "member_unknown"; }
-function activeOrganizationPermissions() { return Object.values(permissionsByName).filter((permission) => permission?.surface === "organization" && permission.status === "active" && !permission.name.startsWith("owner.")).map((permission) => permission.name).sort(); }
+function rolePotentialByKey() { return new Map((organizationRolePotentials || []).map((role) => [role.roleKey, role])); }
+function title(value) { return String(value || "").replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()); }
+function presentationFor(permission = {}) {
+  const [domain = "organization", resource = "permission", action = "access"] = String(permission.name || "").split(".");
+  const groupKey = permission.domain || permission.namespace || domain;
+  return {
+    groupKey,
+    groupLabel: title(groupKey),
+    groupOrder: ["org", "lms", "planning", "community", "analytics", "reports", "crm", "scheduling", "communications", "notifications", "accounting", "billing", "payroll", "support", "platform"].indexOf(groupKey) + 1 || 99,
+    label: title(`${action} ${resource}`),
+    description: `Allows ${title(action).toLowerCase()} access for ${title(resource).toLowerCase()}.`,
+    order: Math.abs(String(permission.name || "").split("").reduce((sum, char) => sum + char.charCodeAt(0), 0)),
+  };
+}
+function targetPotentialPermissions(canonicalKey) {
+  const potential = rolePotentialByKey().get(canonicalKey);
+  return Array.isArray(potential?.potentialPermissionIds) ? potential.potentialPermissionIds : (rolePermissionAssignments[canonicalKey] || []);
+}
+function executablePermissions(canonicalKey) {
+  const potential = rolePotentialByKey().get(canonicalKey);
+  return new Set(Array.isArray(potential?.activeExecutableScopeIds) ? potential.activeExecutableScopeIds : (rolePermissionAssignments[canonicalKey] || []));
+}
 
 async function listRoleView({ roles = [], members = [], memberRolesByUserId = new Map(), organizationId }) {
   const limits = await entitlementRepository.listLimits({ organizationId });
@@ -43,7 +63,7 @@ async function listRoleView({ roles = [], members = [], memberRolesByUserId = ne
     if (!id) continue;
     const canonicalKey = canonicalRoleKey(roleName(role));
     if (!canonicalKey.startsWith("organization_")) continue;
-    const potentialPermissions = rolePermissionAssignments[canonicalKey] || [];
+    const potentialPermissions = targetPotentialPermissions(canonicalKey);
     byRole.set(id, {
       id,
       canonicalKey,
@@ -64,34 +84,56 @@ async function listRoleView({ roles = [], members = [], memberRolesByUserId = ne
 }
 
 async function buildPermissionRows({ organizationId, roles = [] }) {
-  const permissions = activeOrganizationPermissions();
   const policyVersion = await entitlementRepository.getPolicyVersion(organizationId);
   const rows = [];
-  const roleIdToName = Object.fromEntries(roles.map((role) => [roleId(role), canonicalRoleKey(roleName(role))]).filter(([id]) => id));
   for (const role of roles) {
     const id = roleId(role);
     if (!id) continue;
-    if (!canonicalRoleKey(roleName(role)).startsWith("organization_")) continue;
-    for (const permission of permissions) {
-      const rolePath = { rolePathId: `${id}:${permission}`, logtoRoleId: id, roleNameCache: roleIdToName[id], tokenScopePresent: true };
-      const evaluation = await evaluateOrganizationEntitlement({ organizationId, subject: null, tokenScopes: permissions, rolePaths: [rolePath], permission, policyVersion, repository: entitlementRepository, roleIdToName });
-      const path = evaluation.evaluatedRolePaths[0] || {};
+    const canonicalKey = canonicalRoleKey(roleName(role));
+    if (!canonicalKey.startsWith("organization_")) continue;
+    const executable = executablePermissions(canonicalKey);
+    for (const permissionId of targetPotentialPermissions(canonicalKey)) {
+      const definition = permissionsByName[permissionId];
+      if (!definition || definition.surface !== "organization" || definition.status === "deprecated" || permissionId.startsWith("owner.")) continue;
+      const presentation = presentationFor(definition);
+      const ceiling = await entitlementRepository.getLimit({ organizationId, logtoRoleId: id, permission: permissionId });
+      const activation = await entitlementRepository.getActivation({ organizationId, logtoRoleId: id, permission: permissionId });
+      const isExecutable = executable.has(permissionId) && definition.status === "active";
+      const runtimeAvailable = isExecutable;
+      const ownerAllowed = ceiling?.allowed === true;
+      const tenantEnabled = activation?.enabled === true;
+      const effective = isExecutable && runtimeAvailable && ownerAllowed && tenantEnabled;
+      const controlState = !isExecutable ? "not_executable" : !runtimeAvailable ? "runtime_unavailable" : ceiling?.locked === true ? "globally_locked" : "editable";
       rows.push({
+        permissionId,
         roleId: id,
-        roleKey: roleIdToName[id],
-        permission,
-        canonical: Boolean(permissionsByName[permission]),
-        rolePotential: path.rolePotential === true,
-        ownerAllowed: path.ceilingAllowed === true,
-        tenantEnabled: path.tenantActivationEnabled === true,
-        effective: path.allowed === true,
-        reason: { code: path.allowed ? "allowed" : path.reasonCode || evaluation.reasonCode, sourceVersions: { policyVersion: String(evaluation.policyVersion || policyVersion), ceilingVersion: String(policyVersion), activationVersion: String(policyVersion), catalogVersion: "2026-07-civitas10-active-permissions-v1" } },
+        roleKey: canonicalKey,
+        permission: permissionId,
+        groupKey: presentation.groupKey,
+        groupLabel: presentation.groupLabel,
+        groupOrder: presentation.groupOrder,
+        label: presentation.label,
+        description: presentation.description,
+        order: presentation.order,
+        enabled: ownerAllowed,
+        canChange: controlState === "editable",
+        controlState,
+        reasonCode: effective ? null : controlState,
+        canonical: true,
+        rolePotential: true,
+        catalogLifecycle: definition.status === "planned" ? "planned" : "active",
+        executable: isExecutable,
+        runtimeAvailable,
+        ownerAllowed,
+        tenantEnabled,
+        effective,
+        policyVersion: String(policyVersion),
+        reason: { code: effective ? "allowed" : controlState, sourceVersions: { policyVersion: String(policyVersion), ceilingVersion: String(policyVersion), activationVersion: String(policyVersion), catalogVersion: "2026-07-civitas10-target-role-potential-v1" } },
       });
     }
   }
-  return rows;
+  return rows.sort((a, b) => a.roleId.localeCompare(b.roleId) || a.groupOrder - b.groupOrder || a.order - b.order || a.permissionId.localeCompare(b.permissionId));
 }
-
 async function buildMemberView({ members = [], memberRolesByUserId = new Map() }) {
   return members.map((user) => {
     const userId = user.id || user.userId || user.logtoUserId;
