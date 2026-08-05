@@ -1,1 +1,1 @@
-Nothing to output - the change list contains only a markdown file (INVENTARIO_ABAC_SCOPE_ASSIGNMENTS.md) which is a source/config file, and there are no build artifacts, dependencies, or temp files to ignore.
+Nothing should be ignored based on the provided file changes. The only added file is a markdown document (`INVENTARIO_COMPLETO_AUTORIZACION_RBAC_PBAC_ABAC.md`), which is a source/config file and not a build artifact, dependency, or temporary file.
