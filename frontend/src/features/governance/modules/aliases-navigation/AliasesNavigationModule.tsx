@@ -1,27 +1,63 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router";
-import { ApiRequestError } from "../../../../api/base";
-import { EmptyState, FilterBar, SectionCard, StatusPill } from "../../../../shared/ui";
-import { appRoutes } from "../../../../navigation/routes";
+import { FilterBar, SectionCard } from "../../../../shared/ui";
 import type { GovernanceRoleNamesReadModel, GovernanceRoleNameRow, GovernanceSurface } from "../../contracts";
+import { RoleNameEditorDrawer } from "./RoleNameEditorDrawer";
+import { RoleNamesTable } from "./RoleNamesTable";
+import { roleNameMutationErrorMessage } from "./roleNamesErrors";
+import { displayNameForSurface, roleNameForSurface } from "./roleNamesViewModel";
 
 type MutationInput = { canonicalRoleKey: string; displayName: string | null; expectedVersion: string; reason: string };
-const hasForbiddenCharacter = (value: string) => Array.from(value).some((char) => { const code = char.codePointAt(0) || 0; return code <= 0x1f || (code >= 0x7f && code <= 0x9f) || code === 0x061c || code === 0x200e || code === 0x200f || (code >= 0x202a && code <= 0x202e) || (code >= 0x2066 && code <= 0x2069); });
-const validate = (value: string) => { const normalized = value.normalize("NFKC").trim().replace(/\s+/gu, " "); if (!normalized) return "Use Reset when you want to remove a display name."; if (normalized.length < 2 || normalized.length > 80) return "Use 2–80 characters."; if (hasForbiddenCharacter(normalized)) return "Control and bidi override characters are not allowed."; if (/^[\p{P}\p{S}\s]+$/u.test(normalized)) return "Use letters or numbers, not only punctuation."; return ""; };
-const displayCount = (count: number) => `${count} ${count === 1 ? "user" : "users"}`;
-const usersHref = ({ surface, organizationId, canonicalRoleKey }: { surface: GovernanceSurface; organizationId: string; canonicalRoleKey: string }) => { const base = surface === "owner" ? appRoutes.ownerOrganizationGovernancePeopleSegmentation.build!({ organizationId }) : appRoutes.tenantGovernancePeopleSegmentation.build!({ organizationId }); const params = new URLSearchParams({ role: canonicalRoleKey }); return `${base}?${params.toString()}`; };
-const roleNameForSurface = (row: GovernanceRoleNameRow, surface: GovernanceSurface) => surface === "owner" ? row.canonicalBaselineLabel : row.civitasDefaultLabel;
-const displayNameForSurface = (row: GovernanceRoleNameRow, surface: GovernanceSurface) => surface === "owner" ? row.civitasDefaultLabel : row.effectiveLabel;
+type MutationResponse = { row?: Partial<GovernanceRoleNameRow> } | unknown;
 
-export const AliasesNavigationModule = ({ roleNames, surface, organizationId, onUpdateOwnerRoleLabel, onUpdateOrganizationRoleAlias, onReload }: { roleNames?: GovernanceRoleNamesReadModel; surface: GovernanceSurface; organizationId: string; onUpdateOwnerRoleLabel?: (input: MutationInput) => Promise<unknown>; onUpdateOrganizationRoleAlias?: (input: MutationInput) => Promise<unknown>; onReload?: () => Promise<void> }) => {
-  const [query, setQuery] = useState(""); const [editing, setEditing] = useState<GovernanceRoleNameRow | null>(null); const [value, setValue] = useState(""); const [message, setMessage] = useState(""); const [saving, setSaving] = useState(false); const opener = useRef<HTMLButtonElement | null>(null);
+const hasForbiddenCharacter = (value: string) => Array.from(value).some((char) => { const code = char.codePointAt(0) || 0; return code <= 0x1f || (code >= 0x7f && code <= 0x9f) || code === 0x061c || code === 0x200e || code === 0x200f || (code >= 0x202a && code <= 0x202e) || (code >= 0x2066 && code <= 0x2069); });
+const normalize = (value: string) => value.normalize("NFKC").trim().replace(/\s+/gu, " ");
+const validate = (value: string) => { const normalized = normalize(value); if (!normalized) return "Use Reset when you want to remove a display name."; if (normalized.length < 2 || normalized.length > 80) return "Use 2-80 characters."; if (hasForbiddenCharacter(normalized)) return "Control and bidi override characters are not allowed."; if (/^[\p{P}\p{S}\s]+$/u.test(normalized)) return "Use letters or numbers, not only punctuation."; return ""; };
+const hasReturnedRow = (value: MutationResponse): value is { row: Partial<GovernanceRoleNameRow> } => typeof value === "object" && value !== null && "row" in value && typeof (value as { row?: unknown }).row === "object" && (value as { row?: unknown }).row !== null;
+
+export const AliasesNavigationModule = ({ roleNames, surface, organizationId, organizationName, onUpdateOwnerRoleLabel, onUpdateOrganizationRoleAlias, onReload }: { roleNames?: GovernanceRoleNamesReadModel; surface: GovernanceSurface; organizationId: string; organizationName?: string | null; onUpdateOwnerRoleLabel?: (input: MutationInput) => Promise<MutationResponse>; onUpdateOrganizationRoleAlias?: (input: MutationInput) => Promise<MutationResponse>; onReload?: () => Promise<void> }) => {
+  const [query, setQuery] = useState("");
+  const [selectedRow, setSelectedRow] = useState<GovernanceRoleNameRow | null>(null);
+  const [localPatches, setLocalPatches] = useState<Record<string, Partial<GovernanceRoleNameRow>>>({});
+  const [value, setValue] = useState("");
+  const [message, setMessage] = useState("");
+  const [pageMessage, setPageMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [resetConfirmation, setResetConfirmation] = useState(false);
+  const opener = useRef<HTMLButtonElement | null>(null);
+
   useEffect(() => {
-    queueMicrotask(() => { setEditing(null); setValue(""); setMessage(""); });
-  }, [roleNames?.organizationId, surface]);
-  const rows = useMemo(() => (roleNames?.rows || []).filter((row) => [roleNameForSurface(row, surface), displayNameForSurface(row, surface)].join(" ").toLocaleLowerCase().includes(query.toLocaleLowerCase())), [query, roleNames?.rows, surface]);
-  const open = (row: GovernanceRoleNameRow, event: React.MouseEvent<HTMLButtonElement>) => { opener.current = event.currentTarget; setEditing(row); setValue(surface === "owner" ? (row.civitasDefaultLabel === row.canonicalBaselineLabel ? "" : row.civitasDefaultLabel) : (row.organizationAlias || "")); setMessage(""); };
-  const close = () => { setEditing(null); setMessage(""); opener.current?.focus(); };
-  const save = async (reset = false, target = editing) => { if (!target) return; const err = reset ? "" : validate(value); if (err) { setMessage(err); return; } const fn = surface === "owner" ? onUpdateOwnerRoleLabel : onUpdateOrganizationRoleAlias; if (!fn) return; setSaving(true); try { await fn({ canonicalRoleKey: target.canonicalRoleKey, displayName: reset ? null : value.normalize("NFKC").trim().replace(/\s+/gu, " "), expectedVersion: surface === "owner" ? roleNames?.globalVersion || target.globalVersion : roleNames?.organizationVersion || target.organizationVersion, reason: reset ? "Reset role display name" : "Update role display name" }); await onReload?.(); close(); } catch (error) { if (error instanceof ApiRequestError && error.status === 409) setMessage("This role name was changed by another administrator."); else setMessage("Role name could not be saved."); } finally { setSaving(false); } };
+    queueMicrotask(() => { setLocalPatches({}); setSelectedRow(null); setValue(""); setMessage(""); setPageMessage(""); setResetConfirmation(false); });
+  }, [roleNames?.organizationId, roleNames?.rows, surface]);
+
+  const rows = useMemo(() => (roleNames?.rows || []).map((row) => ({ ...row, ...(localPatches[row.canonicalRoleKey] || {}) })).filter((row) => [roleNameForSurface(row, surface), displayNameForSurface(row, surface)].join(" ").toLocaleLowerCase().includes(query.toLocaleLowerCase())), [localPatches, query, roleNames?.rows, surface]);
+  const open = (row: GovernanceRoleNameRow, openerButton: HTMLButtonElement, reset = false) => { opener.current = openerButton; setSelectedRow(row); setValue(surface === "owner" ? (row.civitasDefaultLabel === row.canonicalBaselineLabel ? "" : row.civitasDefaultLabel) : (row.organizationAlias || "")); setMessage(""); setPageMessage(""); setResetConfirmation(reset); };
+  const close = () => { setSelectedRow(null); setMessage(""); setResetConfirmation(false); opener.current?.focus(); };
+  const applyReturnedRow = (target: GovernanceRoleNameRow, response: MutationResponse, reset: boolean) => {
+    const fallbackPatch = surface === "owner" ? { civitasDefaultLabel: reset ? target.canonicalBaselineLabel : normalize(value), effectiveLabel: reset ? target.canonicalBaselineLabel : normalize(value) } : { organizationAlias: reset ? null : normalize(value), effectiveLabel: reset ? target.civitasDefaultLabel : normalize(value) };
+    const patch = hasReturnedRow(response) ? response.row : fallbackPatch;
+    setLocalPatches((current) => ({ ...current, [target.canonicalRoleKey]: { ...current[target.canonicalRoleKey], ...patch } }));
+  };
+  const save = async (reset = false) => {
+    if (!selectedRow) return;
+    const err = reset ? "" : validate(value);
+    if (err) { setMessage(err); return; }
+    const fn = surface === "owner" ? onUpdateOwnerRoleLabel : onUpdateOrganizationRoleAlias;
+    if (!fn) return;
+    setSaving(true);
+    setMessage("");
+    setPageMessage("");
+    try {
+      const response = await fn({ canonicalRoleKey: selectedRow.canonicalRoleKey, displayName: reset ? null : normalize(value), expectedVersion: surface === "owner" ? roleNames?.globalVersion || selectedRow.globalVersion : roleNames?.organizationVersion || selectedRow.organizationVersion, reason: reset ? "Reset role display name" : "Update role display name" });
+      applyReturnedRow(selectedRow, response, reset);
+      close();
+      setPageMessage("Display name saved.");
+      try { await onReload?.(); } catch { setPageMessage("Display name was saved, but the latest data could not be refreshed."); }
+    } catch (error) {
+      setMessage(roleNameMutationErrorMessage(error));
+    } finally {
+      setSaving(false);
+    }
+  };
   const owner = surface === "owner";
-  return <SectionCard title="Role names" description={owner ? "Manage the display names used across Civitas." : "Manage the display names used in this organization."}><div className="civitas-workspace-stack"><FilterBar searchLabel="Search roles" placeholder="Search by role name or display name" searchValue={query} onSearchChange={setQuery} onReset={() => setQuery("")} />{!rows.length ? <EmptyState message="No roles match your search." /> : <div className="grid gap-3 md:block"><table className="hidden min-w-full text-sm md:table"><thead><tr className="border-b border-border text-left text-xs font-semibold uppercase tracking-[0.16em] text-muted"><th className="px-3 py-2">Role name</th><th className="px-3 py-2">Display name</th><th className="px-3 py-2">Users</th><th className="px-3 py-2">Status</th><th className="px-3 py-2">Actions</th></tr></thead><tbody>{rows.map((row) => { const displayName = displayNameForSurface(row, surface); return <tr key={row.logtoRoleId} className="border-b border-border"><td className="px-3 py-3">{roleNameForSurface(row, surface)}</td><td className="px-3 py-3">{displayName}</td><td className="px-3 py-3"><Link className="civitas-link" to={usersHref({ surface, organizationId: roleNames?.organizationId || organizationId, canonicalRoleKey: row.canonicalRoleKey })} aria-label={`View ${displayCount(row.directRoleUserCount)} assigned to ${displayName} in Segmentation`}>{displayCount(row.directRoleUserCount)}</Link></td><td className="px-3 py-3"><StatusPill status="success">Active</StatusPill></td><td className="px-3 py-3"><div className="flex gap-2"><button className="civitas-icon-button" type="button" aria-label={`Edit display name for ${displayName}`} onClick={(event) => open(row, event)}>✏️</button><button className="civitas-icon-button" type="button" aria-label={`Reset display name for ${displayName}`} onClick={() => { setValue(""); void save(true, row); }}>↺</button></div></td></tr>; })}</tbody></table>{rows.map((row) => { const displayName = displayNameForSurface(row, surface); return <article key={`card-${row.logtoRoleId}`} className="civitas-card civitas-pad-tight md:hidden"><div className="font-semibold">{roleNameForSurface(row, surface)}</div><p>{displayName}</p><Link className="civitas-link" to={usersHref({ surface, organizationId: roleNames?.organizationId || organizationId, canonicalRoleKey: row.canonicalRoleKey })} aria-label={`View ${displayCount(row.directRoleUserCount)} assigned to ${displayName} in Segmentation`}>{displayCount(row.directRoleUserCount)}</Link><div className="mt-2 flex items-center justify-between gap-3"><StatusPill status="success">Active</StatusPill><span className="flex gap-2"><button className="civitas-icon-button" type="button" aria-label={`Edit display name for ${displayName}`} onClick={(event) => open(row, event)}>✏️</button><button className="civitas-icon-button" type="button" aria-label={`Reset display name for ${displayName}`} onClick={() => { setValue(""); void save(true, row); }}>↺</button></span></div></article>; })}</div>}{editing ? <div className="fixed inset-0 z-50 grid place-items-end bg-backdrop sm:place-items-center" role="dialog" aria-modal="true" aria-labelledby="role-name-editor-title"><div className="h-full w-full overflow-auto bg-surface p-6 shadow-lg sm:h-auto sm:max-w-xl sm:rounded-lg"><h2 id="role-name-editor-title" className="text-lg font-semibold">Edit display name</h2><p className="mt-2 text-sm text-muted-strong">Display names change presentation only. Technical identities, permissions, assignments, and memberships do not change.</p><label className="mt-4 block text-sm font-semibold" htmlFor="role-label-input">Display name</label><input id="role-label-input" className="civitas-field mt-1" value={value} maxLength={80} onChange={(event) => { setValue(event.target.value); setMessage(""); }} autoFocus /><div className="mt-1 text-xs text-muted-strong">{value.normalize("NFKC").trim().length}/80 characters</div>{message ? <p className="mt-3 text-sm font-semibold text-danger" role="alert">{message}</p> : null}<div className="mt-5 flex flex-wrap justify-end gap-2"><button className="civitas-secondary-button" type="button" onClick={() => void save(true)} disabled={saving}>Reset</button><button className="civitas-secondary-button" type="button" onClick={close}>Cancel</button><button className="civitas-primary-button" type="button" onClick={() => void save(false)} disabled={saving}>{saving ? "Saving…" : "Save"}</button></div></div></div> : null}</div></SectionCard>;
+  return <SectionCard title="Role names" description={owner ? "Manage the display names used across Civitas." : "Manage the display names used in this organization."}><div className="civitas-workspace-stack"><FilterBar searchLabel="Search roles" placeholder="Search by role name or display name" searchValue={query} onSearchChange={setQuery} onReset={() => setQuery("")} />{pageMessage ? <p className="text-sm font-semibold text-muted-strong" role="status">{pageMessage}</p> : null}<RoleNamesTable rows={rows} surface={surface} organizationId={roleNames?.organizationId || organizationId} onEdit={(row, button) => open(row, button)} onReset={(row, button) => open(row, button, true)} /><RoleNameEditorDrawer row={selectedRow} surface={surface} organizationName={organizationName} value={value} message={message} saving={saving} resetConfirmation={resetConfirmation} onValueChange={(next) => { setValue(next); setMessage(""); }} onSave={() => void save(false)} onReset={() => { setResetConfirmation(true); if (resetConfirmation) void save(true); }} onCancel={close} /></div></SectionCard>;
 };

@@ -9,7 +9,13 @@ const routes = readFileSync(new URL("../../navigation/routes.ts", import.meta.ur
 const registry = readFileSync(new URL("./visual/governance.screen.ts", import.meta.url), "utf8");
 const matrix = readFileSync(new URL("./modules/permission-matrix/PermissionMatrixModule.tsx", import.meta.url), "utf8");
 const roleNames = readFileSync(new URL("./modules/aliases-navigation/AliasesNavigationModule.tsx", import.meta.url), "utf8");
+const roleNamesTable = readFileSync(new URL("./modules/aliases-navigation/RoleNamesTable.tsx", import.meta.url), "utf8");
+const roleNameDrawer = readFileSync(new URL("./modules/aliases-navigation/RoleNameEditorDrawer.tsx", import.meta.url), "utf8");
+const roleNamesViewModel = readFileSync(new URL("./modules/aliases-navigation/roleNamesViewModel.ts", import.meta.url), "utf8");
+const roleNamesErrors = readFileSync(new URL("./modules/aliases-navigation/roleNamesErrors.ts", import.meta.url), "utf8");
 const segmentation = readFileSync(new URL("./modules/people-segmentation/PeopleSegmentationModule.tsx", import.meta.url), "utf8");
+const formDrawer = readFileSync(new URL("../../shared/ui/patterns/FormDrawer.tsx", import.meta.url), "utf8");
+const primitivesCss = readFileSync(new URL("../../styles/primitives.css", import.meta.url), "utf8");
 const reasonFormat = readFileSync(new URL("./modules/permission-matrix/reason-format.ts", import.meta.url), "utf8");
 const dataScope = readFileSync(new URL("./modules/data-scope/DataScopeModule.tsx", import.meta.url), "utf8");
 const unitsModule = readFileSync(new URL("./modules/units/UnitsModule.tsx", import.meta.url), "utf8");
@@ -98,17 +104,55 @@ test("scope assignments remain role-path bound", () => { assert.match(routes, /s
 test("role names screen matches the product table and user-count navigation contract", () => {
   assert.match(roleNames, /Manage the display names used across Civitas/);
   assert.match(roleNames, /Manage the display names used in this organization/);
-  for (const header of ["Role name", "Display name", "Users", "Status", "Actions"]) assert.match(roleNames, new RegExp(`>${header}<`));
+  for (const header of ["Role name", "Display name", "Users", "Status", "Actions"]) assert.match(roleNamesTable, new RegExp(`>${header}<`));
   assert.match(roleNames, /Search roles/);
   assert.match(roleNames, /Search by role name or display name/);
-  assert.match(roleNames, /directRoleUserCount/);
-  assert.match(roleNames, /View .* assigned to .* in Segmentation/);
-  assert.match(roleNames, /appRoutes\.ownerOrganizationGovernancePeopleSegmentation\.build/);
-  assert.match(roleNames, /appRoutes\.tenantGovernancePeopleSegmentation\.build/);
-  assert.match(roleNames, /new URLSearchParams\(\{ role: canonicalRoleKey \}\)/);
-  assert.doesNotMatch(roleNames, /Canonical role|Logto role|Civitas default|Uses Civitas default|Inherited|Organization alias|<code|Role mapping needs attention|diagnostics/i);
-  assert.doesNotMatch(roleNames, /assignedMemberCount\)|filter\(.*members|roleAliases\.length|permissions\.length/);
+  assert.match(roleNamesTable, /directRoleUserCount/);
+  assert.match(roleNamesTable, /View .* assigned to .* in Segmentation/);
+  assert.match(roleNamesViewModel, /appRoutes\.ownerOrganizationGovernancePeopleSegmentation\.build/);
+  assert.match(roleNamesViewModel, /appRoutes\.tenantGovernancePeopleSegmentation\.build/);
+  assert.match(roleNamesViewModel, /new URLSearchParams\(\{ role: canonicalRoleKey \}\)/);
+  assert.doesNotMatch(roleNames + roleNamesTable, /Canonical role|Logto role|Civitas default|Uses Civitas default|Inherited|Organization alias|<code|Role mapping needs attention|diagnostics/i);
+  assert.doesNotMatch(roleNames + roleNamesTable, /assignedMemberCount\)|filter\(.*members|roleAliases\.length|permissions\.length/);
   assert.match(contracts, /directRoleUserCount: number/);
+});
+
+test("role names editor composes the shared right-side FormDrawer visual system", () => {
+  assert.ok(roleNameDrawer.includes('import { AlertStrip, FormDrawer, FormField } from "../../../../shared/ui"'));
+  assert.doesNotMatch(roleNames + roleNameDrawer + roleNamesTable, /fixed inset-0|role=\"dialog\"|aria-modal=\"true\"|place-items-center|sm:rounded-lg|bg-backdrop/);
+  assert.match(formDrawer, /IconX/);
+  assert.match(formDrawer, /aria-modal=\"true\"/);
+  assert.match(formDrawer, /document\.body\.style\.overflow = \"hidden\"/);
+  assert.match(formDrawer, /previousFocusRef\.current\?\.focus\(\)/);
+  assert.match(formDrawer, /event\.key === \"Escape\"/);
+  assert.match(formDrawer, /initialFocusRef/);
+  assert.match(primitivesCss, /\.civitas-form-drawer-overlay[\s\S]*justify-content: flex-end/);
+  assert.match(primitivesCss, /\.civitas-form-drawer[\s\S]*height: 100vh/);
+  assert.match(primitivesCss, /grid-template-rows: auto minmax\(0, 1fr\) auto/);
+  assert.match(primitivesCss, /\.civitas-form-drawer-footer[\s\S]*position: sticky/);
+  assert.match(primitivesCss, /@media \(max-width: 768px\)[\s\S]*width: 100vw/);
+});
+
+test("role names actions use Tabler icons and confirmed reset without emoji glyphs", () => {
+  assert.match(roleNamesTable, /IconPencil/);
+  assert.match(roleNamesTable, /IconRestore/);
+  assert.match(roleNamesTable, /title=\"Edit display name\"/);
+  assert.match(roleNamesTable, /No custom display name to reset/);
+  assert.match(roleNamesTable, /disabled=\{!canReset\}/);
+  assert.match(roleNames, /setResetConfirmation\(true\)/);
+  assert.doesNotMatch(roleNames + roleNamesTable + roleNameDrawer, /✏️|↺/);
+});
+
+test("role names drawer exposes metadata and separates mutation from reload failures", () => {
+  for (const copy of ["ROLE NAME", "Edit display name", "Display names change presentation only. Permissions and access remain unchanged.", "Role name", "Scope", "Current display name", "Last modified", "Modified by", "Across Civitas", "Used across Civitas unless an organization has its own display name.", "Shown only in this organization."]) assert.match(roleNameDrawer, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  assert.doesNotMatch(roleNameDrawer, /canonicalRoleKey|logtoRoleId|logtoRoleName|policyVersion|auditEvent|source/);
+  assert.match(roleNamesErrors, /You do not have permission to change role display names/);
+  assert.match(roleNamesErrors, /Another role already uses this display name/);
+  assert.match(roleNamesErrors, /This display name was changed by another administrator/);
+  assert.match(roleNamesErrors, /Display name could not be saved\. Try again/);
+  assert.match(roleNames, /Display name was saved, but the latest data could not be refreshed/);
+  assert.match(roleNames, /applyReturnedRow/);
+  assert.match(roleNames, /catch \{ setPageMessage/);
 });
 
 
