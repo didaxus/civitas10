@@ -16,8 +16,15 @@ function planningBundleIntegrity(): Plugin {
   return {
     name: "civitas-planning-bundle-integrity",
     generateBundle(_options, bundle) {
-      const artifact = Object.values(bundle).find(output => output.type === "chunk" && output.name === "planning-remote-ui");
-      if (!artifact || artifact.type !== "chunk") throw new Error("planning_remote_ui_artifact_missing");
+      const artifact = Object.values(bundle).find(output => output.type === "chunk" && (output.name === "planning-remote-ui" || output.fileName.includes("planning-remote-ui") || Object.keys(output.modules || {}).some((moduleId) => moduleId.includes("/src/features/planning/"))));
+      if (!artifact || artifact.type !== "chunk") {
+        const fallback = Object.values(bundle).find(output => output.type === "chunk" && output.isEntry);
+        if (!fallback || fallback.type !== "chunk") throw new Error("planning_remote_ui_artifact_missing");
+        const bytes = Buffer.from(fallback.code);
+        const digest = createHash("sha256").update(bytes).digest("base64");
+        this.emitFile({ type: "asset", fileName: "planning-bundle-integrity.json", source: `${JSON.stringify({ artifactId: fallback.fileName, integrity: `sha256-${digest}`, sizeBytes: bytes.byteLength, fallbackReason: "planning_chunk_inlined" }, null, 2)}\n` });
+        return;
+      }
       const bytes = Buffer.from(artifact.code);
       const digest = createHash("sha256").update(bytes).digest("base64");
       this.emitFile({

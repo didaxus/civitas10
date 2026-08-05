@@ -9,7 +9,7 @@ const generated = Object.freeze({
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19"
+    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
   },
   "catalog": {
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
@@ -58,7 +58,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 10
+        }
       },
       {
         "name": "analytics.dashboards.read",
@@ -73,7 +81,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View dashboards",
+          "description": "View dashboards for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 20
+        }
       },
       {
         "name": "analytics.exports.approve",
@@ -88,7 +104,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 30
+        }
       },
       {
         "name": "analytics.imports.delete",
@@ -103,7 +127,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 40
+        }
       },
       {
         "name": "analytics.records.read",
@@ -118,7 +150,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View records",
+          "description": "View records for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 50
+        }
       },
       {
         "name": "analytics.reports.read",
@@ -133,7 +173,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View reports",
+          "description": "View reports for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 60
+        }
       },
       {
         "name": "analytics.reports.update",
@@ -148,7 +196,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 70
+        }
       },
       {
         "name": "analytics.settings.create",
@@ -163,7 +219,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization analytics.",
+          "groupKey": "analytics",
+          "groupLabel": "Analytics",
+          "groupOrder": 70,
+          "order": 80
+        }
       },
       {
         "name": "community.admin.export",
@@ -178,7 +242,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 10
+        }
       },
       {
         "name": "community.exports.approve",
@@ -193,7 +265,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 20
+        }
       },
       {
         "name": "community.groups.read",
@@ -208,7 +288,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View groups",
+          "description": "View groups for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 30
+        }
       },
       {
         "name": "community.imports.delete",
@@ -223,7 +311,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 40
+        }
       },
       {
         "name": "community.posts.read",
@@ -238,7 +334,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View community posts",
+          "description": "View community posts for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 50
+        }
       },
       {
         "name": "community.reports.update",
@@ -253,7 +357,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 60
+        }
       },
       {
         "name": "community.settings.create",
@@ -268,7 +380,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization community.",
+          "groupKey": "community",
+          "groupLabel": "Community",
+          "groupOrder": 40,
+          "order": 70
+        }
       },
       {
         "name": "crm.admin.export",
@@ -283,7 +403,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization CRM.",
+          "groupKey": "crm",
+          "groupLabel": "CRM",
+          "groupOrder": 45,
+          "order": 10
+        }
       },
       {
         "name": "crm.contacts.read",
@@ -298,7 +426,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View contacts",
+          "description": "View contacts for the organization CRM.",
+          "groupKey": "crm",
+          "groupLabel": "CRM",
+          "groupOrder": 45,
+          "order": 20
+        }
       },
       {
         "name": "crm.exports.approve",
@@ -313,7 +449,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization CRM.",
+          "groupKey": "crm",
+          "groupLabel": "CRM",
+          "groupOrder": 45,
+          "order": 30
+        }
       },
       {
         "name": "crm.imports.delete",
@@ -328,7 +472,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization CRM.",
+          "groupKey": "crm",
+          "groupLabel": "CRM",
+          "groupOrder": 45,
+          "order": 40
+        }
       },
       {
         "name": "crm.reports.update",
@@ -343,7 +495,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization CRM.",
+          "groupKey": "crm",
+          "groupLabel": "CRM",
+          "groupOrder": 45,
+          "order": 50
+        }
       },
       {
         "name": "crm.settings.create",
@@ -358,7 +518,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization CRM.",
+          "groupKey": "crm",
+          "groupLabel": "CRM",
+          "groupOrder": 45,
+          "order": 60
+        }
       },
       {
         "name": "hr.admin.export",
@@ -373,7 +541,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 10
+        }
       },
       {
         "name": "hr.approvals.archive",
@@ -388,7 +564,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive approvals",
+          "description": "Archive approvals for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 20
+        }
       },
       {
         "name": "hr.dashboards.read",
@@ -403,7 +587,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View dashboards",
+          "description": "View dashboards for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 30
+        }
       },
       {
         "name": "hr.employees.read",
@@ -418,7 +610,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View employees",
+          "description": "View employees for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 40
+        }
       },
       {
         "name": "hr.events.create",
@@ -433,7 +633,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create events",
+          "description": "Create events for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 50
+        }
       },
       {
         "name": "hr.exports.approve",
@@ -448,7 +656,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 60
+        }
       },
       {
         "name": "hr.files.approve",
@@ -463,7 +679,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve files",
+          "description": "Approve files for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 70
+        }
       },
       {
         "name": "hr.imports.delete",
@@ -478,7 +702,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 80
+        }
       },
       {
         "name": "hr.policies.delete",
@@ -493,7 +725,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete policies",
+          "description": "Delete policies for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 90
+        }
       },
       {
         "name": "hr.records.read",
@@ -508,7 +748,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View records",
+          "description": "View records for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 100
+        }
       },
       {
         "name": "hr.reports.update",
@@ -523,7 +771,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 110
+        }
       },
       {
         "name": "hr.requests.manage",
@@ -538,7 +794,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage requests",
+          "description": "Manage requests for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 120
+        }
       },
       {
         "name": "hr.settings.create",
@@ -553,7 +817,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 130
+        }
       },
       {
         "name": "hr.tasks.update",
@@ -568,7 +840,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage tasks",
+          "description": "Manage tasks for the organization payroll.",
+          "groupKey": "payroll",
+          "groupLabel": "Payroll",
+          "groupOrder": 110,
+          "order": 140
+        }
       },
       {
         "name": "lms.assignments.create",
@@ -583,7 +863,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create assignments",
+          "description": "Create assignments for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 10
+        }
       },
       {
         "name": "lms.assignments.read",
@@ -598,7 +886,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View assignments",
+          "description": "View assignments for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 20
+        }
       },
       {
         "name": "lms.attendance.approve",
@@ -613,7 +909,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve attendance",
+          "description": "Approve attendance for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 30
+        }
       },
       {
         "name": "lms.attendance.manage",
@@ -628,7 +932,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage attendance",
+          "description": "Manage attendance for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 40
+        }
       },
       {
         "name": "lms.certificates.delete",
@@ -643,7 +955,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete certificates",
+          "description": "Delete certificates for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 50
+        }
       },
       {
         "name": "lms.content.archive",
@@ -658,7 +978,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive learning content",
+          "description": "Archive learning content for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 60
+        }
       },
       {
         "name": "lms.content.export",
@@ -673,7 +1001,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export learning content",
+          "description": "Export learning content for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 70
+        }
       },
       {
         "name": "lms.course_offerings.read",
@@ -696,7 +1032,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/lmsGroupLeadership.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View course offerings",
+          "description": "View course offerings for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 80
+        }
       },
       {
         "name": "lms.course_offerings.read.extra",
@@ -711,7 +1055,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View course offerings",
+          "description": "View course offerings for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 90
+        }
       },
       {
         "name": "lms.courses.read",
@@ -726,7 +1078,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View courses",
+          "description": "View courses for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 100
+        }
       },
       {
         "name": "lms.forums.update",
@@ -741,7 +1101,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage forums",
+          "description": "Manage forums for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 110
+        }
       },
       {
         "name": "lms.grades.delete",
@@ -756,7 +1124,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete grades",
+          "description": "Delete grades for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 120
+        }
       },
       {
         "name": "lms.grades.export",
@@ -771,7 +1147,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export grades",
+          "description": "Export grades for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 130
+        }
       },
       {
         "name": "lms.group_members.archive",
@@ -786,7 +1170,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive group members",
+          "description": "Archive group members for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 140
+        }
       },
       {
         "name": "lms.group_members.read",
@@ -809,7 +1201,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/lmsGroupLeadership.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View group members",
+          "description": "View group members for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 150
+        }
       },
       {
         "name": "lms.groups.manage",
@@ -824,7 +1224,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage groups",
+          "description": "Manage groups for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 160
+        }
       },
       {
         "name": "lms.groups.read",
@@ -847,7 +1255,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/lmsGroupLeadership.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View groups",
+          "description": "View groups for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 170
+        }
       },
       {
         "name": "lms.outcomes.export",
@@ -862,7 +1278,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export outcomes",
+          "description": "Export outcomes for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 180
+        }
       },
       {
         "name": "lms.progress.approve",
@@ -877,7 +1301,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve progress",
+          "description": "Approve progress for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 190
+        }
       },
       {
         "name": "lms.quizzes.create",
@@ -892,7 +1324,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create quizzes",
+          "description": "Create quizzes for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 200
+        }
       },
       {
         "name": "lms.rubrics.read",
@@ -907,7 +1347,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View rubrics",
+          "description": "View rubrics for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 210
+        }
       },
       {
         "name": "lms.submissions.approve",
@@ -922,7 +1370,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve submissions",
+          "description": "Approve submissions for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 220
+        }
       },
       {
         "name": "lms.submissions.update",
@@ -937,7 +1393,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage submissions",
+          "description": "Manage submissions for the organization learning.",
+          "groupKey": "learning",
+          "groupLabel": "Learning",
+          "groupOrder": 20,
+          "order": 230
+        }
       },
       {
         "name": "marketing.admin.export",
@@ -952,7 +1416,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization marketing.",
+          "groupKey": "marketing",
+          "groupLabel": "Marketing",
+          "groupOrder": 50,
+          "order": 10
+        }
       },
       {
         "name": "marketing.campaigns.read",
@@ -967,7 +1439,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View campaigns",
+          "description": "View campaigns for the organization marketing.",
+          "groupKey": "marketing",
+          "groupLabel": "Marketing",
+          "groupOrder": 50,
+          "order": 20
+        }
       },
       {
         "name": "marketing.exports.approve",
@@ -982,7 +1462,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization marketing.",
+          "groupKey": "marketing",
+          "groupLabel": "Marketing",
+          "groupOrder": 50,
+          "order": 30
+        }
       },
       {
         "name": "marketing.imports.delete",
@@ -997,7 +1485,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization marketing.",
+          "groupKey": "marketing",
+          "groupLabel": "Marketing",
+          "groupOrder": 50,
+          "order": 40
+        }
       },
       {
         "name": "marketing.reports.update",
@@ -1012,7 +1508,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization marketing.",
+          "groupKey": "marketing",
+          "groupLabel": "Marketing",
+          "groupOrder": 50,
+          "order": 50
+        }
       },
       {
         "name": "marketing.settings.create",
@@ -1027,7 +1531,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization marketing.",
+          "groupKey": "marketing",
+          "groupLabel": "Marketing",
+          "groupOrder": 50,
+          "order": 60
+        }
       },
       {
         "name": "org.analytics.export",
@@ -1042,7 +1554,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export analytics",
+          "description": "Export analytics for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 10
+        }
       },
       {
         "name": "org.announcements.read",
@@ -1057,7 +1577,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View announcements",
+          "description": "View announcements for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 20
+        }
       },
       {
         "name": "org.billing.manage",
@@ -1072,7 +1600,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage billing",
+          "description": "Manage billing for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 30
+        }
       },
       {
         "name": "org.documents.create",
@@ -1095,7 +1631,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/guards.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "Create documents",
+          "description": "Create documents for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 40
+        }
       },
       {
         "name": "org.documents.manage",
@@ -1110,7 +1654,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage documents",
+          "description": "Manage documents for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 50
+        }
       },
       {
         "name": "org.documents.read",
@@ -1133,7 +1685,15 @@ const generated = Object.freeze({
         "runtimePath": "backend/authorization/guards.js",
         "testEvidence": [
           "backend/test/permission-catalog-contract.test.js"
-        ]
+        ],
+        "presentation": {
+          "label": "View documents",
+          "description": "View documents for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 60
+        }
       },
       {
         "name": "org.enrollments.delete",
@@ -1148,7 +1708,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete enrollments",
+          "description": "Delete enrollments for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 70
+        }
       },
       {
         "name": "org.enrollments.export",
@@ -1163,7 +1731,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export enrollments",
+          "description": "Export enrollments for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 80
+        }
       },
       {
         "name": "org.files.create",
@@ -1178,7 +1754,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create files",
+          "description": "Create files for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 90
+        }
       },
       {
         "name": "org.forms.update",
@@ -1193,7 +1777,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage forms",
+          "description": "Manage forms for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 100
+        }
       },
       {
         "name": "org.groups.approve",
@@ -1208,7 +1800,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve groups",
+          "description": "Approve groups for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 110
+        }
       },
       {
         "name": "org.groups.update",
@@ -1223,7 +1823,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage groups",
+          "description": "Manage groups for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 120
+        }
       },
       {
         "name": "org.members.archive",
@@ -1238,7 +1846,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive members",
+          "description": "Archive members for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 130
+        }
       },
       {
         "name": "org.members.invite",
@@ -1253,7 +1869,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Invite members",
+          "description": "Invite members for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 140
+        }
       },
       {
         "name": "org.members.read",
@@ -1268,7 +1892,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View members",
+          "description": "View members for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 150
+        }
       },
       {
         "name": "org.reports.approve",
@@ -1283,7 +1915,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve reports",
+          "description": "Approve reports for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 160
+        }
       },
       {
         "name": "org.roles.create",
@@ -1298,7 +1938,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create roles",
+          "description": "Create roles for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 170
+        }
       },
       {
         "name": "org.settings.read",
@@ -1313,7 +1961,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View settings",
+          "description": "View settings for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 180
+        }
       },
       {
         "name": "org.support.archive",
@@ -1328,7 +1984,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive support records",
+          "description": "Archive support records for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 190
+        }
       },
       {
         "name": "org.workflows.delete",
@@ -1343,7 +2007,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete workflows",
+          "description": "Delete workflows for the organization.",
+          "groupKey": "organization",
+          "groupLabel": "Organization",
+          "groupOrder": 10,
+          "order": 200
+        }
       },
       {
         "name": "owner.audit.read",
@@ -1358,7 +2030,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View audit",
+          "description": "View audit for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 10
+        }
       },
       {
         "name": "owner.audit.update",
@@ -1373,7 +2053,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage audit",
+          "description": "Manage audit for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 20
+        }
       },
       {
         "name": "owner.billing.create",
@@ -1388,7 +2076,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create billing",
+          "description": "Create billing for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 30
+        }
       },
       {
         "name": "owner.catalog.export",
@@ -1403,7 +2099,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export catalog",
+          "description": "Export catalog for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 40
+        }
       },
       {
         "name": "owner.entitlements.approve",
@@ -1418,7 +2122,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve entitlements",
+          "description": "Approve entitlements for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 50
+        }
       },
       {
         "name": "owner.impersonation.archive",
@@ -1433,7 +2145,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive impersonation",
+          "description": "Archive impersonation for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 60
+        }
       },
       {
         "name": "owner.operations.manage",
@@ -1448,7 +2168,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage operations",
+          "description": "Manage operations for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 70
+        }
       },
       {
         "name": "owner.platform.approve",
@@ -1463,7 +2191,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve platform",
+          "description": "Approve platform for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 80
+        }
       },
       {
         "name": "owner.reports.update",
@@ -1478,7 +2214,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 90
+        }
       },
       {
         "name": "owner.security.read",
@@ -1493,7 +2237,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View security",
+          "description": "View security for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 100
+        }
       },
       {
         "name": "owner.settings.delete",
@@ -1508,7 +2260,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete settings",
+          "description": "Delete settings for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 110
+        }
       },
       {
         "name": "owner.support.delete",
@@ -1523,7 +2283,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete support records",
+          "description": "Delete support records for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 120
+        }
       },
       {
         "name": "owner.tenants.manage",
@@ -1538,7 +2306,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage tenants",
+          "description": "Manage tenants for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 130
+        }
       },
       {
         "name": "owner.tenants.read",
@@ -1553,7 +2329,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View tenants",
+          "description": "View tenants for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 140
+        }
       },
       {
         "name": "owner.users.archive",
@@ -1568,7 +2352,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive users",
+          "description": "Archive users for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 150
+        }
       },
       {
         "name": "owner.users.create",
@@ -1583,7 +2375,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create users",
+          "description": "Create users for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 160
+        }
       },
       {
         "name": "owner.webhooks.export",
@@ -1598,7 +2398,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export webhooks",
+          "description": "Export webhooks for the owner administration.",
+          "groupKey": "owner",
+          "groupLabel": "Owner Administration",
+          "groupOrder": 5,
+          "order": 170
+        }
       },
       {
         "name": "payments.admin.export",
@@ -1613,7 +2421,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 10
+        }
       },
       {
         "name": "payments.approvals.archive",
@@ -1628,7 +2444,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive approvals",
+          "description": "Archive approvals for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 20
+        }
       },
       {
         "name": "payments.dashboards.read",
@@ -1643,7 +2467,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View dashboards",
+          "description": "View dashboards for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 30
+        }
       },
       {
         "name": "payments.events.create",
@@ -1658,7 +2490,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create events",
+          "description": "Create events for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 40
+        }
       },
       {
         "name": "payments.exports.approve",
@@ -1673,7 +2513,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 50
+        }
       },
       {
         "name": "payments.files.approve",
@@ -1688,7 +2536,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve files",
+          "description": "Approve files for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 60
+        }
       },
       {
         "name": "payments.imports.delete",
@@ -1703,7 +2559,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 70
+        }
       },
       {
         "name": "payments.invoices.read",
@@ -1718,7 +2582,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View invoices",
+          "description": "View invoices for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 80
+        }
       },
       {
         "name": "payments.metrics.export",
@@ -1733,7 +2605,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export metrics",
+          "description": "Export metrics for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 90
+        }
       },
       {
         "name": "payments.policies.delete",
@@ -1748,7 +2628,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete policies",
+          "description": "Delete policies for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 100
+        }
       },
       {
         "name": "payments.records.read",
@@ -1763,7 +2651,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View records",
+          "description": "View records for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 110
+        }
       },
       {
         "name": "payments.reports.update",
@@ -1778,7 +2674,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 120
+        }
       },
       {
         "name": "payments.requests.manage",
@@ -1793,7 +2697,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage requests",
+          "description": "Manage requests for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 130
+        }
       },
       {
         "name": "payments.settings.create",
@@ -1808,7 +2720,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 140
+        }
       },
       {
         "name": "payments.tasks.update",
@@ -1823,7 +2743,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage tasks",
+          "description": "Manage tasks for the organization billing.",
+          "groupKey": "billing",
+          "groupLabel": "Billing",
+          "groupOrder": 100,
+          "order": 150
+        }
       },
       {
         "name": "planning.approvals.archive",
@@ -1838,7 +2766,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive approvals",
+          "description": "Archive approvals for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 10
+        }
       },
       {
         "name": "planning.approvals.export",
@@ -1853,7 +2789,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export approvals",
+          "description": "Export approvals for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 20
+        }
       },
       {
         "name": "planning.budgets.approve",
@@ -1868,7 +2812,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve budgets",
+          "description": "Approve budgets for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 30
+        }
       },
       {
         "name": "planning.budgets.update",
@@ -1883,7 +2835,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage budgets",
+          "description": "Manage budgets for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 40
+        }
       },
       {
         "name": "planning.dependencies.approve",
@@ -1898,7 +2858,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve dependencies",
+          "description": "Approve dependencies for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 50
+        }
       },
       {
         "name": "planning.dependencies.manage",
@@ -1913,7 +2881,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage dependencies",
+          "description": "Manage dependencies for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 60
+        }
       },
       {
         "name": "planning.initiatives.archive",
@@ -1928,7 +2904,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive initiatives",
+          "description": "Archive initiatives for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 70
+        }
       },
       {
         "name": "planning.initiatives.create",
@@ -1943,7 +2927,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create initiatives",
+          "description": "Create initiatives for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 80
+        }
       },
       {
         "name": "planning.milestones.read",
@@ -1958,7 +2950,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View milestones",
+          "description": "View milestones for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 90
+        }
       },
       {
         "name": "planning.milestones.update",
@@ -1973,7 +2973,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage milestones",
+          "description": "Manage milestones for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 100
+        }
       },
       {
         "name": "planning.minutes.delete",
@@ -1988,7 +2996,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete meeting minutes",
+          "description": "Delete meeting minutes for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 110
+        }
       },
       {
         "name": "planning.plans.approve",
@@ -2003,7 +3019,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve plans",
+          "description": "Approve plans for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 120
+        }
       },
       {
         "name": "planning.plans.manage",
@@ -2018,7 +3042,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage plans",
+          "description": "Manage plans for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 130
+        }
       },
       {
         "name": "planning.plans.read",
@@ -2033,7 +3065,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View plans",
+          "description": "View plans for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 140
+        }
       },
       {
         "name": "planning.profile.manage",
@@ -2048,7 +3088,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage planning profile",
+          "description": "Manage planning profile for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 150
+        }
       },
       {
         "name": "planning.profile.read",
@@ -2063,7 +3111,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View planning profile",
+          "description": "View planning profile for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 160
+        }
       },
       {
         "name": "planning.proposals.update",
@@ -2078,7 +3134,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage proposals",
+          "description": "Manage proposals for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 170
+        }
       },
       {
         "name": "planning.risks.delete",
@@ -2093,7 +3157,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete risks",
+          "description": "Delete risks for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 180
+        }
       },
       {
         "name": "planning.risks.export",
@@ -2108,7 +3180,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export risks",
+          "description": "Export risks for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 190
+        }
       },
       {
         "name": "planning.roadmaps.export",
@@ -2123,7 +3203,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export roadmaps",
+          "description": "Export roadmaps for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 200
+        }
       },
       {
         "name": "planning.surveys.approve",
@@ -2138,7 +3226,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve surveys",
+          "description": "Approve surveys for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 210
+        }
       },
       {
         "name": "planning.tasks.create",
@@ -2153,7 +3249,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create tasks",
+          "description": "Create tasks for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 220
+        }
       },
       {
         "name": "planning.tasks.delete",
@@ -2168,7 +3272,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete tasks",
+          "description": "Delete tasks for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 230
+        }
       },
       {
         "name": "planning.votes.archive",
@@ -2183,7 +3295,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive votes",
+          "description": "Archive votes for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 240
+        }
       },
       {
         "name": "planning.votes.create",
@@ -2198,7 +3318,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create votes",
+          "description": "Create votes for the organization planning.",
+          "groupKey": "planning",
+          "groupLabel": "Planning",
+          "groupOrder": 30,
+          "order": 250
+        }
       },
       {
         "name": "platform.admin.export",
@@ -2213,7 +3341,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 10
+        }
       },
       {
         "name": "platform.approvals.archive",
@@ -2228,7 +3364,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Archive approvals",
+          "description": "Archive approvals for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 20
+        }
       },
       {
         "name": "platform.exports.approve",
@@ -2243,7 +3387,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 30
+        }
       },
       {
         "name": "platform.imports.delete",
@@ -2258,7 +3410,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 40
+        }
       },
       {
         "name": "platform.records.read",
@@ -2273,7 +3433,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View records",
+          "description": "View records for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 50
+        }
       },
       {
         "name": "platform.reports.update",
@@ -2288,7 +3456,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 60
+        }
       },
       {
         "name": "platform.requests.manage",
@@ -2303,7 +3479,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage requests",
+          "description": "Manage requests for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 70
+        }
       },
       {
         "name": "platform.settings.create",
@@ -2318,7 +3502,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the platform adapters.",
+          "groupKey": "platform",
+          "groupLabel": "Platform",
+          "groupOrder": 90,
+          "order": 80
+        }
       },
       {
         "name": "reports.admin.export",
@@ -2333,7 +3525,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization reports.",
+          "groupKey": "reports",
+          "groupLabel": "Reports",
+          "groupOrder": 80,
+          "order": 10
+        }
       },
       {
         "name": "reports.exports.approve",
@@ -2348,7 +3548,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization reports.",
+          "groupKey": "reports",
+          "groupLabel": "Reports",
+          "groupOrder": 80,
+          "order": 20
+        }
       },
       {
         "name": "reports.imports.delete",
@@ -2363,7 +3571,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization reports.",
+          "groupKey": "reports",
+          "groupLabel": "Reports",
+          "groupOrder": 80,
+          "order": 30
+        }
       },
       {
         "name": "reports.records.read",
@@ -2378,7 +3594,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View records",
+          "description": "View records for the organization reports.",
+          "groupKey": "reports",
+          "groupLabel": "Reports",
+          "groupOrder": 80,
+          "order": 40
+        }
       },
       {
         "name": "reports.reports.update",
@@ -2393,7 +3617,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization reports.",
+          "groupKey": "reports",
+          "groupLabel": "Reports",
+          "groupOrder": 80,
+          "order": 50
+        }
       },
       {
         "name": "reports.settings.create",
@@ -2408,7 +3640,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization reports.",
+          "groupKey": "reports",
+          "groupLabel": "Reports",
+          "groupOrder": 80,
+          "order": 60
+        }
       },
       {
         "name": "scheduling.admin.export",
@@ -2423,7 +3663,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 10
+        }
       },
       {
         "name": "scheduling.bookings.read",
@@ -2438,7 +3686,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View bookings",
+          "description": "View bookings for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 20
+        }
       },
       {
         "name": "scheduling.events.create",
@@ -2453,7 +3709,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create events",
+          "description": "Create events for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 30
+        }
       },
       {
         "name": "scheduling.events.read",
@@ -2468,7 +3732,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View events",
+          "description": "View events for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 40
+        }
       },
       {
         "name": "scheduling.exports.approve",
@@ -2483,7 +3755,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 50
+        }
       },
       {
         "name": "scheduling.imports.delete",
@@ -2498,7 +3778,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 60
+        }
       },
       {
         "name": "scheduling.reports.update",
@@ -2513,7 +3801,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization scheduling.",
+          "groupKey": "scheduling",
+          "groupLabel": "Scheduling",
+          "groupOrder": 55,
+          "order": 70
+        }
       },
       {
         "name": "support.admin.export",
@@ -2528,7 +3824,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Export administration",
+          "description": "Export administration for the organization support.",
+          "groupKey": "support",
+          "groupLabel": "Support",
+          "groupOrder": 60,
+          "order": 10
+        }
       },
       {
         "name": "support.exports.approve",
@@ -2543,7 +3847,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Approve exports",
+          "description": "Approve exports for the organization support.",
+          "groupKey": "support",
+          "groupLabel": "Support",
+          "groupOrder": 60,
+          "order": 20
+        }
       },
       {
         "name": "support.imports.delete",
@@ -2558,7 +3870,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Delete imports",
+          "description": "Delete imports for the organization support.",
+          "groupKey": "support",
+          "groupLabel": "Support",
+          "groupOrder": 60,
+          "order": 30
+        }
       },
       {
         "name": "support.reports.update",
@@ -2573,7 +3893,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Manage reports",
+          "description": "Manage reports for the organization support.",
+          "groupKey": "support",
+          "groupLabel": "Support",
+          "groupOrder": 60,
+          "order": 40
+        }
       },
       {
         "name": "support.settings.create",
@@ -2588,7 +3916,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "Create settings",
+          "description": "Create settings for the organization support.",
+          "groupKey": "support",
+          "groupLabel": "Support",
+          "groupOrder": 60,
+          "order": 50
+        }
       },
       {
         "name": "support.tickets.read",
@@ -2603,7 +3939,15 @@ const generated = Object.freeze({
         "consumers": [],
         "policyRequirements": [],
         "screenActionIds": [],
-        "compatibility": "none"
+        "compatibility": "none",
+        "presentation": {
+          "label": "View support tickets",
+          "description": "View support tickets for the organization support.",
+          "groupKey": "support",
+          "groupLabel": "Support",
+          "groupOrder": 60,
+          "order": 60
+        }
       }
     ],
     "legacyDecisions": [
@@ -2819,7 +4163,7 @@ const generated = Object.freeze({
       "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
       "contractVersion": "2026-07-civitas-permission-catalog-v1",
       "baselineAudit": "#167 observed legacy baseline; target is canonical Phase 3 contract",
-      "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19"
+      "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
     },
     "legacyBaselineObserved": [
       {
@@ -3070,7 +4414,7 @@ const generated = Object.freeze({
         "reason": "Governance IDs are blocked pending explicit namespace decision; consumers must not infer target permissions."
       }
     ],
-    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19"
+    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
   },
   "activePermissions": [
     {
@@ -3094,7 +4438,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View course offerings",
+        "description": "View course offerings for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 80
+      }
     },
     {
       "name": "lms.group_members.read",
@@ -3117,7 +4469,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View group members",
+        "description": "View group members for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 150
+      }
     },
     {
       "name": "lms.groups.read",
@@ -3140,7 +4500,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View groups",
+        "description": "View groups for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 170
+      }
     },
     {
       "name": "org.documents.create",
@@ -3163,7 +4531,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "Create documents",
+        "description": "Create documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 40
+      }
     },
     {
       "name": "org.documents.read",
@@ -3186,7 +4562,15 @@ const generated = Object.freeze({
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View documents",
+        "description": "View documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 60
+      }
     }
   ]
 })
@@ -3194,4 +4578,4 @@ const catalog = Object.freeze(generated.catalog)
 const permissions = Object.freeze(catalog.permissions.map(Object.freeze))
 const activePermissions = Object.freeze(generated.activePermissions.map(Object.freeze))
 const permissionsByName = Object.freeze(Object.fromEntries(permissions.map((permission) => [permission.name, permission])))
-module.exports = { generated, catalog, catalogHash: 'ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19', permissions, activePermissions, permissionsByName }
+module.exports = { generated, catalog, catalogHash: '573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca', permissions, activePermissions, permissionsByName }

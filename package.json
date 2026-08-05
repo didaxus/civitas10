@@ -34,6 +34,7 @@
     "authz:role-model:generate": "node scripts/authorization/generate-role-model.mjs",
     "authz:role-model:check": "node scripts/authorization/generate-role-model.mjs --check && node --test backend/test/role-model-contract.test.js",
     "authz:role-model:diff": "node scripts/authorization/diff-role-model.mjs",
+    "authz:role-potential:reconciliation-report": "node scripts/authorization/report-role-potential-reconciliation.mjs",
     "logto:authz:plan": "node scripts/logto/cli.js plan-rbac",
     "logto:custom-claims:check": "node scripts/logto/cli.js check-custom-claims",
     "test:logto:token-contract": "node --test backend/test/logto-token-contract.test.js",

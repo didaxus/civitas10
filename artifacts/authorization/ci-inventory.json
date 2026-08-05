@@ -3,9 +3,9 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19"
+    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
   },
-  "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19",
+  "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca",
   "contractVersion": "2026-07-civitas-permission-catalog-v1",
   "roleModelVersion": "2026-07-civitas-phase3-13-role-v1",
   "contractVersionRecorded": "2026-07-civitas-permission-catalog-v1",

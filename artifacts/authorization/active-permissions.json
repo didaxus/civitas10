@@ -3,9 +3,9 @@
     "notice": "GENERATED — DO NOT EDIT",
     "source": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:permission-catalog:generate",
-    "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19"
+    "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca"
   },
-  "catalogHash": "ae15183114fc13ec7dcc49a2ef8632f50ac8ab82cba42e8d61b84973849d0a19",
+  "catalogHash": "573a51324a516cfd0b96d51542920b24019de72208036953cdc00ee1519893ca",
   "activePermissions": [
     {
       "name": "lms.course_offerings.read",
@@ -28,7 +28,15 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View course offerings",
+        "description": "View course offerings for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 80
+      }
     },
     {
       "name": "lms.group_members.read",
@@ -51,7 +59,15 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View group members",
+        "description": "View group members for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 150
+      }
     },
     {
       "name": "lms.groups.read",
@@ -74,7 +90,15 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View groups",
+        "description": "View groups for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 170
+      }
     },
     {
       "name": "org.documents.create",
@@ -97,7 +121,15 @@
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "Create documents",
+        "description": "Create documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 40
+      }
     },
     {
       "name": "org.documents.read",
@@ -120,7 +152,15 @@
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View documents",
+        "description": "View documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 60
+      }
     }
   ]
 }

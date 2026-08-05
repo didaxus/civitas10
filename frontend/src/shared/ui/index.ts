@@ -24,7 +24,7 @@ export { Popover } from "./Popover";
 export { UnavailableSwitch } from "./UnavailableSwitch";
 export { PermissionGrid } from "./PermissionGrid";
 export { PendingChangesBar, type PendingChangesState } from "./PendingChangesBar";
-export { PermissionGroupAccordion, type PermissionToggleRow } from "./PermissionGroupAccordion";
+export { PermissionGroupAccordion, type PermissionToggleRow, type PermissionControlState } from "./PermissionGroupAccordion";
 export { FilterBar } from "./FilterBar";
 export { SplitView } from "./SplitView";
 export { MetricStrip, type MetricStripItem } from "./MetricStrip";

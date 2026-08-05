@@ -37,6 +37,11 @@ export function validateCatalog(catalog) {
     if (!DATA_SCOPE_STRATEGY_NAMES.includes(permission.dataScopeStrategy)) errors.push(`${prefix} unknown dataScopeStrategy`)
     if (permission.namespace === 'planning' && permission.targetStatus !== 'planned') errors.push(`${prefix} planning permissions must remain planned`)
     if (permission.targetStatus === 'deprecated' && (!permission.replacement || !permission.compatibility || permission.compatibility === 'none' || !permission.migrationWindow || !permission.rollbackId)) errors.push(`${prefix} deprecated entries require replacement, compatibility window, migration window and rollback`)
+    if (permission.surface === 'organization') {
+      const presentation = permission.presentation || {}
+      for (const key of ['label','description','groupKey','groupLabel']) if (typeof presentation[key] !== 'string' || !presentation[key].trim()) errors.push(`${prefix} missing presentation.${key}`)
+      for (const key of ['groupOrder','order']) if (typeof presentation[key] !== 'number' || !Number.isFinite(presentation[key])) errors.push(`${prefix} missing presentation.${key}`)
+    }
   }
   const legacy = new Set()
   for (const decision of catalog.legacyDecisions || []) {

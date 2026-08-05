@@ -117,7 +117,7 @@ test("role names routes retain stable destinations", () => { assert.match(routes
 
 test("permission workspace uses the backend view model and batch save", () => {
   assert.match(matrix, /PendingChangesBar/);
-  assert.match(matrix, /permissions enabled/);
+  assert.match(matrix, /permissions \{countNoun\}/); assert.match(matrix, /authorized/); assert.match(matrix, /enabled/);
   assert.match(matrix, /expectedPolicyVersion/);
   assert.match(matrix, /status===409|status === 409/);
   assert.match(matrix, /beforeunload/);
@@ -134,8 +134,9 @@ test("permission groups compose shared grid and switches", () => {
 test("role permissions editor does not reconstruct authorization", () => {
   const adapter = readFileSync(new URL("./modules/permission-matrix/permission-policy-view-model.ts", import.meta.url), "utf8");
   assert.match(adapter, /row\.label/); assert.match(adapter, /row\.description/); assert.match(adapter, /row\.groupLabel/); assert.match(adapter, /row\.canChange/);
-  assert.doesNotMatch(adapter, /split\(|canonical|rolePotential|ownerAllowed|reasonCode/);
-  assert.doesNotMatch(matrix, /rolePotential|ownerAllowed|reason\.code|permissionId as fallback/);
+  assert.doesNotMatch(adapter, /split\(|reasonCode|permissionId as fallback/);
+  assert.match(adapter, /row\.rolePotential/); assert.match(adapter, /row\.ownerAllowed/);
+  assert.doesNotMatch(matrix, /reason\.code|permissionId as fallback/);
   assert.match(api, /updateOwnerCeilings/); assert.match(api, /updateTenantActivations/);
 });
 

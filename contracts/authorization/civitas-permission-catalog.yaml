@@ -45,7 +45,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 10
+      }
     },
     {
       "name": "analytics.exports.approve",
@@ -60,7 +68,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 30
+      }
     },
     {
       "name": "analytics.imports.delete",
@@ -75,7 +91,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 40
+      }
     },
     {
       "name": "analytics.records.read",
@@ -90,7 +114,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View records",
+        "description": "View records for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 50
+      }
     },
     {
       "name": "analytics.reports.update",
@@ -105,7 +137,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 70
+      }
     },
     {
       "name": "analytics.settings.create",
@@ -120,7 +160,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 80
+      }
     },
     {
       "name": "community.admin.export",
@@ -135,7 +183,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 10
+      }
     },
     {
       "name": "community.exports.approve",
@@ -150,7 +206,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 20
+      }
     },
     {
       "name": "community.imports.delete",
@@ -165,7 +229,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 40
+      }
     },
     {
       "name": "community.posts.read",
@@ -180,7 +252,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View community posts",
+        "description": "View community posts for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 50
+      }
     },
     {
       "name": "community.reports.update",
@@ -195,7 +275,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 60
+      }
     },
     {
       "name": "community.settings.create",
@@ -210,7 +298,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 70
+      }
     },
     {
       "name": "crm.admin.export",
@@ -225,7 +321,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization CRM.",
+        "groupKey": "crm",
+        "groupLabel": "CRM",
+        "groupOrder": 45,
+        "order": 10
+      }
     },
     {
       "name": "crm.contacts.read",
@@ -240,7 +344,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View contacts",
+        "description": "View contacts for the organization CRM.",
+        "groupKey": "crm",
+        "groupLabel": "CRM",
+        "groupOrder": 45,
+        "order": 20
+      }
     },
     {
       "name": "crm.exports.approve",
@@ -255,7 +367,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization CRM.",
+        "groupKey": "crm",
+        "groupLabel": "CRM",
+        "groupOrder": 45,
+        "order": 30
+      }
     },
     {
       "name": "crm.imports.delete",
@@ -270,7 +390,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization CRM.",
+        "groupKey": "crm",
+        "groupLabel": "CRM",
+        "groupOrder": 45,
+        "order": 40
+      }
     },
     {
       "name": "crm.reports.update",
@@ -285,7 +413,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization CRM.",
+        "groupKey": "crm",
+        "groupLabel": "CRM",
+        "groupOrder": 45,
+        "order": 50
+      }
     },
     {
       "name": "crm.settings.create",
@@ -300,7 +436,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization CRM.",
+        "groupKey": "crm",
+        "groupLabel": "CRM",
+        "groupOrder": 45,
+        "order": 60
+      }
     },
     {
       "name": "hr.admin.export",
@@ -315,7 +459,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 10
+      }
     },
     {
       "name": "hr.approvals.archive",
@@ -330,7 +482,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive approvals",
+        "description": "Archive approvals for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 20
+      }
     },
     {
       "name": "hr.dashboards.read",
@@ -345,7 +505,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View dashboards",
+        "description": "View dashboards for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 30
+      }
     },
     {
       "name": "hr.events.create",
@@ -360,7 +528,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create events",
+        "description": "Create events for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 50
+      }
     },
     {
       "name": "hr.exports.approve",
@@ -375,7 +551,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 60
+      }
     },
     {
       "name": "hr.files.approve",
@@ -390,7 +574,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve files",
+        "description": "Approve files for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 70
+      }
     },
     {
       "name": "hr.imports.delete",
@@ -405,7 +597,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 80
+      }
     },
     {
       "name": "hr.policies.delete",
@@ -420,7 +620,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete policies",
+        "description": "Delete policies for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 90
+      }
     },
     {
       "name": "hr.records.read",
@@ -435,7 +643,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View records",
+        "description": "View records for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 100
+      }
     },
     {
       "name": "hr.reports.update",
@@ -450,7 +666,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 110
+      }
     },
     {
       "name": "hr.requests.manage",
@@ -465,7 +689,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage requests",
+        "description": "Manage requests for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 120
+      }
     },
     {
       "name": "hr.settings.create",
@@ -480,7 +712,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 130
+      }
     },
     {
       "name": "hr.tasks.update",
@@ -495,7 +735,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage tasks",
+        "description": "Manage tasks for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 140
+      }
     },
     {
       "name": "lms.assignments.create",
@@ -510,7 +758,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create assignments",
+        "description": "Create assignments for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 10
+      }
     },
     {
       "name": "lms.assignments.read",
@@ -525,7 +781,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View assignments",
+        "description": "View assignments for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 20
+      }
     },
     {
       "name": "lms.attendance.approve",
@@ -540,7 +804,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve attendance",
+        "description": "Approve attendance for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 30
+      }
     },
     {
       "name": "lms.attendance.manage",
@@ -555,7 +827,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage attendance",
+        "description": "Manage attendance for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 40
+      }
     },
     {
       "name": "lms.certificates.delete",
@@ -570,7 +850,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete certificates",
+        "description": "Delete certificates for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 50
+      }
     },
     {
       "name": "lms.content.archive",
@@ -585,7 +873,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive learning content",
+        "description": "Archive learning content for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 60
+      }
     },
     {
       "name": "lms.content.export",
@@ -600,7 +896,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export learning content",
+        "description": "Export learning content for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 70
+      }
     },
     {
       "name": "lms.course_offerings.read",
@@ -623,7 +927,15 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View course offerings",
+        "description": "View course offerings for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 80
+      }
     },
     {
       "name": "lms.course_offerings.read.extra",
@@ -638,7 +950,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View course offerings",
+        "description": "View course offerings for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 90
+      }
     },
     {
       "name": "lms.forums.update",
@@ -653,7 +973,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage forums",
+        "description": "Manage forums for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 110
+      }
     },
     {
       "name": "lms.grades.delete",
@@ -668,7 +996,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete grades",
+        "description": "Delete grades for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 120
+      }
     },
     {
       "name": "lms.grades.export",
@@ -683,7 +1019,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export grades",
+        "description": "Export grades for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 130
+      }
     },
     {
       "name": "lms.group_members.archive",
@@ -698,7 +1042,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive group members",
+        "description": "Archive group members for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 140
+      }
     },
     {
       "name": "lms.group_members.read",
@@ -721,7 +1073,15 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View group members",
+        "description": "View group members for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 150
+      }
     },
     {
       "name": "lms.groups.manage",
@@ -736,7 +1096,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage groups",
+        "description": "Manage groups for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 160
+      }
     },
     {
       "name": "lms.groups.read",
@@ -759,7 +1127,15 @@
       "runtimePath": "backend/authorization/lmsGroupLeadership.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View groups",
+        "description": "View groups for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 170
+      }
     },
     {
       "name": "lms.outcomes.export",
@@ -774,7 +1150,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export outcomes",
+        "description": "Export outcomes for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 180
+      }
     },
     {
       "name": "lms.progress.approve",
@@ -789,7 +1173,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve progress",
+        "description": "Approve progress for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 190
+      }
     },
     {
       "name": "lms.quizzes.create",
@@ -804,7 +1196,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create quizzes",
+        "description": "Create quizzes for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 200
+      }
     },
     {
       "name": "lms.rubrics.read",
@@ -819,7 +1219,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View rubrics",
+        "description": "View rubrics for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 210
+      }
     },
     {
       "name": "lms.submissions.approve",
@@ -834,7 +1242,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve submissions",
+        "description": "Approve submissions for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 220
+      }
     },
     {
       "name": "lms.submissions.update",
@@ -849,7 +1265,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage submissions",
+        "description": "Manage submissions for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 230
+      }
     },
     {
       "name": "marketing.admin.export",
@@ -864,7 +1288,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization marketing.",
+        "groupKey": "marketing",
+        "groupLabel": "Marketing",
+        "groupOrder": 50,
+        "order": 10
+      }
     },
     {
       "name": "marketing.campaigns.read",
@@ -879,7 +1311,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View campaigns",
+        "description": "View campaigns for the organization marketing.",
+        "groupKey": "marketing",
+        "groupLabel": "Marketing",
+        "groupOrder": 50,
+        "order": 20
+      }
     },
     {
       "name": "marketing.exports.approve",
@@ -894,7 +1334,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization marketing.",
+        "groupKey": "marketing",
+        "groupLabel": "Marketing",
+        "groupOrder": 50,
+        "order": 30
+      }
     },
     {
       "name": "marketing.imports.delete",
@@ -909,7 +1357,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization marketing.",
+        "groupKey": "marketing",
+        "groupLabel": "Marketing",
+        "groupOrder": 50,
+        "order": 40
+      }
     },
     {
       "name": "marketing.reports.update",
@@ -924,7 +1380,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization marketing.",
+        "groupKey": "marketing",
+        "groupLabel": "Marketing",
+        "groupOrder": 50,
+        "order": 50
+      }
     },
     {
       "name": "marketing.settings.create",
@@ -939,7 +1403,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization marketing.",
+        "groupKey": "marketing",
+        "groupLabel": "Marketing",
+        "groupOrder": 50,
+        "order": 60
+      }
     },
     {
       "name": "org.analytics.export",
@@ -954,7 +1426,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export analytics",
+        "description": "Export analytics for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 10
+      }
     },
     {
       "name": "org.announcements.read",
@@ -969,7 +1449,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View announcements",
+        "description": "View announcements for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 20
+      }
     },
     {
       "name": "org.billing.manage",
@@ -984,7 +1472,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage billing",
+        "description": "Manage billing for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 30
+      }
     },
     {
       "name": "org.documents.create",
@@ -1007,7 +1503,15 @@
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "Create documents",
+        "description": "Create documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 40
+      }
     },
     {
       "name": "org.documents.manage",
@@ -1022,7 +1526,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage documents",
+        "description": "Manage documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 50
+      }
     },
     {
       "name": "org.documents.read",
@@ -1045,7 +1557,15 @@
       "runtimePath": "backend/authorization/guards.js",
       "testEvidence": [
         "backend/test/permission-catalog-contract.test.js"
-      ]
+      ],
+      "presentation": {
+        "label": "View documents",
+        "description": "View documents for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 60
+      }
     },
     {
       "name": "org.enrollments.delete",
@@ -1060,7 +1580,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete enrollments",
+        "description": "Delete enrollments for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 70
+      }
     },
     {
       "name": "org.enrollments.export",
@@ -1075,7 +1603,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export enrollments",
+        "description": "Export enrollments for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 80
+      }
     },
     {
       "name": "org.files.create",
@@ -1090,7 +1626,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create files",
+        "description": "Create files for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 90
+      }
     },
     {
       "name": "org.forms.update",
@@ -1105,7 +1649,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage forms",
+        "description": "Manage forms for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 100
+      }
     },
     {
       "name": "org.groups.approve",
@@ -1120,7 +1672,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve groups",
+        "description": "Approve groups for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 110
+      }
     },
     {
       "name": "org.groups.update",
@@ -1135,7 +1695,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage groups",
+        "description": "Manage groups for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 120
+      }
     },
     {
       "name": "org.members.archive",
@@ -1150,7 +1718,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive members",
+        "description": "Archive members for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 130
+      }
     },
     {
       "name": "org.members.invite",
@@ -1165,7 +1741,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Invite members",
+        "description": "Invite members for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 140
+      }
     },
     {
       "name": "org.members.read",
@@ -1180,7 +1764,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View members",
+        "description": "View members for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 150
+      }
     },
     {
       "name": "org.reports.approve",
@@ -1195,7 +1787,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve reports",
+        "description": "Approve reports for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 160
+      }
     },
     {
       "name": "org.roles.create",
@@ -1210,7 +1810,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create roles",
+        "description": "Create roles for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 170
+      }
     },
     {
       "name": "org.settings.read",
@@ -1225,7 +1833,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View settings",
+        "description": "View settings for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 180
+      }
     },
     {
       "name": "org.support.archive",
@@ -1240,7 +1856,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive support records",
+        "description": "Archive support records for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 190
+      }
     },
     {
       "name": "org.workflows.delete",
@@ -1255,7 +1879,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete workflows",
+        "description": "Delete workflows for the organization.",
+        "groupKey": "organization",
+        "groupLabel": "Organization",
+        "groupOrder": 10,
+        "order": 200
+      }
     },
     {
       "name": "owner.audit.read",
@@ -1270,7 +1902,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View audit",
+        "description": "View audit for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 10
+      }
     },
     {
       "name": "owner.audit.update",
@@ -1285,7 +1925,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage audit",
+        "description": "Manage audit for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 20
+      }
     },
     {
       "name": "owner.billing.create",
@@ -1300,7 +1948,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create billing",
+        "description": "Create billing for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 30
+      }
     },
     {
       "name": "owner.catalog.export",
@@ -1315,7 +1971,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export catalog",
+        "description": "Export catalog for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 40
+      }
     },
     {
       "name": "owner.entitlements.approve",
@@ -1330,7 +1994,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve entitlements",
+        "description": "Approve entitlements for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 50
+      }
     },
     {
       "name": "owner.impersonation.archive",
@@ -1345,7 +2017,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive impersonation",
+        "description": "Archive impersonation for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 60
+      }
     },
     {
       "name": "owner.operations.manage",
@@ -1360,7 +2040,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage operations",
+        "description": "Manage operations for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 70
+      }
     },
     {
       "name": "owner.platform.approve",
@@ -1375,7 +2063,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve platform",
+        "description": "Approve platform for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 80
+      }
     },
     {
       "name": "owner.reports.update",
@@ -1390,7 +2086,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 90
+      }
     },
     {
       "name": "owner.security.read",
@@ -1405,7 +2109,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View security",
+        "description": "View security for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 100
+      }
     },
     {
       "name": "owner.settings.delete",
@@ -1420,7 +2132,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete settings",
+        "description": "Delete settings for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 110
+      }
     },
     {
       "name": "owner.support.delete",
@@ -1435,7 +2155,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete support records",
+        "description": "Delete support records for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 120
+      }
     },
     {
       "name": "owner.tenants.manage",
@@ -1450,7 +2178,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage tenants",
+        "description": "Manage tenants for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 130
+      }
     },
     {
       "name": "owner.tenants.read",
@@ -1465,7 +2201,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View tenants",
+        "description": "View tenants for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 140
+      }
     },
     {
       "name": "owner.users.archive",
@@ -1480,7 +2224,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive users",
+        "description": "Archive users for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 150
+      }
     },
     {
       "name": "owner.users.create",
@@ -1495,7 +2247,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create users",
+        "description": "Create users for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 160
+      }
     },
     {
       "name": "owner.webhooks.export",
@@ -1510,7 +2270,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export webhooks",
+        "description": "Export webhooks for the owner administration.",
+        "groupKey": "owner",
+        "groupLabel": "Owner Administration",
+        "groupOrder": 5,
+        "order": 170
+      }
     },
     {
       "name": "payments.admin.export",
@@ -1525,7 +2293,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 10
+      }
     },
     {
       "name": "payments.approvals.archive",
@@ -1540,7 +2316,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive approvals",
+        "description": "Archive approvals for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 20
+      }
     },
     {
       "name": "payments.dashboards.read",
@@ -1555,7 +2339,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View dashboards",
+        "description": "View dashboards for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 30
+      }
     },
     {
       "name": "payments.events.create",
@@ -1570,7 +2362,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create events",
+        "description": "Create events for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 40
+      }
     },
     {
       "name": "payments.exports.approve",
@@ -1585,7 +2385,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 50
+      }
     },
     {
       "name": "payments.files.approve",
@@ -1600,7 +2408,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve files",
+        "description": "Approve files for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 60
+      }
     },
     {
       "name": "payments.imports.delete",
@@ -1615,7 +2431,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 70
+      }
     },
     {
       "name": "payments.metrics.export",
@@ -1630,7 +2454,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export metrics",
+        "description": "Export metrics for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 90
+      }
     },
     {
       "name": "payments.policies.delete",
@@ -1645,7 +2477,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete policies",
+        "description": "Delete policies for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 100
+      }
     },
     {
       "name": "payments.records.read",
@@ -1660,7 +2500,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View records",
+        "description": "View records for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 110
+      }
     },
     {
       "name": "payments.reports.update",
@@ -1675,7 +2523,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 120
+      }
     },
     {
       "name": "payments.requests.manage",
@@ -1690,7 +2546,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage requests",
+        "description": "Manage requests for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 130
+      }
     },
     {
       "name": "payments.settings.create",
@@ -1705,7 +2569,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 140
+      }
     },
     {
       "name": "payments.tasks.update",
@@ -1720,7 +2592,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage tasks",
+        "description": "Manage tasks for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 150
+      }
     },
     {
       "name": "planning.approvals.archive",
@@ -1735,7 +2615,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive approvals",
+        "description": "Archive approvals for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 10
+      }
     },
     {
       "name": "planning.approvals.export",
@@ -1750,7 +2638,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export approvals",
+        "description": "Export approvals for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 20
+      }
     },
     {
       "name": "planning.budgets.approve",
@@ -1765,7 +2661,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve budgets",
+        "description": "Approve budgets for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 30
+      }
     },
     {
       "name": "planning.budgets.update",
@@ -1780,7 +2684,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage budgets",
+        "description": "Manage budgets for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 40
+      }
     },
     {
       "name": "planning.dependencies.approve",
@@ -1795,7 +2707,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve dependencies",
+        "description": "Approve dependencies for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 50
+      }
     },
     {
       "name": "planning.dependencies.manage",
@@ -1810,7 +2730,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage dependencies",
+        "description": "Manage dependencies for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 60
+      }
     },
     {
       "name": "planning.initiatives.archive",
@@ -1825,7 +2753,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive initiatives",
+        "description": "Archive initiatives for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 70
+      }
     },
     {
       "name": "planning.initiatives.create",
@@ -1840,7 +2776,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create initiatives",
+        "description": "Create initiatives for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 80
+      }
     },
     {
       "name": "planning.milestones.read",
@@ -1855,7 +2799,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View milestones",
+        "description": "View milestones for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 90
+      }
     },
     {
       "name": "planning.milestones.update",
@@ -1870,7 +2822,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage milestones",
+        "description": "Manage milestones for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 100
+      }
     },
     {
       "name": "planning.minutes.delete",
@@ -1885,7 +2845,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete meeting minutes",
+        "description": "Delete meeting minutes for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 110
+      }
     },
     {
       "name": "planning.plans.approve",
@@ -1900,7 +2868,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve plans",
+        "description": "Approve plans for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 120
+      }
     },
     {
       "name": "planning.plans.manage",
@@ -1915,7 +2891,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage plans",
+        "description": "Manage plans for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 130
+      }
     },
     {
       "name": "planning.plans.read",
@@ -1930,7 +2914,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View plans",
+        "description": "View plans for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 140
+      }
     },
     {
       "name": "planning.profile.manage",
@@ -1945,7 +2937,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage planning profile",
+        "description": "Manage planning profile for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 150
+      }
     },
     {
       "name": "planning.profile.read",
@@ -1960,7 +2960,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View planning profile",
+        "description": "View planning profile for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 160
+      }
     },
     {
       "name": "planning.proposals.update",
@@ -1975,7 +2983,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage proposals",
+        "description": "Manage proposals for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 170
+      }
     },
     {
       "name": "planning.risks.delete",
@@ -1990,7 +3006,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete risks",
+        "description": "Delete risks for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 180
+      }
     },
     {
       "name": "planning.risks.export",
@@ -2005,7 +3029,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export risks",
+        "description": "Export risks for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 190
+      }
     },
     {
       "name": "planning.roadmaps.export",
@@ -2020,7 +3052,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export roadmaps",
+        "description": "Export roadmaps for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 200
+      }
     },
     {
       "name": "planning.surveys.approve",
@@ -2035,7 +3075,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve surveys",
+        "description": "Approve surveys for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 210
+      }
     },
     {
       "name": "planning.tasks.create",
@@ -2050,7 +3098,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create tasks",
+        "description": "Create tasks for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 220
+      }
     },
     {
       "name": "planning.tasks.delete",
@@ -2065,7 +3121,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete tasks",
+        "description": "Delete tasks for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 230
+      }
     },
     {
       "name": "planning.votes.archive",
@@ -2080,7 +3144,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive votes",
+        "description": "Archive votes for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 240
+      }
     },
     {
       "name": "planning.votes.create",
@@ -2095,7 +3167,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create votes",
+        "description": "Create votes for the organization planning.",
+        "groupKey": "planning",
+        "groupLabel": "Planning",
+        "groupOrder": 30,
+        "order": 250
+      }
     },
     {
       "name": "platform.admin.export",
@@ -2110,7 +3190,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 10
+      }
     },
     {
       "name": "platform.approvals.archive",
@@ -2125,7 +3213,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Archive approvals",
+        "description": "Archive approvals for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 20
+      }
     },
     {
       "name": "platform.exports.approve",
@@ -2140,7 +3236,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 30
+      }
     },
     {
       "name": "platform.imports.delete",
@@ -2155,7 +3259,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 40
+      }
     },
     {
       "name": "platform.records.read",
@@ -2170,7 +3282,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View records",
+        "description": "View records for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 50
+      }
     },
     {
       "name": "platform.reports.update",
@@ -2185,7 +3305,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 60
+      }
     },
     {
       "name": "platform.requests.manage",
@@ -2200,7 +3328,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage requests",
+        "description": "Manage requests for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 70
+      }
     },
     {
       "name": "platform.settings.create",
@@ -2215,7 +3351,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the platform adapters.",
+        "groupKey": "platform",
+        "groupLabel": "Platform",
+        "groupOrder": 90,
+        "order": 80
+      }
     },
     {
       "name": "reports.admin.export",
@@ -2230,7 +3374,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization reports.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 10
+      }
     },
     {
       "name": "reports.exports.approve",
@@ -2245,7 +3397,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization reports.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 20
+      }
     },
     {
       "name": "reports.imports.delete",
@@ -2260,7 +3420,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization reports.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 30
+      }
     },
     {
       "name": "reports.records.read",
@@ -2275,7 +3443,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View records",
+        "description": "View records for the organization reports.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 40
+      }
     },
     {
       "name": "reports.reports.update",
@@ -2290,7 +3466,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization reports.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 50
+      }
     },
     {
       "name": "reports.settings.create",
@@ -2305,7 +3489,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization reports.",
+        "groupKey": "reports",
+        "groupLabel": "Reports",
+        "groupOrder": 80,
+        "order": 60
+      }
     },
     {
       "name": "scheduling.admin.export",
@@ -2320,7 +3512,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 10
+      }
     },
     {
       "name": "scheduling.events.create",
@@ -2335,7 +3535,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create events",
+        "description": "Create events for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 30
+      }
     },
     {
       "name": "scheduling.events.read",
@@ -2350,7 +3558,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View events",
+        "description": "View events for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 40
+      }
     },
     {
       "name": "scheduling.exports.approve",
@@ -2365,7 +3581,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 50
+      }
     },
     {
       "name": "scheduling.imports.delete",
@@ -2380,7 +3604,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 60
+      }
     },
     {
       "name": "scheduling.reports.update",
@@ -2395,7 +3627,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 70
+      }
     },
     {
       "name": "support.admin.export",
@@ -2410,7 +3650,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Export administration",
+        "description": "Export administration for the organization support.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 60,
+        "order": 10
+      }
     },
     {
       "name": "support.exports.approve",
@@ -2425,7 +3673,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve exports",
+        "description": "Approve exports for the organization support.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 60,
+        "order": 20
+      }
     },
     {
       "name": "support.imports.delete",
@@ -2440,7 +3696,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Delete imports",
+        "description": "Delete imports for the organization support.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 60,
+        "order": 30
+      }
     },
     {
       "name": "support.reports.update",
@@ -2455,7 +3719,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Manage reports",
+        "description": "Manage reports for the organization support.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 60,
+        "order": 40
+      }
     },
     {
       "name": "support.settings.create",
@@ -2470,7 +3742,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create settings",
+        "description": "Create settings for the organization support.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 60,
+        "order": 50
+      }
     },
     {
       "name": "support.tickets.read",
@@ -2485,7 +3765,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View support tickets",
+        "description": "View support tickets for the organization support.",
+        "groupKey": "support",
+        "groupLabel": "Support",
+        "groupOrder": 60,
+        "order": 60
+      }
     },
     {
       "name": "analytics.dashboards.read",
@@ -2500,7 +3788,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View dashboards",
+        "description": "View dashboards for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 20
+      }
     },
     {
       "name": "community.groups.read",
@@ -2515,7 +3811,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View groups",
+        "description": "View groups for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 30
+      }
     },
     {
       "name": "hr.employees.read",
@@ -2530,7 +3834,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View employees",
+        "description": "View employees for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 40
+      }
     },
     {
       "name": "lms.courses.read",
@@ -2545,7 +3857,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View courses",
+        "description": "View courses for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 100
+      }
     },
     {
       "name": "payments.invoices.read",
@@ -2560,7 +3880,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View invoices",
+        "description": "View invoices for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 80
+      }
     },
     {
       "name": "analytics.reports.read",
@@ -2575,7 +3903,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View reports",
+        "description": "View reports for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 60
+      }
     },
     {
       "name": "scheduling.bookings.read",
@@ -2590,7 +3926,15 @@
       "consumers": [],
       "policyRequirements": [],
       "screenActionIds": [],
-      "compatibility": "none"
+      "compatibility": "none",
+      "presentation": {
+        "label": "View bookings",
+        "description": "View bookings for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 20
+      }
     }
   ],
   "legacyDecisions": [
