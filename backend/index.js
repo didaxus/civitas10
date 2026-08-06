@@ -697,13 +697,17 @@ const organizationMappingRepository = createPostgresOrganizationMappingRepositor
 const organizationMappingService = createOrganizationMappingService({ repository: organizationMappingRepository });
 const organizationMappingRouter = createOrganizationMappingRouter({
   service: organizationMappingService,
-  authorizeAction: (actionId, permission) => [
-    requireSafeOrganizationIdParam,
-    requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [permission] }),
-    requireOrg,
-    requirePermission(permission),
-    requireAuthorization({ permission, actionId, surface: "organization", operation: actionId }),
-  ],
+  authorizeAction: (actionId, permission, options = {}) => {
+    const { decisionEnvelope = false, ...authorizationOptions } = options;
+    if (decisionEnvelope) return [requireSafeOrganizationIdParam, requireAuthorization({ permission, actionId, surface: "organization", operation: actionId, ...authorizationOptions })];
+    return [
+      requireSafeOrganizationIdParam,
+      requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [permission] }),
+      requireOrg,
+      requirePermission(permission),
+      requireAuthorization({ permission, actionId, surface: "organization", operation: actionId, ...authorizationOptions }),
+    ];
+  },
 });
 app.use("/api/v1", organizationMappingRouter);
 

@@ -22,6 +22,7 @@ const emptyGovernanceModel = (organizationId: string, surface: GovernanceSurface
 const itemFromPath = (pathname: string): GovernanceWorkspaceItemId => {
   if (pathname.endsWith("/role-names")) return "role-names";
   if (pathname.endsWith("/scope-assignments")) return "scope-assignments";
+  if (pathname.endsWith("/data-scopes")) return "data-scopes";
   if (pathname.endsWith("/structure")) return "structure-classification";
   if (pathname.endsWith("/segments")) return "people-segmentation";
   if (pathname.endsWith("/access-explorer")) return "access-explorer";

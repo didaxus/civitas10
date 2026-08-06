@@ -11,11 +11,11 @@ export const materializeNavigationTree = (items: readonly NavigationNode[], para
   return [{ ...item, path, children: item.children ? materializeNavigationTree(item.children, params) : undefined }];
 });
 
-export type OwnerNavigationTreeInput = { organizationId?: string; organizationName?: string | null };
+export type OwnerNavigationTreeInput = { organizationId?: string; organizationName?: string | null; visibleOrganizationModelActions?: ReadonlySet<string> };
 
-export const buildOwnerNavigationTree = ({ organizationId }: OwnerNavigationTreeInput = {}): NavigationNode[] => {
+export const buildOwnerNavigationTree = ({ organizationId, visibleOrganizationModelActions }: OwnerNavigationTreeInput = {}): NavigationNode[] => {
   if (!isConcreteRouteParam(organizationId)) return ownerNavigationTree;
-  const governanceChildren = GOVERNANCE_WORKSPACE_ITEMS.map((item) => ({ ...appRoutes[item.routeKey], label: item.label }));
+  const governanceChildren = GOVERNANCE_WORKSPACE_ITEMS.filter((item) => !item.actionId.startsWith("organizationModel.") || visibleOrganizationModelActions?.has(item.actionId)).map((item) => ({ ...appRoutes[item.routeKey], label: item.label }));
   return [
     { ...appRoutes.ownerOrganizations, label: "Back to Directory", iconKey: "back", contextual: true },
     appRoutes.ownerOrganizationState,

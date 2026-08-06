@@ -13,8 +13,8 @@ test("preview is deterministic and projections are canonical", async () => {
   const a = await service.preview({ organizationId: "org_a", draftId: draft.id, actorLogtoUserId: "user_a" });
   const b = await service.preview({ organizationId: "org_a", draftId: draft.id, actorLogtoUserId: "user_a" });
   assert.equal(a.previewDigest, b.previewDigest);
-  assert.deepEqual(a.graph, buildOrganizationGraph(model));
-  assert.deepEqual(a.scopeTree, buildPrimaryScopeTree(model));
+  assert.deepEqual(a.graph, buildOrganizationGraph({ ...model, modelVersion: draft.version }));
+  assert.deepEqual(a.scopeTree, buildPrimaryScopeTree({ ...model, modelVersion: draft.version }));
   assert.deepEqual(a.facets, buildReusableFacets(model));
   assert.equal(a.mutatedAuthorization, false);
 });
