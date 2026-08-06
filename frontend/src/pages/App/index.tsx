@@ -1,5 +1,6 @@
 import { LogtoProvider, useLogto } from "@logto/react";
-import { Routes, Route, Navigate, useLocation, useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { Routes, Route, Navigate, Link, useLocation, useParams } from "react-router";
 import Landing from "./Landing";
 import Callback from "../Callback";
 import OrganizationPage from "../OrganizationPage";
@@ -15,20 +16,131 @@ import { isConcreteRouteParam } from "../../navigation/route-builders";
 import { OwnerRouteGuard } from "../../authz/OwnerRouteGuard";
 import { ScreenGate } from "../../authorization/components/ScreenGate";
 import { TenantAuthorizationProvider } from "../../authorization/AuthorizationProvider";
-import { civitasLogtoConfig } from "../../auth/logtoConfig";
+import { civitasLogtoConfig, getCivitasSignInOptions } from "../../auth/logtoConfig";
+import { APP_ENV } from "../../env";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
 import { OwnerOrganizationLayout } from "../../layouts/OwnerLayout";
 import { DataScopesPage } from "../../features/organization-model/DataScopesPage";
 import { StructurePage } from "../../features/organization-model/StructurePage";
 import { AccessExplorerPage } from "../../features/organization-model/AccessExplorerPage";
 
+const SESSION_ROUTING_SCOPES = ["roles", "urn:logto:scope:organizations", "urn:logto:scope:organization_roles"] as const;
+const runtimeLogtoConfig = {
+  ...civitasLogtoConfig,
+  scopes: [...new Set([...(civitasLogtoConfig.scopes ?? []), ...SESSION_ROUTING_SCOPES])],
+};
+
 const legacyOwnerGovernanceGroupsPath = `${appRoutes.ownerOrganizationState.path}/governance/groups`;
 const legacyOwnerGovernanceAuditPath = `${appRoutes.ownerOrganizationState.path}/governance/audit`;
 const legacyOwnerGovernancePeopleSegmentationPath = `${appRoutes.ownerOrganizationState.path}/governance/people-segmentation`;
 
+const claimList = (value: unknown) => Array.isArray(value) ? [...new Set(value.map(String).filter(Boolean))] : [];
+
+type EntryState =
+  | { status: "loading" }
+  | { status: "owner" }
+  | { status: "organizations"; organizationIds: string[] }
+  | { status: "unavailable"; message: string };
+
+function AuthenticatedEntryRoute({ selectionOnly = false }: { selectionOnly?: boolean }) {
+  const { getAccessToken, getIdTokenClaims, signIn } = useLogto();
+  const [state, setState] = useState<EntryState>({ status: "loading" });
+
+  useEffect(() => {
+    let active = true;
+
+    const resolveEntry = async () => {
+      setState({ status: "loading" });
+      try {
+        const claims = await getIdTokenClaims() as ({ organizations?: unknown } | undefined);
+        const organizationIds = claimList(claims?.organizations);
+
+        if (!selectionOnly) {
+          try {
+            const ownerToken = await getAccessToken(APP_ENV.api.resource);
+            if (ownerToken) {
+              if (active) setState({ status: "owner" });
+              return;
+            }
+          } catch {
+            // A missing global token is not a tenant access denial. Continue with
+            // organization-scoped routing instead of forcing the Owner shell.
+          }
+        }
+
+        if (active && organizationIds.length > 0) {
+          setState({ status: "organizations", organizationIds });
+          return;
+        }
+
+        if (active) {
+          setState({
+            status: "unavailable",
+            message: "This session has neither a Civitas Owner API token nor an organization membership claim. Refresh the session after access is assigned.",
+          });
+        }
+      } catch (error) {
+        if (active) {
+          setState({ status: "unavailable", message: error instanceof Error ? error.message : "Session routing is unavailable." });
+        }
+      }
+    };
+
+    void resolveEntry();
+    return () => { active = false; };
+  }, [getAccessToken, getIdTokenClaims, selectionOnly]);
+
+  if (state.status === "loading") {
+    return <div className="p-6 text-sm text-muted-strong" role="status">Resolving your Civitas workspace…</div>;
+  }
+
+  if (state.status === "owner") {
+    return <Navigate to={appRoutes.owner.path} replace />;
+  }
+
+  if (state.status === "organizations") {
+    if (!selectionOnly && state.organizationIds.length === 1) {
+      return <Navigate to={appRoutes.tenantGovernanceDataScopes.build!({ organizationId: state.organizationIds[0] })} replace />;
+    }
+
+    return (
+      <main className="mx-auto max-w-3xl space-y-4 p-6" aria-labelledby="organization-selection-title">
+        <h1 id="organization-selection-title" className="text-2xl font-semibold">Select an organization</h1>
+        <p className="text-sm text-muted-strong">Open an organization-scoped Governance workspace using its Logto organization token.</p>
+        <ul className="space-y-2">
+          {state.organizationIds.map((organizationId) => (
+            <li key={organizationId}>
+              <Link
+                className="block rounded-md border border-border bg-surface px-4 py-3 hover:bg-surface-subtle"
+                to={appRoutes.tenantGovernanceDataScopes.build!({ organizationId })}
+              >
+                {organizationId}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto max-w-3xl space-y-4 p-6" aria-labelledby="session-access-title">
+      <h1 id="session-access-title" className="text-2xl font-semibold">Workspace access unavailable</h1>
+      <p className="text-sm text-muted-strong">{state.message}</p>
+      <button
+        type="button"
+        className="rounded-md bg-primary px-4 py-2 text-on-primary"
+        onClick={() => void signIn(getCivitasSignInOptions())}
+      >
+        Refresh sign-in session
+      </button>
+    </main>
+  );
+}
+
 function App() {
   return (
-    <LogtoProvider config={civitasLogtoConfig}>
+    <LogtoProvider config={runtimeLogtoConfig}>
       <div className="min-h-screen bg-bg text-text">
         <Routes>
           <Route path="/callback" element={<Callback />} />
@@ -81,7 +193,8 @@ function AppContent() {
   if (!isAuthenticated) return <Landing />;
   return (
     <Routes>
-      <Route path="/" element={<Navigate to={appRoutes.owner.path} replace />} />
+      <Route path="/" element={<AuthenticatedEntryRoute />} />
+      <Route path={appRoutes.selectOrganization.path} element={<AuthenticatedEntryRoute selectionOnly />} />
       <Route path={appRoutes.owner.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-overview"><OwnerOperationalHomePage /></ScreenGate></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerOrganizations.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-organizations"><OwnerOrganizationsIndexPage /></ScreenGate></OwnerRouteGuard>} />
       <Route path={appRoutes.ownerCreateOrganization.path} element={<OwnerRouteGuard><ScreenGate screenId="owner-organizations-create"><OwnerOrganizationsPage /></ScreenGate></OwnerRouteGuard>} />
