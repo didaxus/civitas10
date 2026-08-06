@@ -1,13 +1,13 @@
 import { createContext, useContext, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLogto } from "@logto/react";
 import type { OrganizationMappingActionId } from "../../generated/organization-mapping-contracts";
-import { useOrganizationModelApi, type AuthorizationUiDecision } from "./api";
+import { useOrganizationModelApi, type AuthorizationUiDecision, type OrganizationModelSurface } from "./api";
 
 type DecisionState = { status: AuthorizationUiDecision["status"]; decision?: AuthorizationUiDecision; error?: string; subjectId?: string };
 const AuthorizationDecisionContext = createContext<DecisionState>({ status: "loading" });
 
-export const OrganizationModelAuthorizationProvider = ({ organizationId, actionId, children }: { organizationId: string; actionId: OrganizationMappingActionId; children: ReactNode }) => {
-  const api = useOrganizationModelApi();
+export const OrganizationModelAuthorizationProvider = ({ organizationId, actionId, surface, children }: { organizationId: string; actionId: OrganizationMappingActionId; surface?: OrganizationModelSurface; children: ReactNode }) => {
+  const api = useOrganizationModelApi(surface);
   const { getIdTokenClaims, isAuthenticated } = useLogto();
   const [state, setState] = useState<DecisionState>({ status: "loading" });
   useEffect(() => {

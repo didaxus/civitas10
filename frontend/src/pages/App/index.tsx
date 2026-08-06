@@ -178,14 +178,14 @@ function TenantGovernanceRoute() {
   );
 }
 
-function OrganizationModelRoute({ page }: { page: "data-scopes" | "structure" | "access-explorer" }) {
+function OrganizationModelRoute({ page, surface = "owner" }: { page: "data-scopes" | "structure" | "access-explorer"; surface?: "owner" | "tenant" }) {
   const { organizationId = "" } = useParams();
-  return page === "data-scopes" ? <DataScopesPage organizationId={organizationId} /> : page === "structure" ? <StructurePage organizationId={organizationId} /> : <AccessExplorerPage organizationId={organizationId} />;
+  return page === "data-scopes" ? <DataScopesPage organizationId={organizationId} surface={surface} /> : page === "structure" ? <StructurePage organizationId={organizationId} surface={surface} /> : <AccessExplorerPage organizationId={organizationId} surface={surface} />;
 }
 
 function OrganizationModelTenantRoute({ page }: { page: "data-scopes" | "structure" | "access-explorer" }) {
   const { organizationId = "" } = useParams();
-  return <TenantAuthorizationProvider organizationId={organizationId}><OrganizationModelRoute page={page} /></TenantAuthorizationProvider>;
+  return <TenantAuthorizationProvider organizationId={organizationId}><OrganizationModelRoute page={page} surface="tenant" /></TenantAuthorizationProvider>;
 }
 
 function AppContent() {
