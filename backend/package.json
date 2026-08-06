@@ -17,6 +17,8 @@
     "db:migrate:sql": "node scripts/run-sql-migrations.js",
     "locations:import": "node scripts/import-location-catalog.js",
     "test:runtime-boundary": "node scripts/validate-runtime-boundary.js",
+    "test:runtime-boundary:core": "node scripts/validate-runtime-boundary.js --core-only",
+    "smoke:organization-mapping-image": "docker build -f Dockerfile -t civitas-backend-318 .. && docker run --rm --entrypoint node civitas-backend-318 -e \"require('/core/organization-mapping/index.cjs'); console.log('organization-mapping-load-ok')\"",
     "locations:ensure": "node scripts/ensure-location-catalog.js",
     "db:bootstrap": "npm run db:migrate:sql && npm run locations:ensure",
     "taxonomy:contract-check": "node ../scripts/taxonomy/contract-check.js && node --test test/authz-taxonomy-contract.test.js",

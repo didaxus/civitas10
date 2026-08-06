@@ -1,6 +1,6 @@
 "use strict";
 const crypto=require("node:crypto");
-const { CANONICAL_DIMENSION_IDS } = require("../../backend/taxonomy/taxonomyDimensionRegistry");
+const { CANONICAL_DIMENSION_IDS } = require("../authz/canonical-dimension-ids.cjs");
 const { getSelector, selectorRegistry } = require("./selector-registry.cjs");
 const { operatorRegistry, outcomeRegistry, authorityRegistry } = require("./registries.cjs");
 const { MAPPING_REASON_CODES } = require("./reason-codes.cjs");
