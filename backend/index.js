@@ -701,6 +701,10 @@ const runMiddlewareChain = (resolveChain) => (req, res, next) => {
   const advance = (error) => error ? next(error) : (chain[index++] || next)(req, res, advance);
   advance();
 };
+const requireOrganizationModelOrganization = async (req, res, next) => {
+  try { await getLogtoOrganizationById(req.params.organizationId); next(); }
+  catch (error) { return sendPublicError(res, error, "OwnerOrganizationModelOrganizationLookupError", "Organization not found"); }
+};
 const organizationMappingRouter = createOrganizationMappingRouter({
   service: organizationMappingService,
   authorizeAction: (actionId, permission, options = {}) => {
@@ -716,6 +720,7 @@ const organizationMappingRouter = createOrganizationMappingRouter({
       requireSafeOrganizationIdParam,
       requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [permission] }),
       requireGlobalOwner,
+      requireOrganizationModelOrganization,
       requireAuthorization({ permission, actionId, surface: "owner", operation: actionId, ...authorizationOptions }),
     ];
     return [runMiddlewareChain(req => req.organizationMappingSurface === "owner" ? owner : tenant)];

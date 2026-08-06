@@ -20,6 +20,7 @@ import { civitasLogtoConfig, getCivitasSignInOptions } from "../../auth/logtoCon
 import { APP_ENV } from "../../env";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
 import { OwnerOrganizationLayout } from "../../layouts/OwnerLayout";
+import { OrganizationLayout } from "../../layouts/OrganizationLayout";
 import { DataScopesPage } from "../../features/organization-model/DataScopesPage";
 import { StructurePage } from "../../features/organization-model/StructurePage";
 import { AccessExplorerPage } from "../../features/organization-model/AccessExplorerPage";
@@ -185,7 +186,7 @@ function OrganizationModelRoute({ page, surface = "owner" }: { page: "data-scope
 
 function OrganizationModelTenantRoute({ page }: { page: "data-scopes" | "structure" | "access-explorer" }) {
   const { organizationId = "" } = useParams();
-  return <TenantAuthorizationProvider organizationId={organizationId}><OrganizationModelRoute page={page} surface="tenant" /></TenantAuthorizationProvider>;
+  return <TenantAuthorizationProvider organizationId={organizationId}><OrganizationLayout organizationId={organizationId} isAdmin><OrganizationModelRoute page={page} surface="tenant" /></OrganizationLayout></TenantAuthorizationProvider>;
 }
 
 function AppContent() {

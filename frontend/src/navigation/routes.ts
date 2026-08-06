@@ -112,7 +112,10 @@ export const ownerNavigationTree: NavigationNode[] = [
 ];
 
 export const tenantNavigationTree: NavigationNode[] = [
-  appRoutes.tenantGovernance,
+  structuralRoute("/tenant-governance-section", "Governance", "governance", "Organization governance workspaces.", [
+    structuralRoute("/tenant-access-policy-section", "Access policy", "roles", undefined, [appRoutes.tenantGovernanceRoles, appRoutes.tenantGovernanceScopeAssignments, appRoutes.tenantGovernanceAccessExplorer]),
+    structuralRoute("/tenant-organization-model-section", "Organization model", "structure", undefined, [appRoutes.tenantGovernanceDataScopes, appRoutes.tenantGovernanceStructure, appRoutes.tenantGovernancePeopleSegmentation]),
+  ]),
   appRoutes.tenantLmsGrades,
   appRoutes.tenantLmsGroups,
 ];
