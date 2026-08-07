@@ -24,6 +24,26 @@ test("service rejects cross-tenant source facts and requires optimistic concurre
   await assert.rejects(() => service.evaluate({ organizationId: "org_a", draftId: draft.id, sourceFacts: { provider: "oidc", subject: "s", tenantId: "org_b", profile: { groups: [] } }, policy: { rules: [] }, actorLogtoUserId: "user_a" }), /organization_mapping_cross_tenant_source_fact/);
 });
 
+test("draft updates distinguish missing tenant-bound drafts from version conflicts", async () => {
+  const service = createOrganizationMappingService({ repository: createInMemoryOrganizationMappingRepository() });
+  const draft = (await service.createDraft({ organizationId: "org_a", model: {}, actorLogtoUserId: "user_a" })).draft;
+
+  for (const update of [
+    { organizationId: "org_a", draftId: "unknown-draft", expectedVersion: 1 },
+    { organizationId: "org_b", draftId: draft.id, expectedVersion: draft.version },
+  ]) {
+    await assert.rejects(
+      () => service.updateDraft({ ...update, model: {}, actorLogtoUserId: "user_a" }),
+      (error) => error.code === "organization_mapping_draft_not_found" && error.status === 404 && error.status !== 500,
+    );
+  }
+
+  await assert.rejects(
+    () => service.updateDraft({ organizationId: "org_a", draftId: draft.id, model: {}, expectedVersion: draft.version + 1, actorLogtoUserId: "user_a" }),
+    (error) => error.code === "organization_mapping_version_conflict" && error.status === 409 && error.status !== 500,
+  );
+});
+
 test("normalized source facts redact sensitive evidence", () => {
   const facts = normalizeSourceFacts({ provider: "saml", subject: "sub", tenantId: "org_a", profile: { groups: ["g"], token: "secret", email: "e@example.test" } });
   assert.equal(Object.hasOwn(facts.evidence, "token"), false);

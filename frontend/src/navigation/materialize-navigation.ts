@@ -11,11 +11,16 @@ export const materializeNavigationTree = (items: readonly NavigationNode[], para
   return [{ ...item, path, children: item.children ? materializeNavigationTree(item.children, params) : undefined }];
 });
 
-export type OwnerNavigationTreeInput = { organizationId?: string; organizationName?: string | null };
+export type OwnerNavigationTreeInput = { organizationId?: string; organizationName?: string | null; visibleOrganizationModelActions?: ReadonlySet<string> };
 
-export const buildOwnerNavigationTree = ({ organizationId }: OwnerNavigationTreeInput = {}): NavigationNode[] => {
+export const buildOwnerNavigationTree = ({ organizationId, visibleOrganizationModelActions }: OwnerNavigationTreeInput = {}): NavigationNode[] => {
   if (!isConcreteRouteParam(organizationId)) return ownerNavigationTree;
-  const governanceChildren = GOVERNANCE_WORKSPACE_ITEMS.map((item) => ({ ...appRoutes[item.routeKey], label: item.label }));
+  const visible = (id: string) => { const item=GOVERNANCE_WORKSPACE_ITEMS.find(entry=>entry.id===id); return Boolean(item && (!item.actionId.startsWith("organizationModel.") || visibleOrganizationModelActions?.has(item.actionId))); };
+  const route = (id: string) => { const item=GOVERNANCE_WORKSPACE_ITEMS.find(entry=>entry.id===id)!; return { ...appRoutes[item.routeKey], label:item.label }; };
+  const governanceChildren: NavigationNode[] = [
+    { path:"/owner-access-policy-section",label:"Access policy",iconKey:"roles",structural:true,children:["role-permissions","scope-assignments","access-explorer"].filter(visible).map(route) },
+    { path:"/owner-organization-model-section",label:"Organization model",iconKey:"structure",structural:true,children:["data-scopes","structure-classification","people-segmentation"].filter(visible).map(route) },
+  ];
   return [
     { ...appRoutes.ownerOrganizations, label: "Back to Directory", iconKey: "back", contextual: true },
     appRoutes.ownerOrganizationState,

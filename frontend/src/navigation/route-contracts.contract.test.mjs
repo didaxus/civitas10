@@ -42,13 +42,9 @@ test("owner contextual workspace is composed into the single AppShell navigation
 test("legacy owner governance URLs redirect through canonical navigation contracts", () => {
   assert.match(appIndex, /isConcreteRouteParam/);
   assert.ok(appIndex.includes('const legacyOwnerGovernanceGroupsPath = `${appRoutes.ownerOrganizationState.path}/governance/groups`;'));
-  assert.ok(appIndex.includes('const legacyOwnerGovernanceDataScopesPath = `${appRoutes.ownerOrganizationState.path}/governance/data-scopes`;'));
-  assert.ok(appIndex.includes('const legacyOwnerGovernancePreviewPath = `${appRoutes.ownerOrganizationState.path}/governance/preview`;'));
   assert.ok(appIndex.includes('const legacyOwnerGovernanceAuditPath = `${appRoutes.ownerOrganizationState.path}/governance/audit`;'));
   assert.ok(appIndex.includes('const legacyOwnerGovernancePeopleSegmentationPath = `${appRoutes.ownerOrganizationState.path}/governance/people-segmentation`;'));
   assert.match(appIndex, /legacyOwnerGovernanceGroupsPath[\s\S]*appRoutes\.ownerOrganizationGovernanceStructure\.build/);
-  assert.match(appIndex, /legacyOwnerGovernanceDataScopesPath[\s\S]*appRoutes\.ownerOrganizationGovernanceDataScopes\.build/);
-  assert.match(appIndex, /legacyOwnerGovernancePreviewPath[\s\S]*appRoutes\.ownerOrganizationGovernancePreview\.build/);
   assert.match(appIndex, /legacyOwnerGovernanceAuditPath[\s\S]*appRoutes\.ownerOrganizationGovernanceAudit\.build/);
   assert.match(appIndex, /legacyOwnerGovernancePeopleSegmentationPath[\s\S]*appRoutes\.ownerOrganizationGovernancePeopleSegmentation\.build/);
   assert.doesNotMatch(appIndex, /path="\/owner\/organizations\/:organizationId\/governance\/(groups|data-scopes|preview|audit|people-segmentation)"/);
