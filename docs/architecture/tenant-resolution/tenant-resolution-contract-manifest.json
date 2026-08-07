@@ -1,0 +1,1780 @@
+{
+  "status": "PASS_CONTRACT_STATIC",
+  "freezeStatus": "READY_FOR_POSTGRES_AND_REPOSITORY_VALIDATION",
+  "repositoryImplementation": "NOT_IMPLEMENTED",
+  "productionStatus": "NO_GO",
+  "namespace": "*.portal.didaxus.com",
+  "callback": "https://auth-callback.didaxus.com/callback",
+  "documents": [
+    {
+      "name": "00-CIVITAS-TENANT-RESOLUTION.md",
+      "bytes": 20040,
+      "sha256": "4f93ba4b26f90c3e4826954718477736254a75872548e2af906a60f59f64baa1"
+    },
+    {
+      "name": "10-CIVITAS-TENANT-RESOLUTION-STATE-MACHINE.md",
+      "bytes": 6805,
+      "sha256": "8667d187f46d0a1e528ccd4acecfc9ad988967dcc69200d340d196471459d018"
+    },
+    {
+      "name": "20-CIVITAS-TENANT-RESOLUTION-OPENAPI.yaml",
+      "bytes": 55349,
+      "sha256": "9bc3a2cb612c75e6a13c46661501093c319ebd4ffad43359b15d16b5a1c60c49"
+    },
+    {
+      "name": "20A-CIVITAS-TENANT-BFF-OPENAPI.yaml",
+      "bytes": 29137,
+      "sha256": "7721bf02564ad19ff46ead1d930a49159a29508314614d5901a4a37d9f443531"
+    },
+    {
+      "name": "20B-CIVITAS-TENANT-OWNER-OPENAPI.yaml",
+      "bytes": 40457,
+      "sha256": "aa754aae8ef0504ceda5742243620c4e2b6c23ecb5aa00da0491df8fb0523db0"
+    },
+    {
+      "name": "30-CIVITAS-TENANT-RESOLUTION-SQL.sql",
+      "bytes": 18881,
+      "sha256": "3e87fe6a57a32abe6b4e3818ccca8adf6bddd13ab70492a9baa0adb0a3ff5e45"
+    },
+    {
+      "name": "31-CIVITAS-TENANT-RESOLUTION-RLS.sql",
+      "bytes": 3146,
+      "sha256": "ff6e3c2734ab1e837d67400baa49773a619088c44b2ee697b8ee58e65aaba6b5"
+    },
+    {
+      "name": "35-CIVITAS-TENANT-RESOLUTION-REPOSITORY-INTEGRATION.md",
+      "bytes": 2436,
+      "sha256": "c6a4d47813c5a2f374707774f7678905f0e6728b8aeb4b7ea30d17394d362c93"
+    },
+    {
+      "name": "40-CIVITAS-TENANT-RESOLUTION-EDGE-CONTRACT.md",
+      "bytes": 8287,
+      "sha256": "f28019a9b41cc959cc736a338457b2176a060554e724576cd8574553afe48683"
+    },
+    {
+      "name": "50-CIVITAS-TENANT-RESOLUTION-BACKEND-BFF.md",
+      "bytes": 14241,
+      "sha256": "2c004d7dd6cbba82fb1f31179e3c3e47b3ce0ac84d90a64adece25ec32627b88"
+    },
+    {
+      "name": "60-CIVITAS-TENANT-RESOLUTION-SESSION-OIDC.md",
+      "bytes": 11792,
+      "sha256": "9789629a56a26555a7809c401f656826510bbdf4bd51e63a221b8404878ae496"
+    },
+    {
+      "name": "70-CIVITAS-TENANT-RESOLUTION-UI.md",
+      "bytes": 20104,
+      "sha256": "e63b80d218b2064707554df78e9c67f10f9fa1c9d67adf23d319624119824de4"
+    },
+    {
+      "name": "80-CIVITAS-TENANT-RESOLUTION-SECURITY-TESTS.md",
+      "bytes": 12633,
+      "sha256": "45172a1681735f1a8f30c2688bb263fd71a203a682280fc83f58ff6c346c7ae3"
+    },
+    {
+      "name": "90-CIVITAS-TENANT-RESOLUTION-CONSISTENCY-CHECK.md",
+      "bytes": 7308,
+      "sha256": "b5571acd17f670eb2be97bc979da7d5b194f564182b8d1f6911f0a1bffcabb07"
+    },
+    {
+      "name": "95-CIVITAS-TENANT-RESOLUTION-AUDIT-RECONCILIATION.md",
+      "bytes": 3886,
+      "sha256": "6d2b4c8aed40a804c8f1112f074cd5fd26d6a6d7427deb40516abe950ad49e26"
+    },
+    {
+      "name": "96-CIVITAS-TENANT-RESOLUTION-IMPLEMENTATION-PLAN.md",
+      "bytes": 1493,
+      "sha256": "e8570bdaf204463df5cda00476f1abd88f7f4936aabce4cd5ff48b5c13c21697"
+    },
+    {
+      "name": "tenant-resolution-contract-manifest.json",
+      "bytes": 47477,
+      "sha256": "6b9a7886c51fe68c61efad6c86b7bee54ec5993a1c92b2dd9d2e0a0e35cfad64"
+    }
+  ],
+  "operations": [
+    {
+      "surface": "tenant-bff",
+      "route": "/api/tenant/context",
+      "method": "GET",
+      "operationId": "getTenantContext",
+      "security": [],
+      "responses": [
+        "200",
+        "404",
+        "423",
+        "503"
+      ]
+    },
+    {
+      "surface": "tenant-bff",
+      "route": "/api/auth/sign-in",
+      "method": "POST",
+      "operationId": "startTenantSignIn",
+      "security": [],
+      "responses": [
+        "201",
+        "404",
+        "423"
+      ]
+    },
+    {
+      "surface": "tenant-bff",
+      "route": "/api/auth/handoff",
+      "method": "POST",
+      "operationId": "consumeTenantAuthHandoff",
+      "security": [],
+      "responses": [
+        "303",
+        "400",
+        "409",
+        "410"
+      ]
+    },
+    {
+      "surface": "tenant-bff",
+      "route": "/api/auth/session",
+      "method": "GET",
+      "operationId": "getTenantSession",
+      "security": [
+        {
+          "sessionCookie": []
+        }
+      ],
+      "responses": [
+        "200",
+        "401",
+        "409"
+      ]
+    },
+    {
+      "surface": "tenant-bff",
+      "route": "/api/auth/sign-out",
+      "method": "POST",
+      "operationId": "signOutTenantSession",
+      "security": [
+        {
+          "sessionCookie": [],
+          "csrfToken": []
+        }
+      ],
+      "responses": [
+        "204"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/tenant-hostnames",
+      "method": "GET",
+      "operationId": "listTenantHostnames",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/tenant-hostnames",
+      "method": "POST",
+      "operationId": "reserveTenantHostname",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "201",
+        "409",
+        "422"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/tenant-hostnames/{hostnameId}",
+      "method": "GET",
+      "operationId": "getTenantHostname",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200",
+        "404"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/tenant-hostnames/{hostnameId}/activate",
+      "method": "POST",
+      "operationId": "activateTenantHostname",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200",
+        "409"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/tenant-hostnames/{hostnameId}/block",
+      "method": "POST",
+      "operationId": "blockTenantHostname",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200",
+        "409"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/tenant-hostnames/{hostnameId}/retire",
+      "method": "POST",
+      "operationId": "retireTenantHostname",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200",
+        "409"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/organizations/{organizationId}/hostname-change-runs",
+      "method": "POST",
+      "operationId": "createHostnameChangeRun",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "202",
+        "409",
+        "422"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/organizations/{organizationId}/hostname-change-runs/{runId}",
+      "method": "GET",
+      "operationId": "getHostnameChangeRun",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200",
+        "404"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/organizations/{organizationId}/hostname-change-runs/{runId}/execute",
+      "method": "POST",
+      "operationId": "executeHostnameChangeRun",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "202",
+        "409"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/organizations/{organizationId}/hostname-change-runs/{runId}/cancel",
+      "method": "POST",
+      "operationId": "cancelHostnameChangeRun",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200",
+        "409"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/reserved-tenant-slugs",
+      "method": "GET",
+      "operationId": "listReservedTenantSlugs",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "200"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/reserved-tenant-slugs",
+      "method": "POST",
+      "operationId": "createReservedTenantSlug",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "201",
+        "409"
+      ]
+    },
+    {
+      "surface": "owner",
+      "route": "/api/v1/owner/reserved-tenant-slugs/{slug}",
+      "method": "DELETE",
+      "operationId": "deleteReservedTenantSlug",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "responses": [
+        "204",
+        "409"
+      ]
+    }
+  ],
+  "states": {
+    "hostname": [
+      "reserved",
+      "active",
+      "redirecting",
+      "retired",
+      "blocked"
+    ],
+    "organization": [
+      "provisioning",
+      "active",
+      "restricted_active",
+      "suspended",
+      "deactivated"
+    ],
+    "hostnameChange": [
+      "draft",
+      "validating",
+      "approved",
+      "executing",
+      "redirecting",
+      "completed",
+      "blocked",
+      "failed",
+      "cancelled"
+    ],
+    "session": [
+      "created",
+      "active",
+      "stale_context",
+      "revoked",
+      "expired"
+    ],
+    "handoff": [
+      "issued",
+      "consumed",
+      "expired",
+      "revoked"
+    ]
+  },
+  "sqlTables": [
+    "platform_hostnames",
+    "reserved_tenant_slugs",
+    "organization_tenant_states",
+    "organization_hostnames",
+    "tenant_hostname_change_runs",
+    "tenant_sessions",
+    "tenant_auth_transactions",
+    "tenant_auth_handoff_tickets"
+  ],
+  "sqlConstraints": [
+    "TRIGGER",
+    "fk_organization_hostname_redirect_target",
+    "ix_organization_hostnames_redirect_expiry",
+    "ix_organization_hostnames_resolution",
+    "ix_tenant_auth_transactions_expiry",
+    "ix_tenant_sessions_binding",
+    "ix_tenant_sessions_expiry",
+    "trg_prevent_auth_handoff_reuse",
+    "trg_prevent_hostname_identity_rewrite",
+    "trg_prevent_invalid_hostname_transition",
+    "uq_one_active_primary_hostname_per_org",
+    "uq_open_hostname_change_run_per_org"
+  ],
+  "semanticChecks": [
+    {
+      "id": "metadata:getTenantContext:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:getTenantContext:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:startTenantSignIn:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:startTenantSignIn:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:consumeTenantAuthHandoff:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:getTenantSession:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:getTenantSession:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:signOutTenantSession:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:signOutTenantSession:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:listTenantHostnames:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:listTenantHostnames:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:reserveTenantHostname:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:getTenantHostname:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:getTenantHostname:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:activateTenantHostname:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:activateTenantHostname:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:blockTenantHostname:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:blockTenantHostname:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:retireTenantHostname:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:retireTenantHostname:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:createHostnameChangeRun:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:getHostnameChangeRun:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:executeHostnameChangeRun:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:cancelHostnameChangeRun:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:listReservedTenantSlugs:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:createReservedTenantSlug:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:operationId",
+      "ok": true,
+      "detail": "missing operationId"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-module",
+      "ok": true,
+      "detail": "missing x-civitas-module"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-capability",
+      "ok": true,
+      "detail": "missing x-civitas-capability"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-route-id",
+      "ok": true,
+      "detail": "missing x-civitas-route-id"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-action-id",
+      "ok": true,
+      "detail": "missing x-civitas-action-id"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-surface",
+      "ok": true,
+      "detail": "missing x-civitas-surface"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-status",
+      "ok": true,
+      "detail": "missing x-civitas-status"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-permission",
+      "ok": true,
+      "detail": "missing x-civitas-permission"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-policies",
+      "ok": true,
+      "detail": "missing x-civitas-policies"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-audit",
+      "ok": true,
+      "detail": "missing x-civitas-audit"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-idempotency",
+      "ok": true,
+      "detail": "missing x-civitas-idempotency"
+    },
+    {
+      "id": "metadata:deleteReservedTenantSlug:x-civitas-execution",
+      "ok": true,
+      "detail": "missing x-civitas-execution"
+    },
+    {
+      "id": "bff:no-bearer",
+      "ok": true,
+      "detail": "BFF spec must not expose bearerAuth"
+    },
+    {
+      "id": "bff:session-cookie",
+      "ok": true,
+      "detail": "sessionCookie missing"
+    },
+    {
+      "id": "bff:csrf",
+      "ok": true,
+      "detail": "csrfToken missing"
+    },
+    {
+      "id": "session:cookie",
+      "ok": true,
+      "detail": "session security mismatch"
+    },
+    {
+      "id": "signout:cookie-csrf",
+      "ok": true,
+      "detail": "sign-out must require cookie and CSRF"
+    },
+    {
+      "id": "signin:anonymous",
+      "ok": true,
+      "detail": "sign-in must be anonymous but same-origin policy protected"
+    },
+    {
+      "id": "handoff:anonymous",
+      "ok": true,
+      "detail": "handoff uses one-time ticket, not bearer/cookie"
+    },
+    {
+      "id": "owner:bearer",
+      "ok": true,
+      "detail": "Owner bearer missing"
+    },
+    {
+      "id": "owner:no-cookie",
+      "ok": true,
+      "detail": "Owner spec must not expose sessionCookie"
+    },
+    {
+      "id": "locked:neutral",
+      "ok": true,
+      "detail": "423 leaks internal status"
+    },
+    {
+      "id": "nostore:post:/api/auth/sign-in:201",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/sign-in:404",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/sign-in:423",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/handoff:303",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/handoff:400",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/handoff:409",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/handoff:410",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:get:/api/auth/session:200",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:get:/api/auth/session:401",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:get:/api/auth/session:409",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "nostore:post:/api/auth/sign-out:204",
+      "ok": true,
+      "detail": "auth response lacks no-store headers"
+    },
+    {
+      "id": "sql:handoff:subject_id",
+      "ok": true,
+      "detail": "missing subject_id text NOT NULL"
+    },
+    {
+      "id": "sql:handoff:membership_id",
+      "ok": true,
+      "detail": "missing membership_id text NOT NULL"
+    },
+    {
+      "id": "sql:handoff:context_version",
+      "ok": true,
+      "detail": "missing context_version bigint NOT NULL"
+    },
+    {
+      "id": "sql:handoff:session_binding_version",
+      "ok": true,
+      "detail": "missing session_binding_version bigint NOT NULL"
+    },
+    {
+      "id": "sql:status = 'active' AND access_mod",
+      "ok": true,
+      "detail": "SQL missing status = 'active' AND access_mode = 'full'"
+    },
+    {
+      "id": "sql:status = 'restricted_active' AND",
+      "ok": true,
+      "detail": "SQL missing status = 'restricted_active' AND access_mode = 'restricted'"
+    },
+    {
+      "id": "sql:status IN ('provisioning', 'susp",
+      "ok": true,
+      "detail": "SQL missing status IN ('provisioning', 'suspended', 'deactivated')"
+    },
+    {
+      "id": "sql:REFERENCES operational_tenants (",
+      "ok": true,
+      "detail": "SQL missing REFERENCES operational_tenants (id)"
+    },
+    {
+      "id": "sql:integration_outbox_events",
+      "ok": true,
+      "detail": "SQL missing integration_outbox_events"
+    },
+    {
+      "id": "sql:audit_logs",
+      "ok": true,
+      "detail": "SQL missing audit_logs"
+    },
+    {
+      "id": "sql:idempotency_records",
+      "ok": true,
+      "detail": "SQL missing idempotency_records"
+    },
+    {
+      "id": "sql:prevent_unsafe_primary_block",
+      "ok": true,
+      "detail": "SQL missing prevent_unsafe_primary_block"
+    },
+    {
+      "id": "sql:enforce_tenant_hostname_invarian",
+      "ok": true,
+      "detail": "SQL missing enforce_tenant_hostname_invariants"
+    },
+    {
+      "id": "sql:target.status <> 'active'",
+      "ok": true,
+      "detail": "SQL missing target.status <> 'active'"
+    },
+    {
+      "id": "sql:target.is_primary <> true",
+      "ok": true,
+      "detail": "SQL missing target.is_primary <> true"
+    },
+    {
+      "id": "sql:AND context_version = $5",
+      "ok": true,
+      "detail": "SQL missing AND context_version = $5"
+    },
+    {
+      "id": "sql:AND session_binding_version = $6",
+      "ok": true,
+      "detail": "SQL missing AND session_binding_version = $6"
+    },
+    {
+      "id": "sql:no-parallel-audit",
+      "ok": true,
+      "detail": "parallel audit table remains"
+    },
+    {
+      "id": "sql:no-parallel-idempotency",
+      "ok": true,
+      "detail": "parallel idempotency table remains"
+    },
+    {
+      "id": "rls:ENABLE ROW LEVEL SECURITY",
+      "ok": true,
+      "detail": "RLS missing ENABLE ROW LEVEL SECURITY"
+    },
+    {
+      "id": "rls:FORCE ROW LEVEL SECURITY",
+      "ok": true,
+      "detail": "RLS missing FORCE ROW LEVEL SECURITY"
+    },
+    {
+      "id": "rls:current_setting('app.organization_id', true)::uuid",
+      "ok": true,
+      "detail": "RLS missing current_setting('app.organization_id', true)::uuid"
+    },
+    {
+      "id": "rls:civitas_tenant_runtime",
+      "ok": true,
+      "detail": "RLS missing civitas_tenant_runtime"
+    },
+    {
+      "id": "state:handoff",
+      "ok": true,
+      "detail": "AuthHandoff lifecycle missing"
+    },
+    {
+      "id": "state:409-moved",
+      "ok": true,
+      "detail": "old-host mutation must use 409"
+    },
+    {
+      "id": "ui:no-bootstrap-mismatch",
+      "ok": true,
+      "detail": "mismatch remains in bootstrap state"
+    },
+    {
+      "id": "ui:runtime-mismatch",
+      "ok": true,
+      "detail": "runtime security state missing"
+    },
+    {
+      "id": "ui:route-registry",
+      "ok": true,
+      "detail": "route registry incomplete"
+    },
+    {
+      "id": "edge:hostregexp",
+      "ok": true,
+      "detail": "Traefik safe baseline missing"
+    },
+    {
+      "id": "edge:no-wildcard-cors",
+      "ok": true,
+      "detail": "CORS policy missing"
+    },
+    {
+      "id": "edge:409-vs-421",
+      "ok": true,
+      "detail": "409/421 policy missing"
+    }
+  ],
+  "postgresExecution": {
+    "status": "NOT_RUN",
+    "requiredBeforeImplementationMerge": true
+  },
+  "repositoryIntegration": {
+    "canonicalOrganization": "operational_tenants",
+    "outbox": "integration_outbox_events",
+    "audit": "audit_logs",
+    "idempotency": "idempotency_records",
+    "coreManagerPreserved": true,
+    "organizationPortalNewSurface": true
+  },
+  "errors": []
+}

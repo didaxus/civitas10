@@ -1,0 +1,1478 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Civitas Tenant Resolution Owner API",
+    "version": "2.0.0",
+    "description": "Core Manager Owner control-plane API. Must be composed into contracts/openapi/civitas-api.yaml."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/owner/tenant-hostnames": {
+      "get": {
+        "tags": [
+          "Owner Hostnames"
+        ],
+        "operationId": "listTenantHostnames",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "organizationId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "$ref": "#/components/schemas/HostnameStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro de hostnames.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OrganizationHostname"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.read",
+        "x-civitas-route-id": "tenant-resolution.listTenantHostnames",
+        "x-civitas-action-id": "listTenantHostnames",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.read",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "not-required",
+        "x-civitas-execution": "sync"
+      },
+      "post": {
+        "tags": [
+          "Owner Hostnames"
+        ],
+        "operationId": "reserveTenantHostname",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "organizationId",
+                  "tenantSlug",
+                  "reason"
+                ],
+                "properties": {
+                  "organizationId": {
+                    "type": "string"
+                  },
+                  "tenantSlug": {
+                    "$ref": "#/components/schemas/TenantSlug"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Hostname reservado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationHostname"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationFailed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.manage",
+        "x-civitas-route-id": "tenant-resolution.reserveTenantHostname",
+        "x-civitas-action-id": "reserveTenantHostname",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.manage",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/tenant-hostnames/{hostnameId}": {
+      "get": {
+        "tags": [
+          "Owner Hostnames"
+        ],
+        "operationId": "getTenantHostname",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/HostnameId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hostname.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationHostname"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.read",
+        "x-civitas-route-id": "tenant-resolution.getTenantHostname",
+        "x-civitas-action-id": "getTenantHostname",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.read",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "not-required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/tenant-hostnames/{hostnameId}/activate": {
+      "post": {
+        "tags": [
+          "Owner Hostnames"
+        ],
+        "operationId": "activateTenantHostname",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/HostnameId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerReason"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hostname primary activo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationHostname"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.manage",
+        "x-civitas-route-id": "tenant-resolution.activateTenantHostname",
+        "x-civitas-action-id": "activateTenantHostname",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.manage",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/tenant-hostnames/{hostnameId}/block": {
+      "post": {
+        "tags": [
+          "Owner Hostnames"
+        ],
+        "operationId": "blockTenantHostname",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/HostnameId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "reason",
+                      "organizationTransition"
+                    ],
+                    "properties": {
+                      "reason": {
+                        "type": "string",
+                        "minLength": 10,
+                        "maxLength": 500
+                      },
+                      "organizationTransition": {
+                        "type": "string",
+                        "enum": [
+                          "suspended",
+                          "deactivated"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "reason",
+                      "replacementHostnameId"
+                    ],
+                    "properties": {
+                      "reason": {
+                        "type": "string",
+                        "minLength": 10,
+                        "maxLength": 500
+                      },
+                      "replacementHostnameId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hostname bloqueado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationHostname"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "description": "Bloquea un hostname. Si el hostname es el primary active, la operación exige suspender o desactivar la organización dentro de la misma transacción, o responde 409.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.manage",
+        "x-civitas-route-id": "tenant-resolution.blockTenantHostname",
+        "x-civitas-action-id": "blockTenantHostname",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.manage",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/tenant-hostnames/{hostnameId}/retire": {
+      "post": {
+        "tags": [
+          "Owner Hostnames"
+        ],
+        "operationId": "retireTenantHostname",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/HostnameId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerReason"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hostname retirado y no reasignable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationHostname"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "description": "Retira un hostname histórico redirecting o blocked. Un hostname active no puede retirarse directamente; debe pasar por un hostname change o una transición segura.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.manage",
+        "x-civitas-route-id": "tenant-resolution.retireTenantHostname",
+        "x-civitas-action-id": "retireTenantHostname",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.manage",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/organizations/{organizationId}/hostname-change-runs": {
+      "post": {
+        "tags": [
+          "Hostname Change"
+        ],
+        "operationId": "createHostnameChangeRun",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OrganizationId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "newTenantSlug",
+                  "reason"
+                ],
+                "properties": {
+                  "newTenantSlug": {
+                    "$ref": "#/components/schemas/TenantSlug"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Change run creado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostnameChangeRun"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationFailed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.change",
+        "x-civitas-route-id": "tenant-resolution.createHostnameChangeRun",
+        "x-civitas-action-id": "createHostnameChangeRun",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.change",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "async"
+      }
+    },
+    "/api/v1/owner/organizations/{organizationId}/hostname-change-runs/{runId}": {
+      "get": {
+        "tags": [
+          "Hostname Change"
+        ],
+        "operationId": "getHostnameChangeRun",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OrganizationId"
+          },
+          {
+            "$ref": "#/components/parameters/RunId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado del change run.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostnameChangeRun"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.read",
+        "x-civitas-route-id": "tenant-resolution.getHostnameChangeRun",
+        "x-civitas-action-id": "getHostnameChangeRun",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.read",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "not-required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/organizations/{organizationId}/hostname-change-runs/{runId}/execute": {
+      "post": {
+        "tags": [
+          "Hostname Change"
+        ],
+        "operationId": "executeHostnameChangeRun",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OrganizationId"
+          },
+          {
+            "$ref": "#/components/parameters/RunId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Ejecución iniciada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostnameChangeRun"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.change",
+        "x-civitas-route-id": "tenant-resolution.executeHostnameChangeRun",
+        "x-civitas-action-id": "executeHostnameChangeRun",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.change",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "async"
+      }
+    },
+    "/api/v1/owner/organizations/{organizationId}/hostname-change-runs/{runId}/cancel": {
+      "post": {
+        "tags": [
+          "Hostname Change"
+        ],
+        "operationId": "cancelHostnameChangeRun",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OrganizationId"
+          },
+          {
+            "$ref": "#/components/parameters/RunId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Change run cancelado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostnameChangeRun"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_hostnames.change",
+        "x-civitas-route-id": "tenant-resolution.cancelHostnameChangeRun",
+        "x-civitas-action-id": "cancelHostnameChangeRun",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_hostnames.change",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/reserved-tenant-slugs": {
+      "get": {
+        "tags": [
+          "Reserved Slugs"
+        ],
+        "operationId": "listReservedTenantSlugs",
+        "responses": {
+          "200": {
+            "description": "Slugs reservados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ReservedTenantSlug"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_slugs.read",
+        "x-civitas-route-id": "tenant-resolution.listReservedTenantSlugs",
+        "x-civitas-action-id": "listReservedTenantSlugs",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_slugs.read",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "not-required",
+        "x-civitas-execution": "sync"
+      },
+      "post": {
+        "tags": [
+          "Reserved Slugs"
+        ],
+        "operationId": "createReservedTenantSlug",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "slug",
+                  "reason"
+                ],
+                "properties": {
+                  "slug": {
+                    "$ref": "#/components/schemas/TenantSlug"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Slug reservado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservedTenantSlug"
+                }
+              }
+            }
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_slugs.manage",
+        "x-civitas-route-id": "tenant-resolution.createReservedTenantSlug",
+        "x-civitas-action-id": "createReservedTenantSlug",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_slugs.manage",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "required",
+        "x-civitas-execution": "sync"
+      }
+    },
+    "/api/v1/owner/reserved-tenant-slugs/{slug}": {
+      "delete": {
+        "tags": [
+          "Reserved Slugs"
+        ],
+        "operationId": "deleteReservedTenantSlug",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/TenantSlug"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/ReauthenticationToken"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Reserva eliminada cuando el slug nunca fue utilizado."
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-civitas-module": "tenant-resolution",
+        "x-civitas-capability": "owner.tenant_slugs.manage",
+        "x-civitas-route-id": "tenant-resolution.deleteReservedTenantSlug",
+        "x-civitas-action-id": "deleteReservedTenantSlug",
+        "x-civitas-surface": "owner",
+        "x-civitas-status": "planned",
+        "x-civitas-permission": "owner.tenant_slugs.manage",
+        "x-civitas-policies": [
+          "effective-host",
+          "owner-authorization",
+          "reauthentication"
+        ],
+        "x-civitas-audit": true,
+        "x-civitas-idempotency": "not-required",
+        "x-civitas-execution": "sync"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Core Manager / Owner authorization only."
+      }
+    },
+    "headers": {
+      "NoStore": {
+        "description": "Respuesta privada no almacenable.",
+        "schema": {
+          "type": "string",
+          "const": "private, no-store"
+        }
+      },
+      "NoCache": {
+        "description": "Compatibilidad con caches HTTP heredados.",
+        "schema": {
+          "type": "string",
+          "const": "no-cache"
+        }
+      },
+      "RequestId": {
+        "description": "Correlación de soporte.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "parameters": {
+      "OrganizationId": {
+        "in": "path",
+        "name": "organizationId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "HostnameId": {
+        "in": "path",
+        "name": "hostnameId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "RunId": {
+        "in": "path",
+        "name": "runId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "IdempotencyKey": {
+        "in": "header",
+        "name": "Idempotency-Key",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128
+        }
+      },
+      "ReauthenticationToken": {
+        "in": "header",
+        "name": "X-Reauthentication-Token",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "NeutralNotFound": {
+        "description": "Espacio no encontrado.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/NeutralNotFoundProblem"
+            }
+          }
+        },
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "Pragma": {
+            "$ref": "#/components/headers/NoCache"
+          }
+        }
+      },
+      "TenantLocked": {
+        "description": "Organización no disponible para acceso.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/TenantLockedProblem"
+            }
+          }
+        },
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "Pragma": {
+            "$ref": "#/components/headers/NoCache"
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Recurso Owner no encontrado.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "Pragma": {
+            "$ref": "#/components/headers/NoCache"
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Conflicto de estado o idempotencia.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "Pragma": {
+            "$ref": "#/components/headers/NoCache"
+          }
+        }
+      },
+      "ValidationFailed": {
+        "description": "Validación fallida.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "Pragma": {
+            "$ref": "#/components/headers/NoCache"
+          }
+        }
+      },
+      "TenantHostMoved": {
+        "description": "Hostname anterior; la mutación no se reenvía.",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "Pragma": {
+            "$ref": "#/components/headers/NoCache"
+          }
+        },
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/TenantHostMovedProblem"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Problem": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "NeutralNotFoundProblem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Problem"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "const": "Espacio no encontrado"
+              },
+              "status": {
+                "const": 404
+              },
+              "code": {
+                "const": "TENANT_SPACE_NOT_FOUND"
+              }
+            }
+          }
+        ]
+      },
+      "TenantLockedProblem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Problem"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "const": "Contacte al administrador de su organización"
+              },
+              "status": {
+                "const": 423
+              },
+              "code": {
+                "const": "TENANT_LOCKED"
+              }
+            }
+          }
+        ]
+      },
+      "TenantSlug": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 63,
+        "pattern": "^[a-z0-9](?:[a-z0-9-]{1,61})[a-z0-9]$"
+      },
+      "HostnameStatus": {
+        "type": "string",
+        "enum": [
+          "reserved",
+          "active",
+          "redirecting",
+          "retired",
+          "blocked"
+        ]
+      },
+      "OrganizationStatus": {
+        "type": "string",
+        "enum": [
+          "provisioning",
+          "active",
+          "restricted_active",
+          "suspended",
+          "deactivated"
+        ]
+      },
+      "TenantContextEnvelope": {
+        "type": "object",
+        "required": [
+          "status",
+          "tenant"
+        ],
+        "properties": {
+          "status": {
+            "const": "active"
+          },
+          "tenant": {
+            "$ref": "#/components/schemas/TenantContext"
+          }
+        }
+      },
+      "TenantContext": {
+        "type": "object",
+        "required": [
+          "organizationId",
+          "tenantSlug",
+          "hostname",
+          "hostnameId",
+          "hostnameStatus",
+          "organizationStatus",
+          "accessMode",
+          "contextVersion",
+          "resolvedAt",
+          "requestId"
+        ],
+        "properties": {
+          "organizationId": {
+            "type": "string"
+          },
+          "tenantSlug": {
+            "$ref": "#/components/schemas/TenantSlug"
+          },
+          "hostname": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{1,61})[a-z0-9]\\.portal\\.didaxus\\.com$"
+          },
+          "hostnameId": {
+            "type": "string"
+          },
+          "hostnameStatus": {
+            "const": "active"
+          },
+          "organizationStatus": {
+            "type": "string",
+            "enum": [
+              "active",
+              "restricted_active"
+            ]
+          },
+          "accessMode": {
+            "type": "string",
+            "enum": [
+              "full",
+              "restricted"
+            ]
+          },
+          "contextVersion": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "resolvedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "TenantSession": {
+        "type": "object",
+        "required": [
+          "sessionId",
+          "organizationId",
+          "hostnameId",
+          "contextVersion",
+          "expiresAt"
+        ],
+        "properties": {
+          "sessionId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "hostnameId": {
+            "type": "string"
+          },
+          "contextVersion": {
+            "type": "integer"
+          },
+          "accessMode": {
+            "type": "string",
+            "enum": [
+              "full",
+              "restricted"
+            ]
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrganizationHostname": {
+        "type": "object",
+        "required": [
+          "id",
+          "organizationId",
+          "tenantSlug",
+          "hostname",
+          "status",
+          "isPrimary",
+          "contextVersion",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "tenantSlug": {
+            "$ref": "#/components/schemas/TenantSlug"
+          },
+          "hostname": {
+            "type": "string",
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{1,61})[a-z0-9]\\.portal\\.didaxus\\.com$"
+          },
+          "status": {
+            "$ref": "#/components/schemas/HostnameStatus"
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "contextVersion": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "redirectTargetHostnameId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "redirectExpiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "retiredAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HostnameChangeRun": {
+        "type": "object",
+        "required": [
+          "id",
+          "organizationId",
+          "oldHostnameId",
+          "newTenantSlug",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "oldHostnameId": {
+            "type": "string"
+          },
+          "newHostnameId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "newTenantSlug": {
+            "$ref": "#/components/schemas/TenantSlug"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "validating",
+              "approved",
+              "executing",
+              "redirecting",
+              "completed",
+              "blocked",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "redirectExpiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "failureCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "ReservedTenantSlug": {
+        "type": "object",
+        "required": [
+          "slug",
+          "reason",
+          "createdAt",
+          "createdBy"
+        ],
+        "properties": {
+          "slug": {
+            "$ref": "#/components/schemas/TenantSlug"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerReason": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reason"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 500
+          }
+        }
+      },
+      "TenantHostMovedProblem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Problem"
+          },
+          {
+            "type": "object",
+            "required": [
+              "canonicalHost"
+            ],
+            "properties": {
+              "status": {
+                "const": 409
+              },
+              "code": {
+                "const": "TENANT_HOST_MOVED"
+              },
+              "canonicalHost": {
+                "type": "string",
+                "pattern": "^[a-z0-9](?:[a-z0-9-]{1,61})[a-z0-9]\\.portal\\.didaxus\\.com$"
+              }
+            }
+          }
+        ]
+      },
+      "TenantAuthorityMismatchProblem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Problem"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": 421
+              },
+              "code": {
+                "const": "TENANT_AUTHORITY_MISMATCH"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

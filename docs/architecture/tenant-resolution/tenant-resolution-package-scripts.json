@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "tenant-resolution:contract-check": "node tenant-resolution/scripts/tenant-resolution/contract-check.mjs",
+    "tenant-resolution:postgres-check": "node tenant-resolution/scripts/tenant-resolution/postgres-check.mjs",
+    "tenant-resolution:edge-check": "node tenant-resolution/scripts/tenant-resolution/edge-check.mjs",
+    "ui:tenant-resolution:check": "node tenant-resolution/scripts/tenant-resolution/ui-check.mjs"
+  }
+}
