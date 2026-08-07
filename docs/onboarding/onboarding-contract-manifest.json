@@ -1,0 +1,214 @@
+{
+  "status": "PASS_DOCUMENT_CONSISTENCY_WITH_NAVIGATION_PATCHES",
+  "canonicalVersion": "1.2.1",
+  "repository": "didaxus/civitas10",
+  "repositoryStatus": "NOT_IMPLEMENTED",
+  "tenantResolutionCompatibility": "PASS_CONTRACT",
+  "uxNavigationAudit": "RECONCILED",
+  "executedAt": "2026-07-26T04:21:00.068Z",
+  "documents": [
+    {
+      "name": "00-CIVITAS-ORGANIZATION-ONBOARDING-AND-ACTIVATION-v1.2.1.md",
+      "bytes": 88055,
+      "sha256": "113c0399b5a9fdedf9b439a40c8021adb9a6454162ce1fa3ba88636e78b00671"
+    },
+    {
+      "name": "CIVITAS_ARCHITECTURE_REVIEW_ONBOARDING_BACKEND-v1.2.1.docx",
+      "bytes": 45648,
+      "sha256": "0496d5c203a2b53d0d20d8def0c25d169a1e284e309feeb34a0e62f272bea7d9"
+    },
+    {
+      "name": "CIVITAS_ARCHITECTURE_REVIEW_ONBOARDING_UI-v1.2.1.docx",
+      "bytes": 48338,
+      "sha256": "03e7d3ed1792fcdb0f0374309332d36c5a0fc5c0f675c6de5d4362c931190a26"
+    },
+    {
+      "name": "CIVITAS_ONBOARDING_CONSISTENCY_CHECK-v1.2.1.md",
+      "bytes": 3294,
+      "sha256": "666a419a88632011dea400d0e7314b2846ac5896c282fafa993582147da72311"
+    },
+    {
+      "name": "CIVITAS_ONBOARDING_REPOSITORY_COMPLIANCE-v1.2.1.md",
+      "bytes": 3444,
+      "sha256": "a85d244d79cbb248a97ff7d2ea72a3e6e27a503f469bb922223422db79e1c691"
+    },
+    {
+      "name": "CIVITAS_ONBOARDING_AUDIT_RECONCILIATION-v1.2.1.md",
+      "bytes": 2192,
+      "sha256": "ee4407d69cf2d313c4fe7f6e90c5551d31e18b914c83c61b0ff9b1a8a884033c"
+    },
+    {
+      "name": "CIVITAS_ONBOARDING_UX_NAVIGATION_AUDIT-v1.2.0.md",
+      "bytes": 26781,
+      "sha256": "7731374d8c98925836e16ae305cd12bde396451894eaacb9165fad76fa526996"
+    }
+  ],
+  "routes": {
+    "ownerIndex": "/owner/organization-onboardings",
+    "ownerStep": "/owner/organization-onboardings/:onboardingId/:visibleStepKey",
+    "ownerSection": "/owner/organization-onboardings/:onboardingId/:visibleStepKey/:sectionKey",
+    "tenantSummary": "/onboarding",
+    "tenantSection": "/onboarding/:visibleStepKey/:sectionKey"
+  },
+  "visibleSteps": [
+    "organization_portal",
+    "initial_administrators",
+    "access_methods",
+    "provisioning_lifecycle",
+    "identity_structure_mapping",
+    "authorization_simulation",
+    "dry_run_review",
+    "approval_publication"
+  ],
+  "navigationControls": [
+    "surface-breadcrumbs",
+    "parent-resume-exit",
+    "hierarchical-registry",
+    "section-navigation",
+    "applicable-step-count",
+    "step-open-behavior",
+    "actor-action-matrix",
+    "role-aware-blocker",
+    "save-semantics",
+    "spanish-copy",
+    "actor-aware-receipt"
+  ],
+  "semanticChecks": [
+    {
+      "id": "file:00-CIVITAS-ORGANIZATION-ONBOARDING-AND-ACTIVATION-v1.2.1.md",
+      "passed": true,
+      "detail": "required file must exist"
+    },
+    {
+      "id": "file:CIVITAS_ONBOARDING_CONSISTENCY_CHECK-v1.2.1.md",
+      "passed": true,
+      "detail": "required file must exist"
+    },
+    {
+      "id": "file:CIVITAS_ONBOARDING_REPOSITORY_COMPLIANCE-v1.2.1.md",
+      "passed": true,
+      "detail": "required file must exist"
+    },
+    {
+      "id": "file:CIVITAS_ONBOARDING_AUDIT_RECONCILIATION-v1.2.1.md",
+      "passed": true,
+      "detail": "required file must exist"
+    },
+    {
+      "id": "file:CIVITAS_ONBOARDING_UX_NAVIGATION_AUDIT-v1.2.0.md",
+      "passed": true,
+      "detail": "required file must exist"
+    },
+    {
+      "id": "version",
+      "passed": true,
+      "detail": "canonical version"
+    },
+    {
+      "id": "repo",
+      "passed": true,
+      "detail": "target repository"
+    },
+    {
+      "id": "bootstrap",
+      "passed": true,
+      "detail": "bootstrap preserved"
+    },
+    {
+      "id": "tenant-resolution",
+      "passed": true,
+      "detail": "Tenant Resolution"
+    },
+    {
+      "id": "routes:owner",
+      "passed": true,
+      "detail": "owner hierarchical routes"
+    },
+    {
+      "id": "routes:tenant",
+      "passed": true,
+      "detail": "tenant hierarchical routes"
+    },
+    {
+      "id": "breadcrumbs",
+      "passed": true,
+      "detail": "surface breadcrumbs"
+    },
+    {
+      "id": "registry",
+      "passed": true,
+      "detail": "hierarchical registry"
+    },
+    {
+      "id": "sections",
+      "passed": true,
+      "detail": "internal section navigation"
+    },
+    {
+      "id": "applicability",
+      "passed": true,
+      "detail": "applicability contract"
+    },
+    {
+      "id": "step-behavior",
+      "passed": true,
+      "detail": "step behavior and invalidation"
+    },
+    {
+      "id": "action-matrix",
+      "passed": true,
+      "detail": "action matrix"
+    },
+    {
+      "id": "blocker-cta",
+      "passed": true,
+      "detail": "role-aware blocker"
+    },
+    {
+      "id": "save-semantics",
+      "passed": true,
+      "detail": "save semantics"
+    },
+    {
+      "id": "language",
+      "passed": true,
+      "detail": "language policy"
+    },
+    {
+      "id": "receipt",
+      "passed": true,
+      "detail": "receipt priority"
+    },
+    {
+      "id": "backend",
+      "passed": true,
+      "detail": "backend navigation contract"
+    },
+    {
+      "id": "ui",
+      "passed": true,
+      "detail": "UI navigation contract"
+    },
+    {
+      "id": "consistency",
+      "passed": true,
+      "detail": "consistency status"
+    },
+    {
+      "id": "repository",
+      "passed": true,
+      "detail": "repository gate updated"
+    },
+    {
+      "id": "reconciliation",
+      "passed": true,
+      "detail": "audit reconciliation"
+    },
+    {
+      "id": "audit-source",
+      "passed": true,
+      "detail": "audit source intact"
+    }
+  ],
+  "errors": []
+}
