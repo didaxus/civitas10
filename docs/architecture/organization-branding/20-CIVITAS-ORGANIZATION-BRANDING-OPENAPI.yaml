@@ -1,0 +1,1707 @@
+openapi: 3.1.0
+info:
+  title: Civitas Organization Branding API
+  version: 1.2.0
+  description: Contrato HTTP congelable del branding URL-first. El organizationId se toma de la ruta y se valida contra sesión,
+    permisos y recursos. El body nunca selecciona el tenant. Draft, publicaciones y salud runtime son recursos independientes.
+servers:
+- url: /api/v1
+security:
+- bearerAuth: []
+tags:
+- name: Tenant Branding
+- name: Origin Requests
+- name: Asset References
+- name: Validation Runs
+- name: Publications
+- name: Owner Governance
+paths:
+  /o/{organizationId}/branding/workspace:
+    get:
+      tags:
+      - Tenant Branding
+      operationId: getBrandingWorkspace
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Draft, publicación activa y salud runtime.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandingWorkspace'
+          headers:
+            ETag:
+              $ref: '#/components/headers/BrandDraftEtag'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /o/{organizationId}/branding/draft:
+    get:
+      tags:
+      - Tenant Branding
+      operationId: getBrandDraft
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Working draft.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandDraft'
+          headers:
+            ETag:
+              $ref: '#/components/headers/BrandDraftEtag'
+    patch:
+      tags:
+      - Tenant Branding
+      operationId: updateBrandDraft
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBrandDraftRequest'
+      responses:
+        '200':
+          description: Draft actualizado.
+          headers:
+            ETag:
+              $ref: '#/components/headers/BrandDraftEtag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandDraft'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+  /o/{organizationId}/branding/draft/validation-runs:
+    post:
+      tags:
+      - Tenant Branding
+      operationId: validateBrandDraft
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '202':
+          description: Validación del draft iniciada.
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /o/{organizationId}/branding/origin-requests:
+    get:
+      tags:
+      - Origin Requests
+      operationId: listOriginRequests
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Solicitudes del tenant.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OriginRequest'
+    post:
+      tags:
+      - Origin Requests
+      operationId: createOriginRequest
+      description: Organization Admin solicita un dominio de imágenes.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOriginRequest'
+      responses:
+        '201':
+          description: Solicitud creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+  /o/{organizationId}/branding/origins:
+    get:
+      tags:
+      - Tenant Branding
+      operationId: listTenantBrandOrigins
+      description: Vista tenant de solo lectura.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Origins.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BrandOrigin'
+  /o/{organizationId}/branding/asset-references/validation-runs:
+    post:
+      tags:
+      - Validation Runs
+      operationId: createAssetValidationRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateValidationRunRequest'
+      responses:
+        '202':
+          description: Validation run creado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationRun'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+  /o/{organizationId}/branding/asset-references/validation-runs/{runId}:
+    get:
+      tags:
+      - Validation Runs
+      operationId: getAssetValidationRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RunId'
+      responses:
+        '200':
+          description: Estado del validation run.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /o/{organizationId}/branding/asset-references:
+    get:
+      tags:
+      - Asset References
+      operationId: listAssetReferences
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Referencias.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssetReference'
+    post:
+      tags:
+      - Asset References
+      operationId: createAssetReference
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAssetReferenceRequest'
+      responses:
+        '201':
+          description: Referencia creada y run consumido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetReference'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          description: Run expirado o consumido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /o/{organizationId}/branding/asset-references/{referenceId}:
+    get:
+      tags:
+      - Asset References
+      operationId: getAssetReference
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/ReferenceId'
+      responses:
+        '200':
+          description: Referencia.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetReference'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /o/{organizationId}/branding/asset-references/{referenceId}/revalidation-runs:
+    post:
+      tags:
+      - Validation Runs
+      operationId: revalidateAssetReference
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/ReferenceId'
+      responses:
+        '202':
+          description: Revalidación creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationRun'
+  /o/{organizationId}/branding/asset-references/{referenceId}/archive:
+    post:
+      tags:
+      - Asset References
+      operationId: archiveAssetReference
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/ReferenceId'
+      responses:
+        '200':
+          description: Referencia archivada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetReference'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /o/{organizationId}/branding/publications:
+    get:
+      tags:
+      - Publications
+      operationId: listBrandPublications
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Historial.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Publication'
+    post:
+      tags:
+      - Publications
+      operationId: publishBrandDraft
+      description: Publica una actualización posterior. Requiere una publicación activa existente; la primera publicación
+        usa InitialPublicationRequest.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - draftVersion
+              properties:
+                draftVersion:
+                  type: integer
+                  minimum: 1
+      responses:
+        '201':
+          description: Publicación posterior creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+  /o/{organizationId}/branding/publications/{publicationId}:
+    get:
+      tags:
+      - Publications
+      operationId: getBrandPublication
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/PublicationId'
+      responses:
+        '200':
+          description: Publicación inmutable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /o/{organizationId}/branding/rollback-runs:
+    post:
+      tags:
+      - Publications
+      operationId: createRollbackRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - targetPublicationId
+              - reason
+              properties:
+                targetPublicationId:
+                  type: string
+                reason:
+                  type: string
+                  minLength: 10
+                  maxLength: 500
+      responses:
+        '202':
+          description: Rollback run creado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackRun'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /o/{organizationId}/branding/rollback-runs/{runId}:
+    get:
+      tags:
+      - Publications
+      operationId: getRollbackRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RunId'
+      responses:
+        '200':
+          description: Estado del rollback.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /owner/organizations/{organizationId}/branding/origin-requests:
+    get:
+      tags:
+      - Owner Governance
+      operationId: listOwnerOriginRequests
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Solicitudes.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OriginRequest'
+  /owner/organizations/{organizationId}/branding/origin-requests/{requestId}/approve:
+    post:
+      tags:
+      - Owner Governance
+      operationId: approveOriginRequest
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '200':
+          description: 'Solicitud aprobada. El sistema crea el origin pending y genera el challenge sin requerir una segunda
+            aprobación.
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /owner/organizations/{organizationId}/branding/origin-requests/{requestId}/reject:
+    post:
+      tags:
+      - Owner Governance
+      operationId: rejectOriginRequest
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '200':
+          description: Solicitud rechazada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /owner/organizations/{organizationId}/branding/origins:
+    get:
+      tags:
+      - Owner Governance
+      operationId: listOwnerOrigins
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Origins.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BrandOrigin'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/verification-runs/{runId}:
+    get:
+      tags:
+      - Owner Governance
+      operationId: getOwnerOriginVerificationRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/RunId'
+      responses:
+        '200':
+          description: Vista Owner del run.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginVerificationRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/manual-exceptions:
+    post:
+      tags:
+      - Owner Governance
+      operationId: approveOriginManualException
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - reason
+              - evidence
+              properties:
+                reason:
+                  type: string
+                  minLength: 20
+                  maxLength: 1000
+                evidence:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Excepción auditada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandOrigin'
+  /o/{organizationId}/branding/origin-requests/{requestId}/cancel:
+    post:
+      tags:
+      - Origin Requests
+      operationId: cancelOriginRequest
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Solicitud cancelada por Organization Admin.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /o/{organizationId}/branding/origins/{originId}/verification-runs:
+    post:
+      tags:
+      - Origin Requests
+      operationId: createTenantOriginVerificationRun
+      description: Organization Admin solicita comprobar nuevamente el challenge configurado.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202':
+          description: Verificación creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginVerificationRun'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /o/{organizationId}/branding/origins/{originId}/verification-runs/{runId}:
+    get:
+      tags:
+      - Origin Requests
+      operationId: getTenantOriginVerificationRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/RunId'
+      responses:
+        '200':
+          description: Estado de verificación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginVerificationRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/suspend:
+    post:
+      tags:
+      - Owner Governance
+      operationId: suspendBrandOrigin
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '200':
+          description: Suspende el origin por riesgo o incumplimiento.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandOrigin'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/revoke:
+    post:
+      tags:
+      - Owner Governance
+      operationId: revokeBrandOrigin
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '200':
+          description: Revoca el origin y bloquea nuevas publicaciones.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandOrigin'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/reactivation-runs:
+    post:
+      tags:
+      - Owner Governance
+      operationId: createBrandOriginReactivationRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '202':
+          description: Revalidación reforzada creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginVerificationRun'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/reactivation-runs/{runId}:
+    get:
+      tags:
+      - Owner Governance
+      operationId: getBrandOriginReactivationRun
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/RunId'
+      responses:
+        '200':
+          description: Estado de reactivación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OriginVerificationRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /owner/organizations/{organizationId}/branding/origins/{originId}/allowed-purposes:
+    patch:
+      tags:
+      - Owner Governance
+      operationId: updateBrandOriginAllowedPurposes
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/OriginId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - allowedPurposes
+              - reason
+              properties:
+                allowedPurposes:
+                  type: array
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/BrandAssetKind'
+                reason:
+                  type: string
+                  minLength: 10
+                  maxLength: 500
+      responses:
+        '200':
+          description: Propósitos actualizados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandOrigin'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /o/{organizationId}/branding/initial-publication-requests:
+    get:
+      tags:
+      - Publications
+      operationId: listTenantInitialPublicationRequests
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Solicitudes iniciales.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InitialPublicationRequest'
+    post:
+      tags:
+      - Publications
+      operationId: createInitialPublicationRequest
+      description: Organization Admin envía el draft validado a aprobación inicial.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInitialPublicationRequest'
+      responses:
+        '201':
+          description: Solicitud creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialPublicationRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+  /o/{organizationId}/branding/initial-publication-requests/{requestId}:
+    get:
+      tags:
+      - Publications
+      operationId: getTenantInitialPublicationRequest
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      responses:
+        '200':
+          description: Solicitud inicial.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialPublicationRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /o/{organizationId}/branding/initial-publication-requests/{requestId}/cancel:
+    post:
+      tags:
+      - Publications
+      operationId: cancelInitialPublicationRequest
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Solicitud cancelada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialPublicationRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /owner/organizations/{organizationId}/branding/initial-publication-requests:
+    get:
+      tags:
+      - Owner Governance
+      operationId: listOwnerInitialPublicationRequests
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Solicitudes pendientes de decisión.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InitialPublicationRequest'
+  /owner/organizations/{organizationId}/branding/initial-publication-requests/{requestId}/approve:
+    post:
+      tags:
+      - Owner Governance
+      operationId: approveInitialPublicationRequest
+      description: La aprobación crea la primera publicación activa atómicamente.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '200':
+          description: Decisión aplicada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialPublicationRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+  /owner/organizations/{organizationId}/branding/initial-publication-requests/{requestId}/reject:
+    post:
+      tags:
+      - Owner Governance
+      operationId: rejectInitialPublicationRequest
+      description: Rechaza la solicitud sin publicar.
+      parameters:
+      - $ref: '#/components/parameters/OrganizationId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/ReauthenticationToken'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerDecisionRequest'
+      responses:
+        '200':
+          description: Decisión aplicada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialPublicationRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    OrganizationId:
+      in: path
+      name: organizationId
+      required: true
+      schema:
+        type: string
+    RequestId:
+      in: path
+      name: requestId
+      required: true
+      schema:
+        type: string
+    OriginId:
+      in: path
+      name: originId
+      required: true
+      schema:
+        type: string
+    ReferenceId:
+      in: path
+      name: referenceId
+      required: true
+      schema:
+        type: string
+    RunId:
+      in: path
+      name: runId
+      required: true
+      schema:
+        type: string
+    PublicationId:
+      in: path
+      name: publicationId
+      required: true
+      schema:
+        type: string
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      schema:
+        type: string
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+    ReauthenticationToken:
+      in: header
+      name: X-Reauthentication-Token
+      required: true
+      schema:
+        type: string
+  responses:
+    Forbidden:
+      description: Permiso insuficiente o tenant mismatch.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Recurso no encontrado dentro del tenant.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: Conflicto de estado o idempotencia.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ValidationFailed:
+      description: Validación fallida.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    PreconditionFailed:
+      description: ETag desactualizado.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Problem:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        code:
+          type: string
+        detail:
+          type: string
+    BrandAssetKind:
+      type: string
+      enum:
+      - login_logo
+      - workspace_logo
+      - favicon
+      - login_cover
+    OriginRequestStatus:
+      type: string
+      enum:
+      - submitted
+      - approved
+      - rejected
+      - cancelled
+      - expired
+    OriginStatus:
+      type: string
+      enum:
+      - pending
+      - verified
+      - stale
+      - suspended
+      - failed
+      - revoked
+      - exception_approved
+    AssetReferenceStatus:
+      type: string
+      enum:
+      - ready
+      - stale
+      - unreachable
+      - content_changed
+      - blocked
+      - archived
+    DraftStatus:
+      type: string
+      enum:
+      - draft
+      - validating
+      - validated
+      - blocked
+    PublicationStatus:
+      type: string
+      enum:
+      - active
+      - superseded
+    RuntimeHealth:
+      type: string
+      enum:
+      - healthy
+      - degraded
+      - unavailable
+    OriginRequest:
+      type: object
+      required:
+      - reason
+      - status
+      - id
+      - organizationId
+      - verificationMethod
+      - allowedPurposes
+      - expiresAt
+      - requestedOrigin
+      - createdAt
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        requestedOrigin:
+          type: string
+          format: uri
+        verificationMethod:
+          type: string
+          enum:
+          - dns_txt
+          - well_known_http
+        allowedPurposes:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/BrandAssetKind'
+        status:
+          $ref: '#/components/schemas/OriginRequestStatus'
+        reason:
+          type: string
+        decisionReason:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        decidedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+    CreateOriginRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - origin
+      - verificationMethod
+      - allowedPurposes
+      - reason
+      properties:
+        origin:
+          type: string
+          format: uri
+        verificationMethod:
+          type: string
+          enum:
+          - dns_txt
+          - well_known_http
+        allowedPurposes:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/BrandAssetKind'
+        reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+    OwnerDecisionRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - reason
+      properties:
+        reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+    BrandOrigin:
+      type: object
+      required:
+      - status
+      - id
+      - organizationId
+      - origin
+      - verificationMethod
+      - allowedPurposes
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        origin:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/OriginStatus'
+        verificationMethod:
+          type: string
+          enum:
+          - dns_txt
+          - well_known_http
+          - manual_exception
+        allowedPurposes:
+          type: array
+          items:
+            $ref: '#/components/schemas/BrandAssetKind'
+        challenge:
+          type:
+          - string
+          - 'null'
+        lastOwnershipVerifiedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        nextOwnershipVerificationAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    BrandDraft:
+      type: object
+      required:
+      - accentColor
+      - status
+      - organizationId
+      - primaryColor
+      - customLegalLinks
+      - shortName
+      - version
+      - updatedAt
+      - secondaryColor
+      - updatedBy
+      - displayName
+      properties:
+        organizationId:
+          type: string
+        displayName:
+          type: string
+        shortName:
+          type: string
+        loginLogoAssetRefId:
+          type:
+          - string
+          - 'null'
+        workspaceLogoAssetRefId:
+          type:
+          - string
+          - 'null'
+        faviconAssetRefId:
+          type:
+          - string
+          - 'null'
+        loginCoverAssetRefId:
+          type:
+          - string
+          - 'null'
+        primaryColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        secondaryColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        accentColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        supportEmail:
+          type:
+          - string
+          - 'null'
+          format: email
+        customLegalLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/SafeLegalLink'
+        status:
+          $ref: '#/components/schemas/DraftStatus'
+        version:
+          type: integer
+          minimum: 1
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    UpdateBrandDraftRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        displayName:
+          type: string
+          minLength: 1
+          maxLength: 160
+        shortName:
+          type: string
+          minLength: 1
+          maxLength: 48
+        loginLogoAssetRefId:
+          type:
+          - string
+          - 'null'
+        workspaceLogoAssetRefId:
+          type:
+          - string
+          - 'null'
+        faviconAssetRefId:
+          type:
+          - string
+          - 'null'
+        loginCoverAssetRefId:
+          type:
+          - string
+          - 'null'
+        primaryColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        secondaryColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        accentColor:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+        supportEmail:
+          type:
+          - string
+          - 'null'
+          format: email
+        customLegalLinks:
+          type: array
+          maxItems: 8
+          items:
+            $ref: '#/components/schemas/SafeLegalLink'
+    SafeLegalLink:
+      type: object
+      additionalProperties: false
+      required:
+      - label
+      - url
+      properties:
+        label:
+          type: string
+          minLength: 3
+          maxLength: 80
+        url:
+          type: string
+          format: uri
+          pattern: ^https://
+    CreateValidationRunRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - kind
+      - url
+      properties:
+        kind:
+          $ref: '#/components/schemas/BrandAssetKind'
+        url:
+          type: string
+          format: uri
+    ValidationRun:
+      type: object
+      required:
+      - approvedOriginId
+      - status
+      - normalizedUrl
+      - id
+      - organizationId
+      - requestedBy
+      - expiresAt
+      - kind
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        kind:
+          $ref: '#/components/schemas/BrandAssetKind'
+        normalizedUrl:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum:
+          - queued
+          - running
+          - passed
+          - failed
+          - expired
+          - consumed
+        validatedSha256:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-f0-9]{64}$
+        validatedBytes:
+          type:
+          - integer
+          - 'null'
+        observedWidth:
+          type:
+          - integer
+          - 'null'
+        observedHeight:
+          type:
+          - integer
+          - 'null'
+        etag:
+          type:
+          - string
+          - 'null'
+        expiresAt:
+          type: string
+          format: date-time
+        failureCode:
+          type:
+          - string
+          - 'null'
+        requestedBy:
+          type: string
+        approvedOriginId:
+          type: string
+    BrowserProbeResult:
+      oneOf:
+      - type: object
+        additionalProperties: false
+        required:
+        - renderability
+        - width
+        - height
+        - durationMs
+        properties:
+          renderability:
+            const: browser_decodable
+          width:
+            type: integer
+            minimum: 1
+          height:
+            type: integer
+            minimum: 1
+          durationMs:
+            type: integer
+            minimum: 0
+      - type: object
+        additionalProperties: false
+        required:
+        - renderability
+        - reason
+        properties:
+          renderability:
+            const: not_decodable
+          reason:
+            type: string
+            enum:
+            - timeout
+            - load_error
+            - cors_error
+            - zero_dimensions
+    CreateAssetReferenceRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - validationRunId
+      - browserProbe
+      properties:
+        validationRunId:
+          type: string
+        browserProbe:
+          $ref: '#/components/schemas/BrowserProbeResult'
+    AssetReference:
+      type: object
+      required:
+      - approvedOriginId
+      - observedWidth
+      - sourceType
+      - normalizedUrl
+      - id
+      - organizationId
+      - status
+      - lastValidatedAt
+      - validatedBytes
+      - validatedSha256
+      - kind
+      - observedHeight
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        approvedOriginId:
+          type: string
+        kind:
+          $ref: '#/components/schemas/BrandAssetKind'
+        normalizedUrl:
+          type: string
+          format: uri
+        status:
+          $ref: '#/components/schemas/AssetReferenceStatus'
+        validatedSha256:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-f0-9]{64}$
+        validatedBytes:
+          type:
+          - integer
+          - 'null'
+        observedWidth:
+          type:
+          - integer
+          - 'null'
+        observedHeight:
+          type:
+          - integer
+          - 'null'
+        lastValidatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        sourceType:
+          const: external_url
+    Publication:
+      type: object
+      required:
+      - status
+      - draftVersion
+      - id
+      - organizationId
+      - createdBy
+      - cspPolicyVersion
+      - creationReason
+      - createdAt
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        draftVersion:
+          type: integer
+        status:
+          $ref: '#/components/schemas/PublicationStatus'
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        creationReason:
+          $ref: '#/components/schemas/PublicationCreationReason'
+        cspPolicyVersion:
+          type: integer
+          minimum: 1
+    RollbackRun:
+      type: object
+      required:
+      - id
+      - organizationId
+      - targetPublicationId
+      - status
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        targetPublicationId:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - validating
+          - blocked
+          - completed
+          - failed
+        failureCode:
+          type:
+          - string
+          - 'null'
+    BrandingWorkspace:
+      type: object
+      required:
+      - draft
+      - activePublication
+      - runtimeHealth
+      - runtimeIssues
+      properties:
+        draft:
+          $ref: '#/components/schemas/BrandDraft'
+        activePublication:
+          oneOf:
+          - $ref: '#/components/schemas/Publication'
+          - type: 'null'
+        runtimeHealth:
+          $ref: '#/components/schemas/RuntimeHealth'
+        runtimeIssues:
+          type: array
+          items:
+            type: object
+    InitialPublicationRequestStatus:
+      type: string
+      enum:
+      - submitted
+      - approved
+      - rejected
+      - cancelled
+      - expired
+    PublicationCreationReason:
+      type: string
+      enum:
+      - initial
+      - update
+      - rollback
+    OriginVerificationRun:
+      type: object
+      required:
+      - id
+      - organizationId
+      - originId
+      - status
+      - createdAt
+      - expiresAt
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        originId:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - running
+          - passed
+          - failed
+          - expired
+        challenge:
+          type:
+          - string
+          - 'null'
+        failureCode:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        completedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    InitialPublicationRequest:
+      type: object
+      required:
+      - id
+      - organizationId
+      - draftVersion
+      - status
+      - requestReason
+      - createdAt
+      - createdBy
+      - expiresAt
+      properties:
+        id:
+          type: string
+        organizationId:
+          type: string
+        draftVersion:
+          type: integer
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/InitialPublicationRequestStatus'
+        requestReason:
+          type: string
+        decisionReason:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        decidedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        decidedBy:
+          type:
+          - string
+          - 'null'
+        publicationId:
+          type:
+          - string
+          - 'null'
+    CreateInitialPublicationRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - draftVersion
+      - reason
+      properties:
+        draftVersion:
+          type: integer
+          minimum: 1
+        reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+  headers:
+    BrandDraftEtag:
+      description: Versión de concurrencia optimista del working draft.
+      schema:
+        type: string
