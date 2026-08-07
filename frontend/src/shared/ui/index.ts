@@ -32,4 +32,4 @@ export { DecisionState, type DecisionStateKind } from "./DecisionState";
 export { EntityWorkspace, SettingsWorkbench, MasterDetail, GroupedToggleList, HierarchyWorkbench, FilterToolbar, FormDrawer, ResponsiveDataView } from "./patterns";
 
 // Componentes especializados
-export { DisabledActionHint, useDisabledActionHint, type DisabledActionHintProps } from "./components/DisabledActionHint";
+export { DisabledActionButton, DisabledActionHint, useDisabledActionHint, type DisabledActionButtonProps, type DisabledActionHintProps } from "./components/DisabledActionHint";

@@ -1,6 +1,7 @@
 import { createContext, useContext, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useLogto } from "@logto/react";
 import type { OrganizationMappingActionId } from "../../generated/organization-mapping-contracts";
+import { DisabledActionButton, type DisabledActionButtonProps } from "../../shared/ui";
 import { useOrganizationModelApi, type AuthorizationUiDecision, type OrganizationModelSurface } from "./api";
 
 type DecisionState = { status: AuthorizationUiDecision["status"]; decision?: AuthorizationUiDecision; error?: string; subjectId?: string };
@@ -138,5 +139,20 @@ export const AuthorizationBlockState = ({ state }: { state: DecisionState }) => 
 export const AuthorizationBoundary = ({ children }: { children: ReactNode }) => { const state = useAuthorizationDecision(); const resolution = resolveAuthorizationTreatment(state.decision); if (!resolution.render) return null; return resolution.queryable ? children : <AuthorizationBlockState state={state} />; };
 export const AuthorizationReason = ({ decision }: { decision: AuthorizationUiDecision }) => <span>{decision.remediation?.safeMessage || decision.terminalReasonCode}</span>;
 export const ScopedDataNotice = () => { const { decision } = useAuthorizationDecision(); return decision?.dataAccessMode === "scoped" && decision.scopeAppliedByBackend ? <p role="status" className="text-sm text-muted">Results are scoped by the backend authorization policy.</p> : null; };
-export const AuthorizationAction = ({ children }: { children: (disabled: boolean, reason?: string) => ReactNode }) => { const state = useAuthorizationDecision(); const resolution = resolveAuthorizationTreatment(state.decision); if (!resolution.render) return null; const disabled = !resolution.executable; return <>{children(disabled, disabled ? state.decision?.remediation?.safeMessage || state.decision?.terminalReasonCode || state.status : undefined)}</>; };
+const safeActionExplanation = (state: DecisionState) => {
+  const category = state.decision?.terminalReasonCode || state.status;
+  const remediation = state.decision?.remediation?.safeMessage;
+  return remediation ? `Reason: ${category}. ${remediation}` : `Reason: ${category}. This action is unavailable until authorization is current.`;
+};
+
+/** Authorization-aware action control. Backend reason category and safe remediation are the only decision details disclosed. */
+export const AuthorizationAction = ({ disabled: locallyDisabled = false, disabledReason, ...props }: DisabledActionButtonProps) => {
+  const state = useAuthorizationDecision();
+  const resolution = resolveAuthorizationTreatment(state.decision);
+  if (!resolution.render) return null;
+  const authorizationDisabled = !resolution.executable;
+  const disabled = authorizationDisabled || locallyDisabled;
+  const explanation = authorizationDisabled ? safeActionExplanation(state) : disabledReason;
+  return <DisabledActionButton {...props} disabled={disabled} disabledReason={explanation} />;
+};
 export const AuthorizationDiagnosticsLink = ({ href, diagnosticsAllowed }: { href: string; diagnosticsAllowed: boolean }) => { const { decision } = useAuthorizationDecision(); const resolution = resolveAuthorizationTreatment(decision, diagnosticsAllowed); return resolution.diagnostics && decision ? <a className="text-link underline" href={href}>Inspect authorization decision {decision.decisionId}</a> : null; };
