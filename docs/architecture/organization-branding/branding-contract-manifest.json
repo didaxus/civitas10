@@ -1,0 +1,9 @@
+{
+  "openapiVersion": "1.2.0",
+  "states": {
+    "assetReference": ["ready", "stale", "unreachable", "content_changed", "blocked", "archived"],
+    "publication": ["active", "superseded"],
+    "publicationCreationReason": ["initial", "update", "rollback"]
+  },
+  "result": "PASS"
+}
