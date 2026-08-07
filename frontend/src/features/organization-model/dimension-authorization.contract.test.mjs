@@ -30,7 +30,7 @@ test("dimension mutation is mounted only inside the editDraft boundary", () => {
   assert.ok(editorStart >= 0 && listStart > editorStart);
   assert.match(editor, /useAuthorizedMutation/);
   assert.match(editor, /saveDimensionConfiguration\.mutate/);
-  assert.match(editor, /<AuthorizationAction>/,
+  assert.match(editor, /<AuthorizationAction\b/,
     "the save control follows the edit decision treatment");
   assert.ok(protectedEditor,
     "a denied edit decision is resolved before the editor and its mutation hook can render");

@@ -10,7 +10,7 @@ function DraftInitialization({ organizationId, publication, onCreated }: { organ
   const create = useAuthorizedMutation((_: void, signal) => api.initializeOrganizationModel.mutate(organizationId, crypto.randomUUID(), signal));
   return <SectionCard title={publication ? "Continue from the published model" : "Create the organization model"} description="The backend creates and validates the draft. No model data is constructed in this browser.">
     {error ? <p role="alert" className="mb-3 text-danger">{error}</p> : null}
-    <AuthorizationAction>{(disabled, reason) => <button type="button" disabled={disabled} title={reason} className="rounded-md bg-primary px-4 py-2 text-on-primary disabled:opacity-50" onClick={() => void create().then(onCreated).catch(caught => setError(caught instanceof Error ? caught.message : "The draft could not be created."))}>{publication ? "Create draft from published version" : "Create organization model"}</button>}</AuthorizationAction>
+    <AuthorizationAction type="button" className="rounded-md bg-primary px-4 py-2 text-on-primary disabled:opacity-50" onClick={() => void create().then(onCreated).catch(caught => setError(caught instanceof Error ? caught.message : "The draft could not be created."))}>{publication ? "Create draft from published version" : "Create organization model"}</AuthorizationAction>
   </SectionCard>;
 }
 
