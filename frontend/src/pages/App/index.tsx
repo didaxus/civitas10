@@ -20,6 +20,7 @@ import { civitasLogtoConfig, getCivitasSignInOptions } from "../../auth/logtoCon
 import { APP_ENV } from "../../env";
 import { OwnerOrganizationRouteBoundary } from "./OwnerOrganizationRouteBoundary";
 import { OwnerOrganizationLayout } from "../../layouts/OwnerLayout";
+import { OrganizationLayout } from "../../layouts/OrganizationLayout";
 import { DataScopesPage } from "../../features/organization-model/DataScopesPage";
 import { StructurePage } from "../../features/organization-model/StructurePage";
 import { AccessExplorerPage } from "../../features/organization-model/AccessExplorerPage";
@@ -178,14 +179,14 @@ function TenantGovernanceRoute() {
   );
 }
 
-function OrganizationModelRoute({ page }: { page: "data-scopes" | "structure" | "access-explorer" }) {
+function OrganizationModelRoute({ page, surface = "owner" }: { page: "data-scopes" | "structure" | "access-explorer"; surface?: "owner" | "tenant" }) {
   const { organizationId = "" } = useParams();
-  return page === "data-scopes" ? <DataScopesPage organizationId={organizationId} /> : page === "structure" ? <StructurePage organizationId={organizationId} /> : <AccessExplorerPage organizationId={organizationId} />;
+  return page === "data-scopes" ? <DataScopesPage organizationId={organizationId} surface={surface} /> : page === "structure" ? <StructurePage organizationId={organizationId} surface={surface} /> : <AccessExplorerPage organizationId={organizationId} surface={surface} />;
 }
 
 function OrganizationModelTenantRoute({ page }: { page: "data-scopes" | "structure" | "access-explorer" }) {
   const { organizationId = "" } = useParams();
-  return <TenantAuthorizationProvider organizationId={organizationId}><OrganizationModelRoute page={page} /></TenantAuthorizationProvider>;
+  return <TenantAuthorizationProvider organizationId={organizationId}><OrganizationLayout organizationId={organizationId} isAdmin><OrganizationModelRoute page={page} surface="tenant" /></OrganizationLayout></TenantAuthorizationProvider>;
 }
 
 function AppContent() {
