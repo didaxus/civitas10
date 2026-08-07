@@ -18,7 +18,7 @@ type ActiveOrganizationContext = {
 
 export const OwnerLayout = ({ children, organizationId }: { children?: ReactNode; organizationId?: string }) => {
   const ownerApi = useOwnerApi();
-  const organizationModelApi = useOrganizationModelApi();
+  const organizationModelApi = useOrganizationModelApi("owner");
   const { getIdTokenClaims } = useLogto();
   const [visibleOrganizationModelActions, setVisibleOrganizationModelActions] = useState<ReadonlySet<string>>(new Set());
   const [activeOrganization, setActiveOrganization] = useState<ActiveOrganizationContext | null>(
