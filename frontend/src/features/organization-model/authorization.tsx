@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useLogto } from "@logto/react";
 import type { OrganizationMappingActionId } from "../../generated/organization-mapping-contracts";
 import { useOrganizationModelApi, type AuthorizationUiDecision, type OrganizationModelSurface } from "./api";
@@ -6,24 +6,24 @@ import { useOrganizationModelApi, type AuthorizationUiDecision, type Organizatio
 type DecisionState = { status: AuthorizationUiDecision["status"]; decision?: AuthorizationUiDecision; error?: string; subjectId?: string };
 const AuthorizationDecisionContext = createContext<DecisionState>({ status: "loading" });
 
-export const OrganizationModelAuthorizationProvider = ({ organizationId, actionId, surface, children }: { organizationId: string; actionId: OrganizationMappingActionId; surface?: OrganizationModelSurface; children: ReactNode }) => {
+type ProviderProps = { organizationId: string; actionId: OrganizationMappingActionId; surface?: OrganizationModelSurface; children: ReactNode };
+
+const AuthorizationDecisionProvider = ({ organizationId, subjectId, actionId, surface, children }: ProviderProps & { subjectId: string }) => {
   const api = useOrganizationModelApi(surface);
-  const { getIdTokenClaims, isAuthenticated } = useLogto();
   const [state, setState] = useState<DecisionState>({ status: "loading" });
+  const generation = useRef(0);
   useEffect(() => {
     const controller = new AbortController();
     let timer = 0;
     const refresh = async () => {
+      const requestGeneration = ++generation.current;
       setState({ status: "loading" });
       try {
-        if (!isAuthenticated) throw new Error("authentication_required");
-        const claims = await getIdTokenClaims();
-        const subjectId = String(claims?.sub || "");
-        if (!subjectId) throw new Error("authorization_subject_unavailable");
         const decision = await api.resolveAuthorizationDecision(organizationId, subjectId, actionId, controller.signal);
-        if (!controller.signal.aborted) setState({ status: decision.status, decision, subjectId });
+        const exactContext = decision.organizationId === organizationId && decision.subjectId === subjectId && decision.actionId === actionId;
+        if (!controller.signal.aborted && requestGeneration === generation.current && exactContext) setState({ status: decision.status, decision, subjectId });
       } catch (error) {
-        if (!controller.signal.aborted) setState({ status: "unavailable", error: error instanceof Error ? error.message : "authorization_unavailable" });
+        if (!controller.signal.aborted && requestGeneration === generation.current) setState({ status: "unavailable", error: error instanceof Error ? error.message : "authorization_unavailable" });
       }
     };
     const revalidate = () => { if (document.visibilityState === "visible" && !controller.signal.aborted) void refresh(); };
@@ -33,8 +33,29 @@ export const OrganizationModelAuthorizationProvider = ({ organizationId, actionI
     document.addEventListener("visibilitychange", revalidate);
     window.addEventListener("civitas:authorization-context-changed", revalidate);
     return () => { controller.abort(); window.clearInterval(timer); window.removeEventListener("focus", revalidate); document.removeEventListener("visibilitychange", revalidate); window.removeEventListener("civitas:authorization-context-changed", revalidate); };
-  }, [actionId, api, getIdTokenClaims, isAuthenticated, organizationId]);
-  return <AuthorizationDecisionContext.Provider key={`${organizationId}:${actionId}:${state.subjectId || "unresolved"}`} value={state}>{children}</AuthorizationDecisionContext.Provider>;
+  }, [actionId, api, organizationId, subjectId]);
+  return <AuthorizationDecisionContext.Provider value={state}>{children}</AuthorizationDecisionContext.Provider>;
+};
+
+export const OrganizationModelAuthorizationProvider = ({ organizationId, actionId, surface, children }: ProviderProps) => {
+  const { getIdTokenClaims, isAuthenticated } = useLogto();
+  const [identity, setIdentity] = useState<{ subjectId?: string; generation: number }>({ generation: 0 });
+  useEffect(() => {
+    const controller = new AbortController();
+    const resolveSubject = async () => {
+      setIdentity(value => ({ generation: value.generation + 1 }));
+      if (!isAuthenticated) return;
+      const claims = await getIdTokenClaims();
+      if (!controller.signal.aborted) setIdentity(value => ({ subjectId: String(claims?.sub || "") || undefined, generation: value.generation }));
+    };
+    const invalidate = () => { if (!controller.signal.aborted) void resolveSubject(); };
+    void resolveSubject();
+    window.addEventListener("civitas:authorization-context-changed", invalidate);
+    return () => { controller.abort(); window.removeEventListener("civitas:authorization-context-changed", invalidate); };
+  }, [getIdTokenClaims, isAuthenticated, organizationId, actionId, surface]);
+  const boundaryKey = `${surface || "inherited"}:${organizationId}:${identity.subjectId || "unresolved"}:${actionId}:${identity.generation}`;
+  if (!identity.subjectId) return <AuthorizationDecisionContext.Provider value={{ status: "loading" }}>{children}</AuthorizationDecisionContext.Provider>;
+  return <AuthorizationDecisionProvider key={boundaryKey} organizationId={organizationId} subjectId={identity.subjectId} actionId={actionId} surface={surface}>{children}</AuthorizationDecisionProvider>;
 };
 
 export const useAuthorizationDecision = () => useContext(AuthorizationDecisionContext);
@@ -46,17 +67,21 @@ export const resolveAuthorizationTreatment = (decision: AuthorizationUiDecision 
 
 export function useAuthorizedQuery<T>(queryKey: readonly unknown[], load: (signal: AbortSignal) => Promise<T>, enabled = true) {
   const authorization = useAuthorizationDecision();
-  const [state, setState] = useState<{ loading: boolean; data?: T; error?: string }>({ loading: false });
-  const stableKey = JSON.stringify(queryKey);
-  useEffect(() => {
+  type QueryState = { key?: string; loading: boolean; data?: T; error?: string };
+  const [state, setState] = useState<QueryState>({ key: "", loading: false });
+  const requestGeneration = useRef(0);
+  const decision = authorization.decision;
+  const stableKey = useMemo(() => JSON.stringify([decision?.organizationId, decision?.subjectId, decision?.policyVersion, decision?.scopeVersion, decision?.actionId, decision?.authorizationSnapshotVersion, queryKey]), [decision?.actionId, decision?.authorizationSnapshotVersion, decision?.organizationId, decision?.policyVersion, decision?.scopeVersion, decision?.subjectId, queryKey]);
+  useLayoutEffect(() => {
+    const generation = ++requestGeneration.current;
     const decision = authorization.decision;
-    if (!enabled || authorization.status !== "ready" || decision?.finalDecision !== "allow") { setState({ loading: false }); return; }
+    if (!enabled || authorization.status !== "ready" || decision?.finalDecision !== "allow") { setState({ key: stableKey, loading: false }); return; }
     const controller = new AbortController();
-    setState({ loading: true });
-    void load(controller.signal).then((data) => { if (!controller.signal.aborted) setState({ loading: false, data }); }).catch((error: unknown) => { if (!controller.signal.aborted) setState({ loading: false, error: error instanceof Error ? error.message : "request_unavailable" }); });
+    setState({ key: stableKey, loading: true });
+    void load(controller.signal).then((data) => { if (!controller.signal.aborted && generation === requestGeneration.current) setState({ key: stableKey, loading: false, data }); }).catch((error: unknown) => { if (!controller.signal.aborted && generation === requestGeneration.current) setState({ key: stableKey, loading: false, error: error instanceof Error ? error.message : "request_unavailable" }); });
     return () => controller.abort();
   }, [authorization.decision, authorization.status, enabled, load, stableKey]);
-  return state;
+  return state.key === stableKey ? state : ({ loading: false } satisfies QueryState);
 }
 
 export function useAuthorizedMutation<TInput, TResult>(mutate: (input: TInput, signal: AbortSignal) => Promise<TResult>) {
