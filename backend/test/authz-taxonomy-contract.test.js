@@ -7,7 +7,7 @@ function runtime() { let policyVersion = 30; const events = []; return { events,
 test("taxonomy keeps platform definitions separate from tenant-owned values", async () => {
   const repo = createInMemoryTaxonomyRepository(); const rt = runtime(); const service = createTaxonomyService({ repository: repo, runtimeConsistencyPort: rt });
   await service.ensureDefinitions();
-  assert.deepEqual(Object.keys(KNOWN_DIMENSIONS).sort(), ["academic.stage","academic.period","academic.subject","academic.course","academic.cohort","academic.class","organization.campus","organization.shift","organization.department","administration.function"].sort());
+  assert.deepEqual(Object.keys(KNOWN_DIMENSIONS).sort(), ["academic.school_year","academic.term","academic.term_type","academic.stage","academic.grade_level","academic.year_level","academic.faculty","academic.department","academic.program","academic.program_level","academic.credential_level","academic.program_version","academic.modality","academic.cohort","academic.subject","academic.course","academic.class","organization.region","organization.campus","organization.shift","organization.department","organization.coordination","administration.function","geography.administrative_area","geography.municipality"].sort());
   const a = await service.createValue({ organizationId: "org_a", dimensionKey: "academic.subject", stableKey: "mathematics", displayName: "Mathematics", actorLogtoUserId: "user_a" });
   const b = await service.createValue({ organizationId: "org_b", dimensionKey: "academic.subject", stableKey: "mathematics", displayName: "Math", actorLogtoUserId: "user_b" });
   assert.notEqual(a.id, b.id);

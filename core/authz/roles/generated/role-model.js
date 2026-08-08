@@ -10,14 +10,14 @@ const generated = Object.freeze({
     "source": "contracts/authorization/civitas-role-bundles.json",
     "catalogSource": "contracts/authorization/civitas-permission-catalog.yaml",
     "command": "npm run authz:role-model:generate",
-    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
-    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b"
+    "catalogHash": "eda09e0840a3b6f2286d27f26e3e3ec96b5eee828e64b6f97a7b0205739373d3",
+    "roleModelHash": "920b0a0b146830c9ddf2d0324aea6a488dd1526054ea689851b0376eb5eae295"
   },
   "roleModel": {
     "roleModelVersion": "2026-07-civitas-phase3-role-bundles-v1",
     "contractVersion": "2026-07-civitas-permission-catalog-v1",
-    "catalogHash": "4b2b7b47fed732959a2d85d2966b16c3f732dd6ec68b0d70eab8176f9ca7dbea",
-    "roleModelHash": "0afdf78595ad447357350104649393a297695bf40fcbb698bbadd0a9cc99862b",
+    "catalogHash": "eda09e0840a3b6f2286d27f26e3e3ec96b5eee828e64b6f97a7b0205739373d3",
+    "roleModelHash": "920b0a0b146830c9ddf2d0324aea6a488dd1526054ea689851b0376eb5eae295",
     "bundles": [
       {
         "key": "org_documents_reader",
@@ -142,6 +142,16 @@ const generated = Object.freeze({
         "description": "org_governance_admin canonical Phase 3 role-potential bundle",
         "permissionIds": [
           "org.groups.approve",
+          "org.orgmodel.publish",
+          "org.orgmodel.read",
+          "org.orgmodel.reconcile",
+          "org.orgmodel_audit.read",
+          "org.orgmodel_draft.manage",
+          "org.orgmodel_draft.read",
+          "org.orgmodel_evidence.read",
+          "org.orgmodel_mapping.approve",
+          "org.orgmodel_mapping.evaluate",
+          "org.orgmodel_rollback.create",
           "org.role_aliases.manage",
           "org.workflows.delete"
         ],
@@ -865,6 +875,16 @@ const generated = Object.freeze({
           "org.members.archive",
           "org.members.invite",
           "org.members.read",
+          "org.orgmodel.publish",
+          "org.orgmodel.read",
+          "org.orgmodel.reconcile",
+          "org.orgmodel_audit.read",
+          "org.orgmodel_draft.manage",
+          "org.orgmodel_draft.read",
+          "org.orgmodel_evidence.read",
+          "org.orgmodel_mapping.approve",
+          "org.orgmodel_mapping.evaluate",
+          "org.orgmodel_rollback.create",
           "org.reports.approve",
           "org.role_aliases.manage",
           "org.roles.create",
@@ -912,9 +932,19 @@ const generated = Object.freeze({
           "lms.groups.read",
           "org.documents.create",
           "org.documents.read",
+          "org.orgmodel.publish",
+          "org.orgmodel.read",
+          "org.orgmodel.reconcile",
+          "org.orgmodel_audit.read",
+          "org.orgmodel_draft.manage",
+          "org.orgmodel_draft.read",
+          "org.orgmodel_evidence.read",
+          "org.orgmodel_mapping.approve",
+          "org.orgmodel_mapping.evaluate",
+          "org.orgmodel_rollback.create",
           "org.role_aliases.manage"
         ],
-        "expectedPotentialCount": 81,
+        "expectedPotentialCount": 91,
         "version": "2026-07-civitas-phase3-role-bundles-v1"
       },
       {

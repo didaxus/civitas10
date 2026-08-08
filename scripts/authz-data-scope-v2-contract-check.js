@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const root = path.resolve(__dirname, '..')
 const scope = require('../backend/authorization/data-scope')
-const forbidden = ['academic.' + 'grade_level', 'academic.' + 'section', 'course_' + 'scope']
+const forbidden = ['academic.' + 'section', 'course_' + 'scope']
 const excluded = new Set(['docs', 'artifacts', '.git', 'node_modules', 'backend/db/migrations'])
 const legacyEvidenceFiles = new Set([
   'backend/taxonomy/taxonomyV2MigrationService.js',

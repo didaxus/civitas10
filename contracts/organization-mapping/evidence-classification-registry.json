@@ -1,0 +1,149 @@
+{
+  "version": "2026-08-org-mapping-evidence-v1",
+  "hash": "a4f1a51a0aaecfaa3bd8ba3a9e946e2b955b276eb875033546cc07f1b9456ee5",
+  "entries": [
+    {
+      "key": "public_organization_fact",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "internal_canonical_identifier",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "source_object_display_name",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "stable_external_object_identifier",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "sensitive_user_attribute",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel_evidence.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "user_identifier",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "restricted_group_name",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "restricted_group_count",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "correlatable_hash",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "connector_diagnostics",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel.read"
+      ],
+      "ui": "redacted",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "classify",
+      "retention": "bounded"
+    },
+    {
+      "key": "secret_token_assertion_material",
+      "status": "active",
+      "audiences": [
+        "org.orgmodel_evidence.read"
+      ],
+      "ui": "never",
+      "audit": "safe_reference",
+      "log": "safe_reference",
+      "export": "redacted",
+      "redaction": "omit",
+      "retention": "bounded"
+    }
+  ]
+}

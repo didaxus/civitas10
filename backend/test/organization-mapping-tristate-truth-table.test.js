@@ -1,0 +1,6 @@
+"use strict";
+const test=require("node:test"); const assert=require("node:assert/strict"); const {evalInclude,evalRequire,evalExclude,TRUTH}=require("../../core/organization-mapping/index.cjs");
+const c=(v)=>({selectorId:"scim.group",operator:"equals",value:v}); const facts={externalGroupIds:["a"],claimsComplete:true};
+test("Include truth table",()=>{assert.equal(evalInclude([c("a"),c("missing")],facts).result,TRUTH.MATCH); assert.equal(evalInclude([c("missing")],facts).result,TRUTH.NO_MATCH); assert.equal(evalInclude([{selectorId:"scim.group",operator:"equals"}],facts).result,TRUTH.UNRESOLVED); assert.equal(evalInclude([],facts).result,"INVALID");});
+test("Require truth table",()=>{assert.equal(evalRequire([c("a")],facts).result,TRUTH.MATCH); assert.equal(evalRequire([c("a"),c("missing")],facts).result,TRUTH.NO_MATCH); assert.equal(evalRequire([{selectorId:"scim.group",operator:"equals"}],facts).result,TRUTH.UNRESOLVED); assert.equal(evalRequire([],facts).result,TRUTH.MATCH);});
+test("Exclude truth table",()=>{assert.equal(evalExclude([c("a")],facts).result,TRUTH.EXCLUDED); assert.equal(evalExclude([c("missing")],facts).result,TRUTH.NO_MATCH); assert.equal(evalExclude([{selectorId:"scim.group",operator:"equals"}],facts).result,TRUTH.UNRESOLVED); assert.equal(evalExclude([],facts).result,TRUTH.NO_MATCH);});

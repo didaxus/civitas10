@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const { DIMENSION_REGISTRY } = require('../../taxonomy/taxonomyDimensionRegistry')
 const DATA_SCOPE_DIMENSION_REGISTRY_VERSION = DIMENSION_REGISTRY.version
 const runtimeMetadata = {
-  'academic.stage':['Academic stage','Broad institutional stage or cycle; never a concrete class.','tree',['lms','analytics','planning']],
+  'academic.stage':['Academic stage','Broad institutional stage or cycle; not a grade, cohort, or concrete class.','tree',['lms','analytics','planning']],
   'academic.period':['Academic period','Explicit academic time period referenced by stable ID.','none',['lms','analytics','planning','scheduling']],
   'academic.subject':['Academic subject','Academic discipline, distinct from course and class.','none',['lms','analytics','planning']],
   'academic.course':['Academic course','Curricular course definition, not a concrete offering.','none',['lms','analytics','planning','scheduling']],
@@ -14,7 +14,7 @@ const runtimeMetadata = {
   'organization.department':['Department','Organizational department.','tree',['crm','support','analytics','payments','hr']],
   'administration.function':['Administrative function','Cross-cutting administrative function.','none',['support','analytics','payments','crm']],
 }
-const TAXONOMY_DIMENSIONS=Object.freeze(Object.fromEntries(DIMENSION_REGISTRY.dimensions.map(({id:key})=>{const [displayName,description,hierarchyBehavior,allowedCapabilities]=runtimeMetadata[key];return [key,Object.freeze({key,displayName,description,valueKind:'stable_id',hierarchyBehavior,allowMultiple:true,tenantOwnershipRequired:true,allowedCapabilities:Object.freeze(allowedCapabilities),lifecycle:'active',authorizationImpact:'restrictive_only'})]})))
+const TAXONOMY_DIMENSIONS=Object.freeze(Object.fromEntries(DIMENSION_REGISTRY.dimensions.map(({id:key,semanticDefinition})=>{const metadata=runtimeMetadata[key]||[key,semanticDefinition,'none',['lms','analytics','planning']];const [displayName,description,hierarchyBehavior,allowedCapabilities]=metadata;return [key,Object.freeze({key,displayName,description,valueKind:'stable_id',hierarchyBehavior,allowMultiple:true,tenantOwnershipRequired:true,allowedCapabilities:Object.freeze(allowedCapabilities),lifecycle:'active',authorizationImpact:'restrictive_only'})]})))
 const TAXONOMY_DIMENSION_KEYS=Object.freeze(Object.keys(TAXONOMY_DIMENSIONS))
 const DATA_SCOPE_DIMENSION_REGISTRY_HASH=crypto.createHash('sha256').update(JSON.stringify(TAXONOMY_DIMENSIONS)).digest('hex')
 function getTaxonomyDimension(key){return TAXONOMY_DIMENSIONS[key]||null}

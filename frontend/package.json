@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "generate:organization-mapping-contracts": "node scripts/generate-organization-mapping-contracts.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/validate-civitas-visual.mjs && node scripts/validate-tailwind-semantic-contract.mjs && node scripts/design-system/validate-intake-boundary.mjs && node scripts/design-system/validate-provenance.mjs && node scripts/validate-governance-visual-contract.mjs && node scripts/validate-navigation-contract.mjs",
     "lint": "eslint .",

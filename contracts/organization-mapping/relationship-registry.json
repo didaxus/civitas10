@@ -1,0 +1,41 @@
+{
+  "version": "2026-08-org-mapping-relationships-v1",
+  "hash": "b0a11e96bc168053ae52342c1845226a9859541272e266111d900988f002e56c",
+  "entries": [
+    {
+      "key": "parent_of",
+      "status": "active",
+      "hierarchy": true
+    },
+    {
+      "key": "reports_to",
+      "status": "active",
+      "hierarchy": false
+    },
+    {
+      "key": "applies_to",
+      "status": "active",
+      "hierarchy": false
+    },
+    {
+      "key": "coordinates",
+      "status": "active",
+      "hierarchy": false
+    },
+    {
+      "key": "supports",
+      "status": "active",
+      "hierarchy": false
+    },
+    {
+      "key": "operates_in",
+      "status": "active",
+      "hierarchy": false
+    },
+    {
+      "key": "classified_by",
+      "status": "active",
+      "hierarchy": false
+    }
+  ]
+}

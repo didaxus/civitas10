@@ -56,6 +56,29 @@
       }
     },
     {
+      "name": "analytics.dashboards.read",
+      "namespace": "analytics",
+      "moduleId": "analytics",
+      "capabilityId": "analytics.organization-overview",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View dashboards",
+        "description": "View dashboards for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 20
+      }
+    },
+    {
       "name": "analytics.exports.approve",
       "namespace": "analytics",
       "moduleId": null,
@@ -122,6 +145,29 @@
         "groupLabel": "Analytics",
         "groupOrder": 70,
         "order": 50
+      }
+    },
+    {
+      "name": "analytics.reports.read",
+      "namespace": "analytics",
+      "moduleId": "reports",
+      "capabilityId": "reports.executive-summary",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View reports",
+        "description": "View reports for the organization analytics.",
+        "groupKey": "analytics",
+        "groupLabel": "Analytics",
+        "groupOrder": 70,
+        "order": 60
       }
     },
     {
@@ -214,6 +260,29 @@
         "groupLabel": "Community",
         "groupOrder": 40,
         "order": 20
+      }
+    },
+    {
+      "name": "community.groups.read",
+      "namespace": "community",
+      "moduleId": "community",
+      "capabilityId": "community.groups",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View groups",
+        "description": "View groups for the organization community.",
+        "groupKey": "community",
+        "groupLabel": "Community",
+        "groupOrder": 40,
+        "order": 30
       }
     },
     {
@@ -513,6 +582,29 @@
         "groupLabel": "Payroll",
         "groupOrder": 110,
         "order": 30
+      }
+    },
+    {
+      "name": "hr.employees.read",
+      "namespace": "hr",
+      "moduleId": "hr",
+      "capabilityId": "hr.employees",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View employees",
+        "description": "View employees for the organization payroll.",
+        "groupKey": "payroll",
+        "groupLabel": "Payroll",
+        "groupOrder": 110,
+        "order": 40
       }
     },
     {
@@ -958,6 +1050,29 @@
         "groupLabel": "Learning",
         "groupOrder": 20,
         "order": 90
+      }
+    },
+    {
+      "name": "lms.courses.read",
+      "namespace": "lms",
+      "moduleId": "lms",
+      "capabilityId": "lms.courses",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View courses",
+        "description": "View courses for the organization learning.",
+        "groupKey": "learning",
+        "groupLabel": "Learning",
+        "groupOrder": 20,
+        "order": 100
       }
     },
     {
@@ -1775,6 +1890,336 @@
       }
     },
     {
+      "name": "org.orgmodel_audit.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_audit",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Inspect organization mapping audit history",
+        "description": "Inspect organization mapping audit history.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 10
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_draft.manage",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_draft",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create or edit organization model drafts",
+        "description": "Create or edit organization model drafts.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 20
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_draft.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_draft",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Read organization model drafts",
+        "description": "Read organization model drafts.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 30
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_mapping.approve",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_mapping",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Approve or reject mapping outcomes",
+        "description": "Approve or reject mapping outcomes.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 50
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_mapping.evaluate",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_mapping",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Evaluate organization mapping policies without granting access",
+        "description": "Evaluate organization mapping policies without granting access.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 60
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_evidence.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_evidence",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Read sensitive external mapping evidence",
+        "description": "Read sensitive external mapping evidence.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 40
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel.publish",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Publish an exact organization model version",
+        "description": "Publish an exact organization model version.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 80
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel.read",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Read published organization model",
+        "description": "Read published organization model.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 90
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel.reconcile",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Reconcile upstream external facts",
+        "description": "Reconcile upstream external facts.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 100
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
+      "name": "org.orgmodel_rollback.create",
+      "namespace": "org",
+      "moduleId": "organization-mapping",
+      "capabilityId": "org.orgmodel_rollback",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "dataScopeStrategy": "organization",
+      "risk": "high",
+      "consumers": [
+        "core/organization-mapping/lifecycle-action-registry.cjs"
+      ],
+      "policyRequirements": [
+        "owner-ceiling",
+        "tenant-activation",
+        "abac-fail-closed"
+      ],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "Create rollback draft from immutable historical version",
+        "description": "Create rollback draft from immutable historical version.",
+        "groupKey": "organization_mapping",
+        "groupLabel": "Organization mapping",
+        "groupOrder": 15,
+        "order": 70
+      },
+      "runtimePath": "backend/organization-mapping/routes.js:/api/v1/o/:organizationId/organization-model",
+      "testEvidence": [
+        "backend/test/organization-mapping-route-authorization.test.js"
+      ]
+    },
+    {
       "name": "org.reports.approve",
       "namespace": "org",
       "moduleId": null,
@@ -1795,6 +2240,42 @@
         "groupLabel": "Organization",
         "groupOrder": 10,
         "order": 160
+      }
+    },
+    {
+      "name": "org.role_aliases.manage",
+      "namespace": "org",
+      "moduleId": null,
+      "capabilityId": "governance.role-aliases",
+      "surface": "organization",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "runtimePath": "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [
+        "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
+        "frontend/src/features/governance/api.ts:updateOrganizationRoleAlias"
+      ],
+      "policyRequirements": [
+        "same-organization",
+        "organization_admin",
+        "presentation_only"
+      ],
+      "screenActionIds": [
+        "governance.organizationRoleAliases"
+      ],
+      "compatibility": "none",
+      "testEvidence": [
+        "backend/test/governance-role-label-service.test.js"
+      ],
+      "presentation": {
+        "label": "Manage organization role aliases",
+        "description": "Update organization-scoped presentation aliases for canonical roles.",
+        "groupKey": "governance",
+        "groupLabel": "Governance",
+        "groupOrder": 20,
+        "order": 100
       }
     },
     {
@@ -2093,6 +2574,40 @@
         "groupKey": "owner",
         "groupLabel": "Owner Administration",
         "groupOrder": 5,
+        "order": 90
+      }
+    },
+    {
+      "name": "owner.role_labels.manage",
+      "namespace": "owner",
+      "moduleId": null,
+      "capabilityId": "governance.role-labels",
+      "surface": "owner",
+      "targetStatus": "active",
+      "observedImplementation": "active",
+      "runtimePath": "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+      "dataScopeStrategy": "global_owner",
+      "risk": "standard",
+      "consumers": [
+        "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
+        "frontend/src/features/governance/api.ts:updateOwnerRoleLabel"
+      ],
+      "policyRequirements": [
+        "owner_global"
+      ],
+      "screenActionIds": [
+        "governance.ownerRoleLabels"
+      ],
+      "compatibility": "none",
+      "testEvidence": [
+        "backend/test/governance-role-label-service.test.js"
+      ],
+      "presentation": {
+        "label": "Manage Civitas role labels",
+        "description": "Update global Civitas presentation labels for canonical organization roles.",
+        "groupKey": "governance",
+        "groupLabel": "Governance",
+        "groupOrder": 20,
         "order": 90
       }
     },
@@ -2439,6 +2954,29 @@
         "groupLabel": "Billing",
         "groupOrder": 100,
         "order": 70
+      }
+    },
+    {
+      "name": "payments.invoices.read",
+      "namespace": "payments",
+      "moduleId": "payments",
+      "capabilityId": "payments.invoices",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View invoices",
+        "description": "View invoices for the organization billing.",
+        "groupKey": "billing",
+        "groupLabel": "Billing",
+        "groupOrder": 100,
+        "order": 80
       }
     },
     {
@@ -3523,6 +4061,29 @@
       }
     },
     {
+      "name": "scheduling.bookings.read",
+      "namespace": "scheduling",
+      "moduleId": "scheduling",
+      "capabilityId": "scheduling.bookings",
+      "surface": "organization",
+      "targetStatus": "planned",
+      "observedImplementation": "absent",
+      "dataScopeStrategy": "organization",
+      "risk": "standard",
+      "consumers": [],
+      "policyRequirements": [],
+      "screenActionIds": [],
+      "compatibility": "none",
+      "presentation": {
+        "label": "View bookings",
+        "description": "View bookings for the organization scheduling.",
+        "groupKey": "scheduling",
+        "groupLabel": "Scheduling",
+        "groupOrder": 55,
+        "order": 20
+      }
+    },
+    {
       "name": "scheduling.events.create",
       "namespace": "scheduling",
       "moduleId": null,
@@ -3773,237 +4334,6 @@
         "groupLabel": "Support",
         "groupOrder": 60,
         "order": 60
-      }
-    },
-    {
-      "name": "analytics.dashboards.read",
-      "namespace": "analytics",
-      "moduleId": "analytics",
-      "capabilityId": "analytics.organization-overview",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View dashboards",
-        "description": "View dashboards for the organization analytics.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 70,
-        "order": 20
-      }
-    },
-    {
-      "name": "community.groups.read",
-      "namespace": "community",
-      "moduleId": "community",
-      "capabilityId": "community.groups",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View groups",
-        "description": "View groups for the organization community.",
-        "groupKey": "community",
-        "groupLabel": "Community",
-        "groupOrder": 40,
-        "order": 30
-      }
-    },
-    {
-      "name": "hr.employees.read",
-      "namespace": "hr",
-      "moduleId": "hr",
-      "capabilityId": "hr.employees",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View employees",
-        "description": "View employees for the organization payroll.",
-        "groupKey": "payroll",
-        "groupLabel": "Payroll",
-        "groupOrder": 110,
-        "order": 40
-      }
-    },
-    {
-      "name": "lms.courses.read",
-      "namespace": "lms",
-      "moduleId": "lms",
-      "capabilityId": "lms.courses",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View courses",
-        "description": "View courses for the organization learning.",
-        "groupKey": "learning",
-        "groupLabel": "Learning",
-        "groupOrder": 20,
-        "order": 100
-      }
-    },
-    {
-      "name": "payments.invoices.read",
-      "namespace": "payments",
-      "moduleId": "payments",
-      "capabilityId": "payments.invoices",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View invoices",
-        "description": "View invoices for the organization billing.",
-        "groupKey": "billing",
-        "groupLabel": "Billing",
-        "groupOrder": 100,
-        "order": 80
-      }
-    },
-    {
-      "name": "analytics.reports.read",
-      "namespace": "analytics",
-      "moduleId": "reports",
-      "capabilityId": "reports.executive-summary",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View reports",
-        "description": "View reports for the organization analytics.",
-        "groupKey": "analytics",
-        "groupLabel": "Analytics",
-        "groupOrder": 70,
-        "order": 60
-      }
-    },
-    {
-      "name": "scheduling.bookings.read",
-      "namespace": "scheduling",
-      "moduleId": "scheduling",
-      "capabilityId": "scheduling.bookings",
-      "surface": "organization",
-      "targetStatus": "planned",
-      "observedImplementation": "absent",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [],
-      "policyRequirements": [],
-      "screenActionIds": [],
-      "compatibility": "none",
-      "presentation": {
-        "label": "View bookings",
-        "description": "View bookings for the organization scheduling.",
-        "groupKey": "scheduling",
-        "groupLabel": "Scheduling",
-        "groupOrder": 55,
-        "order": 20
-      }
-    },
-    {
-      "name": "owner.role_labels.manage",
-      "namespace": "owner",
-      "moduleId": null,
-      "capabilityId": "governance.role-labels",
-      "surface": "owner",
-      "targetStatus": "active",
-      "observedImplementation": "active",
-      "runtimePath": "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
-      "dataScopeStrategy": "global_owner",
-      "risk": "standard",
-      "consumers": [
-        "backend/index.js:PUT /api/owner/governance/role-labels/:canonicalRoleKey",
-        "frontend/src/features/governance/api.ts:updateOwnerRoleLabel"
-      ],
-      "policyRequirements": [
-        "owner_global"
-      ],
-      "screenActionIds": [
-        "governance.ownerRoleLabels"
-      ],
-      "compatibility": "none",
-      "testEvidence": [
-        "backend/test/governance-role-label-service.test.js"
-      ],
-      "presentation": {
-        "label": "Manage Civitas role labels",
-        "description": "Update global Civitas presentation labels for canonical organization roles.",
-        "groupKey": "governance",
-        "groupLabel": "Governance",
-        "groupOrder": 20,
-        "order": 90
-      }
-    },
-    {
-      "name": "org.role_aliases.manage",
-      "namespace": "org",
-      "moduleId": null,
-      "capabilityId": "governance.role-aliases",
-      "surface": "organization",
-      "targetStatus": "active",
-      "observedImplementation": "active",
-      "runtimePath": "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
-      "dataScopeStrategy": "organization",
-      "risk": "standard",
-      "consumers": [
-        "backend/index.js:PUT /api/o/:organizationId/governance/role-aliases/:canonicalRoleKey",
-        "frontend/src/features/governance/api.ts:updateOrganizationRoleAlias"
-      ],
-      "policyRequirements": [
-        "same-organization",
-        "organization_admin",
-        "presentation_only"
-      ],
-      "screenActionIds": [
-        "governance.organizationRoleAliases"
-      ],
-      "compatibility": "none",
-      "testEvidence": [
-        "backend/test/governance-role-label-service.test.js"
-      ],
-      "presentation": {
-        "label": "Manage organization role aliases",
-        "description": "Update organization-scoped presentation aliases for canonical roles.",
-        "groupKey": "governance",
-        "groupLabel": "Governance",
-        "groupOrder": 20,
-        "order": 100
       }
     }
   ],

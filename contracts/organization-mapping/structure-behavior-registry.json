@@ -1,0 +1,26 @@
+{
+  "version": "2026-08-org-mapping-structure-behaviors-v1",
+  "hash": "3b3dc8874d07b2936a30131015b4cee88b2a7248d19f9358b1bd5dddfc613188",
+  "entries": [
+    {
+      "key": "hierarchy_axis",
+      "status": "active"
+    },
+    {
+      "key": "cross_cutting_overlay",
+      "status": "active"
+    },
+    {
+      "key": "reusable_facet",
+      "status": "active"
+    },
+    {
+      "key": "operating_context",
+      "status": "active"
+    },
+    {
+      "key": "applicability",
+      "status": "active"
+    }
+  ]
+}

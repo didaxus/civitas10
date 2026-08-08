@@ -22,7 +22,7 @@
       "const": "civitas.authorization.data-scope-dimensions"
     },
     "version": {
-      "const": "2026-07-civitas-data-scope-dimensions-v2"
+      "const": "2026-08-civitas-data-scope-dimensions-v3"
     },
     "schemaVersion": {
       "type": "string"
@@ -99,13 +99,14 @@
           "version",
           "status",
           "tenantOwnership",
+          "semanticDefinition",
           "valueLifecycle",
           "provenance"
         ],
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^(academic|organization|administration)\\.[a-z_]+$"
+            "pattern": "^(academic|organization|administration|geography)\\.[a-z_]+$"
           },
           "version": {
             "type": "integer",
@@ -151,6 +152,38 @@
                 "minLength": 1
               }
             }
+          },
+          "semanticDefinition": {
+            "type": "string",
+            "minLength": 20
+          }
+        }
+      }
+    },
+    "deprecatedDimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "replacement",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "const": "deprecated"
+          },
+          "replacement": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 20
           }
         }
       }

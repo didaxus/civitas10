@@ -56,6 +56,7 @@ const { createModuleAvailabilityResolver, createStaticOperationRegistry, createP
 const { createEntitlementPolicyProvider, createDataScopePolicyProvider } = require("./authorization/policies/providers");
 const { createProductionModuleControlPlaneService } = require("./services/moduleControlPlane");
 const { createDataScopeEvaluator } = require("./authorization/data-scope");
+const { createPostgresOrganizationMappingRepository, createOrganizationMappingService, createOrganizationMappingRouter } = require("./organization-mapping");
 
 const app = express();
 const port = 3000;
@@ -691,6 +692,46 @@ registerScimReconciliationRoutes({
   sharedAuth: SHARED_AUTH,
   apiResource: API_RESOURCE,
 });
+
+const organizationMappingRepository = createPostgresOrganizationMappingRepository({ pool: getPool() });
+const organizationMappingService = createOrganizationMappingService({ repository: organizationMappingRepository });
+const runMiddlewareChain = (resolveChain) => (req, res, next) => {
+  const chain = typeof resolveChain === "function" ? resolveChain(req) : resolveChain;
+  let index = 0;
+  const advance = (error) => error ? next(error) : (chain[index++] || next)(req, res, advance);
+  advance();
+};
+const requireOrganizationModelOrganization = async (req, res, next) => {
+  try { await getLogtoOrganizationById(req.params.organizationId); next(); }
+  catch (error) { return sendPublicError(res, error, "OwnerOrganizationModelOrganizationLookupError", "Organization not found"); }
+};
+const organizationMappingRouter = createOrganizationMappingRouter({
+  service: organizationMappingService,
+  authorizeAction: (actionId, permission, options = {}) => {
+    const { decisionEnvelope = false, ...authorizationOptions } = options;
+    const tenant = decisionEnvelope ? [requireSafeOrganizationIdParam, requireAuthorization({ permission, actionId, surface: "organization", operation: actionId, ...authorizationOptions })] : [
+      requireSafeOrganizationIdParam,
+      requireOrganizationAccess({ resource: API_RESOURCE, requiredAllScopes: [permission] }),
+      requireOrg,
+      requirePermission(permission),
+      requireAuthorization({ permission, actionId, surface: "organization", operation: actionId, ...authorizationOptions }),
+    ];
+    const owner = [
+      requireSafeOrganizationIdParam,
+      requireGlobalAccess({ resource: API_RESOURCE, requiredScopes: [permission] }),
+      requireGlobalOwner,
+      requireOrganizationModelOrganization,
+      requireAuthorization({ permission, actionId, surface: "owner", operation: actionId, ...authorizationOptions }),
+    ];
+    return [runMiddlewareChain(req => req.organizationMappingSurface === "owner" ? owner : tenant)];
+  },
+});
+app.use("/api/v1/owner/organizations/:organizationId/organization-model", (req, _res, next) => {
+  req.organizationMappingSurface = "owner";
+  req.url = `/o/${encodeURIComponent(req.params.organizationId)}/organization-model${req.url}`;
+  next();
+}, organizationMappingRouter);
+app.use("/api/v1", organizationMappingRouter);
 
 secureRoute.get("/documents", "organizationMemberReadLegacyRedirect", requireOrganizationAccess({ requiredAllScopes: [ORG_AUTHZ.documentsRead] }), requireOrg, requireOrganizationRole(SHARED_AUTH.organization.roles.member), requirePermission(ORG_AUTHZ.documentsRead), (req, res) => {
   const canonicalPath = organizationPath(req.auth?.organizationId || req.user?.organizationId, "documents");

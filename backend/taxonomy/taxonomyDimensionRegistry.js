@@ -3,16 +3,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 const YAML = require("yaml");
 const Ajv2020 = require("ajv/dist/2020");
+const { CANONICAL_DIMENSION_IDS } = require("../../core/authz/canonical-dimension-ids.cjs");
 
 const REGISTRY_PATH = path.resolve(__dirname, "../../contracts/authorization/data-scope-dimensions.yaml");
 const REGISTRY_SCHEMA_PATH = path.resolve(__dirname, "../../contracts/authorization/schemas/data-scope-dimensions.schema.json");
 const DIMENSION_REGISTRY_CONTRACT = "civitas.authorization.data-scope-dimensions";
 const DIMENSION_REGISTRY_SCHEMA_VERSION = "civitas-data-scope-dimensions-schema/v1";
-const DIMENSION_REGISTRY_CONTRACT_VERSION = "civitas-data-scope-dimensions/v2";
-const CANONICAL_DIMENSION_IDS = Object.freeze([
-  "academic.stage", "academic.period", "academic.subject", "academic.course", "academic.cohort", "academic.class",
-  "organization.campus", "organization.shift", "organization.department", "administration.function",
-]);
+const DIMENSION_REGISTRY_CONTRACT_VERSION = "civitas-data-scope-dimensions/v3";
 const REGISTRY_ERROR_CODES = Object.freeze({
   FILE_MISSING: "taxonomy_dimension_registry_file_missing",
   MALFORMED: "taxonomy_dimension_registry_malformed",
@@ -61,7 +58,7 @@ function loadDimensionRegistry(file = REGISTRY_PATH) {
     fail(REGISTRY_ERROR_CODES.MALFORMED, error);
   }
   validateDimensionRegistry(registry);
-  return Object.freeze({ ...registry, dimensions: Object.freeze(registry.dimensions) });
+  return Object.freeze({ ...registry, dimensions: Object.freeze(registry.dimensions), deprecatedDimensions: Object.freeze(registry.deprecatedDimensions || []) });
 }
 
 const DIMENSION_REGISTRY = loadDimensionRegistry();

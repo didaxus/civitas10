@@ -5,11 +5,11 @@ const scope=require('../authorization/data-scope')
 const { resourceMatchesConstraint }=scope
 const { DIMENSION_REGISTRY, REGISTRY_ERROR_CODES, validateDimensionRegistry }=require('../taxonomy/taxonomyDimensionRegistry')
 
-const frozen=['academic.stage','academic.period','academic.subject','academic.course','academic.cohort','academic.class','organization.campus','organization.shift','organization.department','administration.function']
+const frozen=['academic.school_year','academic.term','academic.term_type','academic.stage','academic.grade_level','academic.year_level','academic.faculty','academic.department','academic.program','academic.program_level','academic.credential_level','academic.program_version','academic.modality','academic.cohort','academic.subject','academic.course','academic.class','organization.region','organization.campus','organization.shift','organization.department','organization.coordination','administration.function','geography.administrative_area','geography.municipality']
 
 test('taxonomy registry rejects contract drift and incomplete envelopes',()=>{
   assert.equal(DIMENSION_REGISTRY.contract,'civitas.authorization.data-scope-dimensions')
-  assert.equal(DIMENSION_REGISTRY.version,'2026-07-civitas-data-scope-dimensions-v2')
+  assert.equal(DIMENSION_REGISTRY.version,'2026-08-civitas-data-scope-dimensions-v3')
   for(const patch of [{contract:'changed'}, {version:undefined}]) {
     assert.throws(()=>validateDimensionRegistry({...DIMENSION_REGISTRY,...patch}),{code:REGISTRY_ERROR_CODES.SCHEMA_INVALID})
   }
@@ -24,18 +24,18 @@ test('taxonomy registry rejects duplicate dimensions and permission semantics',(
 })
 
 test('taxonomy dimension registry v2 is the exact single canonical vocabulary',()=>{
-  assert.equal(scope.DATA_SCOPE_DIMENSION_REGISTRY_VERSION,'2026-07-civitas-data-scope-dimensions-v2')
+  assert.equal(scope.DATA_SCOPE_DIMENSION_REGISTRY_VERSION,'2026-08-civitas-data-scope-dimensions-v3')
   assert.deepEqual(scope.TAXONOMY_DIMENSION_KEYS,frozen)
   assert.throws(()=>scope.assertTaxonomyDimension('academic.'+'section'),/taxonomy_dimension_unknown/)
-  assert.throws(()=>scope.assertTaxonomyDimension('academic.'+'grade_level'),/taxonomy_dimension_unknown/)
   for(const key of frozen){const dimension=scope.assertTaxonomyDimension(key);assert.equal(dimension.key,key);assert.equal(dimension.tenantOwnershipRequired,true);assert.equal(dimension.authorizationImpact,'restrictive_only')}
 })
 
-test('stage, period, subject, course, cohort, and class remain distinct stable-ID concepts',()=>{
-  const keys=['academic.stage','academic.period','academic.subject','academic.course','academic.cohort','academic.class']
+test('school year, term, term type, grade, subject, course, cohort, and class remain distinct stable-ID concepts',()=>{
+  const keys=['academic.school_year','academic.term','academic.term_type','academic.grade_level','academic.stage','academic.subject','academic.course','academic.cohort','academic.class']
   assert.equal(new Set(keys.map(key=>scope.TAXONOMY_DIMENSIONS[key].description)).size,keys.length)
-  assert.equal(scope.TAXONOMY_DIMENSIONS['academic.period'].valueKind,'stable_id')
-  assert.match(scope.TAXONOMY_DIMENSIONS['academic.stage'].description,/never a concrete class/)
+  assert.equal(scope.TAXONOMY_DIMENSIONS['academic.term'].valueKind,'stable_id')
+  assert.match(scope.TAXONOMY_DIMENSIONS['academic.stage'].description,/not a grade/)
+  assert.match(scope.TAXONOMY_DIMENSIONS['academic.grade_level'].description,/not an assessment score/)
 })
 
 test('strategy, dimensions, and templates are separate compatible contracts',()=>{
@@ -70,4 +70,4 @@ test('unit and resource targets fail closed when ownership resolvers are absent'
   await assert.rejects(()=>service.createAssignment({...base,scopeKind:'unit',relationshipKey:'academic.assigned_group',unitId:'unit_123'}),{code:'data_scope_resolver_unavailable'});await assert.rejects(()=>service.createAssignment({...base,scopeKind:'resource',relationshipKey:'academic.assigned_course',resourceRef:'course_123'}),{code:'data_scope_resolver_unavailable'});
 })
 
-test('taxonomy migration upserts and verifies all ten canonical definitions',()=>{const fs=require('node:fs');const path=require('node:path');const sql=fs.readFileSync(path.join(__dirname,'../db/migrations/0025_data_scope_taxonomy_v2.sql'),'utf8');for(const key of frozen)assert.match(sql,new RegExp(key.replace('.','\\.')));assert.match(sql,/count\(\*\).*<> 10/s);assert.match(sql,/on conflict\(dimension_key\) do update/)})
+test('taxonomy migration upserts and verifies all canonical definitions',()=>{const fs=require('node:fs');const path=require('node:path');const sql=fs.readFileSync(path.join(__dirname,'../db/migrations/0039_data_scope_taxonomy_v3.sql'),'utf8');for(const key of frozen)assert.match(sql,new RegExp(key.replace('.','\\.')));assert.match(sql,/count\(\*\).*<> 25/s);assert.match(sql,/on conflict\(dimension_key\) do update/)})
